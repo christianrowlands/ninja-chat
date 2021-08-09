@@ -125,7 +125,7 @@
     <string name="mgmt_account_enable">계정 사용 </string>
     <string name="mgmt_account_are_you_sure">확실합니까? </string>
     <string name="attach_record_voice">녹음 </string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">암호 </string>
     <string name="add_phone_book_text">주소록에 %s를 추가하시겠습니까?</string>
     <string name="server_info_show_more">서버 정보 </string>
@@ -306,7 +306,7 @@
     <string name="pref_treat_vibrate_as_silent">진동을 자동으로 처리</string>
     <string name="pref_show_connection_options">확장 연결 설정</string>
     <string name="pref_show_connection_options_summary">계정을 설정할 때 호스트 이름과 포트 설정을 표시합니다</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="mam_prefs">보관 설정</string>
     <string name="server_side_mam_prefs">서버 사이드의 보관 설정</string>
     <string name="fetching_mam_prefs">보관 설정을 얻고 있습니다. 잠시 기다려주십시오 ...</string>

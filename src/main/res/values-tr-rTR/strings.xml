@@ -234,8 +234,8 @@
     <string name="select">Seç</string>
     <string name="contact_already_exists">Kişi zaten mevcut</string>
     <string name="join">Katıl</string>
-    <string name="channel_full_jid_example">channel@cnoference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@cnoference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Yer imi olarak kaydet</string>
     <string name="delete_bookmark">Yer imini sil</string>
     <string name="destroy_room">Grup konuşmasını yoket</string>
@@ -535,7 +535,7 @@
     <string name="share_uri_with">URI paylaş ile...</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy, popüler XMPP sunucusu Conversations\'ın otomatik kişi keşfine sahip bir yan ürünüdür. <br><br>Telefon numarası ile kayıt olursunuz ve Quicksy -adres defterinizdeki numaraları baz alarak- otomatik olarak size olası yeni kişiler önerir.<br><br>Kayıt olarak <a href="https://quicksy.im/#privacy">gizlilik sözleşmemizi</a> onaylamış oluyorsunuz.]]></string>
     <string name="agree_and_continue">Kabul et ve devam et</string>
-    <string name="magic_create_text">Conversations\'da hesap kurulum için bir rehber hazırlanmıştır.¹\nConversations.im\'i bir sağlayıcı olarak seçtikten sonra başka sağlayıcılar kullanan kullanıcılarla onlara tam XMPP adresinizi vererek iletişim kurabilirsiniz.</string>
+    <string name="magic_create_text">Conversations\'da hesap kurulum için bir rehber hazırlanmıştır.¹\nninja.chat\'i bir sağlayıcı olarak seçtikten sonra başka sağlayıcılar kullanan kullanıcılarla onlara tam XMPP adresinizi vererek iletişim kurabilirsiniz.</string>
     <string name="your_full_jid_will_be">Tam XMPP adresiniz %s olacak</string>
     <string name="create_account">Hesap Oluştur</string>
     <string name="use_own_provider">Kendi sağlayıcımı kullan</string>

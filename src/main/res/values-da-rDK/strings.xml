@@ -535,7 +535,7 @@
     <string name="share_uri_with">Del URL med…</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy er en klone af den populære XMPP klient Conversations med automatisk kontaktopdagelse.<br><br>Du tilmelder dig med dit telefonnummer, og Quicksy vil automatisk - baseret på telefonnumre i din adressebog - foreslå mulige kontakter til dig.<br><br>Når du tilmelder dig, accepterer du vores <a href="https://quicksy.im/#privacy">privatlispolitik</a>.]]></string>
     <string name="agree_and_continue">Accepter og fortsætte</string>
-    <string name="magic_create_text">En guide er oprettet til kontooprettelse på conversations.im.¹\nNår du vælger conversations.im som udbyder, kan du kommunikere med brugere fra andre udbydere ved at give dem din fulde XMPP-adresse.</string>
+    <string name="magic_create_text">En guide er oprettet til kontooprettelse på ninja.chat.¹\nNår du vælger ninja.chat som udbyder, kan du kommunikere med brugere fra andre udbydere ved at give dem din fulde XMPP-adresse.</string>
     <string name="your_full_jid_will_be">Din fulde XMPP-adresse vil blive: %s</string>
     <string name="create_account">Opret konto</string>
     <string name="use_own_provider">Brug min egen udbyder</string>

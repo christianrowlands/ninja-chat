@@ -120,7 +120,7 @@
     <string name="attach_record_voice">ശബ്‌ദം റെക്കോർഡുചെയ്യൂ</string>
     <string name="account_settings_jabber_id">XMPP വിലാസം</string>
     <string name="block_jabber_id">XMPP വിലാസം തടയുക</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">രഹസ്യവാക്ക്</string>
     <string name="invalid_jid">ഈ XMPP വിലാസ‍ം അസാധുവാണ്</string>
     <string name="error_out_of_memory">മെമ്മറി തീർന്നു. ചിത്രം വളരെ വലുതാണ്</string>
@@ -232,7 +232,7 @@
     <string name="download_failed_file_not_found">ഡൗൺലോഡ് പരാജയപ്പെട്ടു: ഫയൽ കണ്ടെത്തിയില്ല</string>
     <string name="server_info_broken">തകർന്നു</string>
     <string name="pref_presence_settings">ലഭ്യത</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="captcha_required">CAPTCHA നിർബന്ധമാണ്</string>
     <plurals name="x_messages">
         <item quantity="one">%d സന്ദേശം</item>

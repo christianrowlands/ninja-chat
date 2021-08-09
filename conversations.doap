@@ -13,7 +13,7 @@
 
     <description xml:lang="en">Conversations is an open source XMPP/Jabber client for the Android platform</description>
 
-    <homepage rdf:resource="https://conversations.im/"/>
+    <homepage rdf:resource="https://ninja.chat/"/>
     <download-page rdf:resource="https://play.google.com/store/apps/details?id=eu.siacs.conversations"/>
     <bug-database rdf:resource="https://github.com/iNPUTmice/Conversations/issues"/>
     <!-- See https://github.com/ewilderj/doap/issues/53 -->

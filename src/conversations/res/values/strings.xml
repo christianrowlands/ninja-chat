@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Pick your XMPP provider</string>
-    <string name="use_conversations.im">Use ninja.chat</string>
+    <string name="use_ninja.chat">Use ninja.chat</string>
     <string name="create_new_account">Create new account</string>
     <string name="do_you_have_an_account">Choose \"Create New Account\" if you do not have a ninja.chat account. Select \"I Already Have an Account\" if you already have one.</string>
     <string name="server_select_text">You can use this client with any XMPP server you choose.\n\n1) The option labeled \"USE NINJA.CHAT\" is designed to communicate securely with a globally accessible server owned by ninja.chat.\n\n2) The option labeled \"CUSTOM SERVER\" can be used to connect to an xmpp server of your choosing.</string>

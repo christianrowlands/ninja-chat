@@ -151,7 +151,7 @@
     <string name="mgmt_account_are_you_sure">Сигурни ли сте?</string>
     <string name="attach_record_voice">Запис на глас</string>
     <string name="account_settings_jabber_id">XMPP адрес</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Парола</string>
     <string name="invalid_jid">Това не е валиден XMPP адрес</string>
     <string name="add_phone_book_text">Искате ли да добавите %s към адресния си указател?</string>
@@ -372,7 +372,7 @@
     <string name="pref_treat_vibrate_as_silent">Тих режим при режим на вибриране</string>
     <string name="pref_show_connection_options">Разширени настройки за връзката</string>
     <string name="pref_show_connection_options_summary">Показване на настройките за сървър и порт при установка на профил</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="mam_prefs">Настройки за архивирането</string>
     <string name="server_side_mam_prefs">Настройки за архивирането на сървъра</string>
     <string name="fetching_mam_prefs">Получаване на настройките за архивирането. Моля, изчакайте…</string>

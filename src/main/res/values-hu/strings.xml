@@ -450,7 +450,7 @@
     <string name="pref_treat_vibrate_as_silent">Rezgés kezelése csendes módként</string>
     <string name="pref_show_connection_options">Kiterjesztett kapcsolati beállítások</string>
     <string name="pref_show_connection_options_summary">Gépnév és port beállításainak megjelenítése egy fiók beállításakor</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Bejelentkezés tanúsítvánnyal</string>
     <string name="unable_to_parse_certificate">Nem sikerült elemezni a tanúsítványt</string>
     <string name="mam_prefs">Archiválási beállítások</string>

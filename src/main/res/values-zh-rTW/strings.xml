@@ -128,7 +128,7 @@
     <string name="mgmt_account_enable">啟用帳戶</string>
     <string name="mgmt_account_are_you_sure">確定?</string>
     <string name="attach_record_voice">錄音</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">密碼</string>
     <string name="add_phone_book_text">是否添加 %s 到地址薄？</string>
     <string name="server_info_show_more">伺服器資訊</string>
@@ -309,7 +309,7 @@
     <string name="pref_treat_vibrate_as_silent">靜音模式開啟振動</string>
     <string name="pref_show_connection_options">高級連接設置</string>
     <string name="pref_show_connection_options_summary">註冊帳戶時顯示主機名稱和埠</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="mam_prefs">壓縮設置</string>
     <string name="server_side_mam_prefs">服務端壓縮設置</string>
     <string name="fetching_mam_prefs">正在獲取壓縮設置。請稍後...</string>

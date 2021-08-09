@@ -136,16 +136,16 @@ public class XmppUri {
         String scheme = uri.getScheme();
         String host = uri.getHost();
         List<String> segments = uri.getPathSegments();
-        if ("https".equalsIgnoreCase(scheme) && "conversations.im".equalsIgnoreCase(host)) {
+        if ("https".equalsIgnoreCase(scheme) && "ninja.chat".equalsIgnoreCase(host)) {
             if (segments.size() >= 2 && segments.get(1).contains("@")) {
-                // sample : https://conversations.im/i/foo@bar.com
+                // sample : https://ninja.chat/i/foo@bar.com
                 try {
                     jid = Jid.ofEscaped(lameUrlDecode(segments.get(1))).toEscapedString();
                 } catch (Exception e) {
                     jid = null;
                 }
             } else if (segments.size() >= 3) {
-                // sample : https://conversations.im/i/foo/bar.com
+                // sample : https://ninja.chat/i/foo/bar.com
                 jid = segments.get(1) + "@" + segments.get(2);
             }
             if (segments.size() > 1 && "j".equalsIgnoreCase(segments.get(0))) {

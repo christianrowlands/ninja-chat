@@ -182,7 +182,7 @@
     <string name="attach_record_voice">音声を録音</string>
     <string name="account_settings_jabber_id">XMPP アドレス</string>
     <string name="block_jabber_id">XMPP アドレスをブロック</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">パスワード</string>
     <string name="invalid_jid">正しい XMPP アドレスではありません</string>
     <string name="error_out_of_memory">メモリ不足です。画像が大きすぎます</string>
@@ -229,8 +229,8 @@
     <string name="select">選択</string>
     <string name="contact_already_exists">連絡先は既に存在します</string>
     <string name="join">参加</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">ブックマークとして保存</string>
     <string name="delete_bookmark">ブックマークを削除</string>
     <string name="destroy_room">グループチャットを破棄する</string>
@@ -467,7 +467,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">デバイスがバイブレート時は取込中と表示</string>
     <string name="pref_show_connection_options">拡張接続設定</string>
     <string name="pref_show_connection_options_summary">アカウントを設定するときにホスト名とポートの設定を表示します</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">証明書でログイン</string>
     <string name="unable_to_parse_certificate">証明書を解析できません</string>
     <string name="mam_prefs">アーカイブの設定</string>
@@ -528,7 +528,7 @@
     <string name="share_uri_with">…で URI を共有</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy は人気の XMPP クライアント Conversations の派生で、連絡先の自動検出機能を備えています。<br><br>電話番号を入力して登録すると、アドレス帳に登録されている電話番号をもとに、Quicksyが自動的に連絡先を提案します。<br><br>登録すると、<a href="https://quicksy.im/#privacy">我々のプライバシーポリシー</a>に同意することになります。]]></string>
     <string name="agree_and_continue">同意して続行</string>
-    <string name="magic_create_text">conversations.im のアカウント作成のための指南が設定されています。¹\nconversations.im をプロバイダーとして選択した場合、あなたの完全なXMPPアドレスを与えることで、他のプロバイダーのユーザーと連絡をとることができます。</string>
+    <string name="magic_create_text">ninja.chat のアカウント作成のための指南が設定されています。¹\nninja.chat をプロバイダーとして選択した場合、あなたの完全なXMPPアドレスを与えることで、他のプロバイダーのユーザーと連絡をとることができます。</string>
     <string name="your_full_jid_will_be">あなたの完全なXMPPアドレスは: %s</string>
     <string name="create_account">アカウントを作成</string>
     <string name="use_own_provider">独自のプロバイダーを使用する</string>

@@ -184,7 +184,7 @@
     <string name="attach_record_voice">Εγγραφή φωνής</string>
     <string name="account_settings_jabber_id">Διεύθυνση XMPP</string>
     <string name="block_jabber_id">Αποκλεισμός διεύθυνσης XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Συνθηματικό</string>
     <string name="invalid_jid">Μη έγκυρη διεύθυνση XMPP</string>
     <string name="error_out_of_memory">Πλήρης μνήμη. Η εικόνα είναι πολύ μεγάλη</string>
@@ -233,8 +233,8 @@
     <string name="select">Επιλογή</string>
     <string name="contact_already_exists">Η επαφή υπάρχει ήδη</string>
     <string name="join">Συμμετοχή</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Αποθήκευση σαν σελιδοδείκτη</string>
     <string name="delete_bookmark">Διαγραφή σελιδοδείκτη</string>
     <string name="destroy_room">Διαγραφή ομαδικής συζήτησης</string>
@@ -470,7 +470,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Σημειώνει την παρουσία σας ως Απασχολημένος/η όταν η συσκευή είναι σε κατάσταση δόνησης</string>
     <string name="pref_show_connection_options">Αναλυτικότερες ρυθμίσεις σύνδεσης</string>
     <string name="pref_show_connection_options_summary">Εμφάνιση ονόματος μηχανήματος και ρυθμίσεων θύρας όταν ρυθμίζεται νέος λογαριασμός</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Σύνδεση με πιστοποιητικό</string>
     <string name="unable_to_parse_certificate">Αδυναμία ανάγνωσης πιστοποιητικού</string>
     <string name="mam_prefs">Επιλογές αρχειοθέτησης</string>
@@ -532,7 +532,7 @@
     <string name="share_uri_with">Διαμοιρασμός της διεύθυνσης URI με...</string>
     <string name="welcome_text_quicksy"><![CDATA[Το Quicksy είναι ένα παρακλάδι του δημοφιλούς προγράμματος XMPP Conversations με αυτόματη εύρεση επαφών.<br><br>Εγγράφεστε με τον τηλεφωνικό σας αριθμό και το Quicksy αυτόματα — με βάση τους τηλεφωνικούς αριθμούς στο βιβλίο διευθύνσεών σας — προτείνει πιθανές επαφές για εσάς.<br><br>Με την εγγραφή σας συμφωνείτε με την <a href="https://quicksy.im/#privacy">πολιτική απορρήτου</a> μας.]]></string>
     <string name="agree_and_continue">Συμφωνώ και προχωρήστε</string>
-    <string name="magic_create_text">Θα καθοδηγηθείτε στη διαδικασία δημιουργίας ενός λογαριασμού στο conversations.im.¹\nΕπιλέγοντας το conversations.im ως πάροχο θα μπορείτε να επικοινωνείτε με χρήστες άλλων παρόχων δίνοντάς τους την πλήρη διεύθυνση XMPP σας.</string>
+    <string name="magic_create_text">Θα καθοδηγηθείτε στη διαδικασία δημιουργίας ενός λογαριασμού στο ninja.chat.¹\nΕπιλέγοντας το ninja.chat ως πάροχο θα μπορείτε να επικοινωνείτε με χρήστες άλλων παρόχων δίνοντάς τους την πλήρη διεύθυνση XMPP σας.</string>
     <string name="your_full_jid_will_be">Η πλήρης ταυτότητα XMPP σας θα είναι: %s</string>
     <string name="create_account">Δημιουργία λογαριασμού</string>
     <string name="use_own_provider">Χρήση του δικού μου παρόχου</string>

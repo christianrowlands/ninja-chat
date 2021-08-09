@@ -185,7 +185,7 @@
     <string name="attach_record_voice">Record voice</string>
     <string name="account_settings_jabber_id">XMPP address</string>
     <string name="block_jabber_id">Block XMPP address</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Password</string>
     <string name="invalid_jid">This is not a valid XMPP address</string>
     <string name="error_out_of_memory">Out of memory. Image too big</string>
@@ -234,8 +234,8 @@
     <string name="select">Select</string>
     <string name="contact_already_exists">The contact already exists</string>
     <string name="join">Join</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Save as bookmark</string>
     <string name="delete_bookmark">Delete bookmark</string>
     <string name="destroy_room">Destroy group chat</string>
@@ -474,7 +474,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Show as Busy when device is on vibrate</string>
     <string name="pref_show_connection_options">Extended connection settings</string>
     <string name="pref_show_connection_options_summary">Show hostname and port settings when setting up an account</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Login with certificate</string>
     <string name="unable_to_parse_certificate">Could not parse certificate</string>
     <string name="mam_prefs">Archiving preferences</string>

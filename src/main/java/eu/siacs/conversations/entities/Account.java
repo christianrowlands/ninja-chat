@@ -565,7 +565,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
 
     public String getShareableLink() {
         List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
-        String uri = "https://conversations.im/i/" + XmppUri.lameUrlEncode(this.getJid().asBareJid().toEscapedString());
+        String uri = "https://ninja.chat/i/" + XmppUri.lameUrlEncode(this.getJid().asBareJid().toEscapedString());
         if (fingerprints.size() > 0) {
             return XmppUri.getFingerprintUri(uri, fingerprints, '&');
         } else {

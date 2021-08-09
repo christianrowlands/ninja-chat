@@ -184,7 +184,7 @@
     <string name="attach_record_voice">Ghi âm</string>
     <string name="account_settings_jabber_id">Địa chỉ XMPP</string>
     <string name="block_jabber_id">Chặn địa chỉ XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Mật khẩu</string>
     <string name="invalid_jid">Đây không phải là địa chỉ XMPP hợp lệ</string>
     <string name="error_out_of_memory">Hết bộ nhớ. Hình ảnh quá lớn</string>
@@ -233,8 +233,8 @@
     <string name="select">Chọn</string>
     <string name="contact_already_exists">Đã có liên hệ này rồi</string>
     <string name="join">Tham gia</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Lưu thành đánh dấu</string>
     <string name="delete_bookmark">Xoá đánh dấu</string>
     <string name="destroy_room">Phá huỷ cuộc trò chuyện nhóm</string>
@@ -471,7 +471,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Hiện là Bận khi thiết bị ở chế độ rung</string>
     <string name="pref_show_connection_options">Cài đặt kết nối mở rộng</string>
     <string name="pref_show_connection_options_summary">Hiện tên máy chủ và cài đặt cổng khi thiết lập tài khoản</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Đăng nhập bằng chứng chỉ</string>
     <string name="unable_to_parse_certificate">Không thể xử lý chứng chỉ</string>
     <string name="mam_prefs">Cài đặt lưu trữ</string>

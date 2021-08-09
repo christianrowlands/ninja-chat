@@ -191,7 +191,7 @@
     <string name="attach_record_voice">Nagraj głos</string>
     <string name="account_settings_jabber_id">Adres XMPP</string>
     <string name="block_jabber_id">Zablokuj adres XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Hasło</string>
     <string name="invalid_jid">To nie jest poprawny adres XMPP</string>
     <string name="error_out_of_memory">Brak pamięci. Obraz jest za duży</string>
@@ -240,8 +240,8 @@
     <string name="select">Wybierz</string>
     <string name="contact_already_exists">Kontakt już istnieje</string>
     <string name="join">Dołącz</string>
-    <string name="channel_full_jid_example">kanał@konferencje.example.com/nick</string>
-    <string name="channel_bare_jid_example">kanał@konferencja.example.com</string>
+    <string name="channel_full_jid_example">kanał@konferencje.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">kanał@konferencja.ninja.chat</string>
     <string name="save_as_bookmark">Dodaj jako zakładkę</string>
     <string name="delete_bookmark">Usuń zakładkę</string>
     <string name="destroy_room">Usuń konferencję</string>
@@ -481,7 +481,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Pokaż jako Zajęty kiedy urządzenie jest w trybie wibracji</string>
     <string name="pref_show_connection_options">Rozszerzone ustawienia połączenia</string>
     <string name="pref_show_connection_options_summary">Pokaż nazwę hosta i ustawienia portu przy dodawaniu konta</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Zaloguj przy użyciu certyfikatu</string>
     <string name="unable_to_parse_certificate">Nie mogę odczytać certyfikatu</string>
     <string name="mam_prefs">Preferencje archiwizacji</string>
@@ -545,7 +545,7 @@
     <string name="share_uri_with">Udostępnij URI za pomocą...</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy to modyfikacja popularnego klienta XMPP Conversations, z automatycznym wykrywaniem kontaktów.<br><br>Zapisujesz się przy użyciu numeru telefonu i Quicksy automatycznie - na podstawie numerów telefonów w książce adresowej - zasugeruje potencjalne kontakty dla ciebie.<br><br>Zapisując się zgadzasz się na naszą <a href="https://quicksy.im/#privacy">politykę prywatności</a>.]]></string>
     <string name="agree_and_continue">Zgoda i kontynuuj</string>
-    <string name="magic_create_text">Poprowadzimy ciebie przez proces tworzenia konta na conversations.im.¹\nKiedy wybierzesz conversations.im jako dostawcę będziesz mógł komunikować się z innymi osobami jeśli podasz im swój pełen adres XMPP.</string>
+    <string name="magic_create_text">Poprowadzimy ciebie przez proces tworzenia konta na ninja.chat.¹\nKiedy wybierzesz ninja.chat jako dostawcę będziesz mógł komunikować się z innymi osobami jeśli podasz im swój pełen adres XMPP.</string>
     <string name="your_full_jid_will_be">Twój pełen adres XMPP to: %s</string>
     <string name="create_account">Utwórz konto</string>
     <string name="use_own_provider">Użyj innego serwera</string>

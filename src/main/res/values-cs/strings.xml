@@ -537,7 +537,7 @@
     <string name="share_uri_with">Sdílet URI s…</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy je aplikace odvozená z populárního XMPP klientu Conversations, s funkcí automatického objevování kontaktů.<br><br>Po zadání Vašeho telefonního čísla Vám Quicksy automaticky—na základě čísel ve Vašem telefonním seznamu—navrhne možné kontakty.<br><br>Přihlášením se do služby potvrzujete souhlas s našimi <a href="https://quicksy.im/#privacy">zásadami pro ochranu osobních údajů</a>.]]></string>
     <string name="agree_and_continue">Souhlasit a pokračovat</string>
-    <string name="magic_create_text">Průvodce je nastaven, aby vytvořil účet na serveru conversations.im.¹\nPokud si vyberete conversations.im jako svého poskytovatele, budete moci komunikovat s uživateli u ostatních poskytovatelů, budou-li mít vaši celou XMPP adresu.</string>
+    <string name="magic_create_text">Průvodce je nastaven, aby vytvořil účet na serveru ninja.chat.¹\nPokud si vyberete ninja.chat jako svého poskytovatele, budete moci komunikovat s uživateli u ostatních poskytovatelů, budou-li mít vaši celou XMPP adresu.</string>
     <string name="your_full_jid_will_be">Vaše celá XMPP adresa: %s</string>
     <string name="create_account">Vytvořit účet</string>
     <string name="use_own_provider">Použít vlastního provozovatele</string>

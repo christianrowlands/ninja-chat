@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="use_conversations.im">Använd conversations.im</string>
+    <string name="use_ninja.chat">Använd ninja.chat</string>
     <string name="create_new_account">Skapa nytt konto</string>
     </resources>

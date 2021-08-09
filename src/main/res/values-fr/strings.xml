@@ -231,8 +231,8 @@
     <string name="select">Sélectionner</string>
     <string name="contact_already_exists">Le contact existe déjà</string>
     <string name="join">Rejoindre</string>
-    <string name="channel_full_jid_example">canal@conference.example.com/surnom</string>
-    <string name="channel_bare_jid_example">canal@conference.example.com</string>
+    <string name="channel_full_jid_example">canal@conference.ninja.chat/surnom</string>
+    <string name="channel_bare_jid_example">canal@conference.ninja.chat</string>
     <string name="save_as_bookmark">Enregistrer comme favori</string>
     <string name="delete_bookmark">Supprimer le favori</string>
     <string name="destroy_room">Détruire le groupe</string>
@@ -468,7 +468,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Occupé lorsque l\'appareil est en mode vibreur</string>
     <string name="pref_show_connection_options">Paramètres de connexion avancés</string>
     <string name="pref_show_connection_options_summary">Montrer le nom d\'hôte et le port lors du paramétrage d\'un compte</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Se connecter avec certificat</string>
     <string name="unable_to_parse_certificate">Impossible d\'analyser le certificat</string>
     <string name="mam_prefs">Paramètres d\'archivage</string>
@@ -529,7 +529,7 @@
     <string name="share_uri_with">Partager l\'URI avec…</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy est une version du populaire client XMPP Conversations avec découverte automatique des contacts.<br><br>Vous vous inscrivez avec votre numéro de téléphone et Quicksy va automatiquement, en fonction des numéros de votre carnet d’adresses, vous suggérer d’éventuels contacts.<br><br> en vous inscrivant, vous acceptez notre <a href="https://quicksy.im/#privacy">politique de confidentialité</a>.]]></string>
     <string name="agree_and_continue">Accepter et continuer</string>
-    <string name="magic_create_text">Nous vous guiderons tout au long du processus de création d\'un compte sur conversations.im.¹\nLorsque vous sélectionnerez conversations.im en tant que fournisseur, vous pourrez communiquer avec les utilisateurs d\'autres fournisseurs en leur fournissant votre adresse XMPP complète.</string>
+    <string name="magic_create_text">Nous vous guiderons tout au long du processus de création d\'un compte sur ninja.chat.¹\nLorsque vous sélectionnerez ninja.chat en tant que fournisseur, vous pourrez communiquer avec les utilisateurs d\'autres fournisseurs en leur fournissant votre adresse XMPP complète.</string>
     <string name="your_full_jid_will_be">Votre adresse XMPP complète sera : %s</string>
     <string name="create_account">Créer un compte</string>
     <string name="use_own_provider">Utiliser votre propre fournisseur</string>

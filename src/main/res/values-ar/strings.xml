@@ -143,7 +143,7 @@
     <string name="attach_record_voice">تسجيل صوت</string>
     <string name="account_settings_jabber_id">عنوان XMPP</string>
     <string name="block_jabber_id">احجب عنوان XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">كلمة السر</string>
     <string name="add_phone_book_text">هل تود إضافة %s إلى سجل عناوينك ؟</string>
     <string name="server_info_show_more">معلومات عن المضيف</string>
@@ -181,8 +181,8 @@
     <string name="select">إختر</string>
     <string name="contact_already_exists">جهة الاتصال موجودة لديك مسبقا</string>
     <string name="join">التحق</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">حفظ بالمفضلة</string>
     <string name="delete_bookmark">إحذف من المفضلة</string>
     <string name="destroy_room">دمر فريق المحادثة</string>
@@ -361,7 +361,7 @@
     <string name="pref_presence_settings">حالة الحضور</string>
     <string name="pref_show_connection_options">إعدادات الربط الموسعة</string>
     <string name="pref_show_connection_options_summary">عرض اسم المضيف وإعدادات المنفذ عند تنصيب حساب</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="mam_prefs">إعدادت الأرشيف</string>
     <string name="captcha_hint">قم بإدخال الرموز المتواجدة في الصورة</string>
     <string name="action_renew_certificate">تجديد الشهادة</string>

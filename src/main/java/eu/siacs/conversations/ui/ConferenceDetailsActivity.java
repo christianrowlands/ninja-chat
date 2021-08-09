@@ -326,7 +326,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     protected String getShareableUri(boolean http) {
         if (mConversation != null) {
             if (http) {
-                return "https://conversations.im/j/" + XmppUri.lameUrlEncode(mConversation.getJid().asBareJid().toEscapedString());
+                return "https://ninja.chat/j/" + XmppUri.lameUrlEncode(mConversation.getJid().asBareJid().toEscapedString());
             } else {
                 return "xmpp:" + mConversation.getJid().asBareJid() + "?join";
             }
