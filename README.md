@@ -1,25 +1,19 @@
-<h1 align="center">Conversations</h1>
+<h1 align="center">Ninja Chat</h1>
 
-<p align="center">Conversations: the very last word in instant messaging</p>
-
-<p align="center">
-    <a href="https://conversations.im/j/conversations@conference.siacs.eu">
-        <img src="https://inverse.chat/badge.svg?room=conversations@conference.siacs.eu"
-             alt="chat on our conference room">
-    </a>
-    <a href="https://travis-ci.org/inputmice/Conversations">
-        <img src="https://travis-ci.org/inputmice/Conversations.svg?branch=master"
-             alt="build status">
-    </a>
-</p>
+<p align="center">Ninja Chat: Become a Ninja</p>
 
 <p align="center">
-    <a href="https://play.google.com/store/apps/details?id=eu.siacs.conversations&amp;referrer=utm_source%3Dgithub">
+    <a href="https://play.google.com/store/apps/details?id=com.ninja.chat&amp;referrer=utm_source%3Dgithub">
        <img src="https://conversations.im/images/en-play-badge.png" alt="Google Play">
     </a>
 </p>
 
-![screenshots](https://raw.githubusercontent.com/inputmice/Conversations/master/screenshots.png)
+## Attribution
+
+The Ninja Chat app was forked from [Conversations.im](https://conversations.im/) and has been slightly
+modified. Conversations.im is an outstanding app so hats off to Daniel Gultsch! 🍻
+
+Everyting that follows in this README is from the original Conversations.im repo.
 
 ## Design principles
 
