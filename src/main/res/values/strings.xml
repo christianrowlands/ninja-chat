@@ -563,7 +563,7 @@
     <string name="gp_medium">Medium</string>
     <string name="gp_long">Long</string>
     <string name="pref_broadcast_last_activity">Broadcast use</string>
-    <string name="pref_broadcast_last_activity_summary">Lets your contacts know when you use Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Lets your contacts know when you use Ninja Chat</string>
     <string name="pref_privacy">Privacy</string>
     <string name="pref_theme_options">Theme</string>
     <string name="pref_theme_options_summary">Select the color palette</string>
@@ -682,7 +682,7 @@
     <string name="message">Message</string>
     <string name="private_messages_are_disabled">Private messages are disabled</string>
     <string name="huawei_protected_apps">Protected Apps</string>
-    <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Conversations to the list of protected apps.</string>
+    <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Ninja Chat to the list of protected apps.</string>
     <string name="mtm_accept_cert">Accept Unknown Certificate?</string>
     <string name="mtm_trust_anchor">The server certificate is not signed by a known Certificate Authority.</string>
     <string name="mtm_accept_servername">Accept Mismatching Server Name?</string>
@@ -831,7 +831,7 @@
     <string name="ebook">e-book</string>
     <string name="video_original">Original (uncompressed)</string>
     <string name="open_with">Open with…</string>
-    <string name="set_profile_picture">Conversations profile picture</string>
+    <string name="set_profile_picture">Ninja Chat profile picture</string>
     <string name="choose_account">Choose account</string>
     <string name="restore_backup">Restore backup</string>
     <string name="restore">Restore</string>
@@ -880,10 +880,10 @@
     <string name="add_anway">Add anyway</string>
     <string name="this_looks_like_channel">This looks like a channel address</string>
     <string name="share_backup_files">Share backup files</string>
-    <string name="conversations_backup">Conversations backup</string>
+    <string name="conversations_backup">Ninja Chat backup</string>
     <string name="event">Event</string>
     <string name="open_backup">Open backup</string>
-    <string name="not_a_backup_file">The file you selected is not a Conversations backup file</string>
+    <string name="not_a_backup_file">The file you selected is not a Ninja Chat backup file</string>
     <string name="account_already_setup">This account has already been setup</string>
     <string name="please_enter_password">Please enter the password for this account</string>
     <string name="unable_to_perform_this_action">Could not perform this action</string>
@@ -959,7 +959,7 @@
     <string name="failed_deliveries">Failed deliveries</string>
     <string name="more_options">More options</string>
     <string name="no_application_found">No application found</string>
-    <string name="invite_to_app">Invite to Conversations</string>
+    <string name="invite_to_app">Invite to Ninja Chat</string>
     <string name="unable_to_parse_invite">Unable to parse invite</string>
     <string name="server_does_not_support_easy_onboarding_invites">Server does not support generating invites</string>
     <string name="no_active_accounts_support_this">No active accounts support this feature</string>

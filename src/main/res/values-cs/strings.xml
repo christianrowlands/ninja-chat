@@ -562,7 +562,7 @@
     <string name="gp_medium">Střední</string>
     <string name="gp_long">Dlouhý</string>
     <string name="pref_broadcast_last_activity">Informovat o používání</string>
-    <string name="pref_broadcast_last_activity_summary">Tato možnost dává vědět Vašim kontaktům, kdy používáte Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Tato možnost dává vědět Vašim kontaktům, kdy používáte Ninja Chat</string>
     <string name="pref_privacy">Soukromí</string>
     <string name="pref_theme_options">Vzhled</string>
     <string name="pref_theme_options_summary">Vybrat paletu barev</string>
@@ -691,7 +691,7 @@
     <string name="message">Zpráva</string>
     <string name="private_messages_are_disabled">Soukromé zprávy jsou zakázány</string>
     <string name="huawei_protected_apps">Chráněné aplikace</string>
-    <string name="huawei_protected_apps_summary">Abyste mohli dostávat upozornění i při vypnuté obrazovce, musíte přidat Conversations mezi chráněné aplikace.</string>
+    <string name="huawei_protected_apps_summary">Abyste mohli dostávat upozornění i při vypnuté obrazovce, musíte přidat Ninja Chat mezi chráněné aplikace.</string>
     <string name="mtm_accept_cert">Přijmout neznámý certifikát?</string>
     <string name="mtm_trust_anchor">Certifikát není podepsaný žádnou známou certifikační autoritou.</string>
     <string name="mtm_accept_servername">Přijmout nesouhlasící jméno serveru?</string>
@@ -882,9 +882,9 @@
     <string name="add_anway">Přesto přidat</string>
     <string name="this_looks_like_channel">Toto vypadá jako adresa kanálu</string>
     <string name="share_backup_files">Sdílet soubory zálohy</string>
-    <string name="conversations_backup">Záloha Conversations</string>
+    <string name="conversations_backup">Záloha Ninja Chat</string>
     <string name="open_backup">Otevřít zálohu</string>
-    <string name="not_a_backup_file">Soubor, který jste zvolili, není soubor zálohy Conversations</string>
+    <string name="not_a_backup_file">Soubor, který jste zvolili, není soubor zálohy Ninja Chat</string>
     <string name="account_already_setup">Tento účet byl již nastaven</string>
     <string name="please_enter_password">Prosím, zadejte heslo k tomuto účtu</string>
     <string name="unable_to_perform_this_action">Nebylo možné vykonat tuto akci</string>
@@ -960,7 +960,7 @@
     <string name="failed_deliveries">Neúspěšné přenosy</string>
     <string name="more_options">Více možností</string>
     <string name="no_application_found">Nenalezena žádná aplikace</string>
-    <string name="invite_to_app">Pozvat do Conversations</string>
+    <string name="invite_to_app">Pozvat do Ninja Chat</string>
     <string name="server_does_not_support_easy_onboarding_invites">Server nepodporuje vytváření pozvánek</string>
     <string name="no_active_accounts_support_this">Žádný z aktivních účtů tuto funkci nepodporuje</string>
     <string name="backup_started_message">Zálohování zahájeno. Budete upozorněni, jakmile bude záloha hotova.</string>

@@ -553,7 +553,7 @@
     <string name="gp_medium">中</string>
     <string name="gp_long">長</string>
     <string name="pref_broadcast_last_activity">ブロードキャストを使用</string>
-    <string name="pref_broadcast_last_activity_summary">Conversations を使用するとき、連絡先に知らせましょう</string>
+    <string name="pref_broadcast_last_activity_summary">Ninja Chat を使用するとき、連絡先に知らせましょう</string>
     <string name="pref_privacy">プライバシー</string>
     <string name="pref_theme_options">テーマ</string>
     <string name="pref_theme_options_summary">カラーパレットの選択</string>
@@ -666,7 +666,7 @@
     <string name="message">メッセージ</string>
     <string name="private_messages_are_disabled">非公開メッセージを無効にしました</string>
     <string name="huawei_protected_apps">保護されたアプリ</string>
-    <string name="huawei_protected_apps_summary">画面がオフになっている場合でも通知を受信し続けるには、保護されたアプリの一覧に Conversations を追加する必要があります。</string>
+    <string name="huawei_protected_apps_summary">画面がオフになっている場合でも通知を受信し続けるには、保護されたアプリの一覧に Ninja Chat を追加する必要があります。</string>
     <string name="mtm_accept_cert">未知の証明書を受け入れますか?</string>
     <string name="mtm_trust_anchor">サーバー証明書が既知の認証局によって署名されていません。</string>
     <string name="mtm_accept_servername">不一致なサーバー名を受け入れますか?</string>
@@ -811,7 +811,7 @@
     <string name="ebook">電子書籍</string>
     <string name="video_original">原物 (非圧縮)</string>
     <string name="open_with">…で開く</string>
-    <string name="set_profile_picture">Conversations プロフィール写真</string>
+    <string name="set_profile_picture">Ninja Chat プロフィール写真</string>
     <string name="choose_account">アカウントを選択</string>
     <string name="restore_backup">バックアップを復元</string>
     <string name="restore">復元</string>
@@ -860,10 +860,10 @@
     <string name="add_anway">とにかく追加</string>
     <string name="this_looks_like_channel">これは談話室アドレスのようです</string>
     <string name="share_backup_files">バックアップファイルを共有</string>
-    <string name="conversations_backup">Conversations のバックアップ</string>
+    <string name="conversations_backup">Ninja Chat のバックアップ</string>
     <string name="event">出来事</string>
     <string name="open_backup">バックアップを開く</string>
-    <string name="not_a_backup_file">選択したファイルは、 Conversations のバックアップファイルではありません</string>
+    <string name="not_a_backup_file">選択したファイルは、 Ninja Chat のバックアップファイルではありません</string>
     <string name="account_already_setup">このアカウントは既に設定されています</string>
     <string name="please_enter_password">このアカウントのパスワートを入力してください</string>
     <string name="unable_to_perform_this_action">この操作を実行できません</string>
