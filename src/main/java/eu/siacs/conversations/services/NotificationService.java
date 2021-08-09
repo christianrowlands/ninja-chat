@@ -86,7 +86,7 @@ public class NotificationService {
 
     private static final long[] CALL_PATTERN = {0, 500, 300, 600};
 
-    private static final String CONVERSATIONS_GROUP = "eu.siacs.conversations";
+    private static final String CONVERSATIONS_GROUP = "chat.ninja";
     private static final int NOTIFICATION_ID_MULTIPLIER = 1024 * 1024;
     static final int FOREGROUND_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 4;
     private static final int NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 2;

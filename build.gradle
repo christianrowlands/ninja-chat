@@ -78,7 +78,8 @@ dependencies {
 
     implementation 'com.google.guava:guava:30.1.1-android'
     quicksyImplementation 'io.michaelrocks:libphonenumber-android:8.12.18'
-    implementation fileTree(include: ['libwebrtc-m90.aar'], dir: 'libs')
+    //implementation fileTree(include: ['libwebrtc-m90.aar'], dir: 'libs')
+    implementation 'org.webrtc:google-webrtc:1.0.32006'
 }
 
 ext {
@@ -96,9 +97,9 @@ android {
         versionCode 42015
         versionName "2.9.13"
         archivesBaseName += "-$versionName"
-        applicationId "eu.siacs.conversations"
+        applicationId "chat.ninja"
         resValue "string", "applicationId", applicationId
-        def appName = "Conversations"
+        def appName = "Ninja Chat"
         resValue "string", "app_name", appName
         buildConfigField "String", "APP_NAME", "\"$appName\"";
     }

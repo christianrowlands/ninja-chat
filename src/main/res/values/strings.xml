@@ -534,15 +534,15 @@
     <string name="security_error_invalid_file_access">Security error: Invalid file access!</string>
     <string name="no_application_to_share_uri">No app found to share URI</string>
     <string name="share_uri_with">Share URI with…</string>
-    <string name="welcome_header" translatable="false">Join the Conversation</string>
+    <string name="welcome_header" translatable="false">Become a Ninja</string>
     <string name="welcome_header_quicksy" translatable="false">Have some Quick Conversations</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy is a spin off of the popular XMPP client Conversations with automatic contact discovery.<br><br>You sign up with your phone number and Quicksy will automatically—based on the phone numbers in your address book—suggest possible contacts to you.<br><br>By signing up you agree to our <a href="https://quicksy.im/#privacy">privacy policy</a>.]]></string>
     <string name="agree_and_continue">Agree and continue</string>
-    <string name="magic_create_text">A guide is set up for account creation on conversations.im.¹\nWhen picking conversations.im as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
+    <string name="magic_create_text">We will guide you through the process of creating a Ninja Chat account.\nWhen picking Ninja Chat as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
     <string name="your_full_jid_will_be">Your full XMPP address will be: %s</string>
     <string name="create_account">Create Account</string>
-    <string name="use_own_provider">Use my own provider</string>
-    <string name="pick_your_username">Pick your username</string>
+    <string name="use_own_provider">Custom Server</string>
+    <string name="pick_your_username">Pick your Username</string>
     <string name="pref_manually_change_presence">Manage availability manually</string>
     <string name="pref_manually_change_presence_summary">Set your availability when editing your status message.</string>
     <string name="status_message">Status message</string>
