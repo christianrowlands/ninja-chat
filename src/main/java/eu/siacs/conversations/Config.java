@@ -14,7 +14,7 @@ import eu.siacs.conversations.xmpp.chatstate.ChatState;
 
 public final class Config {
     private static final int UNENCRYPTED = 1;
-    private static final int OPENPGP = 2;
+    private static final int OPENPGP = 0;
     private static final int OTR = 4;
     private static final int OMEMO = 8;
 

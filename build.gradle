@@ -9,10 +9,14 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.1'
+        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
     }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 repositories {
     google()
@@ -80,6 +84,11 @@ dependencies {
     quicksyImplementation 'io.michaelrocks:libphonenumber-android:8.12.18'
     //implementation fileTree(include: ['libwebrtc-m90.aar'], dir: 'libs')
     implementation 'org.webrtc:google-webrtc:1.0.32006'
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:28.3.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
 }
 
 ext {
