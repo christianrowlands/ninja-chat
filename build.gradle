@@ -86,7 +86,7 @@ dependencies {
     implementation 'org.webrtc:google-webrtc:1.0.32006'
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:28.3.0')
+    implementation platform('com.google.firebase:firebase-bom:28.3.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
 }
@@ -106,7 +106,7 @@ android {
         versionCode 42015
         versionName "2.9.13"
         archivesBaseName += "-$versionName"
-        applicationId "chat.ninja"
+        applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
         def appName = "Ninja Chat"
         resValue "string", "app_name", appName

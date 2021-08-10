@@ -15,6 +15,35 @@ modified. Conversations.im is an outstanding app so hats off to Daniel Gultsch! 
 
 Everyting that follows in this README is from the original Conversations.im repo.
 
+## Ninja Chat Build
+
+### Development
+
+To build a development debug version of Ninja Chat, you can use the command:
+```
+./gradlew assembleConversationsFreeSystemDebug
+```
+
+To build and install the apk onto a connected device us the command:
+```
+./gradlew installConversationsFreeSystemDebug
+```
+
+### Release
+
+To build a release version of Ninja Chat first create a file named signing.properties and enter in
+the keystore information that is used to sign the app (used to ensure the source of the app is legit).
+```
+keystore=<path to keystore file>
+keystore.password=
+keystore.alias=
+```
+
+Then, build the release bundle using the following command
+```
+./gradlew bundleConversationsFreeSystemRelease
+```
+
 ## Design principles
 
 * Be as beautiful and easy to use as possible without sacrificing security or
