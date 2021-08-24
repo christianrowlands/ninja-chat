@@ -740,7 +740,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                         if (QuickConversationsService.isQuicksy()) {
                             builder.setMessage(Html.fromHtml(getString(R.string.sync_with_contacts_quicksy)));
                         } else {
-                            builder.setMessage(getString(R.string.sync_with_contacts_long, getString(R.string.app_name)));
+                            builder.setMessage(Html.fromHtml(getString(R.string.sync_with_contacts_long, getString(R.string.app_name))));
                         }
                         @StringRes int confirmButtonText;
                         if (QuickConversationsService.isConversations()) {
