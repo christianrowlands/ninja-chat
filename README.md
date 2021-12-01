@@ -13,7 +13,6 @@
 The Ninja Chat app was forked from [Conversations.im](https://conversations.im/) and has been slightly
 modified. Conversations.im is an outstanding app so hats off to Daniel Gultsch! 🍻
 
-Everyting that follows in this README is from the original Conversations.im repo.
 
 ## Ninja Chat Build
 
@@ -45,6 +44,8 @@ Then, build the release bundle using the following command
 ```
 
 There is also a GitLab CI/CD job setup to build the release APK and bundle.
+
+----- Everything that follows in this README is from the original Conversations.im repo. -----
 
 ## Design principles
 
