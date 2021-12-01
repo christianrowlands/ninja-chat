@@ -10,28 +10,13 @@ before_script:
   - chmod +x ./gradlew
 
 stages:
-  - build
   - test
-  - release
-  - deploy
-
-# While linting is good, I don't want to make a ton of changes to the code because it makes it harder to pull in changes from the upstream repo
-#lintDebug:
-#  stage: build
-#  only:
-#    - ninja-master
-#  script:
-#    - ./gradlew -Pci --console=plain lintConversationsFreeSystemDebug -PbuildDir=lint
-
-assembleDebug:
-  stage: build
-  only:
-    - ninja-master
-  script:
-    - ./gradlew assembleConversationsFreeSystemDebug
-  artifacts:
-    paths:
-      - build/outputs/apk/conversationsFreeSystem/debug
+  - assembleDebugApk
+  - deployDebugApk
+  - assembleReleaseApk
+  - deployRepleaseApk
+  - assembleReleaseBundle
+  - deployBundle
 
 testDebug:
   stage: test
@@ -40,8 +25,25 @@ testDebug:
   script:
     - ./gradlew -Pci --console=plain testConversationsFreeSystemDebugUnitTest
 
+testRelease:
+  stage: test
+  only:
+    - tags
+  script:
+    - ./gradlew -Pci --console=plain testConversationsFreeSystemReleaseUnitTest
+
+assembleDebug:
+  stage: assembleDebugApk
+  only:
+    - ninja-master
+  script:
+    - ./gradlew assembleConversationsFreeSystemDebug
+  artifacts:
+    paths:
+      - build/outputs/apk/conversationsFreeSystem/debug
+
 deployDebug:
-  stage: deploy
+  stage: deployDebugApk
   only:
     - ninja-master
   script:
@@ -55,7 +57,7 @@ deployDebug:
   cache: {}
 
 assembleReleaseApk:
-  stage: release
+  stage: assembleReleaseApk
   only:
     - ninja-master
   script:
@@ -70,15 +72,8 @@ assembleReleaseApk:
       - build/outputs/apk/conversationsFreeSystem/release
       - CHANGELOG
 
-testRelease:
-  stage: test
-  only:
-    - tags
-  script:
-    - ./gradlew -Pci --console=plain testConversationsFreeSystemReleaseUnitTest
-
 deployReleaseApk:
-  stage: deploy
+  stage: deployRepleaseApk
   only:
     - tags
   script:
@@ -92,7 +87,7 @@ deployReleaseApk:
   cache: {}
 
 assembleReleaseBundle:
-  stage: release
+  stage: assembleReleaseBundle
   only:
     - tags
   script:
@@ -108,7 +103,7 @@ assembleReleaseBundle:
       - CHANGELOG
 
 deployReleaseBundle:
-  stage: deploy
+  stage: deployBundle
   only:
     - tags
   script:
