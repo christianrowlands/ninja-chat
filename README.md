@@ -44,6 +44,8 @@ Then, build the release bundle using the following command
 ./gradlew bundleConversationsFreeSystemRelease
 ```
 
+There is also a GitLab CI/CD job setup to build the release APK and bundle.
+
 ## Design principles
 
 * Be as beautiful and easy to use as possible without sacrificing security or
