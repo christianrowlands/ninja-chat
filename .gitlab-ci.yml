@@ -34,7 +34,7 @@ assembleDebug:
       curl \
         -F token="${APK_SLACK_CHANNEL_ACCESS_TOKEN}" \
         -F channels="${APK_SLACK_CHANNEL_ID}" \
-        -F initial_comment="Hello DFP Team! Here is the latest APK" \
+        -F initial_comment="Hello Team! Here is the latest APK" \
         -F "file=@$(find build/outputs/apk/conversationsFreeSystem/debug -name '*arm64*')" \
         https://slack.com/api/files.upload
   artifacts:
@@ -55,7 +55,7 @@ deployDebug:
       curl \
         -F token="${APK_SLACK_CHANNEL_ACCESS_TOKEN}" \
         -F channels="${APK_SLACK_CHANNEL_ID}" \
-        -F initial_comment="Hello DFP Team! Here is the latest Ninja Chat debug APK" \
+        -F initial_comment="Hello Team! Here is the latest Ninja Chat debug APK" \
         -F "file=@$(find build/outputs/apk/conversationsFreeSystem/debug -name '*arm64*')" \
         https://slack.com/api/files.upload
   cache: {}
