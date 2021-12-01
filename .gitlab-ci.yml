@@ -15,12 +15,13 @@ stages:
   - release
   - deploy
 
-lintDebug:
-  stage: build
-  only:
-    - ninja-master
-  script:
-    - ./gradlew -Pci --console=plain lintConversationsFreeSystemDebug -PbuildDir=lint
+# While linting is good, I don't want to make a ton of changes to the code because it makes it harder to pull in changes from the upstream repo
+#lintDebug:
+#  stage: build
+#  only:
+#    - ninja-master
+#  script:
+#    - ./gradlew -Pci --console=plain lintConversationsFreeSystemDebug -PbuildDir=lint
 
 assembleDebug:
   stage: build
@@ -53,12 +54,12 @@ deployDebug:
         https://slack.com/api/files.upload
   cache: {}
 
-lintRelease:
-  stage: build
-  only:
-    - tags
-  script:
-    - ./gradlew -Pci --console=plain lintConversationsFreeSystemRelease -PbuildDir=lint
+#lintRelease:
+#  stage: build
+#  only:
+#    - tags
+#  script:
+#    - ./gradlew -Pci --console=plain lintConversationsFreeSystemRelease -PbuildDir=lint
 
 assembleReleaseApk:
   stage: release

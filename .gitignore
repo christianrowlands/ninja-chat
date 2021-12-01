@@ -46,3 +46,4 @@ proguard/
 import-summary.txt
 .navigation/
 
+lint*
