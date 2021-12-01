@@ -54,13 +54,6 @@ deployDebug:
         https://slack.com/api/files.upload
   cache: {}
 
-lintRelease:
-  stage: build
-  only:
-    - tags
-  script:
-    - ./gradlew -Pci --console=plain lintConversationsFreeSystemRelease -PbuildDir=lint
-
 assembleReleaseApk:
   stage: release
   only:
