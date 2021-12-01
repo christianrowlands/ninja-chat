@@ -1,5 +1,21 @@
 # Changelog
 
+### Version 2.10.2
+
+* Fix crash when rendering some quotes
+* Fix crash in welcome screen
+
+### Version 2.10.1
+
+* Fix issue with some videos not being compressed
+* Fix rare crash when opening notification
+
+### Version 2.10.0
+
+* Show black bars when remote video does not match aspect ratio of screen
+* Improve search performance
+* Add setting to prevent screenshots
+
 ### Version 2.9.13
 
 * minor A/V improvements

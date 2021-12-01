@@ -39,6 +39,7 @@ import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.http.AesGcmURL;
 import eu.siacs.conversations.http.URL;
+import eu.siacs.conversations.ui.util.QuoteHelper;
 
 public class MessageUtils {
 
@@ -69,8 +70,7 @@ public class MessageUtils {
                 continue;
             }
             final char c = line.charAt(0);
-            if (c == '>' && UIHelper.isPositionFollowedByQuoteableCharacter(line, 0)
-                    || (c == '\u00bb' && !UIHelper.isPositionFollowedByQuote(line, 0))) {
+            if (QuoteHelper.isNestedTooDeeply(line)) {
                 continue;
             }
             if (builder.length() != 0) {
