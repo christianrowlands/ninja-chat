@@ -64,9 +64,11 @@ deployDebug:
 assembleReleaseApk:
   stage: release
   only:
-    - tags
+    - ninja-master
   script:
+    - echo $KEYSTORE_FILE
     - echo $KEYSTORE_FILE | base64 -d > my.keystore
+    - cat my.keystore
     - ./gradlew assembleConversationsFreeSystemRelease
       -Pandroid.injected.signing.store.file=$(pwd)/my.keystore
       -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD
