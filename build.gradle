@@ -7,8 +7,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.3'
-        classpath 'com.google.gms:google-services:4.3.8'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
+        classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
     }
 }
 
@@ -85,7 +85,7 @@ dependencies {
     implementation 'org.webrtc:google-webrtc:1.0.32006'
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:28.3.1')
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
 }
@@ -103,7 +103,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 42023
-        versionName "2.10.2"
+        versionName "2.10.2-alpha01"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
