@@ -59,7 +59,7 @@ deployDebug:
 assembleReleaseApk:
   stage: assembleReleaseApk
   only:
-    - ninja-master
+    - tags
   script:
     - echo $KEYSTORE_FILE | base64 -d > my.keystore
     - ./gradlew assembleConversationsFreeSystemRelease
