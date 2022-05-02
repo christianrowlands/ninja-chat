@@ -986,8 +986,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final MenuItem menuVideoCall = menu.findItem(R.id.action_video_call);
         final MenuItem menuTogglePinned = menu.findItem(R.id.action_toggle_pinned);
 
-        menuCall.setVisible(false); // TODO Remove once the backend XMPP server supports it
-
         if (conversation != null) {
             if (conversation.getMode() == Conversation.MODE_MULTI) {
                 menuContactDetails.setVisible(false);
@@ -1025,8 +1023,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuTogglePinned.setTitle(R.string.add_to_favorites);
             }
         }
-
-        menuCall.setVisible(false); // TODO Remove once the backend XMPP server supports it
 
         super.onCreateOptionsMenu(menu, menuInflater);
     }
