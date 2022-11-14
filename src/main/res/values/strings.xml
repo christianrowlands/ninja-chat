@@ -415,6 +415,7 @@
     <string name="video">video</string>
     <string name="image">image</string>
     <string name="vector_graphic">vector graphic</string>
+    <string name="multimedia_file">multimedia file</string>
     <string name="pdf_document">PDF document</string>
     <string name="apk">Android App</string>
     <string name="vcard">Contact</string>
@@ -463,6 +464,7 @@
     <string name="download_failed_file_not_found">Download failed: File not found</string>
     <string name="download_failed_could_not_connect">Download failed: Could not connect to host</string>
     <string name="download_failed_could_not_write_file">Download failed: Could not write file</string>
+    <string name="download_failed_invalid_file">Download failed: Invalid file</string>
     <string name="account_status_tor_unavailable">Tor network unavailable</string>
     <string name="account_status_bind_failure">Bind failure</string>
     <string name="account_status_host_unknown">The server is not responsible for this domain</string>
@@ -622,6 +624,8 @@
     <string name="pref_clean_private_storage_summary">Clean private storage where files are kept (They can be re-downloaded from the server)</string>
     <string name="i_followed_this_link_from_a_trusted_source">I followed this link from a trusted source</string>
     <string name="verifying_omemo_keys_trusted_source">You are about to verify the OMEMO keys of %1$s after clicking a link. This is only secure if you followed this link from a trusted source where only %2$s could have published this link.</string>
+    <string name="verifying_omemo_keys_trusted_source_account">You are about to verify the OMEMO keys of your own account. This is only secure if you followed this link from a trusted source where only you could have published this link.</string>
+    <string name="continue_btn">Continue</string>
     <string name="verify_omemo_keys">Verify OMEMO keys</string>
     <string name="show_inactive_devices">Show inactive</string>
     <string name="hide_inactive_devices">Hide inactive</string>
@@ -904,6 +908,7 @@
     <string name="rtp_state_incoming_video_call">Incoming video call</string>
     <string name="rtp_state_connecting">Connecting</string>
     <string name="rtp_state_connected">Connected</string>
+    <string name="rtp_state_reconnecting">Reconnecting</string>
     <string name="rtp_state_accepting_call">Accepting call</string>
     <string name="rtp_state_ending_call">Ending call</string>
     <string name="answer_call">Answer</string>
@@ -919,6 +924,8 @@
     <string name="hang_up">Hang up</string>
     <string name="ongoing_call">Ongoing call</string>
     <string name="ongoing_video_call">Ongoing video call</string>
+    <string name="reconnecting_call">Reconnecting call</string>
+    <string name="reconnecting_video_call">Reconnecting video call</string>
     <string name="disable_tor_to_make_call">Disable Tor to make calls</string>
     <string name="incoming_call">Incoming call</string>
     <string name="incoming_call_duration">Incoming call · %s</string>
@@ -970,5 +977,6 @@
     <string name="plain_text_document">Plain text document</string>
     <string name="account_registrations_are_not_supported">Account registrations are not supported</string>
     <string name="no_xmpp_adddress_found">No XMPP address found</string>
+    <string name="account_status_temporary_auth_failure">Temporary authentication failure</string>
 
 </resources>

@@ -1,5 +1,7 @@
 package eu.siacs.conversations.services;
 
+import static eu.siacs.conversations.utils.Compatibility.s;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -36,6 +38,7 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.security.KeyChain;
 import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -572,8 +575,8 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public void attachImageToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
-        final String mimeType = MimeUtils.guessMimeTypeFromUri(this, uri);
+    public void attachImageToConversation(final Conversation conversation, final Uri uri,  final String type, final UiCallback<Message> callback) {
+        final String mimeType = MimeUtils.guessMimeTypeFromUriAndMime(this, uri, type);
         final String compressPictures = getCompressPicturesPreference();
 
         if ("never".equals(compressPictures)
@@ -1203,9 +1206,10 @@ public class XmppConnectionService extends Service {
 
     private void setupPhoneStateListener() {
         final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (telephonyManager != null) {
-            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        if (telephonyManager == null || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            return;
         }
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     public boolean isPhoneInCall() {
@@ -1298,8 +1302,8 @@ public class XmppConnectionService extends Service {
         toggleForegroundService(false);
     }
 
-    public void setOngoingCall(AbstractJingleConnection.Id id, Set<Media> media) {
-        ongoingCall.set(new OngoingCall(id, media));
+    public void setOngoingCall(AbstractJingleConnection.Id id, Set<Media> media, final boolean reconnecting) {
+        ongoingCall.set(new OngoingCall(id, media, reconnecting));
         toggleForegroundService(false);
     }
 
@@ -1315,7 +1319,7 @@ public class XmppConnectionService extends Service {
             final Notification notification;
             final int id;
             if (ongoing != null) {
-                notification = this.mNotificationService.getOngoingCallNotification(ongoing.id, ongoing.media);
+                notification = this.mNotificationService.getOngoingCallNotification(ongoing);
                 id = NotificationService.ONGOING_CALL_NOTIFICATION_ID;
                 startForeground(id, notification);
                 mNotificationService.cancel(NotificationService.FOREGROUND_NOTIFICATION_ID);
@@ -1382,7 +1386,9 @@ public class XmppConnectionService extends Service {
         final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction(ACTION_POST_CONNECTIVITY_CHANGE);
         try {
-            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, s()
+                    ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                    : PendingIntent.FLAG_UPDATE_CURRENT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtMillis, pendingIntent);
             } else {
@@ -1394,7 +1400,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void scheduleWakeUpCall(int seconds, int requestCode) {
-        final long timeToWake = SystemClock.elapsedRealtime() + (seconds < 0 ? 1 : seconds + 1) * 1000;
+        final long timeToWake = SystemClock.elapsedRealtime() + (seconds < 0 ? 1 : seconds + 1) * 1000L;
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
             return;
@@ -1402,7 +1408,16 @@ public class XmppConnectionService extends Service {
         final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction("ping");
         try {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0);
+            final PendingIntent pendingIntent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                pendingIntent =
+                        PendingIntent.getBroadcast(
+                                this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE);
+            } else {
+                pendingIntent =
+                        PendingIntent.getBroadcast(
+                                this, requestCode, intent, 0);
+            }
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWake, pendingIntent);
         } catch (RuntimeException e) {
             Log.e(Config.LOGTAG, "unable to schedule alarm for ping", e);
@@ -1419,7 +1434,9 @@ public class XmppConnectionService extends Service {
         final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction(ACTION_IDLE_PING);
         try {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, s()
+                    ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                    : PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWake, pendingIntent);
         } catch (RuntimeException e) {
             Log.d(Config.LOGTAG, "unable to schedule alarm for idle ping", e);
@@ -1432,7 +1449,7 @@ public class XmppConnectionService extends Service {
         connection.setOnStatusChangedListener(this.statusListener);
         connection.setOnPresencePacketReceivedListener(this.mPresenceParser);
         connection.setOnUnregisteredIqPacketReceivedListener(this.mIqParser);
-        connection.setOnJinglePacketReceivedListener(((a, jp) -> mJingleConnectionManager.deliverPacket(a, jp)));
+        connection.setOnJinglePacketReceivedListener((mJingleConnectionManager::deliverPacket));
         connection.setOnBindListener(this.mOnBindListener);
         connection.setOnMessageAcknowledgeListener(this.mOnMessageAcknowledgedListener);
         connection.addOnAdvancedStreamFeaturesAvailableListener(this.mMessageArchiveService);
@@ -1793,7 +1810,9 @@ public class XmppConnectionService extends Service {
     public void createBookmark(final Account account, final Bookmark bookmark) {
         account.putBookmark(bookmark);
         final XmppConnection connection = account.getXmppConnection();
-        if (connection.getFeatures().bookmarks2()) {
+        if (connection == null) {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid()+": no connection. ignoring bookmark creation");
+        } else if (connection.getFeatures().bookmarks2()) {
             final Element item = mIqGenerator.publishBookmarkItem(bookmark);
             pushNodeAndEnforcePublishOptions(account, Namespace.BOOKMARKS2, item, bookmark.getJid().asBareJid().toEscapedString(), PublishOptions.persistentWhitelistAccessMaxItems());
         } else if (connection.getFeatures().bookmarksConversion()) {
@@ -4126,7 +4145,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void updateAccountUi() {
-        for (OnAccountUpdate listener : threadSafeList(this.mOnAccountUpdates)) {
+        for (final OnAccountUpdate listener : threadSafeList(this.mOnAccountUpdates)) {
             listener.onAccountUpdate();
         }
     }
@@ -4869,12 +4888,14 @@ public class XmppConnectionService extends Service {
     }
 
     public static class OngoingCall {
-        private final AbstractJingleConnection.Id id;
-        private final Set<Media> media;
+        public final AbstractJingleConnection.Id id;
+        public final Set<Media> media;
+        public final boolean reconnecting;
 
-        public OngoingCall(AbstractJingleConnection.Id id, Set<Media> media) {
+        public OngoingCall(AbstractJingleConnection.Id id, Set<Media> media, final boolean reconnecting) {
             this.id = id;
             this.media = media;
+            this.reconnecting = reconnecting;
         }
 
         @Override
@@ -4882,12 +4903,12 @@ public class XmppConnectionService extends Service {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             OngoingCall that = (OngoingCall) o;
-            return Objects.equal(id, that.id);
+            return reconnecting == that.reconnecting && Objects.equal(id, that.id) && Objects.equal(media, that.media);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(id);
+            return Objects.hashCode(id, media, reconnecting);
         }
     }
 }
