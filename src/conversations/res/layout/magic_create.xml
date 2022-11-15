@@ -95,7 +95,6 @@
                         android:padding="8dp"
                         android:src="@drawable/ninja_main_logo" />
                 </RelativeLayout>
-
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>

@@ -130,7 +130,7 @@
     <string name="pref_confirm_messages">メッセージを確認</string>
     <string name="pref_confirm_messages_summary">あなたがメッセージを受信して読んだときに、連絡先に知らせる</string>
     <string name="pref_prevent_screenshots">スクリーンショットを防ぐ</string>
-    <string name="pref_prevent_screenshots_summary">アプリスイッチャーでアプリの内容を隠し、スクリーンショットを防ぐ</string>
+    <string name="pref_prevent_screenshots_summary">アプリスイッチャー内でアプリの内容を隠し、スクリーンショットを防ぐ</string>
     <string name="pref_ui_options">UI</string>
     <string name="openpgp_error">OpenKeychain でエラーが発生しました。</string>
     <string name="bad_key_for_encryption">暗号化の鍵が不正です。</string>
@@ -217,6 +217,8 @@
     <string name="openpgp_key_id">OpenPGP 鍵 ID</string>
     <string name="omemo_fingerprint">OMEMO フィンガープリント</string>
     <string name="omemo_fingerprint_x509">v\\OMEMO フィンガープリント</string>
+    <string name="omemo_fingerprint_selected_message">OMEMO フィンガープリント (メッセージ起源)</string>
+    <string name="omemo_fingerprint_x509_selected_message">v\\OMEMO フィンガープリント (メッセージ起源)</string>
     <string name="other_devices">他のデバイス</string>
     <string name="trust_omemo_fingerprints">OMEMO フィンガープリントを信頼</string>
     <string name="fetching_keys">鍵の取得中…</string>
@@ -459,6 +461,7 @@
     <string name="download_failed_file_not_found">ダウンロードに失敗しました: ファイルが見つかりません</string>
     <string name="download_failed_could_not_connect">ダウンロードに失敗しました: ホストに接続できませんでした</string>
     <string name="download_failed_could_not_write_file">ダウンロードに失敗しました: ファイルに書き込みできません</string>
+    <string name="download_failed_invalid_file">ダウンロード失敗: 無効なファイル</string>
     <string name="account_status_tor_unavailable">Tor ネットワークが利用できません</string>
     <string name="account_status_bind_failure">バインド失敗</string>
     <string name="account_status_host_unknown">そのサーバーはこのドメインに責任を持ちません</string>
@@ -615,6 +618,8 @@
     <string name="pref_clean_private_storage_summary">ファイルが保存されているプライベートストレージを消去します (サーバーから再ダウンロードできます)</string>
     <string name="i_followed_this_link_from_a_trusted_source">信頼できるソースからこのリンクをたどりました</string>
     <string name="verifying_omemo_keys_trusted_source">リンクをクリックした後、%1$s の OMEMO 鍵を検証しようとしています。 これは、%2$s がこのリンクを公開した、信頼できるソースからこのリンクをたどった場合にのみ安全です。</string>
+    <string name="verifying_omemo_keys_trusted_source_account">あなたが所有するアカウントの OMEMO 鍵を検証しようとしています。 これは、あなたがこのリンクを公開した、信頼できるソースからこのリンクをたどった場合にのみ安全です。</string>
+    <string name="continue_btn">続行</string>
     <string name="verify_omemo_keys">OMEMO 鍵を検証</string>
     <string name="show_inactive_devices">非アクティブを表示</string>
     <string name="hide_inactive_devices">非アクティブを非表示</string>
@@ -950,5 +955,8 @@
     <string name="backup_started_message">バックアップを開始しました。 バックアップが完了すると通知が届きます。</string>
     <string name="unable_to_enable_video">映像を有効化できません。</string>
     <string name="plain_text_document">プレーンテキスト文書</string>
+    <string name="account_registrations_are_not_supported">アカウント登録はサポートされていません</string>
+    <string name="no_xmpp_adddress_found">XMPPアドレスがみつかりません</string>
+    <string name="account_status_temporary_auth_failure">一時的な認証失敗</string>
 
 </resources>

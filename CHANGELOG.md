@@ -1,5 +1,45 @@
 # Changelog
 
+### Version 2.10.10
+
+* Minor bug fixes
+* Restore ability to call out via JMP and other services (Playstore version)
+
+### Version 2.10.9
+
+* Ask for Bluetooth permissions when making A/V calls (You can reject this if you don’t use Bluetooth headsets)
+* Fix bug when calling Movim
+
+### Version 2.10.8
+
+* Fix wrong avatar being shown for group chats
+
+### Version 2.10.7
+
+* always ask for battery optimizations opt-out
+* set local only flag on 'x connected accounts' notifications
+* Minor bug fixes
+
+### Version 2.10.6
+
+* Minor bug fixes
+
+### Version 2.10.5
+
+* Security: Stop downloading files that exceed advertised file size
+* Security: Limit POSH files to 10K
+
+### Version 2.10.4
+
+* Fix interaction with Google Maps Share Location Plugin
+* Remove footnote with regards to server fee
+
+### Version 2.10.3
+
+* Store files in location appropriate for Android 11
+* Attempt to reconnect call after network switch
+* Show caller JID and account JID in incoming call screen
+
 ### Version 2.10.2
 
 * Fix crash when rendering some quotes

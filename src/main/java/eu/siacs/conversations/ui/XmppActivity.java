@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AlertDialog.Builder;
@@ -71,10 +72,10 @@ import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Presences;
 import eu.siacs.conversations.services.AvatarService;
 import eu.siacs.conversations.services.BarcodeProvider;
+import eu.siacs.conversations.services.EmojiInitializationService;
 import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.services.XmppConnectionService.XmppConnectionBinder;
-import eu.siacs.conversations.ui.service.EmojiService;
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PresenceSelector;
 import eu.siacs.conversations.ui.util.SoftKeyboardUtils;
@@ -408,7 +409,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
-        new EmojiService(this).init();
+        EmojiInitializationService.execute(this);
         this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
@@ -447,9 +448,19 @@ public abstract class XmppActivity extends ActionBarActivity {
             final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             return cm != null
                     && cm.isActiveNetworkMetered()
-                    && cm.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED;
+                    && getRestrictBackgroundStatus(cm) == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED;
         } else {
             return false;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static int getRestrictBackgroundStatus(@NonNull final ConnectivityManager connectivityManager) {
+        try {
+            return connectivityManager.getRestrictBackgroundStatus();
+        } catch (final Exception e) {
+            Log.d(Config.LOGTAG,"platform bug detected. Unable to get restrict background status",e);
+            return -1;
         }
     }
 
