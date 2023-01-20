@@ -1,5 +1,5 @@
 <h1 align="center">Ninja Chat</h1>
-Testing an upstream change.
+Testing an upstream change #2.
 
 <p align="center">Ninja Chat: Become a Ninja</p>
 
