@@ -1333,11 +1333,11 @@ public class ConversationFragment extends XmppFragment
                     && t == null) {
                 copyMessage.setVisible(true);
                 quoteMessage.setVisible(!showError && MessageUtils.prepareQuote(m).length() > 0);
-                String body = m.getMergedBody().toString();
-                if (ShareUtil.containsXmppUri(body)) {
+                final String scheme = ShareUtil.getLinkScheme(m.getMergedBody());
+                if ("xmpp".equals(scheme)) {
                     copyLink.setTitle(R.string.copy_jabber_id);
                     copyLink.setVisible(true);
-                } else if (Patterns.AUTOLINK_WEB_URL.matcher(body).find()) {
+                } else if (scheme != null) {
                     copyLink.setVisible(true);
                 }
             }
@@ -2453,12 +2453,14 @@ public class ConversationFragment extends XmppFragment
         this.binding.textSendButton.setContentDescription(
                 activity.getString(R.string.send_message_to_x, conversation.getName()));
         this.binding.textinput.setKeyboardListener(null);
-        this.binding.textinput.setText("");
         final boolean participating =
                 conversation.getMode() == Conversational.MODE_SINGLE
                         || conversation.getMucOptions().participating();
         if (participating) {
-            this.binding.textinput.append(this.conversation.getNextMessage());
+            this.binding.textinput.setText(this.conversation.getNextMessage());
+            this.binding.textinput.setSelection(this.binding.textinput.length());
+        } else {
+            this.binding.textinput.setText(MessageUtils.EMPTY_STRING);
         }
         this.binding.textinput.setKeyboardListener(this);
         messageListAdapter.updatePreferences();
@@ -2721,6 +2723,9 @@ public class ConversationFragment extends XmppFragment
                     break;
                 case KICKED:
                     showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
+                    break;
+                case TECHNICAL_PROBLEMS:
+                    showSnackbar(R.string.conference_technical_problems, R.string.try_again, joinMuc);
                     break;
                 case UNKNOWN:
                     showSnackbar(R.string.conference_unknown_error, R.string.try_again, joinMuc);

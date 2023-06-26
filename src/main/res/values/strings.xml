@@ -168,6 +168,7 @@
     <string name="account_status_tls_error_domain">Domain not verifiable</string>
     <string name="account_status_policy_violation">Policy violation</string>
     <string name="account_status_incompatible_server">Incompatible server</string>
+    <string name="account_status_incompatible_client">Incompatible client</string>
     <string name="account_status_stream_error">Stream error</string>
     <string name="account_status_stream_opening_error">Stream opening error</string>
     <string name="encryption_choice_unencrypted">Unencrypted</string>
@@ -292,8 +293,8 @@
     <string name="title_pref_enable_quiet_hours">Enable quiet hours</string>
     <string name="pref_quiet_hours_summary">Notifications will be silenced during quiet hours</string>
     <string name="pref_expert_options_other">Other</string>
-    <string name="pref_autojoin">Synchronize with bookmarks</string>
-    <string name="pref_autojoin_summary">Join group chats automatically if the bookmark says so</string>
+    <string name="pref_autojoin">Synchronize bookmarks</string>
+    <string name="pref_autojoin_summary">Set “autojoin” flag when entering or leaving a MUC and react to modifications made by other clients.</string>
     <string name="toast_message_omemo_fingerprint">OMEMO fingerprint copied to clipboard</string>
     <string name="conference_banned">You are banned from this group chat</string>
     <string name="conference_members_only">This group chat is members only</string>
@@ -301,6 +302,7 @@
     <string name="conference_kicked">You have been kicked from this group chat</string>
     <string name="conference_shutdown">The group chat was shut down</string>
     <string name="conference_unknown_error">You are no longer in this group chat</string>
+    <string name="conference_technical_problems">You left this group chat due to technical reasons</string>
     <string name="using_account">using account %s</string>
     <string name="hosted_on">hosted on %s</string>
     <string name="checking_x">Checking %s on HTTP host</string>
@@ -766,6 +768,7 @@
     <string name="messages_channel_name">Messages</string>
     <string name="incoming_calls_channel_name">Incoming calls</string>
     <string name="ongoing_calls_channel_name">Ongoing calls</string>
+    <string name="missed_calls_channel_name">Missed calls</string>
     <string name="silent_messages_channel_name">Silent messages</string>
     <string name="silent_messages_channel_description">This notification group is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
     <string name="delivery_failed_channel_name">Failed deliveries</string>
@@ -906,6 +909,8 @@
     <string name="make_call">Make call</string>
     <string name="rtp_state_incoming_call">Incoming call</string>
     <string name="rtp_state_incoming_video_call">Incoming video call</string>
+    <string name="rtp_state_content_add_video">Switch to video call?</string>
+    <string name="rtp_state_content_add">Add additional tracks?</string>
     <string name="rtp_state_connecting">Connecting</string>
     <string name="rtp_state_connected">Connected</string>
     <string name="rtp_state_reconnecting">Reconnecting</string>
@@ -933,6 +938,18 @@
     <string name="outgoing_call">Outgoing call</string>
     <string name="outgoing_call_duration">Outgoing call · %s</string>
     <string name="missed_call">Missed call</string>
+    <plurals name="n_missed_calls_from_x">
+        <item quantity="one">%1$d missed call from %2$s</item>
+        <item quantity="other">%1$d missed calls from %2$s</item>
+    </plurals>
+    <plurals name="n_missed_calls">
+        <item quantity="one">%d missed call</item>
+        <item quantity="other">%d missed calls</item>
+    </plurals>
+    <plurals name="n_missed_calls_from_m_contacts">
+        <item quantity="one">%1$d missed calls from %2$d contact</item>
+        <item quantity="other">%1$d missed calls from %2$d contacts</item>
+    </plurals>
     <string name="audio_call">Audio call</string>
     <string name="video_call">Video call</string>
     <string name="help">Help</string>
@@ -978,5 +995,15 @@
     <string name="account_registrations_are_not_supported">Account registrations are not supported</string>
     <string name="no_xmpp_adddress_found">No XMPP address found</string>
     <string name="account_status_temporary_auth_failure">Temporary authentication failure</string>
+    <string name="delete_avatar">Delete avatar</string>
+    <string name="audio_video_disabled_tor">Calls are disabled when using Tor</string>
+    <string name="switch_to_video">Switch to video</string>
+    <string name="reject_switch_to_video">Reject switch to video request</string>
+    <string name="unified_push_distributor">UnifiedPush Distributor</string>
+    <string name="pref_up_push_account_title">XMPP Account</string>
+    <string name="pref_up_push_account_summary">The account through which push messages will be received.</string>
+    <string name="pref_up_push_server_title">Push Server</string>
+    <string name="pref_up_push_server_summary">A user-chosen push server to relay push messages via XMPP to your device.</string>
+    <string name="no_account_deactivated">None (deactivated)</string>
 
 </resources>

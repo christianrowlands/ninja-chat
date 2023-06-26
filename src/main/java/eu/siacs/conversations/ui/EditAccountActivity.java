@@ -181,7 +181,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
 
             if (inNeedOfSaslAccept()) {
-                mAccount.setKey(Account.PINNED_MECHANISM_KEY, String.valueOf(-1));
+                mAccount.resetPinnedMechanism();
                 if (!xmppConnectionService.updateAccount(mAccount)) {
                     Toast.makeText(EditAccountActivity.this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
                 }
@@ -286,13 +286,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 mAccount = new Account(jid.asBareJid(), password);
                 mAccount.setPort(numericPort);
                 mAccount.setHostname(hostname);
-                mAccount.setOption(Account.OPTION_USETLS, true);
-                mAccount.setOption(Account.OPTION_USECOMPRESSION, true);
                 mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
                 xmppConnectionService.createAccount(mAccount);
             }
             binding.hostnameLayout.setError(null);
             binding.portLayout.setError(null);
+            if (mAccount.isOnion()) {
+                Toast.makeText(EditAccountActivity.this, R.string.audio_video_disabled_tor, Toast.LENGTH_LONG).show();
+            }
             if (mAccount.isEnabled()
                     && !registerNewAccount
                     && !mInitMode) {
@@ -418,7 +419,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             } else {
                 preset = jid.getDomain();
             }
-            final Intent intent = SignupUtils.getTokenRegistrationIntent(this, preset, mAccount.getKey(Account.PRE_AUTH_REGISTRATION_TOKEN));
+            final Intent intent = SignupUtils.getTokenRegistrationIntent(this, preset, mAccount.getKey(Account.KEY_PRE_AUTH_REGISTRATION_TOKEN));
             StartConversationActivity.addInviteUri(intent, getIntent());
             startActivity(intent);
             return;
@@ -821,7 +822,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }
         if (mUsernameMode) {
             this.binding.accountJidLayout.setHint(getString(R.string.username_hint));
-            this.binding.accountJid.setHint(R.string.username_hint);
         } else {
             final KnownHostsAdapter mKnownHostsAdapter = new KnownHostsAdapter(this,
                     R.layout.simple_list_item,
@@ -889,7 +889,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private boolean inNeedOfSaslAccept() {
-        return mAccount != null && mAccount.getLastErrorStatus() == Account.State.DOWNGRADE_ATTACK && mAccount.getKeyAsInt(Account.PINNED_MECHANISM_KEY, -1) >= 0 && !accountInfoEdited();
+        return mAccount != null && mAccount.getLastErrorStatus() == Account.State.DOWNGRADE_ATTACK && mAccount.getPinnedMechanismPriority() >= 0 && !accountInfoEdited();
     }
 
     private void shareBarcode() {

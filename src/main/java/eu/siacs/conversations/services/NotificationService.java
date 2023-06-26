@@ -36,6 +36,7 @@ import androidx.core.app.RemoteInput;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.IconCompat;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 
@@ -90,17 +91,21 @@ public class NotificationService {
 
     private static final long[] CALL_PATTERN = {0, 500, 300, 600};
 
-    private static final String CONVERSATIONS_GROUP = "chat.ninja";
+    private static final String MESSAGES_GROUP = "chat.ninja.messages";
+    private static final String MISSED_CALLS_GROUP = "chat.ninja.missed_calls";
     private static final int NOTIFICATION_ID_MULTIPLIER = 1024 * 1024;
     static final int FOREGROUND_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 4;
     private static final int NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 2;
     private static final int ERROR_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 6;
     private static final int INCOMING_CALL_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 8;
     public static final int ONGOING_CALL_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 10;
-    private static final int DELIVERY_FAILED_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 12;
+    public static final int MISSED_CALL_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 12;
+    private static final int DELIVERY_FAILED_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 13;
     private final XmppConnectionService mXmppConnectionService;
     private final LinkedHashMap<String, ArrayList<Message>> notifications = new LinkedHashMap<>();
     private final HashMap<Conversation, AtomicInteger> mBacklogMessageCounter = new HashMap<>();
+    private final LinkedHashMap<Conversational, MissedCallsInfo> mMissedCalls =
+            new LinkedHashMap<>();
     private Conversation mOpenConversation;
     private boolean mIsInForeground;
     private long mLastNotification;
@@ -221,6 +226,18 @@ public class NotificationService {
         ongoingCallsChannel.setGroup("calls");
         notificationManager.createNotificationChannel(ongoingCallsChannel);
 
+        final NotificationChannel missedCallsChannel =
+                new NotificationChannel(
+                        "missed_calls",
+                        c.getString(R.string.missed_calls_channel_name),
+                        NotificationManager.IMPORTANCE_HIGH);
+        missedCallsChannel.setShowBadge(true);
+        missedCallsChannel.setSound(null, null);
+        missedCallsChannel.setLightColor(LED_COLOR);
+        missedCallsChannel.enableLights(true);
+        missedCallsChannel.setGroup("calls");
+        notificationManager.createNotificationChannel(missedCallsChannel);
+
         final NotificationChannel messagesChannel =
                 new NotificationChannel(
                         "messages",
@@ -284,12 +301,18 @@ public class NotificationService {
         notificationManager.createNotificationChannel(deliveryFailedChannel);
     }
 
-    private boolean notify(final Message message) {
+    private boolean notifyMessage(final Message message) {
         final Conversation conversation = (Conversation) message.getConversation();
         return message.getStatus() == Message.STATUS_RECEIVED
                 && !conversation.isMuted()
                 && (conversation.alwaysNotify() || wasHighlightedOrPrivate(message))
-                && (!conversation.isWithStranger() || notificationsFromStrangers());
+                && (!conversation.isWithStranger() || notificationsFromStrangers())
+                && message.getType() != Message.TYPE_RTP_SESSION;
+    }
+
+    private boolean notifyMissedCall(final Message message) {
+        return message.getType() == Message.TYPE_RTP_SESSION
+                && message.getStatus() == Message.STATUS_RECEIVED;
     }
 
     public boolean notificationsFromStrangers() {
@@ -320,11 +343,15 @@ public class NotificationService {
     }
 
     public void pushFromBacklog(final Message message) {
-        if (notify(message)) {
+        if (notifyMessage(message)) {
             synchronized (notifications) {
                 getBacklogMessageCounter((Conversation) message.getConversation())
                         .incrementAndGet();
                 pushToStack(message);
+            }
+        } else if (notifyMissedCall(message)) {
+            synchronized (mMissedCalls) {
+                pushMissedCall(message);
             }
         }
     }
@@ -360,6 +387,9 @@ public class NotificationService {
                 updateNotification(count > 0, conversations);
             }
         }
+        synchronized (mMissedCalls) {
+            updateMissedCallNotifications(mMissedCalls.keySet());
+        }
     }
 
     private List<String> getBacklogConversations(Account account) {
@@ -387,8 +417,8 @@ public class NotificationService {
         return count;
     }
 
-    void finishBacklog(boolean notify) {
-        finishBacklog(notify, null);
+    void finishBacklog() {
+        finishBacklog(false, null);
     }
 
     private void pushToStack(final Message message) {
@@ -666,7 +696,7 @@ public class NotificationService {
 
     private void pushNow(final Message message) {
         mXmppConnectionService.updateUnreadCountBadge();
-        if (!notify(message)) {
+        if (!notifyMessage(message)) {
             Log.d(
                     Config.LOGTAG,
                     message.getConversation().getAccount().getJid().asBareJid()
@@ -695,7 +725,29 @@ public class NotificationService {
         }
     }
 
-    public void clear() {
+    private void pushMissedCall(final Message message) {
+        final Conversational conversation = message.getConversation();
+        final MissedCallsInfo info = mMissedCalls.get(conversation);
+        if (info == null) {
+            mMissedCalls.put(conversation, new MissedCallsInfo(message.getTimeSent()));
+        } else {
+            info.newMissedCall(message.getTimeSent());
+        }
+    }
+
+    public void pushMissedCallNow(final Message message) {
+        synchronized (mMissedCalls) {
+            pushMissedCall(message);
+            updateMissedCallNotifications(Collections.singleton(message.getConversation()));
+        }
+    }
+
+    public void clear(final Conversation conversation) {
+        clearMessages(conversation);
+        clearMissedCalls(conversation);
+    }
+
+    public void clearMessages() {
         synchronized (notifications) {
             for (ArrayList<Message> messages : notifications.values()) {
                 markAsReadIfHasDirectReply(messages);
@@ -705,7 +757,7 @@ public class NotificationService {
         }
     }
 
-    public void clear(final Conversation conversation) {
+    public void clearMessages(final Conversation conversation) {
         synchronized (this.mBacklogMessageCounter) {
             this.mBacklogMessageCounter.remove(conversation);
         }
@@ -714,6 +766,25 @@ public class NotificationService {
             if (notifications.remove(conversation.getUuid()) != null) {
                 cancel(conversation.getUuid(), NOTIFICATION_ID);
                 updateNotification(false, null, true);
+            }
+        }
+    }
+
+    public void clearMissedCalls() {
+        synchronized (mMissedCalls) {
+            for (final Conversational conversation : mMissedCalls.keySet()) {
+                cancel(conversation.getUuid(), MISSED_CALL_NOTIFICATION_ID);
+            }
+            mMissedCalls.clear();
+            updateMissedCallNotifications(null);
+        }
+    }
+
+    public void clearMissedCalls(final Conversation conversation) {
+        synchronized (mMissedCalls) {
+            if (mMissedCalls.remove(conversation) != null) {
+                cancel(conversation.getUuid(), MISSED_CALL_NOTIFICATION_ID);
+                updateMissedCallNotifications(null);
             }
         }
     }
@@ -797,12 +868,37 @@ public class NotificationService {
                         }
                         modifyForSoundVibrationAndLight(
                                 singleBuilder, notifyThis, quiteHours, preferences);
-                        singleBuilder.setGroup(CONVERSATIONS_GROUP);
+                        singleBuilder.setGroup(MESSAGES_GROUP);
                         setNotificationColor(singleBuilder);
                         notify(entry.getKey(), NOTIFICATION_ID, singleBuilder.build());
                     }
                 }
                 notify(NOTIFICATION_ID, mBuilder.build());
+            }
+        }
+    }
+
+    private void updateMissedCallNotifications(final Set<Conversational> update) {
+        if (mMissedCalls.isEmpty()) {
+            cancel(MISSED_CALL_NOTIFICATION_ID);
+            return;
+        }
+        if (mMissedCalls.size() == 1 && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            final Conversational conversation = mMissedCalls.keySet().iterator().next();
+            final MissedCallsInfo info = mMissedCalls.values().iterator().next();
+            final Notification notification = missedCall(conversation, info);
+            notify(MISSED_CALL_NOTIFICATION_ID, notification);
+        } else {
+            final Notification summary = missedCallsSummary();
+            notify(MISSED_CALL_NOTIFICATION_ID, summary);
+            if (update != null) {
+                for (final Conversational conversation : update) {
+                    final MissedCallsInfo info = mMissedCalls.get(conversation);
+                    if (info != null) {
+                        final Notification notification = missedCall(conversation, info);
+                        notify(conversation.getUuid(), MISSED_CALL_NOTIFICATION_ID, notification);
+                    }
+                }
             }
         }
     }
@@ -867,6 +963,127 @@ public class NotificationService {
         }
     }
 
+    private Notification missedCallsSummary() {
+        final Builder publicBuilder = buildMissedCallsSummary(true);
+        final Builder builder = buildMissedCallsSummary(false);
+        builder.setPublicVersion(publicBuilder.build());
+        return builder.build();
+    }
+
+    private Builder buildMissedCallsSummary(boolean publicVersion) {
+        final Builder builder =
+                new NotificationCompat.Builder(mXmppConnectionService, "missed_calls");
+        int totalCalls = 0;
+        final List<String> names = new ArrayList<>();
+        long lastTime = 0;
+        for (final Map.Entry<Conversational, MissedCallsInfo> entry : mMissedCalls.entrySet()) {
+            final Conversational conversation = entry.getKey();
+            final MissedCallsInfo missedCallsInfo = entry.getValue();
+            names.add(conversation.getContact().getDisplayName());
+            totalCalls += missedCallsInfo.getNumberOfCalls();
+            lastTime = Math.max(lastTime, missedCallsInfo.getLastTime());
+        }
+        final String title =
+                (totalCalls == 1)
+                        ? mXmppConnectionService.getString(R.string.missed_call)
+                        : (mMissedCalls.size() == 1)
+                                ? mXmppConnectionService
+                                        .getResources()
+                                        .getQuantityString(
+                                                R.plurals.n_missed_calls, totalCalls, totalCalls)
+                                : mXmppConnectionService
+                                        .getResources()
+                                        .getQuantityString(
+                                                R.plurals.n_missed_calls_from_m_contacts,
+                                                mMissedCalls.size(),
+                                                totalCalls,
+                                                mMissedCalls.size());
+        builder.setContentTitle(title);
+        builder.setTicker(title);
+        if (!publicVersion) {
+            builder.setContentText(Joiner.on(", ").join(names));
+        }
+        builder.setSmallIcon(R.drawable.ic_call_missed_white_24db);
+        builder.setGroupSummary(true);
+        builder.setGroup(MISSED_CALLS_GROUP);
+        builder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
+        builder.setCategory(NotificationCompat.CATEGORY_CALL);
+        builder.setWhen(lastTime);
+        if (!mMissedCalls.isEmpty()) {
+            final Conversational firstConversation = mMissedCalls.keySet().iterator().next();
+            builder.setContentIntent(createContentIntent(firstConversation));
+        }
+        builder.setDeleteIntent(createMissedCallsDeleteIntent(null));
+        modifyMissedCall(builder);
+        return builder;
+    }
+
+    private Notification missedCall(final Conversational conversation, final MissedCallsInfo info) {
+        final Builder publicBuilder = buildMissedCall(conversation, info, true);
+        final Builder builder = buildMissedCall(conversation, info, false);
+        builder.setPublicVersion(publicBuilder.build());
+        return builder.build();
+    }
+
+    private Builder buildMissedCall(
+            final Conversational conversation, final MissedCallsInfo info, boolean publicVersion) {
+        final Builder builder =
+                new NotificationCompat.Builder(mXmppConnectionService, "missed_calls");
+        final String title =
+                (info.getNumberOfCalls() == 1)
+                        ? mXmppConnectionService.getString(R.string.missed_call)
+                        : mXmppConnectionService
+                                .getResources()
+                                .getQuantityString(
+                                        R.plurals.n_missed_calls,
+                                        info.getNumberOfCalls(),
+                                        info.getNumberOfCalls());
+        builder.setContentTitle(title);
+        final String name = conversation.getContact().getDisplayName();
+        if (publicVersion) {
+            builder.setTicker(title);
+        } else {
+            builder.setTicker(
+                    mXmppConnectionService
+                            .getResources()
+                            .getQuantityString(
+                                    R.plurals.n_missed_calls_from_x,
+                                    info.getNumberOfCalls(),
+                                    info.getNumberOfCalls(),
+                                    name));
+            builder.setContentText(name);
+        }
+        builder.setSmallIcon(R.drawable.ic_call_missed_white_24db);
+        builder.setGroup(MISSED_CALLS_GROUP);
+        builder.setCategory(NotificationCompat.CATEGORY_CALL);
+        builder.setWhen(info.getLastTime());
+        builder.setContentIntent(createContentIntent(conversation));
+        builder.setDeleteIntent(createMissedCallsDeleteIntent(conversation));
+        if (!publicVersion && conversation instanceof Conversation) {
+            builder.setLargeIcon(
+                    mXmppConnectionService
+                            .getAvatarService()
+                            .get(
+                                    (Conversation) conversation,
+                                    AvatarService.getSystemUiAvatarSize(mXmppConnectionService)));
+        }
+        modifyMissedCall(builder);
+        return builder;
+    }
+
+    private void modifyMissedCall(final Builder builder) {
+        final SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(mXmppConnectionService);
+        final Resources resources = mXmppConnectionService.getResources();
+        final boolean led = preferences.getBoolean("led", resources.getBoolean(R.bool.led));
+        if (led) {
+            builder.setLights(LED_COLOR, 2000, 3000);
+        }
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setSound(null);
+        setNotificationColor(builder);
+    }
+
     private Builder buildMultipleConversation(final boolean notify, final boolean quietHours) {
         final Builder mBuilder =
                 new NotificationCompat.Builder(
@@ -880,42 +1097,39 @@ public class NotificationService {
                                 R.plurals.x_unread_conversations,
                                 notifications.size(),
                                 notifications.size()));
-        final StringBuilder names = new StringBuilder();
+        final List<String> names = new ArrayList<>();
         Conversation conversation = null;
         for (final ArrayList<Message> messages : notifications.values()) {
-            if (messages.size() > 0) {
-                conversation = (Conversation) messages.get(0).getConversation();
-                final String name = conversation.getName().toString();
-                SpannableString styledString;
-                if (Config.HIDE_MESSAGE_TEXT_IN_NOTIFICATION) {
-                    int count = messages.size();
-                    styledString =
-                            new SpannableString(
-                                    name
-                                            + ": "
-                                            + mXmppConnectionService
-                                                    .getResources()
-                                                    .getQuantityString(
-                                                            R.plurals.x_messages, count, count));
-                    styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), 0);
-                    style.addLine(styledString);
-                } else {
-                    styledString =
-                            new SpannableString(
-                                    name
-                                            + ": "
-                                            + UIHelper.getMessagePreview(
-                                                            mXmppConnectionService, messages.get(0))
-                                                    .first);
-                    styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), 0);
-                    style.addLine(styledString);
-                }
-                names.append(name);
-                names.append(", ");
+            if (messages.isEmpty()) {
+                continue;
             }
-        }
-        if (names.length() >= 2) {
-            names.delete(names.length() - 2, names.length());
+            conversation = (Conversation) messages.get(0).getConversation();
+            final String name = conversation.getName().toString();
+            SpannableString styledString;
+            if (Config.HIDE_MESSAGE_TEXT_IN_NOTIFICATION) {
+                int count = messages.size();
+                styledString =
+                        new SpannableString(
+                                name
+                                        + ": "
+                                        + mXmppConnectionService
+                                                .getResources()
+                                                .getQuantityString(
+                                                        R.plurals.x_messages, count, count));
+                styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), 0);
+                style.addLine(styledString);
+            } else {
+                styledString =
+                        new SpannableString(
+                                name
+                                        + ": "
+                                        + UIHelper.getMessagePreview(
+                                                        mXmppConnectionService, messages.get(0))
+                                                .first);
+                styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), 0);
+                style.addLine(styledString);
+            }
+            names.add(name);
         }
         final String contentTitle =
                 mXmppConnectionService
@@ -926,13 +1140,13 @@ public class NotificationService {
                                 notifications.size());
         mBuilder.setContentTitle(contentTitle);
         mBuilder.setTicker(contentTitle);
-        mBuilder.setContentText(names.toString());
+        mBuilder.setContentText(Joiner.on(", ").join(names));
         mBuilder.setStyle(style);
         if (conversation != null) {
             mBuilder.setContentIntent(createContentIntent(conversation));
         }
         mBuilder.setGroupSummary(true);
-        mBuilder.setGroup(CONVERSATIONS_GROUP);
+        mBuilder.setGroup(MESSAGES_GROUP);
         mBuilder.setDeleteIntent(createDeleteIntent(null));
         mBuilder.setSmallIcon(R.drawable.ic_notification);
         return mBuilder;
@@ -1334,9 +1548,9 @@ public class NotificationService {
         return createContentIntent(conversation.getUuid(), null);
     }
 
-    private PendingIntent createDeleteIntent(Conversation conversation) {
+    private PendingIntent createDeleteIntent(final Conversation conversation) {
         final Intent intent = new Intent(mXmppConnectionService, XmppConnectionService.class);
-        intent.setAction(XmppConnectionService.ACTION_CLEAR_NOTIFICATION);
+        intent.setAction(XmppConnectionService.ACTION_CLEAR_MESSAGE_NOTIFICATION);
         if (conversation != null) {
             intent.putExtra("uuid", conversation.getUuid());
             return PendingIntent.getService(
@@ -1350,6 +1564,28 @@ public class NotificationService {
         return PendingIntent.getService(
                 mXmppConnectionService,
                 0,
+                intent,
+                s()
+                        ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                        : PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private PendingIntent createMissedCallsDeleteIntent(final Conversational conversation) {
+        final Intent intent = new Intent(mXmppConnectionService, XmppConnectionService.class);
+        intent.setAction(XmppConnectionService.ACTION_CLEAR_MISSED_CALL_NOTIFICATION);
+        if (conversation != null) {
+            intent.putExtra("uuid", conversation.getUuid());
+            return PendingIntent.getService(
+                    mXmppConnectionService,
+                    generateRequestCode(conversation, 21),
+                    intent,
+                    s()
+                            ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                            : PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+        return PendingIntent.getService(
+                mXmppConnectionService,
+                1,
                 intent,
                 s()
                         ? PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
@@ -1582,7 +1818,8 @@ public class NotificationService {
                                         ? PendingIntent.FLAG_IMMUTABLE
                                                 | PendingIntent.FLAG_UPDATE_CURRENT
                                         : PendingIntent.FLAG_UPDATE_CURRENT));
-            } else {
+            }/* else { // we can't install packages any longer but leaving this here to make sure future
+                       // merges of upstream changes don't end up re-enabling this code
                 mBuilder.addAction(
                         R.drawable.ic_file_download_white_24dp,
                         mXmppConnectionService.getString(R.string.install_orbot),
@@ -1594,7 +1831,7 @@ public class NotificationService {
                                         ? PendingIntent.FLAG_IMMUTABLE
                                                 | PendingIntent.FLAG_UPDATE_CURRENT
                                         : PendingIntent.FLAG_UPDATE_CURRENT));
-            }
+            }*/
         }
         mBuilder.setDeleteIntent(createDismissErrorIntent());
         mBuilder.setVisibility(Notification.VISIBILITY_PRIVATE);
@@ -1674,6 +1911,29 @@ public class NotificationService {
             notificationManager.cancel(tag, id);
         } catch (RuntimeException e) {
             Log.d(Config.LOGTAG, "unable to cancel notification", e);
+        }
+    }
+
+    private static class MissedCallsInfo {
+        private int numberOfCalls;
+        private long lastTime;
+
+        MissedCallsInfo(final long time) {
+            numberOfCalls = 1;
+            lastTime = time;
+        }
+
+        public void newMissedCall(final long time) {
+            ++numberOfCalls;
+            lastTime = time;
+        }
+
+        public int getNumberOfCalls() {
+            return numberOfCalls;
+        }
+
+        public long getLastTime() {
+            return lastTime;
         }
     }
 

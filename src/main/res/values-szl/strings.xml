@@ -316,8 +316,6 @@
     <string name="title_pref_enable_quiet_hours">Włōncz godziny cisze</string>
     <string name="pref_quiet_hours_summary">Powiadōmiynia bydōm wyciszōne we ôbranych godzinach</string>
     <string name="pref_expert_options_other">Inksze</string>
-    <string name="pref_autojoin">Synchrōnizuj ze zokłodkami</string>
-    <string name="pref_autojoin_summary">Przistympuj do godek grupowych autōmatycznie, jeźli tak pado zokłodka</string>
     <string name="toast_message_omemo_fingerprint">Ôdcisk klucza OMEMO bōł skopiowany do skrytki</string>
     <string name="conference_banned">Ôd tyj grupy mosz wykluczynie</string>
     <string name="conference_members_only">Kōnferyncyjo ino dlo czōnkōw</string>
@@ -575,8 +573,8 @@
     <string name="share_uri_with">Udostympnij URI ze pōmocōm…</string>
     <string name="welcome_text_quicksy">Quicksy to modyfikacyjo popularnego klijynta XMPP Conversations, z autōmatycznym wykrywaniym kōntaktōw.&lt;br&gt;&lt;br&gt;Zapisujesz sie przi użyciu numeru telefōnu i Quicksy autōmatycznie — podle numerōw telefōnōw we adresowyj ksiōnżce — zasugeruje potyncjalne kōntakty dlo ciebie.&lt;br&gt;&lt;br&gt;Bez zapisanie sie zgodzosz sie na naszo &lt;a href=https://quicksy.im/#privacy&gt;polityka prywatności&lt;/a&gt;.</string>
     <string name="agree_and_continue">Zgodzōm sie, kōntynuuj</string>
-    <string name="magic_create_text">Pokludzymy cie bez proces tworzynio kōnta na conversations.im.¹
-\nKej ôbieresz conversations.im za liferanta, to poradzisz kōmunikować sie ze używoczami inkszych liferantōw, jeźli podosz im swoja połno adresa XMPP.</string>
+    <string name="magic_create_text">Pokludzymy cie bez proces tworzynio kōnta na ninja.chat.¹
+\nKej ôbieresz ninja.chat za liferanta, to poradzisz kōmunikować sie ze używoczami inkszych liferantōw, jeźli podosz im swoja połno adresa XMPP.</string>
     <string name="your_full_jid_will_be">Twoja połno adresa XMPP to: %s</string>
     <string name="create_account">Stwōrz kōnto</string>
     <string name="use_own_provider">Użyj inkszego serwera</string>

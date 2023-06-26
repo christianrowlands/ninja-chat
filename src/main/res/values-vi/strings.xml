@@ -291,8 +291,6 @@
     <string name="title_pref_enable_quiet_hours">Bật giờ yên lặng</string>
     <string name="pref_quiet_hours_summary">Thông báo sẽ được tắt trong giờ yên lặng</string>
     <string name="pref_expert_options_other">Khác</string>
-    <string name="pref_autojoin">Đồng bộ hoá bằng dấu trang</string>
-    <string name="pref_autojoin_summary">Tự động tham gia các cuộc trò chuyện nhóm nếu dấu trang bảo thế</string>
     <string name="toast_message_omemo_fingerprint">Đã sao chép mã vân tay OMEMO vào bộ nhớ tạm</string>
     <string name="conference_banned">Bạn bị cấm khỏi cuộc trò chuyện nhóm này</string>
     <string name="conference_members_only">Cuộc trò chuyện nhóm này chỉ dành cho thành viên</string>
@@ -535,7 +533,7 @@
     <string name="share_uri_with">Chia sẻ URI với...</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy là một sự phát triển khác của ứng dụng khách XMPP Conversations có tự động khám phá liên hệ.<br><br>Bạn đăng ký bằng số điện thoại của bạn và Quicksy sẽ tự động—dựa trên những số điện thoại trong sổ địa chỉ của bạn—đề xuất các liên hệ có thể có cho bạn.<br><br>Bằng cách đăng ký, bạn đồng ý với <a href=\"https://quicksy.im/#privacy\">chính sách riêng tư</a> của chúng tôi.]]></string>
     <string name="agree_and_continue">Đồng ý và tiếp tục</string>
-    <string name="magic_create_text">Một hướng dẫn đã được thiết lập cho việc tạo tài khoản trên conversations.im.¹\nKhi chọn conversations.im làm nhà cung cấp, bạn sẽ có thể giao tiếp với những người dùng của các nhà cung cấp khác bằng cách đưa cho họ địa chỉ XMPP đầy đủ của bạn. </string>
+    <string name="magic_create_text">Một hướng dẫn đã được thiết lập cho việc tạo tài khoản trên ninja.chat.¹\nKhi chọn ninja.chat làm nhà cung cấp, bạn sẽ có thể giao tiếp với những người dùng của các nhà cung cấp khác bằng cách đưa cho họ địa chỉ XMPP đầy đủ của bạn. </string>
     <string name="your_full_jid_will_be">Địa chỉ XMPP đầy đủ của bạn sẽ là: %s</string>
     <string name="create_account">Tạo tài khoản</string>
     <string name="use_own_provider">Dùng nhà cung cấp của tôi</string>
