@@ -21,7 +21,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-feature
         android:name="android.hardware.location"
@@ -81,6 +80,12 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:mimeType="resource/folder" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+        </intent>
+        <intent>
+            <action android:name="org.unifiedpush.android.connector.MESSAGE"/>
+        </intent>
     </queries>
 
     <application
@@ -111,6 +116,21 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.media.RINGER_MODE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".services.UnifiedPushDistributor"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="org.unifiedpush.android.distributor.REGISTER" />
+                <action android:name="org.unifiedpush.android.distributor.UNREGISTER" />
+                <action android:name="org.unifiedpush.android.distributor.feature.BYTES_MESSAGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_FULLY_REMOVED" />
+                <data android:scheme="package"/>
             </intent-filter>
         </receiver>
 

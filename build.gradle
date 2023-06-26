@@ -37,7 +37,7 @@ configurations {
 dependencies {
     implementation 'androidx.viewpager:viewpager:1.0.0'
 
-    playstoreImplementation('com.google.firebase:firebase-messaging:23.0.7') {
+    playstoreImplementation('com.google.firebase:firebase-messaging:23.1.1') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
@@ -46,11 +46,11 @@ dependencies {
     quicksyPlaystoreImplementation 'com.google.android.gms:play-services-auth-api-phone:18.0.1'
     implementation 'org.sufficientlysecure:openpgp-api:10.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
-    implementation 'androidx.exifinterface:exifinterface:1.3.3'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.exifinterface:exifinterface:1.3.5'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'com.google.android.material:material:1.7.0'
 
     implementation "androidx.emoji2:emoji2:1.2.0"
     freeImplementation "androidx.emoji2:emoji2-bundled:1.2.0"
@@ -64,7 +64,8 @@ dependencies {
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation "com.wefika:flowlayout:0.4.1"
-    implementation 'com.otaliastudios:transcoder:0.10.4'
+    //noinspection GradleDependency
+    implementation 'com.otaliastudios:transcoder:0.9.1'
 
     implementation 'org.jxmpp:jxmpp-jid:1.0.3'
     implementation 'org.osmdroid:osmdroid-android:6.1.11'
@@ -79,8 +80,8 @@ dependencies {
 
     implementation 'com.google.guava:guava:31.1-android'
     quicksyImplementation 'io.michaelrocks:libphonenumber-android:8.12.49'
-    freeImplementation 'ch.threema:webrtc-android:100.0.0'
-    playstoreImplementation fileTree(include: ['libwebrtc-m104.aar'], dir: 'libs')
+    freeImplementation 'ch.threema:webrtc-android:108.0.0'
+    playstoreImplementation fileTree(include: ['libwebrtc-m108.aar'], dir: 'libs')
 
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
@@ -89,7 +90,6 @@ dependencies {
 }
 
 ext {
-    travisBuild = System.getenv("TRAVIS") == "true"
     preDexEnabled = System.getProperty("pre-dex", "true")
     abiCodes = ['armeabi-v7a': 1, 'x86': 2, 'x86_64': 3, 'arm64-v8a': 4]
 }
@@ -100,14 +100,14 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 42038
-        versionName "2.10.10"
+        versionCode 42050
+        versionName "2.12.2"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
         def appName = "Ninja Chat"
         resValue "string", "app_name", appName
-        buildConfigField "String", "APP_NAME", "\"$appName\"";
+        buildConfigField "String", "APP_NAME", "\"$appName\""
     }
 
     splits {
@@ -141,7 +141,7 @@ android {
 
             def appName = "Quicksy"
             resValue "string", "app_name", appName
-            buildConfigField "String", "APP_NAME", "\"$appName\"";
+            buildConfigField "String", "APP_NAME", "\"$appName\""
         }
 
         conversations {

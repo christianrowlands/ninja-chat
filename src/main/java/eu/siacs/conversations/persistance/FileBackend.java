@@ -684,7 +684,7 @@ public class FileBackend {
         } catch (final FileWriterException e) {
             cleanup(file);
             throw new FileCopyException(R.string.error_unable_to_create_temporary_file);
-        } catch (final SecurityException e) {
+        } catch (final SecurityException | IllegalStateException e) {
             cleanup(file);
             throw new FileCopyException(R.string.error_security_exception);
         } catch (final IOException e) {
@@ -1576,19 +1576,19 @@ public class FileBackend {
                 return 0;
             }
             return Integer.parseInt(value);
-        } catch (final IllegalArgumentException e) {
+        } catch (final Exception e) {
             return 0;
         }
     }
 
     private Dimensions getImageDimensions(File file) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        int rotation = getRotation(file);
-        boolean rotated = rotation == 90 || rotation == 270;
-        int imageHeight = rotated ? options.outWidth : options.outHeight;
-        int imageWidth = rotated ? options.outHeight : options.outWidth;
+        final int rotation = getRotation(file);
+        final boolean rotated = rotation == 90 || rotation == 270;
+        final int imageHeight = rotated ? options.outWidth : options.outHeight;
+        final int imageWidth = rotated ? options.outHeight : options.outWidth;
         return new Dimensions(imageHeight, imageWidth);
     }
 
@@ -1602,7 +1602,6 @@ public class FileBackend {
         return getVideoDimensions(metadataRetriever);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private Dimensions getPdfDocumentDimensions(final File file) {
         final ParcelFileDescriptor fileDescriptor;
         try {
@@ -1610,7 +1609,7 @@ public class FileBackend {
             if (fileDescriptor == null) {
                 return new Dimensions(0, 0);
             }
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             return new Dimensions(0, 0);
         }
         try {
@@ -1621,7 +1620,7 @@ public class FileBackend {
             page.close();
             pdfRenderer.close();
             return scalePdfDimensions(new Dimensions(height, width));
-        } catch (IOException | SecurityException e) {
+        } catch (final IOException | SecurityException e) {
             Log.d(Config.LOGTAG, "unable to get dimensions for pdf document", e);
             return new Dimensions(0, 0);
         }

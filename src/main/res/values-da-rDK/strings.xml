@@ -170,6 +170,7 @@
     <string name="account_status_tls_error_domain">Domæne kan ikke verificeres</string>
     <string name="account_status_policy_violation">Brud på retningslinjer</string>
     <string name="account_status_incompatible_server">Inkompatibel server</string>
+    <string name="account_status_incompatible_client">Inkompatibel klient</string>
     <string name="account_status_stream_error">Strømfejl</string>
     <string name="account_status_stream_opening_error">Fejl ved streamåbning</string>
     <string name="encryption_choice_unencrypted">Ukrypteret</string>
@@ -294,8 +295,8 @@
     <string name="title_pref_enable_quiet_hours">Aktiver stilletid</string>
     <string name="pref_quiet_hours_summary">Notifikationer vil være lydløs under stilletid</string>
     <string name="pref_expert_options_other">Andre</string>
-    <string name="pref_autojoin">Synkroniser med bogmærker</string>
-    <string name="pref_autojoin_summary">Deltag automatisk i gruppechat hvis bogmærket tillader det</string>
+    <string name="pref_autojoin">Synkroniser bogmærker</string>
+    <string name="pref_autojoin_summary">Indstil \"autojoin\"-flag, når du går ind i eller forlader en MUC, og reager på ændringer foretaget af andre klienter.</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-fingeraftryk kopieret til udklipsholder</string>
     <string name="conference_banned">Du er udelukket fra denne gruppechat</string>
     <string name="conference_members_only">Denne gruppechat er kun for medlemmer</string>
@@ -303,6 +304,7 @@
     <string name="conference_kicked">Du er blevet smidt ud af denne gruppechat</string>
     <string name="conference_shutdown">Gruppechatten er lukket ned</string>
     <string name="conference_unknown_error">Du er ikke længere i denne gruppechat</string>
+    <string name="conference_technical_problems">Du forlod denne gruppechat af tekniske årsager</string>
     <string name="using_account">anvender konto %s</string>
     <string name="hosted_on">hostet på %s</string>
     <string name="checking_x">Tjekker %s på HTTP vært</string>
@@ -417,6 +419,7 @@
     <string name="video">video</string>
     <string name="image">billede</string>
     <string name="vector_graphic">vektorgrafik</string>
+    <string name="multimedia_file">multimediefil</string>
     <string name="pdf_document">PDF dokument</string>
     <string name="apk">Android App</string>
     <string name="vcard">Kontakt</string>
@@ -765,6 +768,7 @@
     <string name="messages_channel_name">Beskeder</string>
     <string name="incoming_calls_channel_name">Indkommende opkald</string>
     <string name="ongoing_calls_channel_name">Udgående opkald</string>
+    <string name="missed_calls_channel_name">Mistet opkald</string>
     <string name="silent_messages_channel_name">Lydløse beskeder</string>
     <string name="silent_messages_channel_description">Denne notifikationsgruppe bruges til at vise notifikationer, der ikke bør udløse nogen lyd. For eksempel når du er aktiv på en anden enhed (Fredningsperiode).</string>
     <string name="delivery_failed_channel_name">Mislykkede leverancer</string>
@@ -905,6 +909,8 @@
     <string name="make_call">Lav opkald</string>
     <string name="rtp_state_incoming_call">Indkommende opkald</string>
     <string name="rtp_state_incoming_video_call">Indkommende videoopkald</string>
+    <string name="rtp_state_content_add_video">Skift til videoopkald</string>
+    <string name="rtp_state_content_add">Tilføje yderligere spor?</string>
     <string name="rtp_state_connecting">Forbinder</string>
     <string name="rtp_state_connected">Forbundet</string>
     <string name="rtp_state_reconnecting">Forbinder igen</string>
@@ -932,6 +938,18 @@
     <string name="outgoing_call">Udgående opkald</string>
     <string name="outgoing_call_duration">Udgående opkald · %s</string>
     <string name="missed_call">Mistet opkald</string>
+    <plurals name="n_missed_calls_from_x">
+        <item quantity="one">%1$d mistet opkald fra %2$s</item>
+        <item quantity="other">%1$d mistet opkald fra %2$s</item>
+    </plurals>
+    <plurals name="n_missed_calls">
+        <item quantity="one">%d mistet opkald</item>
+        <item quantity="other">%d mistet opkald</item>
+    </plurals>
+    <plurals name="n_missed_calls_from_m_contacts">
+        <item quantity="one">%1$d mistet opkald fra %2$d kontakt</item>
+        <item quantity="other">%1$d mistet opkald fra %2$d kontakter</item>
+    </plurals>
     <string name="audio_call">Lydopkald</string>
     <string name="video_call">Videoopkald</string>
     <string name="help">Hjælp</string>
@@ -976,4 +994,10 @@
     <string name="plain_text_document">Ren tekstdokument</string>
     <string name="account_registrations_are_not_supported">Kontoregistrering er ikke understøttet</string>
     <string name="no_xmpp_adddress_found">Ingen XMPP-adresse fundet</string>
-    </resources>
+    <string name="account_status_temporary_auth_failure">Midlertidig godkendelsesfejl</string>
+    <string name="delete_avatar">Slet avatar</string>
+    <string name="audio_video_disabled_tor">Opkald er deaktiveret ved brug af Tor</string>
+    <string name="switch_to_video">Skift til video</string>
+    <string name="reject_switch_to_video">Afvis skift til video anmodning</string>
+
+</resources>

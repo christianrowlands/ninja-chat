@@ -87,15 +87,20 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     private OnContactPictureClicked mOnContactPictureClickedListener;
     private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
     private boolean mUseGreenBackground = false;
+    private final boolean mForceNames;
 
-    public MessageAdapter(XmppActivity activity, List<Message> messages) {
+    public MessageAdapter(final XmppActivity activity, final List<Message> messages, final boolean forceNames) {
         super(activity, 0, messages);
         this.audioPlayer = new AudioPlayer(this);
         this.activity = activity;
         metrics = getContext().getResources().getDisplayMetrics();
         updatePreferences();
+        this.mForceNames = forceNames;
     }
 
+    public MessageAdapter(final XmppActivity activity, final List<Message> messages) {
+        this(activity, messages, false);
+    }
 
     private static void resetClickListener(View... views) {
         for (View view : views) {
@@ -233,7 +238,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 error = true;
                 break;
             default:
-                if (multiReceived) {
+                if (mForceNames || multiReceived) {
                     info = UIHelper.getMessageDisplayName(message);
                 }
                 break;

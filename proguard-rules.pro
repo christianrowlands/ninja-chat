@@ -25,6 +25,8 @@
 -dontwarn com.google.firebase.analytics.connector.AnalyticsConnector
 -dontwarn java.lang.**
 -dontwarn javax.lang.**
+-dontwarn org.webrtc.Dav1dDecoder
+
 
 -dontwarn com.android.org.conscrypt.SSLParametersImpl
 -dontwarn org.apache.harmony.xnet.provider.jsse.SSLParametersImpl

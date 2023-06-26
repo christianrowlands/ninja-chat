@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.databinding.DataBindingUtil;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -136,30 +137,41 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
             }
         }
         if (saveFile) {
-            new Thread(
-                            () -> {
-                                try {
-                                    if (!outputFileWrittenLatch.await(2, TimeUnit.SECONDS)) {
-                                        Log.d(
-                                                Config.LOGTAG,
-                                                "time out waiting for output file to be written");
-                                    }
-                                } catch (InterruptedException e) {
-                                    Log.d(
-                                            Config.LOGTAG,
-                                            "interrupted while waiting for output file to be written",
-                                            e);
-                                }
-                                runOnUiThread(
-                                        () -> {
-                                            setResult(
-                                                    Activity.RESULT_OK,
-                                                    new Intent()
-                                                            .setData(Uri.fromFile(mOutputFile)));
-                                            finish();
-                                        });
-                            })
-                    .start();
+            new Thread(new Finisher(outputFileWrittenLatch, mOutputFile, this)).start();
+        }
+    }
+
+    private static class Finisher implements Runnable {
+
+        private final CountDownLatch latch;
+        private final File outputFile;
+        private final WeakReference<Activity> activityReference;
+
+        private Finisher(CountDownLatch latch, File outputFile, Activity activity) {
+            this.latch = latch;
+            this.outputFile = outputFile;
+            this.activityReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void run() {
+            try {
+                if (!latch.await(8, TimeUnit.SECONDS)) {
+                    Log.d(Config.LOGTAG, "time out waiting for output file to be written");
+                }
+            } catch (final InterruptedException e) {
+                Log.d(Config.LOGTAG, "interrupted while waiting for output file to be written", e);
+            }
+            final Activity activity = activityReference.get();
+            if (activity == null) {
+                return;
+            }
+            activity.runOnUiThread(
+                    () -> {
+                        activity.setResult(
+                                Activity.RESULT_OK, new Intent().setData(Uri.fromFile(outputFile)));
+                        activity.finish();
+                    });
         }
     }
 
@@ -187,7 +199,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
         setupFileObserver(parentDirectory);
     }
 
-    private void setupFileObserver(File directory) {
+    private void setupFileObserver(final File directory) {
         mFileObserver =
                 new FileObserver(directory.getAbsolutePath()) {
                     @Override
@@ -207,7 +219,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(final View view) {
         switch (view.getId()) {
             case R.id.cancel_button:
                 mHandler.removeCallbacks(mTickExecutor);

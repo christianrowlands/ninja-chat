@@ -31,10 +31,7 @@
     <string name="minutes_ago">%d min sedan</string>
     <plurals name="x_unread_conversations">
         <item quantity="one">%d oläst konversation</item>
-
-    
         <item quantity="other">%d olästa konversationer</item>
-
     </plurals>
     <string name="sending">skickar…</string>
     <string name="message_decrypting">Avkrypterar meddelande. Vänta…</string>
@@ -84,7 +81,7 @@
     <string name="send_failed">sändning misslyckades</string>
     <string name="preparing_image">Förbereder att skicka bild</string>
     <string name="preparing_images">Förbereder att skicka bilder</string>
-    <string name="sharing_files_please_wait">Delar filer. Vänta...</string>
+    <string name="sharing_files_please_wait">Delar filer. Vänta…</string>
     <string name="action_clear_history">Rensa historik</string>
     <string name="clear_conversation_history">Rensa konversationshistorik</string>
     <string name="clear_histor_msg">Vill du radera alla meddelanden i den här konversationen?\n\n<b>Varning:</b> Det här påverkar inte meddelanden som finns lagrade på andra enheter eller servrar.</string>
@@ -294,8 +291,6 @@
     <string name="title_pref_enable_quiet_hours">Aktivera tysta timmar</string>
     <string name="pref_quiet_hours_summary">Notifieringar kommer vara tysta under tysta timmar</string>
     <string name="pref_expert_options_other">Annat</string>
-    <string name="pref_autojoin">Synkronisera med bokmärken</string>
-    <string name="pref_autojoin_summary">Gå med i gruppchattar automatiskt om bokmärket säger det</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-fingeravtryck kopierat till urklipp</string>
     <string name="conference_banned">Du är avstängd från denna gruppchatt</string>
     <string name="conference_members_only">Denna gruppchatt är endast för medlemmar</string>
@@ -538,10 +533,10 @@
     <string name="this_account_is_disabled">Du har deaktiverat detta konto</string>
     <string name="security_error_invalid_file_access">Säkerhetsfel: Ogiltig filåtkomst!</string>
     <string name="no_application_to_share_uri">Ingen applikation hittades för att dela URI</string>
-    <string name="share_uri_with">Dela URI med...</string>
+    <string name="share_uri_with">Dela URI med…</string>
     <string name="welcome_text_quicksy"><![CDATA[Quicksy är en spin-off av den populära XMPP-klienten Conversations med automatisk kontaktupptäckt.<br><br>Du registrerar dig med ditt telefonnummer och Quicksy kommer automatiskt – baserat på telefonnumren i din adressbok – att föreslå möjliga kontakter till dig.<br><br>Genom att registrera dig godkänner du vår <a href=\"https://quicksy.im/#privacy\">integritetspolicy</a>.]]></string>
     <string name="agree_and_continue">Acceptera och gå vidare</string>
-    <string name="magic_create_text">En guide har skapats för kontoskapande på conversations.im.¹\nNär du väljer conversations.im som leverantör kommer du att kunna kommunicera med användare av andra leverantörer genom att ge dem din fullständiga XMPP-adress.</string>
+    <string name="magic_create_text">En guide har skapats för kontoskapande på ninja.chat.¹\nNär du väljer ninja.chat som leverantör kommer du att kunna kommunicera med användare av andra leverantörer genom att ge dem din fullständiga XMPP-adress.</string>
     <string name="your_full_jid_will_be">Din fullständiga XMPP-adress kommer att vara: %s</string>
     <string name="create_account">Skapa konto</string>
     <string name="use_own_provider">Använd min egen leverantör</string>
@@ -691,7 +686,7 @@
     <string name="mtm_accept_cert">Godkänn okänt certifikat?</string>
     <string name="mtm_trust_anchor">Servercertifikatet är inte signerat av en känd certifikatutfärdare.</string>
     <string name="mtm_accept_servername">Acceptera servernamn som inte matchar?</string>
-    <string name="mtm_hostname_mismatch">Servern kunde inte autentisera som \&quot;%s\&quot;. Certifikatet är endast giltigt för:</string>
+    <string name="mtm_hostname_mismatch">Servern kunde inte autentisera som \"%s\". Certifikatet är endast giltigt för:</string>
     <string name="mtm_connect_anyway">Vill du ansluta ändå?</string>
     <string name="mtm_cert_details">Certifikatdetaljer:</string>
     <string name="once">En gång</string>
@@ -915,4 +910,4 @@
     <string name="no_application_found">Ingen applikation hittades</string>
     <string name="invite_to_app">Bjud in till Conversations</string>
     <string name="no_xmpp_adddress_found">Ingen XMPP-adress hittades</string>
-    </resources>
+</resources>
