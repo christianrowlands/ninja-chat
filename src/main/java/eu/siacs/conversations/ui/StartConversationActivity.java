@@ -322,18 +322,18 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 prefilled = null;
             }
             switch (actionItem.getId()) {
-                case R.id.discover_public_channels:
+                /*case R.id.discover_public_channels:
                     startActivity(new Intent(this, ChannelDiscoveryActivity.class));
                     break;
                 case R.id.join_public_channel:
                     showJoinConferenceDialog(prefilled);
-                    break;
+                    break;*/
                 case R.id.create_private_group_chat:
                     showCreatePrivateGroupChatDialog();
                     break;
-                case R.id.create_public_channel:
+                /*case R.id.create_public_channel:
                     showPublicChannelDialog();
-                    break;
+                    break;*/
                 case R.id.create_contact:
                     showCreateContactDialog(prefilled, null);
                     break;
@@ -757,9 +757,9 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                         final AtomicBoolean requestPermission = new AtomicBoolean(false);
                         builder.setTitle(R.string.sync_with_contacts);
                         if (QuickConversationsService.isQuicksy()) {
-                            builder.setMessage(Html.fromHtml(getString(R.string.sync_with_contacts_quicksy_static)));
+                            builder.setMessage(Html.fromHtml(getString(R.string.sync_with_contacts_quicksy)));
                         } else {
-                            builder.setMessage(getString(R.string.sync_with_contacts_long, getString(R.string.app_name)));
+                            builder.setMessage(Html.fromHtml(getString(R.string.sync_with_contacts_long, getString(R.string.app_name))));
                         }
                         @StringRes int confirmButtonText;
                         if (QuickConversationsService.isConversations()) {

@@ -9,7 +9,7 @@ Design principles:
 
 Features:
 
-* End-to-end encryption with either <a href="http://conversations.im/omemo/">OMEMO</a> or <a href="http://openpgp.org/about/">OpenPGP</a>
+* End-to-end encryption with either <a href="http://ninja.chat/omemo/">OMEMO</a> or <a href="http://openpgp.org/about/">OpenPGP</a>
 * Sending and receiving images
 * Encrypted audio and video calls (DTLS-SRTP)
 * Intuitive UI that follows Android Design guidelines
@@ -20,7 +20,11 @@ Features:
 * Multiple accounts / unified inbox
 * Very low impact on battery life
 
+<<<<<<< HEAD
 Conversations makes it very easy to create an account on the free conversations.im server. However Conversations will work with any other XMPP server as well. A lot of XMPP servers are run by volunteers and are free of charge.
+=======
+Ninja Chat makes it very easy to create an account on the free ninja.chat server. However Ninja Chat will work with any other XMPP server as well. A lot of XMPP servers are run by volunteers and are free of charge.
+>>>>>>> ninja-master
 
 XMPP Features:
 

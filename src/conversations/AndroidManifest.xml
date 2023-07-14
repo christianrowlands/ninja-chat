@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="eu.siacs.conversations">
 
-    <application android:icon="@mipmap/new_launcher">
+    <application>
         <activity
             android:name=".ui.ManageAccountActivity"
             android:label="@string/title_activity_manage_accounts"
@@ -24,9 +25,9 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.ImportBackupActivity"
-            android:exported="true"
             android:label="@string/restore_backup"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

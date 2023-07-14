@@ -987,8 +987,8 @@
     <string name="pref_up_push_account_summary">Llogaria përmes së cilës do të merren mesazhet push.</string>
     <string name="pref_up_push_server_title">Shërbyes Push</string>
     <string name="pref_up_push_server_summary">Një shërbyes push i zgjedhur nga përdoruesi, përmes të cilit të kalohen te pajisja juaj mesazhet push përmes XMPP-je.</string>
-    <string name="magic_create_text">Ka të hartuar një udhërrëfyes mbi krijim llogarish te conversations.im.
-\nKu zgjidhet conversations.im si shërbim, do të jeni në gjendje të komunikoni me përdorues prej shërbimesh të tjera duke u dhënë atyre adresën tuaj të plotë XMPP.</string>
+    <string name="magic_create_text">Ka të hartuar një udhërrëfyes mbi krijim llogarish te ninja.chat.
+\nKu zgjidhet ninja.chat si shërbim, do të jeni në gjendje të komunikoni me përdorues prej shërbimesh të tjera duke u dhënë atyre adresën tuaj të plotë XMPP.</string>
     <plurals name="n_missed_calls_from_m_contacts">
         <item quantity="one">%1$d thirrje të humbur prej %2$d kontakti</item>
         <item quantity="other">%1$d thirrje të humbur prej %2$d kontaktesh</item>

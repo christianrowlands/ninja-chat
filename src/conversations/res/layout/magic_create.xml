@@ -93,7 +93,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:padding="8dp"
-                        android:src="@drawable/main_logo" />
+                        android:src="@drawable/ninja_main_logo" />
                 </RelativeLayout>
             </RelativeLayout>
         </ScrollView>

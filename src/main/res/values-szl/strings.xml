@@ -566,8 +566,8 @@
     <string name="no_application_to_share_uri">Niy szło znojś aplikacyje do udostympniynio URI</string>
     <string name="share_uri_with">Udostympnij URI ze pōmocōm…</string>
     <string name="agree_and_continue">Zgodzōm sie, kōntynuuj</string>
-    <string name="magic_create_text">Pokludzymy cie bez proces tworzynio kōnta na conversations.im.¹
-\nKej ôbieresz conversations.im za liferanta, to poradzisz kōmunikować sie ze używoczami inkszych liferantōw, jeźli podosz im swoja połno adresa XMPP.</string>
+    <string name="magic_create_text">Pokludzymy cie bez proces tworzynio kōnta na ninja.chat.¹
+\nKej ôbieresz ninja.chat za liferanta, to poradzisz kōmunikować sie ze używoczami inkszych liferantōw, jeźli podosz im swoja połno adresa XMPP.</string>
     <string name="your_full_jid_will_be">Twoja połno adresa XMPP to: %s</string>
     <string name="create_account">Stwōrz kōnto</string>
     <string name="use_own_provider">Użyj inkszego serwera</string>

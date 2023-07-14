@@ -187,8 +187,8 @@
     <string name="mgmt_account_delete_confirm_text">Изтриването на профила Ви ще изтрие и цялата история на разговорите Ви</string>
     <string name="attach_record_voice">Запис на глас</string>
     <string name="account_settings_jabber_id">XMPP адрес</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="block_jabber_id">Блокиране на XMPP адрес</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
     <string name="password">Парола</string>
     <string name="invalid_jid">Това не е правилен XMPP адрес</string>
     <string name="error_out_of_memory">Няма достатъчно памет. Изображението е твърде голямо.</string>
@@ -472,7 +472,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Показване като „зает“, когато устройството е на вибрация</string>
     <string name="pref_show_connection_options">Разширени настройки за връзката</string>
     <string name="pref_show_connection_options_summary">Показване на настройките за сървър и порт при установка на профил</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Влизане със сертификат</string>
     <string name="unable_to_parse_certificate">Сертификатът не може да бъде прочетен</string>
     <string name="mam_prefs">Настройки за архивирането</string>
@@ -676,7 +676,7 @@
     <string name="message">Съобщение</string>
     <string name="private_messages_are_disabled">Личните съобщения са изключени</string>
     <string name="huawei_protected_apps">Защитени приложения</string>
-    <string name="huawei_protected_apps_summary">Ако искате да продължите да получавате известия дори когато екранът е заключен, трябва да добавите „Conversations“ към списъка от защитени приложения.</string>
+    <string name="huawei_protected_apps_summary">Ако искате да продължите да получавате известия дори когато екранът е заключен, трябва да добавите „Ninja Chat“ към списъка от защитени приложения.</string>
     <string name="mtm_accept_cert">Приемане на непознатия сертификат?</string>
     <string name="mtm_trust_anchor">Сървърният сертификат не е подписан от познат център за сертификация.</string>
     <string name="mtm_accept_servername">Приемане на несъвпадащото име на сървъра?</string>
@@ -825,7 +825,7 @@
     <string name="ebook">е-книга</string>
     <string name="video_original">Оригинално (некомпресирано)</string>
     <string name="open_with">Отваряне с…</string>
-    <string name="set_profile_picture">Профилна снимка за Conversations</string>
+    <string name="set_profile_picture">Профилна снимка за Ninja Chat</string>
     <string name="choose_account">Изберете профил</string>
     <string name="restore_backup">Възстановяване от резервно копие</string>
     <string name="restore">Възстановяване</string>

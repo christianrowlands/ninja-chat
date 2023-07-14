@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="server_select_text">XMPP është një rrjet shkëmbimi mesazhesh të atypëratyshëm i pavarur nga shërbimet. Këtë klient mund ta përdorni me cilindo shërbyes XMPP që zgjidhni.
-\nMegjithatë, për lehtësi, e kemi bërë të kollajshme të krijohet një llogari te conversations.im, një shërbim posaçërisht i përshtatshëm për përdorim me Conversations.</string>
+\nMegjithatë, për lehtësi, e kemi bërë të kollajshme të krijohet një llogari te ninja.chat, një shërbim posaçërisht i përshtatshëm për përdorim me Ninja Chat.</string>
     <string name="magic_create_text_on_x">Jeni ftuar te %1$s. Do t’ju udhëheqim përmes procesit të krijimit të një llogarie.
 \nKur zgjidhet %1$s si shërbim, do të jeni në gjendje të komunikoni me përdorues nga shërbime të tjera duke u dhënë adresën tuaj të plotë XMPP.</string>
     <string name="magic_create_text_fixed">Jeni ftuar te %1$s. Për ju është zgjedhur tashmë një emër përdoruesi. Do t’ju udhëheqim përmes procesit të krijimit të një llogarie.
@@ -12,7 +12,7 @@
     <string name="share_invite_with">Ndajeni ftesën me…</string>
     <string name="create_new_account">Krijoni llogari të re</string>
     <string name="pick_a_server">Zgjidhni shërbimin tuaj XMPP</string>
-    <string name="use_conversations.im">Përdor conversations.im</string>
+    <string name="use_ninja.chat">Përdor ninja.chat</string>
     <string name="do_you_have_an_account">Keni tashmë një llogari XMPP\? Mund të jetë kështu nëse përdorni tashmë një klient tjetër XMPP, ose e keni përdorur Conversations më parë. Nëse jo, mund të krijoni një llogari të re XMPP që tani.
 \nNdihmëz: Disa shërbime email-i ofrojnë gjithashtu llogari XMPP.</string>
     <string name="your_server_invitation">Ftesë nga shërbyesi juaj</string>

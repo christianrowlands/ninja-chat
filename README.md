@@ -1,6 +1,6 @@
-<h1 align="center">Conversations</h1>
+<h1 align="center">Ninja Chat</h1>
 
-<p align="center">Conversations: the very last word in instant messaging</p>
+<p align="center">Ninja Chat: Become a Ninja</p>
 
 <p align="center">
   <a href="https://play.google.com/store/apps/details?id=eu.siacs.conversations&amp;referrer=utm_source%3Dcodeberg">
@@ -12,6 +12,46 @@
 </p>
 
 ![screenshots](https://codeberg.org/iNPUTmice/Conversations/raw/branch/master/screenshots.png)
+
+## Attribution
+
+The Ninja Chat app was forked from [Conversations.im](https://conversations.im/) and has been slightly
+modified. Conversations.im is an outstanding app so hats off to Daniel Gultsch! 🍻
+
+
+## Ninja Chat Build
+
+### Development
+
+To build a development debug version of Ninja Chat, you can use the command:
+```
+./gradlew assembleConversationsFreeSystemDebug
+```
+
+To build and install the apk onto a connected device us the command:
+```
+./gradlew installConversationsFreeSystemDebug
+```
+
+### Release
+
+To build a release version of Ninja Chat first create a file named signing.properties and enter in
+the keystore information that is used to sign the app (used to ensure the source of the app is legit).
+```
+keystore=<path to keystore file>
+keystore.password=
+keystore.alias=
+```
+
+Then, build the release bundle using the following command
+```
+./gradlew bundleConversationsFreeSystemRelease
+```
+
+There is also a GitLab CI/CD job setup to build the release APK and bundle.
+
+----- Everything that follows in this README is from the original Conversations.im repo. -----
+>>>>>>> ninja-master
 
 ## Design principles
 

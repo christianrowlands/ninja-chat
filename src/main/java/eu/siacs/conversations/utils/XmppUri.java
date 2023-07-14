@@ -35,7 +35,7 @@ public class XmppUri {
     private Map<String, String> parameters = Collections.emptyMap();
     private boolean safeSource = true;
 
-    public static final String INVITE_DOMAIN = "conversations.im";
+    public static final String INVITE_DOMAIN = "ninja.chat";
 
     public XmppUri(final String uri) {
         try {
@@ -143,14 +143,14 @@ public class XmppUri {
         List<String> segments = uri.getPathSegments();
         if ("https".equalsIgnoreCase(scheme) && INVITE_DOMAIN.equalsIgnoreCase(host)) {
             if (segments.size() >= 2 && segments.get(1).contains("@")) {
-                // sample : https://conversations.im/i/foo@bar.com
+                // sample : https://ninja.chat/i/foo@bar.com
                 try {
                     jid = Jid.ofEscaped(lameUrlDecode(segments.get(1))).toEscapedString();
                 } catch (Exception e) {
                     jid = null;
                 }
             } else if (segments.size() >= 3) {
-                // sample : https://conversations.im/i/foo/bar.com
+                // sample : https://ninja.chat/i/foo/bar.com
                 jid = segments.get(1) + "@" + segments.get(2);
             }
             if (segments.size() > 1 && "j".equalsIgnoreCase(segments.get(0))) {

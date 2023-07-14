@@ -172,7 +172,7 @@
     <string name="attach_record_voice">Записати голос</string>
     <string name="account_settings_jabber_id">Адреса XMPP</string>
     <string name="block_jabber_id">Заблокувати адресу XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Пароль</string>
     <string name="invalid_jid">Це недійсна адреса XMPP</string>
     <string name="error_out_of_memory">Пам\'ять вичерпано. Завелике зображення.</string>
@@ -218,8 +218,8 @@
     <string name="select">Вибрати</string>
     <string name="contact_already_exists">Контакт уже існує</string>
     <string name="join">Приєднатися</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Зберегти до закладок</string>
     <string name="delete_bookmark">Вилучити закладку</string>
     <string name="destroy_room">Вилучити груповий чат</string>
@@ -451,7 +451,7 @@
     <string name="pref_treat_vibrate_as_silent">Вважати вібро за безшумний режим</string>
     <string name="pref_show_connection_options">Розширені налаштування з\'єднання</string>
     <string name="pref_show_connection_options_summary">Показати налаштування імені вузла та порту при налаштуванні облікового запису</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Вхід із сертифікатом</string>
     <string name="unable_to_parse_certificate">Не можу розпізнати сертифікат</string>
     <string name="mam_prefs">Налаштування збереження</string>

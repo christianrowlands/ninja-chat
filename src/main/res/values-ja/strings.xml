@@ -185,7 +185,7 @@
     <string name="attach_record_voice">音声を録音</string>
     <string name="account_settings_jabber_id">XMPP アドレス</string>
     <string name="block_jabber_id">XMPP アドレスをブロック</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">パスワード</string>
     <string name="invalid_jid">正しい XMPP アドレスではありません</string>
     <string name="error_out_of_memory">メモリ不足です。画像が大きすぎます</string>
@@ -233,9 +233,9 @@
     <string name="select">選択</string>
     <string name="contact_already_exists">連絡先は既に存在します</string>
     <string name="join">参加</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
-    <string name="save_as_bookmark">ブックマークに保存</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
+    <string name="save_as_bookmark">ブックマークとして保存</string>
     <string name="delete_bookmark">ブックマークを削除</string>
     <string name="destroy_room">グループチャットを破棄する</string>
     <string name="destroy_channel">談話室を破棄する</string>
@@ -472,8 +472,8 @@
     <string name="pref_treat_vibrate_as_silent">バイブレートをサイレントモードとして扱う</string>
     <string name="pref_treat_vibrate_as_dnd_summary">デバイスがバイブレートのときは取込中と表示</string>
     <string name="pref_show_connection_options">拡張接続設定</string>
-    <string name="pref_show_connection_options_summary">アカウントを設定するときに、ホスト名とポートの設定を表示</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="pref_show_connection_options_summary">アカウントを設定するときにホスト名とポートの設定を表示します</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">証明書でログイン</string>
     <string name="unable_to_parse_certificate">証明書を解析できません</string>
     <string name="mam_prefs">アーカイブ設定</string>
@@ -532,7 +532,7 @@
     <string name="no_application_to_share_uri">URI を共有するアプリが見つかりません</string>
     <string name="share_uri_with">…で URI を共有</string>
     <string name="agree_and_continue">同意して続行</string>
-    <string name="magic_create_text">conversations.im 上にアカウントを作成する設定の指南です。¹\nconversations.im をプロバイダーとして選択した場合、あなたの完全な XMPP アドレスを他のプロバイダーのユーザーに示すことで、その人と連絡をとることができます。</string>
+    <string name="magic_create_text">ninja.chat のアカウント作成のための指南が設定されています。¹\nninja.chat をプロバイダーとして選択した場合、あなたの完全なXMPPアドレスを与えることで、他のプロバイダーのユーザーと連絡をとることができます。</string>
     <string name="your_full_jid_will_be">あなたの完全なXMPPアドレスは: %s</string>
     <string name="create_account">アカウントを作成</string>
     <string name="use_own_provider">自分のプロバイダーを使用</string>
@@ -557,7 +557,7 @@
     <string name="gp_medium">中</string>
     <string name="gp_long">長</string>
     <string name="pref_broadcast_last_activity">ブロードキャストを使用</string>
-    <string name="pref_broadcast_last_activity_summary">Conversations を使用するときに、連絡先に知らせましょう</string>
+    <string name="pref_broadcast_last_activity_summary">Ninja Chat を使用するとき、連絡先に知らせましょう</string>
     <string name="pref_privacy">プライバシー</string>
     <string name="pref_theme_options">テーマ</string>
     <string name="pref_theme_options_summary">カラーパレットの選択</string>
@@ -672,7 +672,7 @@
     <string name="message">メッセージ</string>
     <string name="private_messages_are_disabled">非公開メッセージを無効化しました</string>
     <string name="huawei_protected_apps">保護されたアプリ</string>
-    <string name="huawei_protected_apps_summary">画面がオフになっているときでも通知を受信し続けるには、保護されたアプリの一覧に Conversations を追加する必要があります。</string>
+    <string name="huawei_protected_apps_summary">画面がオフになっている場合でも通知を受信し続けるには、保護されたアプリの一覧に Ninja Chat を追加する必要があります。</string>
     <string name="mtm_accept_cert">未知の証明書を受け入れますか?</string>
     <string name="mtm_trust_anchor">サーバー証明書が既知の認証局によって署名されていません。</string>
     <string name="mtm_accept_servername">不一致のサーバー名を受け入れますか?</string>
@@ -821,7 +821,7 @@
     <string name="ebook">電子書籍</string>
     <string name="video_original">そのまま (非圧縮)</string>
     <string name="open_with">…で開く</string>
-    <string name="set_profile_picture">Conversations プロフィール画像</string>
+    <string name="set_profile_picture">Ninja Chat プロフィール写真</string>
     <string name="choose_account">アカウントを選択</string>
     <string name="restore_backup">バックアップを復元</string>
     <string name="restore">復元</string>
@@ -869,10 +869,10 @@
     <string name="add_anway">とにかく追加</string>
     <string name="this_looks_like_channel">これは談話室アドレスのようです</string>
     <string name="share_backup_files">バックアップファイルを共有</string>
-    <string name="conversations_backup">Conversations のバックアップ</string>
+    <string name="conversations_backup">Ninja Chat のバックアップ</string>
     <string name="event">出来事</string>
     <string name="open_backup">バックアップを開く</string>
-    <string name="not_a_backup_file">選択したファイルは、 Conversations のバックアップファイルではありません</string>
+    <string name="not_a_backup_file">選択したファイルは、 Ninja Chat のバックアップファイルではありません</string>
     <string name="account_already_setup">このアカウントは既に設定されています</string>
     <string name="please_enter_password">このアカウントのパスワートを入力してください</string>
     <string name="unable_to_perform_this_action">この操作を実行できません</string>

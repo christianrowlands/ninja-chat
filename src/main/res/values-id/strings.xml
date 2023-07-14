@@ -177,7 +177,7 @@
     <string name="attach_record_voice">Rekam suara</string>
     <string name="account_settings_jabber_id">alamat XMPP</string>
     <string name="block_jabber_id">Blok alamat XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Password</string>
     <string name="invalid_jid">Alamat XMPP salah</string>
     <string name="error_out_of_memory">Memori habis. Gambar terlalu besar</string>
@@ -381,7 +381,7 @@
     <string name="download_failed_could_not_connect">Unduhan gagal: Tidak dapat terhubung ke host</string>
     <string name="account_status_tor_unavailable">Tor network tidak tersedia</string>
     <string name="server_info_broken">Rusak</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="pref_connection_options">Koneksi</string>
     <string name="pref_use_tor">Hubungkan via Tor</string>
     <string name="account_settings_hostname">Hostname</string>

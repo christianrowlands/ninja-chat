@@ -235,8 +235,8 @@
     <string name="select">Изабери</string>
     <string name="contact_already_exists">Контакт већ постоји</string>
     <string name="join">Придружи се</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Сачувај као обележивач</string>
     <string name="delete_bookmark">Обриши обележивач</string>
     <string name="destroy_room">Уклони групно ћаскање</string>

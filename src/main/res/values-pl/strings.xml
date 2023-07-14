@@ -130,7 +130,7 @@
     <string name="pref_notification_grace_period_summary">Długość czasu kiedy powiadomienia są uśpione po wykryciu aktywności na jednym z twoich innych urządzeń.</string>
     <string name="pref_advanced_options">Zaawansowane</string>
     <string name="pref_never_send_crash">Nie wysyłaj raportów awarii</string>
-    <string name="pref_never_send_crash_summary">Wysyłając nam ślady stosu pomagasz w rozwoju</string>
+    <string name="pref_never_send_crash_summary">Wysyłając nam ślady stosu pomagasz w rozwoju</string>
     <string name="pref_confirm_messages">Potwierdzenia wiadomości</string>
     <string name="pref_confirm_messages_summary">Zezwól na wysyłanie do osób z twojej listy kontaktów informacji o tym, kiedy otrzymałeś i przeczytałeś wiadomość od nich</string>
     <string name="pref_prevent_screenshots">Zapobiegaj zrzutom ekranu</string>
@@ -192,7 +192,7 @@
     <string name="attach_record_voice">Nagraj głos</string>
     <string name="account_settings_jabber_id">Adres XMPP</string>
     <string name="block_jabber_id">Zablokuj adres XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Hasło</string>
     <string name="invalid_jid">To nie jest poprawny adres XMPP</string>
     <string name="error_out_of_memory">Brak pamięci. Obraz jest za duży</string>
@@ -240,8 +240,8 @@
     <string name="select">Wybierz</string>
     <string name="contact_already_exists">Kontakt już istnieje</string>
     <string name="join">Dołącz</string>
-    <string name="channel_full_jid_example">kanał@konferencje.example.com/nick</string>
-    <string name="channel_bare_jid_example">kanał@konferencja.example.com</string>
+    <string name="channel_full_jid_example">kanał@konferencje.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">kanał@konferencja.ninja.chat</string>
     <string name="save_as_bookmark">Dodaj jako zakładkę</string>
     <string name="delete_bookmark">Usuń zakładkę</string>
     <string name="destroy_room">Usuń konferencję</string>
@@ -486,7 +486,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Pokaż jako Zajęty kiedy urządzenie jest w trybie wibracji</string>
     <string name="pref_show_connection_options">Rozszerzone ustawienia połączenia</string>
     <string name="pref_show_connection_options_summary">Pokaż nazwę hosta i ustawienia portu przy dodawaniu konta</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Zaloguj przy użyciu certyfikatu</string>
     <string name="unable_to_parse_certificate">Nie mogę odczytać certyfikatu</string>
     <string name="mam_prefs">Preferencje archiwizacji</string>
@@ -550,8 +550,8 @@
     <string name="no_application_to_share_uri">Nie odnaleziono aplikacji do udostępnienia URI</string>
     <string name="share_uri_with">Udostępnij URI za pomocą…</string>
     <string name="agree_and_continue">Zgoda i kontynuuj</string>
-    <string name="magic_create_text">Poprowadzimy cię przez proces tworzenia konta na conversations.im.
-\nKiedy wybierzesz conversations.im jako dostawcę będziesz mógł komunikować się z innymi osobami jeśli podasz im swój pełen adres XMPP.</string>
+    <string name="magic_create_text">Poprowadzimy cię przez proces tworzenia konta na ninja.chat.
+\nKiedy wybierzesz ninja.chat jako dostawcę będziesz mógł komunikować się z innymi osobami jeśli podasz im swój pełen adres XMPP.</string>
     <string name="your_full_jid_will_be">Twój pełen adres XMPP to: %s</string>
     <string name="create_account">Utwórz konto</string>
     <string name="use_own_provider">Użyj innego serwera</string>
@@ -576,7 +576,7 @@
     <string name="gp_medium">Średni</string>
     <string name="gp_long">Długi</string>
     <string name="pref_broadcast_last_activity">Ogłaszaj użycie</string>
-    <string name="pref_broadcast_last_activity_summary">Powiadamiaj kontakty o tym, że używasz Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Powiadamiaj kontakty o tym, że używasz Ninja Chat</string>
     <string name="pref_privacy">Prywatność</string>
     <string name="pref_theme_options">Skórka</string>
     <string name="pref_theme_options_summary">Wybierz paletę kolorów</string>
@@ -709,7 +709,7 @@
     <string name="message">Wiadomość</string>
     <string name="private_messages_are_disabled">Prywatne wiadomości są wyłączone</string>
     <string name="huawei_protected_apps">Aplikacje chronione</string>
-    <string name="huawei_protected_apps_summary">Aby otrzymywać powiadomienia nawet kiedy ekran jest wyłączony musisz dodać Conversations do listy chronionych aplikacji.</string>
+    <string name="huawei_protected_apps_summary">Aby otrzymywać powiadomienia nawet kiedy ekran jest wyłączony musisz dodać Ninja Chat do listy chronionych aplikacji.</string>
     <string name="mtm_accept_cert">Zaakceptować nieznany certyfikat?</string>
     <string name="mtm_trust_anchor">Certyfikat serwera nie jest podpisany przez znany Urząd Certyfikacji.</string>
     <string name="mtm_accept_servername">Czy zaakceptować niepasującą nazwę serwera?</string>
@@ -860,7 +860,7 @@
     <string name="ebook">e-book</string>
     <string name="video_original">Oryginalne (nieskompresowane)</string>
     <string name="open_with">Otwórz za pomocą…</string>
-    <string name="set_profile_picture">Obrazek profilowy Conversations</string>
+    <string name="set_profile_picture">Obrazek profilowy Ninja Chat</string>
     <string name="choose_account">Wybierz konto</string>
     <string name="restore_backup">Przywróć kopię zapasową</string>
     <string name="restore">Przywróć</string>
@@ -908,10 +908,10 @@
     <string name="add_anway">Dodaj i tak</string>
     <string name="this_looks_like_channel">To wygląda jak adres kanału</string>
     <string name="share_backup_files">Udostępnij pliki kopii zapasowych</string>
-    <string name="conversations_backup">Kopia zapasowa Conversations</string>
+    <string name="conversations_backup">Kopia zapasowa Ninja Chat</string>
     <string name="event">Zdarzenie</string>
     <string name="open_backup">Otwórz kopię zapasową</string>
-    <string name="not_a_backup_file">Plik, który otworzyłeś, nie jest plikiem kopii zapasowej Conversations</string>
+    <string name="not_a_backup_file">Plik, który otworzyłeś, nie jest plikiem kopii zapasowej Ninja Chat</string>
     <string name="account_already_setup">To konto zostało już ustawione</string>
     <string name="please_enter_password">Proszę podać hasło dla tego konta</string>
     <string name="unable_to_perform_this_action">Nie można wykonać tej akcji</string>
@@ -1012,7 +1012,7 @@
     <string name="failed_deliveries">Nie dostarczone wiadomości</string>
     <string name="more_options">Więcej ustawień</string>
     <string name="no_application_found">Nie znaleziono żadnej aplikacji</string>
-    <string name="invite_to_app">Zaproś do Conversations</string>
+    <string name="invite_to_app">Zaproś do Ninja Chat</string>
     <string name="unable_to_parse_invite">Nie można przetworzyć zaproszenia</string>
     <string name="server_does_not_support_easy_onboarding_invites">Serwer nie wspiera tworzenia zaproszeń</string>
     <string name="no_active_accounts_support_this">Nie ma aktywnych kont wspierających tę funkcję</string>

@@ -538,8 +538,7 @@
     <string name="no_application_to_share_uri">Ingen app fundet der kan dele URL</string>
     <string name="share_uri_with">Del URL med…</string>
     <string name="agree_and_continue">Accepter og fortsætte</string>
-    <string name="magic_create_text">En guide er oprettet til kontooprettelse på conversations.im.
-\nNår du vælger conversations.im som udbyder, vil du være i stand til at kommunikere med brugere af andre udbydere ved at give dem din fulde XMPP-adresse.</string>
+    <string name="magic_create_text">En guide er oprettet til kontooprettelse på ninja.chat.¹\nNår du vælger ninja.chat som udbyder, kan du kommunikere med brugere fra andre udbydere ved at give dem din fulde XMPP-adresse.</string>
     <string name="your_full_jid_will_be">Din fulde XMPP-adresse vil blive: %s</string>
     <string name="create_account">Opret konto</string>
     <string name="use_own_provider">Brug min egen udbyder</string>
@@ -564,7 +563,7 @@
     <string name="gp_medium">Mellem</string>
     <string name="gp_long">Lang</string>
     <string name="pref_broadcast_last_activity">Udsend brug af app</string>
-    <string name="pref_broadcast_last_activity_summary">Lad dine kontakter vide når du bruger Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Lad dine kontakter vide når du bruger Ninja Chat</string>
     <string name="pref_privacy">Privatliv</string>
     <string name="pref_theme_options">Tema</string>
     <string name="pref_theme_options_summary">Vælg farvepalette</string>
@@ -685,7 +684,7 @@
     <string name="message">Besked</string>
     <string name="private_messages_are_disabled">Private beskeder er deaktiveret</string>
     <string name="huawei_protected_apps">Beskyttet apps</string>
-    <string name="huawei_protected_apps_summary">For at modtage underretninger, selv når skærmen er slukket, skal du tilføje Conversations til listen over beskyttede apps.</string>
+    <string name="huawei_protected_apps_summary">For at modtage underretninger, selv når skærmen er slukket, skal du tilføje Ninja Chat til listen over beskyttede apps.</string>
     <string name="mtm_accept_cert">Accepter ukendt certifikat?</string>
     <string name="mtm_trust_anchor">Serverens certifikat er ikke underskrevet af en kendt Certifikat Autoritet.</string>
     <string name="mtm_accept_servername">Accepter fejlbehæftet servernavn?</string>
@@ -835,7 +834,7 @@
     <string name="ebook">e-bog</string>
     <string name="video_original">Original (ukomprimeret)</string>
     <string name="open_with">Åbn med…</string>
-    <string name="set_profile_picture">Conversations profilbillede</string>
+    <string name="set_profile_picture">Ninja Chat profilbillede</string>
     <string name="choose_account">Vælg konto</string>
     <string name="restore_backup">Gendan backup</string>
     <string name="restore">Gendan</string>
@@ -883,10 +882,10 @@
     <string name="add_anway">Tilføj alligvel</string>
     <string name="this_looks_like_channel">Dette ligner en kanal adresse</string>
     <string name="share_backup_files">Del backup filer</string>
-    <string name="conversations_backup">Conversations backup</string>
+    <string name="conversations_backup">Ninja Chat backup</string>
     <string name="event">Begivenhed</string>
     <string name="open_backup">Åben backup</string>
-    <string name="not_a_backup_file">Den fil du valgte er ikke en Conversations backup fil</string>
+    <string name="not_a_backup_file">Den fil du valgte er ikke en Ninja Chat backup fil</string>
     <string name="account_already_setup">Denne konto er allerede oprettet</string>
     <string name="please_enter_password">Indtast adgangskoden til denne konto</string>
     <string name="unable_to_perform_this_action">Kunne ikke udføre denne handling</string>
@@ -977,7 +976,7 @@
     <string name="failed_deliveries">Mislykkede leverancer</string>
     <string name="more_options">Flere valg</string>
     <string name="no_application_found">Intet program fundet</string>
-    <string name="invite_to_app">Inviter til Conversations</string>
+    <string name="invite_to_app">Inviter til Ninja Chat</string>
     <string name="unable_to_parse_invite">Kunne ikke analysere invitation</string>
     <string name="server_does_not_support_easy_onboarding_invites">Server understøtter ikke generering af invitationer</string>
     <string name="no_active_accounts_support_this">Ingen aktive konti understøtter denne funktion</string>

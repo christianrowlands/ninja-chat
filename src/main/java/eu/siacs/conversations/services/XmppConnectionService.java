@@ -68,6 +68,7 @@ import java.io.File;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -129,6 +130,7 @@ import eu.siacs.conversations.ui.UiCallback;
 import eu.siacs.conversations.ui.interfaces.OnAvatarPublication;
 import eu.siacs.conversations.ui.interfaces.OnMediaLoaded;
 import eu.siacs.conversations.ui.interfaces.OnSearchResultsAvailable;
+import eu.siacs.conversations.utils.AccountUtils;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.ConversationsFileObserver;
 import eu.siacs.conversations.utils.CryptoHelper;
@@ -223,7 +225,7 @@ public class XmppConnectionService extends Service {
     private final FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
     private final NotificationService mNotificationService = new NotificationService(this);
-    private final UnifiedPushBroker unifiedPushBroker = new UnifiedPushBroker(this);
+//    private final UnifiedPushBroker unifiedPushBroker = new UnifiedPushBroker(this);
     private final ChannelDiscoveryService mChannelDiscoveryService = new ChannelDiscoveryService(this);
     private final ShortcutService mShortcutService = new ShortcutService(this);
     private final AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
@@ -382,7 +384,7 @@ public class XmppConnectionService extends Service {
             connectMultiModeConversations(account);
             syncDirtyContacts(account);
 
-            unifiedPushBroker.renewUnifiedPushEndpointsOnBind(account);
+//            unifiedPushBroker.renewUnifiedPushEndpointsOnBind(account);
         }
     };
     private final AtomicLong mLastExpiryRun = new AtomicLong(0);
@@ -812,22 +814,22 @@ public class XmppConnectionService extends Service {
                 case ACTION_FCM_TOKEN_REFRESH:
                     refreshAllFcmTokens();
                     break;
-                case ACTION_RENEW_UNIFIED_PUSH_ENDPOINTS:
-                    final String instance = intent.getStringExtra("instance");
-                    final String application = intent.getStringExtra("application");
-                    final Messenger messenger = intent.getParcelableExtra("messenger");
-                    final UnifiedPushBroker.PushTargetMessenger pushTargetMessenger;
-                    if (messenger != null && application != null && instance != null) {
-                        pushTargetMessenger = new UnifiedPushBroker.PushTargetMessenger(new UnifiedPushDatabase.PushTarget(application, instance),messenger);
-                        Log.d(Config.LOGTAG,"found push target messenger");
-                    } else {
-                        pushTargetMessenger = null;
-                    }
-                    final Optional<UnifiedPushBroker.Transport> transport = renewUnifiedPushEndpoints(pushTargetMessenger);
-                    if (instance != null && transport.isPresent()) {
-                        unifiedPushBroker.rebroadcastEndpoint(messenger, instance, transport.get());
-                    }
-                    break;
+//                case ACTION_RENEW_UNIFIED_PUSH_ENDPOINTS:
+//                    final String instance = intent.getStringExtra("instance");
+//                    final String application = intent.getStringExtra("application");
+//                    final Messenger messenger = intent.getParcelableExtra("messenger");
+//                    final UnifiedPushBroker.PushTargetMessenger pushTargetMessenger;
+//                    if (messenger != null && application != null && instance != null) {
+//                        pushTargetMessenger = new UnifiedPushBroker.PushTargetMessenger(new UnifiedPushDatabase.PushTarget(application, instance),messenger);
+//                        Log.d(Config.LOGTAG,"found push target messenger");
+//                    } else {
+//                        pushTargetMessenger = null;
+//                    }
+//                    final Optional<UnifiedPushBroker.Transport> transport = renewUnifiedPushEndpoints(pushTargetMessenger);
+//                    if (instance != null && transport.isPresent()) {
+//                        unifiedPushBroker.rebroadcastEndpoint(messenger, instance, transport.get());
+//                    }
+//                    break;
                 case ACTION_IDLE_PING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         scheduleNextIdlePing();
@@ -957,9 +959,9 @@ public class XmppConnectionService extends Service {
         return pingNow;
     }
 
-    public boolean processUnifiedPushMessage(final Account account, final Jid transport, final Element push) {
-        return unifiedPushBroker.processPushMessage(account, transport, push);
-    }
+//    public boolean processUnifiedPushMessage(final Account account, final Jid transport, final Element push) {
+//        return unifiedPushBroker.processPushMessage(account, transport, push);
+//    }
 
     public void reinitializeMuclumbusService() {
         mChannelDiscoveryService.initializeMuclumbusService();
@@ -1196,7 +1198,7 @@ public class XmppConnectionService extends Service {
         editor.putBoolean(EventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts).apply();
         editor.apply();
         toggleSetProfilePictureActivity(hasEnabledAccounts);
-        reconfigurePushDistributor();
+//        reconfigurePushDistributor();
 
         restoreFromDatabase();
 
@@ -2368,17 +2370,17 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public boolean reconfigurePushDistributor() {
-        return this.unifiedPushBroker.reconfigurePushDistributor();
-    }
-
-    private Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints(final UnifiedPushBroker.PushTargetMessenger pushTargetMessenger) {
-        return this.unifiedPushBroker.renewUnifiedPushEndpoints(pushTargetMessenger);
-    }
-
-    public Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints() {
-        return this.unifiedPushBroker.renewUnifiedPushEndpoints(null);
-    }
+//    public boolean reconfigurePushDistributor() {
+//        return this.unifiedPushBroker.reconfigurePushDistributor();
+//    }
+//
+//    private Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints(final UnifiedPushBroker.PushTargetMessenger pushTargetMessenger) {
+//        return this.unifiedPushBroker.renewUnifiedPushEndpoints(pushTargetMessenger);
+//    }
+//
+//    public Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints() {
+//        return this.unifiedPushBroker.renewUnifiedPushEndpoints(null);
+//    }
 
     private void provisionAccount(final String address, final String password) {
         final Jid jid = Jid.ofEscaped(address);

@@ -461,7 +461,7 @@
     <string name="pref_treat_vibrate_as_silent">Rezgés kezelése csendes módként</string>
     <string name="pref_show_connection_options">Kiterjesztett kapcsolati beállítások</string>
     <string name="pref_show_connection_options_summary">Gépnév és port beállításainak megjelenítése egy fiók beállításakor</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Bejelentkezés tanúsítvánnyal</string>
     <string name="unable_to_parse_certificate">Nem sikerült elemezni a tanúsítványt</string>
     <string name="mam_prefs">Archiválási beállítások</string>
@@ -538,7 +538,7 @@
     <string name="gp_medium">Közepes</string>
     <string name="gp_long">Hosszú</string>
     <string name="pref_broadcast_last_activity">Üzenetszórás használata</string>
-    <string name="pref_broadcast_last_activity_summary">Tudassa partnereivel, hogy mikor használja a Conversations-t</string>
+    <string name="pref_broadcast_last_activity_summary">Tudassa partnereivel, hogy mikor használja a Ninja Chat</string>
     <string name="pref_privacy">Adatvédelem</string>
     <string name="pref_theme_options">Téma</string>
     <string name="pref_theme_options_summary">Színpaletta kiválasztása</string>
@@ -648,7 +648,7 @@
     <string name="message">Üzenet</string>
     <string name="private_messages_are_disabled">A személyes üzenetek le vannak tiltva</string>
     <string name="huawei_protected_apps">Védett alkalmazások</string>
-    <string name="huawei_protected_apps_summary">Ha akkor is szeretne értesítéseket kapni, amikor a kijelző ki van kapcsolva, hozzá kell adnia a Conversations alkalmazást a védett alkalmazások listájához.</string>
+    <string name="huawei_protected_apps_summary">Ha akkor is szeretne értesítéseket kapni, amikor a kijelző ki van kapcsolva, hozzá kell adnia a Ninja Chat alkalmazást a védett alkalmazások listájához.</string>
     <string name="mtm_accept_cert">Elfogadja az ismeretlen tanúsítványt?</string>
     <string name="mtm_trust_anchor">A kiszolgáló tanúsítványa nincs aláírva egy ismert hitelesítésszolgáltató által.</string>
     <string name="mtm_accept_servername">Elfogadja a nem egyező kiszolgálónevet?</string>
@@ -793,7 +793,7 @@
     <string name="ebook">e-könyv</string>
     <string name="video_original">Eredeti (tömörítetlen)</string>
     <string name="open_with">Megnyitás ezzel…</string>
-    <string name="set_profile_picture">Conversations profilkép</string>
+    <string name="set_profile_picture">Ninja Chat profilkép</string>
     <string name="choose_account">Fiók kiválasztása</string>
     <string name="restore_backup">Biztonsági mentés visszaállítása</string>
     <string name="restore">Visszaállítás</string>
@@ -841,10 +841,10 @@
     <string name="add_anway">Hozzáadás mindenképp</string>
     <string name="this_looks_like_channel">Ez egy csatornacímnek tűnik</string>
     <string name="share_backup_files">Biztonsági mentés fájlok megosztása</string>
-    <string name="conversations_backup">Conversations biztonsági mentés</string>
+    <string name="conversations_backup">Ninja Chat biztonsági mentés</string>
     <string name="event">Esemény</string>
     <string name="open_backup">Biztonsági mentés megnyitása</string>
-    <string name="not_a_backup_file">A kiválasztott fájl nem Conversations biztonsági mentés fájl</string>
+    <string name="not_a_backup_file">A kiválasztott fájl nem Ninja Chat biztonsági mentés fájl</string>
     <string name="account_already_setup">Ez a fiók már be lett állítva</string>
     <string name="please_enter_password">Adja meg a fiók jelszavát</string>
     <string name="unable_to_perform_this_action">Nem sikerült végrehajtani ezt a műveletet</string>

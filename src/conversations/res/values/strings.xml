@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Pick your XMPP provider</string>
-    <string name="use_conversations.im">Use conversations.im</string>
+    <string name="use_ninja.chat">Use ninja.chat</string>
     <string name="create_new_account">Create new account</string>
-    <string name="do_you_have_an_account">Do you already have an XMPP account? This might be the case if you are already using a different XMPP client or have used Conversations before. If not you can create a new XMPP account right now.\nHint: Some email providers also provide XMPP accounts.</string>
-    <string name="server_select_text">XMPP is a provider independent instant messaging network. You can use this client with what ever XMPP server you choose.\nHowever for your convenience we made it easy to create an account on conversations.im; a provider specially suited for the use with Conversations.</string>
+    <string name="do_you_have_an_account">Choose \"Create New Account\" if you do not have a ninja.chat account. Select \"I Already Have an Account\" if you already have one.</string>
+    <string name="server_select_text">You can use this client with any XMPP server you choose.\n\n1) The option labeled \"USE NINJA.CHAT\" is designed to communicate securely with a globally accessible server owned by ninja.chat.\n\n2) The option labeled \"CUSTOM SERVER\" can be used to connect to an xmpp server of your choosing.</string>
     <string name="magic_create_text_on_x">You have been invited to %1$s. We will guide you through the process of creating an account.\nWhen picking %1$s as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
     <string name="magic_create_text_fixed">You have been invited to %1$s. A username has already been picked for you. We will guide you through the process of creating an account.\nYou will be able to communicate with users of other providers by giving them your full XMPP address.</string>
     <string name="your_server_invitation">Your server invitation</string>

@@ -173,9 +173,9 @@
     <string name="mgmt_account_enable">啟用帳戶</string>
     <string name="mgmt_account_delete_confirm_text">刪除帳戶將抹除您全部的會話記錄</string>
     <string name="attach_record_voice">錄音</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="account_settings_jabber_id">XMPP 位址</string>
     <string name="block_jabber_id">封鎖 XMPP 位址</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
     <string name="password">密碼</string>
     <string name="invalid_jid">這不是有效的 XMPP 位址</string>
     <string name="error_out_of_memory">記憶體不足，圖片過大</string>
@@ -509,8 +509,8 @@
     <string name="no_application_to_share_uri">找不到可以分享 URI 的應用程式</string>
     <string name="share_uri_with">分享 URI 至…</string>
     <string name="agree_and_continue">同意並繼續</string>
-    <string name="magic_create_text">此指引將為您在 conversations.im 中建立一個帳戶。
-\n使用 conversations.im 作為您的提供者，再將您完整的 XMPP 位址交給使用其他提供者的使用者後，您便能與他們進行交流。</string>
+    <string name="magic_create_text">此指引將為您在 ninja.chat 中建立一個帳戶。
+\n使用 ninja.chat 作為您的提供者，再將您完整的 XMPP 位址交給使用其他提供者的使用者後，您便能與他們進行交流。</string>
     <string name="your_full_jid_will_be">您的完整 XMPP 位址將會是：%s</string>
     <string name="create_account">建立帳戶</string>
     <string name="use_own_provider">使用我自己的提供者</string>
@@ -588,6 +588,7 @@
     <string name="continue_btn">繼續</string>
     <string name="verify_omemo_keys">驗證 OMEMO 金鑰</string>
     <string name="distrust_omemo_key">不再信任裝置</string>
+
     <plurals name="seconds">
         <item quantity="other">%d 秒</item>
     </plurals>
@@ -1021,3 +1022,4 @@
     <string name="group_chats">群組聊天</string>
     <string name="save_as_group_chat">儲存為群組聊天</string>
 </resources>
+

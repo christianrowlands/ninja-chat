@@ -41,12 +41,12 @@ public final class Config {
 
     public static final String LOGTAG = BuildConfig.APP_NAME.toLowerCase(Locale.US);
 
-    public static final Jid BUG_REPORTS = Jid.of("bugs@conversations.im");
+    public static final Jid BUG_REPORTS = Jid.of("craxiomdev@gmail.com");
     public static final Uri HELP = Uri.parse("https://help.conversations.im");
 
 
     public static final String DOMAIN_LOCK = null; //only allow account creation for this domain
-    public static final String MAGIC_CREATE_DOMAIN = "conversations.im";
+    public static final String MAGIC_CREATE_DOMAIN = "ninja.chat";
     public static final Jid QUICKSY_DOMAIN = Jid.of("quicksy.im");
 
     public static final String CHANNEL_DISCOVERY = "https://search.jabber.network";
@@ -126,7 +126,7 @@ public final class Config {
     public static final boolean X509_VERIFICATION = false; //use x509 certificates to verify OMEMO keys
     public static final boolean REQUIRE_RTP_VERIFICATION = false; //require a/v calls to be verified with OMEMO
 
-    public static final boolean ONLY_INTERNAL_STORAGE = false; //use internal storage instead of sdcard to save attachments
+    public static final boolean ONLY_INTERNAL_STORAGE = true; //use internal storage instead of sdcard to save attachments
 
     public static final boolean IGNORE_ID_REWRITE_IN_MUC = true;
     public static final boolean MUC_LEAVE_BEFORE_JOIN = false;

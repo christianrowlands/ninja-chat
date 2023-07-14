@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Välj din XMPP-leverantör</string>
-    <string name="use_conversations.im">Använd conversations.im</string>
+    <string name="use_ninja.chat">Använd ninja.chat</string>
     <string name="create_new_account">Skapa ett nytt konto</string>
     <string name="do_you_have_an_account">Har du redan ett XMPP-konto? Detta kan vara fallet om du redan använder en annan XMPP-klient eller om du har använt Conversations tidigare. Om inte, kan du skapa ett nytt XMPP-konto på en gång.\nTips: Vissa e-postleverantörer tillhandahåller även XMPP-konton.</string>
     <string name="your_server_invitation">Din serverinbjudan</string>
@@ -13,7 +13,7 @@
     <string name="magic_create_text_fixed">Du har blivit inbjuden till %1$s. Ett användarnamn har redan valts åt dig. Vi guidar dig genom processen för att skapa ett konto.
 \nDu kommer att kunna kommunicera med användare av andra leverantörer genom att ge dem din fullständiga XMPP-adress.</string>
     <string name="server_select_text">XMPP är ett leverantörsoberoende snabbmeddelandenätverk. Du kan använda den här klienten med vilken XMPP-server du än väljer.
-\nMen för din bekvämlighet har vi gjort det enkelt att skapa ett konto på conversations.im; en leverantör som är speciellt lämpad för användning med Conversations.</string>
+\nMen för din bekvämlighet har vi gjort det enkelt att skapa ett konto på ninja.chat; en leverantör som är speciellt lämpad för användning med Ninja Chat.</string>
     <string name="magic_create_text_on_x">Du har blivit inbjuden till %1$s. Vi guidar dig genom processen för att skapa ett konto.
 \nNär du väljer %1$s som leverantör kommer du att kunna kommunicera med användare av andra leverantörer genom att ge dem din fullständiga XMPP-adress.</string>
 </resources>

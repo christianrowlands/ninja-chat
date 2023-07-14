@@ -187,7 +187,7 @@
     <string name="attach_record_voice">Record voice</string>
     <string name="account_settings_jabber_id">XMPP address</string>
     <string name="block_jabber_id">Block XMPP address</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Password</string>
     <string name="invalid_jid">This is not a valid XMPP address</string>
     <string name="error_out_of_memory">Out of memory. Image too big</string>
@@ -236,8 +236,8 @@
     <string name="select">Select</string>
     <string name="contact_already_exists">The contact already exists</string>
     <string name="join">Join</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Save as bookmark</string>
     <string name="save_as_group_chat">Save as group chat</string>
     <string name="delete_bookmark">Delete bookmark</string>
@@ -480,7 +480,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Show as Busy when device is on vibrate</string>
     <string name="pref_show_connection_options">Extended connection settings</string>
     <string name="pref_show_connection_options_summary">Show hostname and port settings when setting up an account</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Login with certificate</string>
     <string name="unable_to_parse_certificate">Could not parse certificate</string>
     <string name="mam_prefs">Archiving preferences</string>
@@ -516,8 +516,8 @@
     <string name="no_storage_permission">Grant %1$s access to external storage</string>
     <string name="no_camera_permission">Grant %1$s access to the camera</string>
     <string name="sync_with_contacts">Synchronize with contacts</string>
-    <string name="sync_with_contacts_long">%1$s wants permission to access your address book to match it with your XMPP contact list.\nThis will display your contacts’ full names and avatars.\n\n%1$s will only read your address book and match it locally without uploading anything to your server.</string>
-    <string name="sync_with_contacts_quicksy_static" translatable="false"><![CDATA[Quicksy stores your contacts’ phone numbers to make suggestions about possible contacts who are already on Quicksy.<br><br>By continuing you agree to our <a href="https://quicksy.im/privacy.htm">Privacy Policy</a> and our <a href="https://quicksy.im/tos.htm">Terms &amp; Conditions</a>.<br><br>You will now be asked to grant permission to access your contacts.]]></string>
+    <string name="sync_with_contacts_long"><![CDATA[%1$s wants permission to access your address book to match it with your XMPP contact list.\nThis will display your contacts’ full names and avatars.\n\n%1$s will only read your address book and match it locally without uploading anything to your server.\n\nFor more information read our <a href="https://github.com/christianrowlands/ninja-chat/blob/ninja-master/privacy_policy.md">privacy policy</a>.]]></string>
+    <string name="sync_with_contacts_quicksy"><![CDATA[Quicksy needs access to your contacts’ phone numbers to make suggestions about possible contacts who are already on Quicksy.<br><br>We will not store a copy of those phone numbers.\n\nFor more information read our <a href="https://quicksy.im/#privacy">privacy policy</a>.<br><br>You will now be asked to grant permission to access your contacts.]]></string>
     <string name="notify_on_all_messages">Notify on all messages</string>
     <string name="notify_only_when_highlighted">Notify only when mentioned</string>
     <string name="notify_never">Notifications disabled</string>
@@ -540,15 +540,15 @@
     <string name="security_error_invalid_file_access">Security error: Invalid file access!</string>
     <string name="no_application_to_share_uri">No app found to share URI</string>
     <string name="share_uri_with">Share URI with…</string>
-    <string name="welcome_header" translatable="false">Join the Conversation</string>
+    <string name="welcome_header" translatable="false">Become a Ninja</string>
     <string name="welcome_header_quicksy" translatable="false">Have some Quick Conversations</string>
     <string name="welcome_text_quicksy_static" translatable="false"><![CDATA[Quicksy is a spin off of the popular XMPP client Conversations with automatic contact discovery.<br><br>You sign up with your phone number and Quicksy will automatically—based on the phone numbers in your address book—suggest possible contacts to you.<br>Quicksy stores your contacts’ phone numbers to make suggestions about possible contacts who are already on Quicksy.<br>By signing up you agree to our <a href="https://quicksy.im/privacy.htm">Privacy Policy</a> and our <a href="https://quicksy.im/tos.htm">Terms &amp; Conditions</a>.]]></string>
     <string name="agree_and_continue">Agree and continue</string>
-    <string name="magic_create_text">A guide is set up for account creation on conversations.im.\nWhen picking conversations.im as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
+    <string name="magic_create_text">A guide is set up for account creation on ninja.chat.\nWhen picking ninja.chat as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
     <string name="your_full_jid_will_be">Your full XMPP address will be: %s</string>
     <string name="create_account">Create Account</string>
-    <string name="use_own_provider">Use my own provider</string>
-    <string name="pick_your_username">Pick your username</string>
+    <string name="use_own_provider">Custom Server</string>
+    <string name="pick_your_username">Pick your Username</string>
     <string name="pref_manually_change_presence">Manage availability manually</string>
     <string name="pref_manually_change_presence_summary">Set your availability when editing your status message.</string>
     <string name="status_message">Status message</string>
@@ -569,7 +569,7 @@
     <string name="gp_medium">Medium</string>
     <string name="gp_long">Long</string>
     <string name="pref_broadcast_last_activity">Broadcast use</string>
-    <string name="pref_broadcast_last_activity_summary">Lets your contacts know when you use Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Lets your contacts know when you use Ninja Chat</string>
     <string name="pref_privacy">Privacy</string>
     <string name="pref_theme_options">Theme</string>
     <string name="pref_theme_options_summary">Select the color palette</string>
@@ -690,7 +690,7 @@
     <string name="message">Message</string>
     <string name="private_messages_are_disabled">Private messages are disabled</string>
     <string name="huawei_protected_apps">Protected Apps</string>
-    <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Conversations to the list of protected apps.</string>
+    <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Ninja Chat to the list of protected apps.</string>
     <string name="mtm_accept_cert">Accept Unknown Certificate?</string>
     <string name="mtm_trust_anchor">The server certificate is not signed by a known Certificate Authority.</string>
     <string name="mtm_accept_servername">Accept Mismatching Server Name?</string>
@@ -840,7 +840,7 @@
     <string name="ebook">e-book</string>
     <string name="video_original">Original (uncompressed)</string>
     <string name="open_with">Open with…</string>
-    <string name="set_profile_picture">Conversations profile picture</string>
+    <string name="set_profile_picture">Ninja Chat profile picture</string>
     <string name="choose_account">Choose account</string>
     <string name="restore_backup">Restore backup</string>
     <string name="restore">Restore</string>
@@ -889,10 +889,10 @@
     <string name="add_anway">Add anyway</string>
     <string name="this_looks_like_channel">This looks like a channel address</string>
     <string name="share_backup_files">Share backup files</string>
-    <string name="conversations_backup">Conversations backup</string>
+    <string name="conversations_backup">Ninja Chat backup</string>
     <string name="event">Event</string>
     <string name="open_backup">Open backup</string>
-    <string name="not_a_backup_file">The file you selected is not a Conversations backup file</string>
+    <string name="not_a_backup_file">The file you selected is not a Ninja Chat backup file</string>
     <string name="account_already_setup">This account has already been setup</string>
     <string name="please_enter_password">Please enter the password for this account</string>
     <string name="unable_to_perform_this_action">Could not perform this action</string>
@@ -986,7 +986,7 @@
     <string name="failed_deliveries">Failed deliveries</string>
     <string name="more_options">More options</string>
     <string name="no_application_found">No application found</string>
-    <string name="invite_to_app">Invite to Conversations</string>
+    <string name="invite_to_app">Invite to Ninja Chat</string>
     <string name="unable_to_parse_invite">Unable to parse invite</string>
     <string name="server_does_not_support_easy_onboarding_invites">Server does not support generating invites</string>
     <string name="no_active_accounts_support_this">No active accounts support this feature</string>

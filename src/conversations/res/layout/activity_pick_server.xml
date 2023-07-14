@@ -56,7 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:text="@string/use_conversations.im"
+                        android:text="@string/use_ninja.chat"
                         android:textColor="?colorAccent" />
 
                     <Button
@@ -77,12 +77,12 @@
                     android:layout_alignParentLeft="true">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:padding="8dp"
-                        android:src="@drawable/main_logo" />
+                        android:src="@drawable/ninja_main_logo" />
                 </RelativeLayout>
             </RelativeLayout>
         </ScrollView>

@@ -188,7 +188,7 @@
     <string name="attach_record_voice">Εγγραφή φωνής</string>
     <string name="account_settings_jabber_id">Διεύθυνση XMPP</string>
     <string name="block_jabber_id">Αποκλεισμός διεύθυνσης XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Συνθηματικό</string>
     <string name="invalid_jid">Μη έγκυρη διεύθυνση XMPP</string>
     <string name="error_out_of_memory">Πλήρης μνήμη. Η εικόνα είναι πολύ μεγάλη</string>
@@ -236,8 +236,8 @@
     <string name="select">Επιλογή</string>
     <string name="contact_already_exists">Η επαφή υπάρχει ήδη</string>
     <string name="join">Συμμετοχή</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Αποθήκευση σαν σελιδοδείκτη</string>
     <string name="delete_bookmark">Διαγραφή σελιδοδείκτη</string>
     <string name="destroy_room">Διαγραφή ομαδικής συζήτησης</string>
@@ -473,7 +473,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Σημειώνει την παρουσία σας ως Απασχολημένος/η όταν η συσκευή είναι σε κατάσταση δόνησης</string>
     <string name="pref_show_connection_options">Αναλυτικότερες ρυθμίσεις σύνδεσης</string>
     <string name="pref_show_connection_options_summary">Εμφάνιση ονόματος μηχανήματος και ρυθμίσεων θύρας όταν ρυθμίζεται νέος λογαριασμός</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Σύνδεση με πιστοποιητικό</string>
     <string name="unable_to_parse_certificate">Αδυναμία ανάγνωσης πιστοποιητικού</string>
     <string name="mam_prefs">Επιλογές αρχειοθέτησης</string>
@@ -533,7 +533,7 @@
     <string name="no_application_to_share_uri">Δεν βρέθηκε εφαρμογή για να μοιραστείτε την διεύθυνση URI</string>
     <string name="share_uri_with">Διαμοιρασμός της διεύθυνσης URI με...</string>
     <string name="agree_and_continue">Συμφωνώ και προχωρήστε</string>
-    <string name="magic_create_text">Θα καθοδηγηθείτε στη διαδικασία δημιουργίας ενός λογαριασμού στο conversations.im.¹\nΕπιλέγοντας το conversations.im ως πάροχο θα μπορείτε να επικοινωνείτε με χρήστες άλλων παρόχων δίνοντάς τους την πλήρη διεύθυνση XMPP σας.</string>
+    <string name="magic_create_text">Θα καθοδηγηθείτε στη διαδικασία δημιουργίας ενός λογαριασμού στο ninja.chat.¹\nΕπιλέγοντας το ninja.chat ως πάροχο θα μπορείτε να επικοινωνείτε με χρήστες άλλων παρόχων δίνοντάς τους την πλήρη διεύθυνση XMPP σας.</string>
     <string name="your_full_jid_will_be">Η πλήρης ταυτότητα XMPP σας θα είναι: %s</string>
     <string name="create_account">Δημιουργία λογαριασμού</string>
     <string name="use_own_provider">Χρήση του δικού μου παρόχου</string>
@@ -558,7 +558,7 @@
     <string name="gp_medium">Μεσαίος</string>
     <string name="gp_long">Μεγάλος</string>
     <string name="pref_broadcast_last_activity">Δημοσιοποίηση της τελευταίας χρήσης</string>
-    <string name="pref_broadcast_last_activity_summary">Επιτρέψτε στις επαφές σας να γνωρίζουν πότε χρησιμοποιείτε το Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Επιτρέψτε στις επαφές σας να γνωρίζουν πότε χρησιμοποιείτε το Ninja Chat</string>
     <string name="pref_privacy">Ιδιωτικότητα</string>
     <string name="pref_theme_options">Θέμα</string>
     <string name="pref_theme_options_summary">Επιλογή παλέτας χρωμάτων</string>
@@ -679,7 +679,7 @@
     <string name="message">Μήνυμα</string>
     <string name="private_messages_are_disabled">Τα ιδιωτικά μηνύματα είναι απενεργοποιημένα</string>
     <string name="huawei_protected_apps">Προστατευμένες εφαρμογές</string>
-    <string name="huawei_protected_apps_summary">Για να συνεχίσετε να λαμβάνετε ειδοποιήσεις, ακόμα κι όταν η οθόνη είναι σβηστή, χρειάζεται να προσθέσετε το Conversations στον κατάλογο με τις προστατευμένες εφαρμογές.</string>
+    <string name="huawei_protected_apps_summary">Για να συνεχίσετε να λαμβάνετε ειδοποιήσεις, ακόμα κι όταν η οθόνη είναι σβηστή, χρειάζεται να προσθέσετε το Ninja Chat στον κατάλογο με τις προστατευμένες εφαρμογές.</string>
     <string name="mtm_accept_cert">Αποδοχή άγνωστου πιστοποιητικού;</string>
     <string name="mtm_trust_anchor">Το πιστοποιητικό του διακομιστή δεν είναι υπογεγραμμένο από κάποια γνωστή Αρχή Πιστοποίησης.</string>
     <string name="mtm_accept_servername">Αποδοχή αναντίστοιχου ονόματος διακομιστή;</string>
@@ -828,7 +828,7 @@
     <string name="ebook">ηλεκτρονικό βιβλίο</string>
     <string name="video_original">Αρχικό (μη συμπιεσμένο)</string>
     <string name="open_with">Άνοιγμα με...</string>
-    <string name="set_profile_picture">Φωτογραφία προφίλ του Conversations</string>
+    <string name="set_profile_picture">Φωτογραφία προφίλ του Ninja Chat</string>
     <string name="choose_account">Επιλογή λογαριασμού</string>
     <string name="restore_backup">Επαναφορά αντιγράφου ασφαλείας</string>
     <string name="restore">Επαναφορά</string>
@@ -876,10 +876,10 @@
     <string name="add_anway">Προσθήκη έτσι κι αλλιώς</string>
     <string name="this_looks_like_channel">Αυτό μοιάζει με διεύθυνση καναλιού</string>
     <string name="share_backup_files">Διαμοιρασμός αντιγράφων ασφαλείας</string>
-    <string name="conversations_backup">Αντίγραφο ασφαλείας Conversations</string>
+    <string name="conversations_backup">Αντίγραφο ασφαλείας Ninja Chat</string>
     <string name="event">Γεγονός</string>
     <string name="open_backup">Άνοιγμα αντιγράφου ασφαλείας</string>
-    <string name="not_a_backup_file">Το αρχείο που επιλέξατε δεν είναι αντίγραφο ασφαλείας του Conversations</string>
+    <string name="not_a_backup_file">Το αρχείο που επιλέξατε δεν είναι αντίγραφο ασφαλείας του Ninja Chat</string>
     <string name="account_already_setup">Αυτός ο λογαριασμός έχει προστεθεί ήδη</string>
     <string name="please_enter_password">Παρακαλώ εισάγετε τον κωδικό για αυτό το λογαριασμό</string>
     <string name="unable_to_perform_this_action">Αδυναμία εκτέλεσης αυτής της λειτουργίας</string>
@@ -956,7 +956,7 @@
     <string name="failed_deliveries">Αποτυχημένες παραδόσεις</string>
     <string name="more_options">Περισσότερες επιλογές</string>
     <string name="no_application_found">Δεν βρέθηκε εφαρμογή</string>
-    <string name="invite_to_app">Πρόσκληση στο Conversations</string>
+    <string name="invite_to_app">Πρόσκληση στο Ninja Chat</string>
     <string name="unable_to_parse_invite">Αδυναμία ανάγνωσης πρόσκλησης</string>
     <string name="server_does_not_support_easy_onboarding_invites">Ο διακομιστής δεν υποστηρίζει την δημιουργία προσκλήσεων</string>
     <string name="no_active_accounts_support_this">Κανένας από τους ενεργούς λογαριασμούς δεν υποστηρίζει αυτό το χαρακτηριστικό</string>

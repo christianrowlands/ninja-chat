@@ -119,7 +119,7 @@
     <string name="unpublish_pgp">حذف کلید عمومی OpenPGP</string>
     <string name="mgmt_account_enable">فعال سازی حساب کاربری</string>
     <string name="attach_record_voice">ضبط صدا</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">کلمه عبور</string>
     <string name="add_phone_book_text">آیا می خواهید %s را به مخاطبان خود اضافه کنید؟</string>
     <string name="server_info_show_more">مشخصات سرور</string>

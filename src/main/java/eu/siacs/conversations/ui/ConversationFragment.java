@@ -1199,6 +1199,7 @@ public class ConversationFragment extends XmppFragment
                 menuTogglePinned.setTitle(R.string.add_to_favorites);
             }
         }
+
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 

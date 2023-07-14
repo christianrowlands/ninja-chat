@@ -180,7 +180,7 @@
     <string name="attach_record_voice">Enregistra veu</string>
     <string name="account_settings_jabber_id">Adreça XMPP</string>
     <string name="block_jabber_id">Bloquejar la direcció XMPP</string>
-    <string name="account_settings_example_jabber_id">username@example.com</string>
+    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="password">Contrasenya</string>
     <string name="invalid_jid">Aquesta no és una direcció XMPP vàlida</string>
     <string name="error_out_of_memory">Fora de la memòria. Imatge massa gran</string>
@@ -226,8 +226,8 @@
     <string name="select">Seleccioneu</string>
     <string name="contact_already_exists">El contacte ja existeix</string>
     <string name="join">Entra</string>
-    <string name="channel_full_jid_example">channel@conference.example.com/nick</string>
-    <string name="channel_bare_jid_example">channel@conference.example.com</string>
+    <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
+    <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Desa com a marcador</string>
     <string name="delete_bookmark">Elimina dels marcadors</string>
     <string name="destroy_room">Destrueix el xat en grup</string>
@@ -460,7 +460,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Mostrar com ocupat quan el dispositiu està en vibració</string>
     <string name="pref_show_connection_options">Configuració de connexió estesa</string>
     <string name="pref_show_connection_options_summary">Mostra el nom de la màquina i la configuració del port quan configureu un compte</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Inici de sessió amb certificat</string>
     <string name="unable_to_parse_certificate">No s\'ha pogut analitzar el certificat</string>
     <string name="mam_prefs">Arxivant preferències</string>
@@ -515,7 +515,7 @@
     <string name="no_application_to_share_uri">No s\'ha trobat cap aplicació per a compartir URI</string>
     <string name="share_uri_with">Comparteix l\'URI amb…</string>
     <string name="agree_and_continue">Acceptar i continuar</string>
-    <string name="magic_create_text">S\'ha establert una guia per a la creació de comptes en conversations.im.¹\nEn triar conversations.im com a proveïdor podràs comunicar-te amb usuaris d\'altres proveïdors donant-los la teva adreça XMPP completa.</string>
+    <string name="magic_create_text">S\'ha establert una guia per a la creació de comptes en ninja.chat.¹\nEn triar ninja.chat com a proveïdor podràs comunicar-te amb usuaris d\'altres proveïdors donant-los la teva adreça XMPP completa.</string>
     <string name="your_full_jid_will_be">La seva adreça XMPP completa serà: %s</string>
     <string name="create_account">Crear compte</string>
     <string name="use_own_provider">Utilitza el meu propi proveïdor</string>
@@ -540,7 +540,7 @@
     <string name="gp_medium">Mitjà</string>
     <string name="gp_long">Llarg</string>
     <string name="pref_broadcast_last_activity">Ús de la radiodifusió</string>
-    <string name="pref_broadcast_last_activity_summary">Permetre que els seus contactes sàpiguen quan usa Conversations</string>
+    <string name="pref_broadcast_last_activity_summary">Permetre que els seus contactes sàpiguen quan usa Ninja Chat</string>
     <string name="pref_privacy">Privadesa</string>
     <string name="pref_theme_options">Tema</string>
     <string name="pref_theme_options_summary">Seleccioneu la paleta de colors</string>
@@ -804,7 +804,7 @@ que l\'administrador del servidor llegeixi els missatges, però pot ser l\'únic
     <string name="ebook">Llibre electrònic</string>
     <string name="video_original">Original (sense comprimir)</string>
     <string name="open_with">Obrir amb...</string>
-    <string name="set_profile_picture">Foto de perfil de Conversations</string>
+    <string name="set_profile_picture">Foto de perfil de Ninja Chat</string>
     <string name="choose_account">Triï el compte</string>
     <string name="restore_backup">Restaurar còpia de seguretat</string>
     <string name="restore">Restaurar</string>
@@ -852,10 +852,10 @@ que l\'administrador del servidor llegeixi els missatges, però pot ser l\'únic
     <string name="add_anway">Afegir de totes maneres</string>
     <string name="this_looks_like_channel">Això sembla una direcció de canal</string>
     <string name="share_backup_files">Compartir arxius de còpia de seguretat</string>
-    <string name="conversations_backup">Còpia de seguretat de Conversations</string>
+    <string name="conversations_backup">Còpia de seguretat de Ninja Chat</string>
     <string name="event">Esdeveniment</string>
     <string name="open_backup">Obrir la còpia de seguretat</string>
-    <string name="not_a_backup_file">L\'arxiu seleccionat no és un arxiu de còpia de seguretat de Conversations</string>
+    <string name="not_a_backup_file">L\'arxiu seleccionat no és un arxiu de còpia de seguretat de Ninja Chat</string>
     <string name="account_already_setup">Aquest compte ja està configurada</string>
     <string name="please_enter_password">Si us plau, introdueixi la contrasenya d\'aquest compte</string>
     <string name="unable_to_perform_this_action">No s\'ha pogut realitzar aquesta acció</string>
@@ -927,7 +927,7 @@ que l\'administrador del servidor llegeixi els missatges, però pot ser l\'únic
     <string name="failed_deliveries">Lliuraments fallits</string>
     <string name="more_options">Més opcions</string>
     <string name="no_application_found">No s\'ha trobat cap aplicació</string>
-    <string name="invite_to_app">Convidar a Conversations</string>
+    <string name="invite_to_app">Convidar a Ninja Chat</string>
     <string name="unable_to_parse_invite">No es pot processar la invitació</string>
     <string name="server_does_not_support_easy_onboarding_invites">El servidor no admet la generació d\'invitacions</string>
     <string name="no_active_accounts_support_this">Cap compte actiu admet aquesta funció</string>

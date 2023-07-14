@@ -91,8 +91,9 @@ public class NotificationService {
 
     private static final long[] CALL_PATTERN = {0, 500, 300, 600};
 
-    private static final String MESSAGES_GROUP = "eu.siacs.conversations.messages";
-    private static final String MISSED_CALLS_GROUP = "eu.siacs.conversations.missed_calls";
+
+    private static final String MESSAGES_GROUP = "chat.ninja.messages";
+    private static final String MISSED_CALLS_GROUP = "chat.ninja.missed_calls";
     private static final int NOTIFICATION_ID_MULTIPLIER = 1024 * 1024;
     static final int FOREGROUND_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 4;
     private static final int NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 2;
@@ -1818,7 +1819,8 @@ public class NotificationService {
                                         ? PendingIntent.FLAG_IMMUTABLE
                                                 | PendingIntent.FLAG_UPDATE_CURRENT
                                         : PendingIntent.FLAG_UPDATE_CURRENT));
-            } else {
+            }/* else { // we can't install packages any longer but leaving this here to make sure future
+                       // merges of upstream changes don't end up re-enabling this code
                 mBuilder.addAction(
                         R.drawable.ic_file_download_white_24dp,
                         mXmppConnectionService.getString(R.string.install_orbot),
@@ -1830,7 +1832,7 @@ public class NotificationService {
                                         ? PendingIntent.FLAG_IMMUTABLE
                                                 | PendingIntent.FLAG_UPDATE_CURRENT
                                         : PendingIntent.FLAG_UPDATE_CURRENT));
-            }
+            }*/
         }
         mBuilder.setDeleteIntent(createDismissErrorIntent());
         mBuilder.setVisibility(Notification.VISIBILITY_PRIVATE);

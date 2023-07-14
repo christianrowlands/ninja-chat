@@ -475,7 +475,7 @@
     <string name="pref_treat_vibrate_as_dnd_summary">Visa som Upptagen när enheten är satt på att endast vibrera</string>
     <string name="pref_show_connection_options">Utökade anslutningsinställningar</string>
     <string name="pref_show_connection_options_summary">Visa val av servernamn och port vid inställning av konto</string>
-    <string name="hostname_example">xmpp.example.com</string>
+    <string name="hostname_example">xmpp.ninja.chat</string>
     <string name="action_add_account_with_certificate">Logga in med certifikat</string>
     <string name="unable_to_parse_certificate">Det gick inte att analysera certifikatet</string>
     <string name="mam_prefs">Arkiveringsinställningar</string>
@@ -537,8 +537,8 @@
     <string name="no_application_to_share_uri">Ingen applikation hittades för att dela URI</string>
     <string name="share_uri_with">Dela URI med …</string>
     <string name="agree_and_continue">Acceptera och gå vidare</string>
-    <string name="magic_create_text">En guide har skapats för kontoskapande på conversations.im.
-\nNär du väljer conversations.im som leverantör kommer du att kunna kommunicera med användare av andra leverantörer genom att ge dem din fullständiga XMPP-adress.</string>
+    <string name="magic_create_text">En guide har skapats för kontoskapande på ninja.chat.
+\nNär du väljer ninja.chat som leverantör kommer du att kunna kommunicera med användare av andra leverantörer genom att ge dem din fullständiga XMPP-adress.</string>
     <string name="your_full_jid_will_be">Din fullständiga XMPP-adress kommer att vara: %s</string>
     <string name="create_account">Skapa konto</string>
     <string name="use_own_provider">Använd min egen leverantör</string>
