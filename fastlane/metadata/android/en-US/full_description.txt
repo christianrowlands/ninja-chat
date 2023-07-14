@@ -20,11 +20,7 @@ Features:
 * Multiple accounts / unified inbox
 * Very low impact on battery life
 
-<<<<<<< HEAD
-Conversations makes it very easy to create an account on the free conversations.im server. However Conversations will work with any other XMPP server as well. A lot of XMPP servers are run by volunteers and are free of charge.
-=======
 Ninja Chat makes it very easy to create an account on the free ninja.chat server. However Ninja Chat will work with any other XMPP server as well. A lot of XMPP servers are run by volunteers and are free of charge.
->>>>>>> ninja-master
 
 XMPP Features:
 

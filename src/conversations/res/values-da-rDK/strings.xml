@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Vælg din XMPP udbyder</string>
-    <string name="use_conversations.im">Brug ninja.chat</string>
+    <string name="use_ninja.chat">Brug ninja.chat</string>
     <string name="create_new_account">Opret ny konto</string>
     <string name="do_you_have_an_account">Har du allerede en XMPP-konto? Dette kan være tilfældet, hvis du allerede bruger en anden XMPP-klient eller har brugt Ninja Chat før. Hvis ikke, kan du lige nu oprette en ny XMPP-konto.\nTip: Nogle e-mail-udbydere leverer også XMPP-konti.</string>
     <string name="server_select_text">XMPP er et udbyderuafhængigt onlinemeddelelsesnetværk. Du kan bruge denne klient med hvilken XMPP-server du end vælger.\nMen for din nemhedsskyld har vi gjort vi det let at oprette en konto på ninja.chat¹; en udbyder, der er specielt velegnet til brug med Ninja Chat.</string>

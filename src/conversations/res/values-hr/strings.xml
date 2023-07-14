@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Odaberite svog XMPP davatelja usluga.</string>
-    <string name="use_conversations.im">Koristite ninja.chat</string>
+    <string name="use_ninja.chat">Koristite ninja.chat</string>
     <string name="create_new_account">Napravi novi račun</string>
     <string name="do_you_have_an_account">Već imate XMPP račun? To može biti slučaj ako već koristite drugi XMPP klijent ili ste prije koristili Razgovore. Ako niste, možete odmah stvoriti novi XMPP račun.\nSavjet: Neki pružatelji usluga e-pošte također nude XMPP račune.</string>
     <string name="server_select_text">XMPP je mreža za razmjenu izravnih poruka neovisna o pružatelju usluga. Možete koristiti ovaj klijent s bilo kojim XMPP poslužiteljem koji odaberete.\nMeđutim, radi vaše udobnosti olakšali smo kreiranje računa na ninja.chat; pružatelj usluga posebno prilagođen za korištenje s Ninja Chat.</string>
