@@ -179,7 +179,6 @@
     <string name="unpublish_pgp_message">Haluatko varmasti poistaa OpenPGP-avaimesi tilamainostuksistasi?\nYhteystietosi eivät voi enää lähettää sinulle OpenPGP-salattuja viestejä.</string>
     <string name="openpgp_has_been_published">OpenPGP julkinen avain julkaistu.</string>
     <string name="mgmt_account_enable">Ota tunnus käyttöön</string>
-    <string name="mgmt_account_are_you_sure">Oletko varma?</string>
     <string name="mgmt_account_delete_confirm_text">Tilin poistaminen pyyhkii koko keskusteluhistoriasi</string>
     <string name="attach_record_voice">Nauhoita ääntä</string>
     <string name="account_settings_jabber_id">XMPP-osoite</string>
@@ -222,7 +221,6 @@
     <string name="fetching_keys">Haetaan avaimia...</string>
     <string name="done">Valmis</string>
     <string name="decrypt">Pura salaus</string>
-    <string name="bookmarks">Kirjanmerkit</string>
     <string name="search">Haku</string>
     <string name="enter_contact">Syötä yhteystieto</string>
     <string name="delete_contact">Poista yhteystieto</string>
@@ -819,7 +817,6 @@
     <string name="discover_channels">Löydä kanavia</string>
     <string name="search_channels">Hae kanavia</string>
     <string name="channel_discovery_opt_in_title">Mahdollinen yksityisyyden loukkaus!</string>
-    <string name="channel_discover_opt_in_message"><![CDATA[Kanavan etsintätoiminto käyttää kolmannen osapuolen palvelua nimeltä <a href=\"https://search.jabber.network\">search.jabber.network</a>.<br><br>Sen käyttö lähettää IP-osoitteesi ja hakusanat palvelulle. Katso heidän <a href=\"https://search.jabber.network/privacy\">yksityisyyskäytännöstään</a> lisätietoa.]]></string>
     <string name="i_already_have_an_account">Minulla on jo tili</string>
     <string name="add_existing_account">Lisää olemassa oleva tili</string>
     <string name="register_new_account">Rekisteröi uusi tili</string>
@@ -865,10 +862,8 @@
     <string name="ongoing_video_call">Videopuhelu kesken</string>
     <string name="disable_tor_to_make_call">Poista Tor käytöstä soittaaksesi puhelun</string>
     <string name="incoming_call">Saapuva puhelu</string>
-    <string name="incoming_call_duration">Saapuva puhelu · %s</string>
     <string name="missed_call_timestamp">Vastaamaton puhelu · %s</string>
     <string name="outgoing_call">Lähtevä puhelu</string>
-    <string name="outgoing_call_duration">Lähtevä puhelu · %s</string>
     <string name="missed_call">Vastaamaton puhelu</string>
     <string name="audio_call">Äänipuhelu</string>
     <string name="video_call">Videopuhelu</string>

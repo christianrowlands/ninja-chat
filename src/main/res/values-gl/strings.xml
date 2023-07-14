@@ -35,7 +35,7 @@
     </plurals>
     <string name="sending">enviando…</string>
     <string name="message_decrypting">Descifrando a mensaxe. Agarda por favor…</string>
-    <string name="pgp_message">Mensaxe cifrado con OpenPGP</string>
+    <string name="pgp_message">Mensaxe cifrada con OpenPGP</string>
     <string name="nick_in_use">O alcume xa está en uso</string>
     <string name="invalid_muc_nick">Alcume non válido</string>
     <string name="admin">Admin</string>
@@ -98,10 +98,10 @@
     <string name="send_message_to_x">Enviar mensaxe a 1%s</string>
     <string name="send_omemo_message">Enviar mensaxe cifrada con OMEMO</string>
     <string name="send_omemo_x509_message">Enviar mensaxe cifrada v\\OMEMO</string>
-    <string name="send_pgp_message">Enviar mensaxe cifrado con OpenPGP</string>
+    <string name="send_pgp_message">Enviar mensaxe cifrada con OpenPGP</string>
     <string name="your_nick_has_been_changed">Novo alcume en uso</string>
     <string name="send_unencrypted">Enviar sen cifrar</string>
-    <string name="decryption_failed">Fallou o descifrado. Quizais non teñas a chave privada apropiada.</string>
+    <string name="decryption_failed">Fallou o desencriptado. Quizais non teñas a chave privada apropiada.</string>
     <string name="openkeychain_required">OpenKeychain</string>
     <string name="openkeychain_required_long"><![CDATA[%1$s utiliza <b>OpenKeychain</b> para cifrar e descifrar as mensaxes e xestionar a túas chaves públicas.<br><br>Está baixo licenza  GPLv3+ e dispoñible en F-Droid e Google Play.<br><br><small>(Reinicia %1$s após a instalación.)</small>]]></string>
     <string name="restart">Reiniciar</string>
@@ -176,7 +176,7 @@
     <string name="account_status_incompatible_client">Cliente non compatible</string>
     <string name="account_status_stream_error">Erro de fluxo</string>
     <string name="account_status_stream_opening_error">Fallo ao abrir o fluxo</string>
-    <string name="encryption_choice_unencrypted">Non cifrado</string>
+    <string name="encryption_choice_unencrypted">Sen cifrar</string>
     <string name="encryption_choice_otr">OTR</string>
     <string name="encryption_choice_pgp">OpenPGP</string>
     <string name="encryption_choice_omemo">OMEMO</string>
@@ -188,8 +188,7 @@
     <string name="unpublish_pgp_message">Tes a certeza de que queres eliminar a túa chave pública OpenPGP do  anuncio de presenza? \nOs teus contactos non poderán enviarche mensaxes cifradas con OpenPGP.</string>
     <string name="openpgp_has_been_published">Publicada a chave pública OpenPGP.</string>
     <string name="mgmt_account_enable">Habilitar</string>
-    <string name="mgmt_account_are_you_sure">Seguro?</string>
-    <string name="mgmt_account_delete_confirm_text">Ao eliminar a conta eliminas todo o historial de conversas</string>
+    <string name="mgmt_account_delete_confirm_text">Tes a certeza de querer eliminar a túa conta\? Ao eliminar a conta eliminas todo o historial de conversas</string>
     <string name="attach_record_voice">Gravar audio</string>
     <string name="account_settings_jabber_id">Enderezo XMPP</string>
     <string name="block_jabber_id">Bloquear enderezo XMPP</string>
@@ -231,7 +230,6 @@
     <string name="fetching_keys">Obtendo chaves…</string>
     <string name="done">Feito</string>
     <string name="decrypt">Descifrar</string>
-    <string name="bookmarks">Marcadores</string>
     <string name="search">Buscar</string>
     <string name="enter_contact">Introducir contacto</string>
     <string name="delete_contact">Eliminar contacto</string>
@@ -461,7 +459,6 @@
     <string name="recently_used">Utilizadas recentemente</string>
     <string name="choose_quick_action">Elixe a acción rápida</string>
     <string name="search_contacts">Buscar contactos</string>
-    <string name="search_bookmarks">Buscar marcadores</string>
     <string name="send_private_message">Enviar mensaxe privada</string>
     <string name="user_has_left_conference">%1$s deixou a conversa en grupo</string>
     <string name="username">Identificador</string>
@@ -522,7 +519,6 @@
     <string name="no_camera_permission">Permitir que %1$s acceda á cámara</string>
     <string name="sync_with_contacts">Sincronice con todos os contactos</string>
     <string name="sync_with_contacts_long">%1$s quere ter permiso para acceder á túa libreta de enderezos para comparala coa lista de contactos XMPP.\nDeste xeito poderá mostrar o nome completo e avatares dos teus contactos.\n\n%1$s só utilizará de xeito local a túa lista de contactos, sen subila a ningún servidor.</string>
-    <string name="sync_with_contacts_quicksy"><![CDATA[Quicksy precisa acceder ao número de teléfono dos contactos para facer suxestións sobre posibles contactos que xa están en Quicksy.<br><br>Non gardaremos unha copia desos números de teléfono.\n\nPara máis información le a nosa <a href="https://quicksy.im/#privacy">política de privacidade</a>.<br><br>A continuación pediremos permiso para acceder aos contactos.]]></string>
     <string name="notify_on_all_messages">Notificar todas as mensaxes</string>
     <string name="notify_only_when_highlighted">Notificar só cando é mencionada</string>
     <string name="notify_never">Notificacións desactivadas</string>
@@ -545,9 +541,9 @@
     <string name="security_error_invalid_file_access">Fallo de seguridade: Acceso non válido ao ficheiro!</string>
     <string name="no_application_to_share_uri">Non se atopou unha app para compartir URI</string>
     <string name="share_uri_with">Compartir URI con…</string>
-    <string name="welcome_text_quicksy"><![CDATA[Quicksy é un derivado do popular cliente XMPP Ninja Chat con descubrimento automático de contactos.<br><br>Podes rexistrarte co teu número de teléfono e Quicksy suxerirache automáticamente —tomando os números da túa libreta de enderezos como referencia—  posibles contactos para ti.<br><br>Ao rexistrarte aceptas a nosa <a href="https://quicksy.im/#privacy">política de privacidade</a>.]]></string>
     <string name="agree_and_continue">Aceptar e continuar</string>
-    <string name="magic_create_text">Tes unha guía para crear unha conta en ninja.chat¹\nAo escoller ninja.chat como provedor poderás comunicarte con outras usuarias de outros provedores con só darlles o teu enderezo XMPP completo.</string>
+    <string name="magic_create_text">Tes unha guía para crear unha conta en ninja.chat
+\nAo escoller ninja.chat como provedor poderás comunicarte con outras usuarias de outros provedores con só darlles o teu enderezo XMPP completo.</string>
     <string name="your_full_jid_will_be">O teu enderezo XMPP completo será: %s</string>
     <string name="create_account">Crear conta</string>
     <string name="use_own_provider">Utilizar o meu propio proveedor</string>
@@ -673,7 +669,7 @@
     <string name="block_stranger">Bloquear estraño</string>
     <string name="block_entire_domain">Bloquear o dominio ao completo</string>
     <string name="online_right_now">En liña neste momento</string>
-    <string name="retry_decryption">Volver a intentar o descifrado</string>
+    <string name="retry_decryption">Volve intentar o descifrado</string>
     <string name="session_failure">Fallo na sesión</string>
     <string name="sasl_downgrade">Mecanismo SASL desactualizado</string>
     <string name="account_status_regis_web">O servidor require rexistro no sitio web</string>
@@ -693,7 +689,7 @@
     <string name="message">Mensaxe</string>
     <string name="private_messages_are_disabled">As mensaxes privadas están desactivadas</string>
     <string name="huawei_protected_apps">Apps protexidos</string>
-    <string name="huawei_protected_apps_summary">Para seguir recibindo notificacións, incluso cando a pantalla está apagada, precisa engadir Ninja Chat a lista de apps protexidos.</string>
+    <string name="huawei_protected_apps_summary">Para seguir recibindo notificacións, incluso cando a pantalla está apagada, tes que engadir Ninja Chat á lista de apps protexidas.</string>
     <string name="mtm_accept_cert">¿Aceptar certificado descoñecido?</string>
     <string name="mtm_trust_anchor">O certificado do servidor non está asinado por unha autoridade de certificación coñecida.</string>
     <string name="mtm_accept_servername">¿Aceptar un nome de servidor que non coincida?</string>
@@ -709,13 +705,13 @@
     <string name="disable_encryption">Desactivar a encriptación</string>
     <string name="error_trustkey_general">%1$s non pode enviar mensaxes cifradas a %2$s. Podería deberse a que o teu contacto utiliza un servidor sen actualizar ou un cliente que non pode xestionar OMEMO.</string>
     <string name="error_trustkey_device_list">Non se obtivo a lista de dispositivos</string>
-    <string name="error_trustkey_bundle">Non se obtiveron as chaves de cifrado</string>
+    <string name="error_trustkey_bundle">Non se obtiveron as chaves da cifraxe</string>
     <string name="error_trustkey_hint_mutual">Suxestión: Nalgúns casos, isto pode solucionarse engadíndovos mutuamente as vosas listas de contactos.</string>
-    <string name="disable_encryption_message">Tes a certeza de querer desactivar o cifrado OMEMO para esta conversa\?
+    <string name="disable_encryption_message">Tes a certeza de querer desactivar a cifraxe OMEMO para esta conversa\?
 \nIsto permitirá á administración do teu servidor ler as túas mensaxes, pero pode ser a única forma de comunicarse con persoas que usan clientes obsoletos.</string>
     <string name="disable_now">Desactivar agora</string>
     <string name="draft">Borrador:</string>
-    <string name="pref_omemo_setting">Cifrado OMEMO</string>
+    <string name="pref_omemo_setting">Cifraxe OMEMO</string>
     <string name="pref_omemo_setting_summary_always">OMEMO sempre se utilizará para charlas individuais e privadas en grupo.</string>
     <string name="pref_omemo_setting_summary_default_on">OMEMO utilizarase por defecto para as novas conversas.</string>
     <string name="pref_omemo_setting_summary_default_off">OMEMO terá que ser activado explícitamente para novas conversacións.</string>
@@ -885,7 +881,6 @@
     <string name="discover_channels">Descubrir canles</string>
     <string name="search_channels">Buscar canles</string>
     <string name="channel_discovery_opt_in_title">Posible intrusión na privacidade!</string>
-    <string name="channel_discover_opt_in_message"><![CDATA[O descubrimento de canles utiliza un servizo de terceiros chamado <a href="https://search.jabber.network">search.jabber.network</a>.<br><br>Ao utilizar esta función transmitirás o teu enderezo IP e termos de busca a ese servizo. Le a súa <a href="https://search.jabber.network/privacy">Política de Privacidade</a> para máis información.]]></string>
     <string name="i_already_have_an_account">Xa teño unha conta</string>
     <string name="add_existing_account">Engadir conta existente</string>
     <string name="register_new_account">Rexistrar unha nova conta</string>
@@ -937,10 +932,8 @@
     <string name="reconnecting_video_call">Reconectando a videochamada</string>
     <string name="disable_tor_to_make_call">Desactivar Tor para facer chamadas</string>
     <string name="incoming_call">Chamada entrante</string>
-    <string name="incoming_call_duration">Conversa de · %s</string>
     <string name="missed_call_timestamp">Chamada perdida · %s</string>
     <string name="outgoing_call">Chamada realizada</string>
-    <string name="outgoing_call_duration">Conversa de · %s</string>
     <string name="missed_call">Chamada perdida</string>
     <plurals name="n_missed_calls_from_x">
         <item quantity="one">%1$d chamada perdida de %2$s</item>
@@ -970,8 +963,8 @@
     <string name="search_this_conversation">Esta conversa</string>
     <string name="your_avatar">O teu avatar</string>
     <string name="avatar_for_x">Avatar para %s</string>
-    <string name="encrypted_with_omemo">Cifrado con OMEMO</string>
-    <string name="encrypted_with_openpgp">Cifrado con OpenPGP</string>
+    <string name="encrypted_with_omemo">Cifrada con OMEMO</string>
+    <string name="encrypted_with_openpgp">Cifrada con OpenPGP</string>
     <string name="not_encrypted">Sen cifrar</string>
     <string name="exit">Saír</string>
     <string name="record_voice_mail">Gravar correo de voz</string>
@@ -1009,4 +1002,14 @@
     <string name="pref_up_push_server_title">Servidor Push</string>
     <string name="pref_up_push_server_summary">O servidor elexido pola usuaria para obter as mensaxes push a través de XMPP.</string>
     <string name="no_account_deactivated">Ningún (desactivado)</string>
+    <string name="decline">Rexeitar</string>
+    <string name="incoming_call_duration_timestamp">Chamada entrante (%s) · %s</string>
+    <string name="outgoing_call_duration_timestamp">Chamada saínte (%s) · %s</string>
+    <string name="outgoing_call_timestamp">Chamada saínte · %s</string>
+    <string name="delete_from_server">Eliminar a conta no servidor</string>
+    <string name="could_not_delete_account_from_server">Non se puido eliminar a conta no servidor</string>
+    <string name="save_as_group_chat">Gardar como conversa en grupo</string>
+    <string name="search_group_chats">Buscar conversas en grupo</string>
+    <string name="group_chats">Conversas en grupo</string>
+    <string name="channel_discover_opt_in_message">O descubrimento de canles usa un servizo externo chamado &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Ao usar esta ferramenta transmitirás o teu enderezo IP e termos de busca a ese servizo. Le a súa &lt;a href=https://search.jabber.network/privacy&gt;Política de Privacidade&lt;/a&gt; para saber máis.</string>
 </resources>

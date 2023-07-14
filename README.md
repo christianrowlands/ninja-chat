@@ -3,10 +3,15 @@
 <p align="center">Ninja Chat: Become a Ninja</p>
 
 <p align="center">
-    <a href="https://play.google.com/store/apps/details?id=com.ninja.chat&amp;referrer=utm_source%3Dgithub">
-       <img src="https://conversations.im/images/en-play-badge.png" alt="Google Play">
-    </a>
+  <a href="https://play.google.com/store/apps/details?id=eu.siacs.conversations&amp;referrer=utm_source%3Dcodeberg">
+    <img src="https://conversations.im/images/get-it-on-play.png" alt="Get it on Google Play" height="80">
+  </a>
+  <a href="https://f-droid.org/packages/eu.siacs.conversations">
+    <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">
+  </a>
 </p>
+
+![screenshots](https://codeberg.org/iNPUTmice/Conversations/raw/branch/master/screenshots.png)
 
 ## Attribution
 
@@ -46,6 +51,7 @@ Then, build the release bundle using the following command
 There is also a GitLab CI/CD job setup to build the release APK and bundle.
 
 ----- Everything that follows in this README is from the original Conversations.im repo. -----
+>>>>>>> ninja-master
 
 ## Design principles
 
@@ -305,8 +311,8 @@ See the dedicated guides for
 
 #### Conversations is missing a certain feature
 
-I'm open for new feature suggestions. You can use the [issue tracker][issues] on
-GitHub.  Please take some time to browse through the issues to see if someone
+I'm open for new feature suggestions. You can use the [issue tracker][https://codeberg.org/iNPUTmice/Conversations/issues]
+on Codeberg.  Please take some time to browse through the issues to see if someone
 else already suggested it. Be assured that I read each and every ticket. If I
 like it I will leave it open until it's implemented. If I don't like it I will
 close it (usually with a short comment). If I don't comment on an feature
@@ -460,7 +466,7 @@ phone. After that you can just execute the following on your computer:
 
 If need be there are also some Apps on the PlayStore that can be used to show the logcat
 directly on your rooted phone. (Search for logcat). However in regards to further processing
-(for example to create an issue here on Github) it is more convenient to just use your PC.
+(for example to create an issue here on Codeberg) it is more convenient to just use your PC.
 
 #### I found a bug
 

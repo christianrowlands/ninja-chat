@@ -91,6 +91,7 @@ public class NotificationService {
 
     private static final long[] CALL_PATTERN = {0, 500, 300, 600};
 
+
     private static final String MESSAGES_GROUP = "chat.ninja.messages";
     private static final String MISSED_CALLS_GROUP = "chat.ninja.missed_calls";
     private static final int NOTIFICATION_ID_MULTIPLIER = 1024 * 1024;

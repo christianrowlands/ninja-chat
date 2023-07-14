@@ -452,6 +452,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
                 response = mXmppConnectionService.getIqGenerator().entityTimeResponse(packet);
             }
             mXmppConnectionService.sendIqPacket(account, response, null);
+
 //        } else if (packet.hasChild("push", Namespace.UNIFIED_PUSH) && packet.getType() == IqPacket.TYPE.SET) {
 //            final Jid transport = packet.getFrom();
 //            final Element push = packet.findChild("push", Namespace.UNIFIED_PUSH);

@@ -181,7 +181,6 @@
     <string name="unpublish_pgp_message">出席情報告知から OpenPGP 公開鍵を削除してもよろしいですか?\n連絡先はあなたに OpenPGP 暗号化メッセージを送信できなくなります。</string>
     <string name="openpgp_has_been_published">OpenPGP 公開鍵を公開しました。</string>
     <string name="mgmt_account_enable">アカウントを有効化</string>
-    <string name="mgmt_account_are_you_sure">よろしいですか?</string>
     <string name="mgmt_account_delete_confirm_text">アカウントを削除すると会話履歴がすべて消去されます</string>
     <string name="attach_record_voice">音声を録音</string>
     <string name="account_settings_jabber_id">XMPP アドレス</string>
@@ -224,7 +223,6 @@
     <string name="fetching_keys">暗号鍵の取得中…</string>
     <string name="done">完了</string>
     <string name="decrypt">復号</string>
-    <string name="bookmarks">ブックマーク</string>
     <string name="search">検索</string>
     <string name="enter_contact">連絡先を入力</string>
     <string name="delete_contact">連絡先を削除</string>
@@ -452,7 +450,6 @@
     <string name="recently_used">最近使用した</string>
     <string name="choose_quick_action">クイックアクションを選択</string>
     <string name="search_contacts">連絡先を検索</string>
-    <string name="search_bookmarks">ブックマークを検索</string>
     <string name="send_private_message">非公開メッセージを送信</string>
     <string name="user_has_left_conference">%1$s はグループチャットを退出しました</string>
     <string name="username">ユーザー名</string>
@@ -512,7 +509,6 @@
     <string name="no_camera_permission">%1$s にカメラへのアクセス権を付与</string>
     <string name="sync_with_contacts">連絡先と同期</string>
     <string name="sync_with_contacts_long">%1$s はあなたのアドレス帳にアクセスして、あなたのXMPP 連絡先名簿と照合する権限を求めています。\nこれにより、連絡先のフルネームとアバターが表示されます。\n\n%1$s は、あなたのサーバーに何かをアップロードすることなく、あなたのアドレス帳を読み込んで照合するだけです。</string>
-    <string name="sync_with_contacts_quicksy"><![CDATA[Quicksyは、既にQuicksyに登録されている連絡先を提案するために、あなたの連絡先の電話番号にアクセスする必要があります。<br><br>Quicksyは、それらの電話番号のコピーを保存することはありません。\n\n詳細は<a href="https://quicksy.im/#privacy">プライバシーポリシー</a>をご覧ください。<br><br>今、連絡先へのアクセス権限を付与するよう求められます。]]></string>
     <string name="notify_on_all_messages">すべてのメッセージで通知</string>
     <string name="notify_only_when_highlighted">メンションされたときにのみ通知</string>
     <string name="notify_never">通知は無効</string>
@@ -535,7 +531,6 @@
     <string name="security_error_invalid_file_access">セキュリティエラー: 不正なファイルアクセス!</string>
     <string name="no_application_to_share_uri">URI を共有するアプリが見つかりません</string>
     <string name="share_uri_with">…で URI を共有</string>
-    <string name="welcome_text_quicksy"><![CDATA[Quicksy は人気のXMPPアプリConversationsの派生で、連絡先の自動検出機能を備えています。<br><br>電話番号を入力して登録すると、アドレス帳に登録されている電話番号をもとに、Quicksyが自動的に連絡先を提案します。<br><br>登録すると、<a href=\"https://quicksy.im/#privacy\">我々のプライバシーポリシー</a>に同意することになります。]]></string>
     <string name="agree_and_continue">同意して続行</string>
     <string name="magic_create_text">ninja.chat のアカウント作成のための指南が設定されています。¹\nninja.chat をプロバイダーとして選択した場合、あなたの完全なXMPPアドレスを与えることで、他のプロバイダーのユーザーと連絡をとることができます。</string>
     <string name="your_full_jid_will_be">あなたの完全なXMPPアドレスは: %s</string>
@@ -867,7 +862,6 @@
     <string name="discover_channels">談話室を発見</string>
     <string name="search_channels">談話室を検索</string>
     <string name="channel_discovery_opt_in_title">プライバシー侵害の可能性あり!</string>
-    <string name="channel_discover_opt_in_message"><![CDATA[談話室発見は、第三者のサービスである<a href=\"https://search.jabber.network\">search.jabber.network</a>を利用します。<br><br>この機能を使うと、あなたののIPアドレスや検索キーワードがそのサービスに送信されます。詳しくは、<a href=\"https://search.jabber.network/privacy\">プライバシーポリシー</a>をご覧ください。]]></string>
     <string name="i_already_have_an_account">既にアカウントを持っています</string>
     <string name="add_existing_account">既存アカウントを追加</string>
     <string name="register_new_account">新規アカウントを登録</string>
@@ -917,10 +911,8 @@
     <string name="reconnecting_video_call">ビデオ通話再接続中</string>
     <string name="disable_tor_to_make_call">通話するのに Tor を無効化</string>
     <string name="incoming_call">着信通話</string>
-    <string name="incoming_call_duration">着信通話・%s</string>
     <string name="missed_call_timestamp">不在着信通話・%s</string>
     <string name="outgoing_call">発信通話</string>
-    <string name="outgoing_call_duration">発信通話・%s</string>
     <string name="missed_call">不在着信通話</string>
     <plurals name="n_missed_calls_from_x">
         <item quantity="other">%2$sから%1$d件の不在着信</item>

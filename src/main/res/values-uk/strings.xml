@@ -168,7 +168,6 @@
     <string name="unpublish_pgp_message">Ви впевнені, що хочете вилучити ваш публічний ключ OpenPGP з вашого оголошення про присутність?\nВаші контакти більше не зможуть надсилати вам повідомлення, зашифровані OpenPGP.</string>
     <string name="openpgp_has_been_published">Публічний ключ OpenPGP опубліковано.</string>
     <string name="mgmt_account_enable">Увімкнути обліковий запис</string>
-    <string name="mgmt_account_are_you_sure">Ви впевнені?</string>
     <string name="mgmt_account_delete_confirm_text">Вилучення облікового запису вилучіть всю історію спілкування</string>
     <string name="attach_record_voice">Записати голос</string>
     <string name="account_settings_jabber_id">Адреса XMPP</string>
@@ -209,7 +208,6 @@
     <string name="fetching_keys">Отримую ключі…</string>
     <string name="done">Зроблено</string>
     <string name="decrypt">Розшифрувати</string>
-    <string name="bookmarks">Закладки</string>
     <string name="search">Пошук</string>
     <string name="enter_contact">Увести контакт</string>
     <string name="delete_contact">Вилучити контакт</string>
@@ -436,7 +434,6 @@
     <string name="recently_used">Остання, що використана</string>
     <string name="choose_quick_action">Вибрати швидку дію</string>
     <string name="search_contacts">Шукати в контактах</string>
-    <string name="search_bookmarks">Шукати закладки</string>
     <string name="send_private_message">Приватне повідомлення</string>
     <string name="user_has_left_conference">%1$s залишила групу!</string>
     <string name="username">Ім\'я користувача</string>
@@ -490,7 +487,6 @@
     <string name="shared_images_with_x">Поділитися зображеннями з %s</string>
     <string name="shared_text_with_x">Текстом поділилися з %s</string>
     <string name="sync_with_contacts">Синхронізувати контакти</string>
-    <string name="sync_with_contacts_quicksy"><![CDATA[Застосунку потрібний доступ до телефонних номерів ваших контактів, щоб запропонувати обмінятися контактами, які уже присутні у застосунку Quicksy.<br><br>Ми не зберігатимемо копію цих телефонних номерів.\n\nДокладна інформація про <a href="https://quicksy.im/#privacy">Політику конфіденційності</a>.<br><br>Зараз ви побачите запит на надання доступу до ваших контактів.]]></string>
     <string name="notify_on_all_messages">Сповіщати про всі повідомлення</string>
     <string name="notify_only_when_highlighted">Повідомляти, лише якщо згадують</string>
     <string name="notify_never">Сповіщення вимкнено</string>
@@ -511,7 +507,6 @@
     <string name="security_error_invalid_file_access">Помилка з безпекою: Неправильний доступ до файлу!</string>
     <string name="no_application_to_share_uri">Не знайдено програми, щоб поділитися URI</string>
     <string name="share_uri_with">Поділитися URI</string>
-    <string name="welcome_text_quicksy"><![CDATA[Quicksy походить від популярного застосунку XMPP Conversations та автоматизує додавання контактів.<br><br>Реєструйтеся за номером телефону, а Quicksy автоматично за номерами телефонів зі списку контактів на пристрої запропонує вам доступні контакти.<br><br>Користування цим застосунком означає, що ви погоджуєтеся з нашою <a href="https://quicksy.im/#privacy">Політикою конфіденційності</a>.]]></string>
     <string name="agree_and_continue">Погодитися та продовжити</string>
     <string name="magic_create_text">Ми допоможемо вам створити обліковий запис. На наступній сторінці ви зможете змінити автоматично створений пароль.\nПодалі ви зможете спілкуватися з користувачами вашого або будь-якого іншого провайдера, для цього потрібно буде надати користувачеві вашу повну адресу XMPP.</string>
     <string name="your_full_jid_will_be">Ваша повна адреса XMPP буде такою: %s</string>
@@ -852,7 +847,6 @@
     <string name="discover_channels">Пошук каналу</string>
     <string name="search_channels">Шукати канали</string>
     <string name="channel_discovery_opt_in_title">Можливе порушення приватності!</string>
-    <string name="channel_discover_opt_in_message"><![CDATA[Пошук каналів використовує сторонній сервіс <a href="https://search.jabber.network">search.jabbercat.org</a>.<br><br>Використання цієї функції передає вашу IP-адресу та пошукові запити цьому сервісу. Перегляньте їхню <a href="https://search.jabber.network/privacy">Політику конфіденційности</a>, щоб отримати більше інформації.]]></string>
     <string name="i_already_have_an_account">Я вже маю обліковий запис</string>
     <string name="add_existing_account">Додати наявний обліковий запис</string>
     <string name="register_new_account">Зареєструвати новий обліковий запис</string>
@@ -898,9 +892,7 @@
     <string name="ongoing_video_call">Активний відеовиклик</string>
     <string name="disable_tor_to_make_call">Вимкнути ToR для здійснення викликів</string>
     <string name="incoming_call">Вхідний виклик</string>
-    <string name="incoming_call_duration">Вхідний виклик · %s</string>
     <string name="outgoing_call">Вихідний виклик</string>
-    <string name="outgoing_call_duration">Вихідний виклик · %s</string>
     <string name="missed_call">Пропущені виклики</string>
     <string name="audio_call">Голосовий виклик</string>
     <string name="video_call">Відеовиклик</string>

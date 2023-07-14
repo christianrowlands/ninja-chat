@@ -1,5 +1,24 @@
 # Changelog
 
+### Version 2.12.6
+
+* Fix 'q' falsely being recognized as cyrillic
+
+### Version 2.12.5
+
+* Bump Target SDK to 33 again
+* Fix issues on servers supporting SASL2 w/o inline Stream Management
+
+### Version 2.12.4
+
+* Revert Target SDK bump (back to 32) to fix various issues on Android 13
+
+### Version 2.12.3
+
+* Improve support for new emojis
+* Add ability to remove account from server
+* Show timestamp for calls
+
 ### Version 2.12.2
 
 * Increase corner radius on profile pictures

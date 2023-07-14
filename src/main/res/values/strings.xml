@@ -183,8 +183,7 @@
     <string name="unpublish_pgp_message">Are you sure you want to remove your OpenPGP public key from your presence announcement?\nYour contacts will no longer be able to send you OpenPGP encrypted messages.</string>
     <string name="openpgp_has_been_published">OpenPGP public key published.</string>
     <string name="mgmt_account_enable">Enable account</string>
-    <string name="mgmt_account_are_you_sure">Are you sure?</string>
-    <string name="mgmt_account_delete_confirm_text">Deleting your account erases your entire conversation history</string>
+    <string name="mgmt_account_delete_confirm_text">Are you sure you want to delete your account? Deleting your account erases your entire conversation history</string>
     <string name="attach_record_voice">Record voice</string>
     <string name="account_settings_jabber_id">XMPP address</string>
     <string name="block_jabber_id">Block XMPP address</string>
@@ -226,7 +225,7 @@
     <string name="fetching_keys">Fetching keys…</string>
     <string name="done">Done</string>
     <string name="decrypt">Decrypt</string>
-    <string name="bookmarks">Bookmarks</string>
+    <string name="group_chats">Group chats</string>
     <string name="search">Search</string>
     <string name="enter_contact">Enter Contact</string>
     <string name="delete_contact">Delete contact</string>
@@ -240,6 +239,7 @@
     <string name="channel_full_jid_example">channel@conference.ninja.chat/nick</string>
     <string name="channel_bare_jid_example">channel@conference.ninja.chat</string>
     <string name="save_as_bookmark">Save as bookmark</string>
+    <string name="save_as_group_chat">Save as group chat</string>
     <string name="delete_bookmark">Delete bookmark</string>
     <string name="destroy_room">Destroy group chat</string>
     <string name="destroy_channel">Destroy channel</string>
@@ -456,7 +456,7 @@
     <string name="recently_used">Most recently used</string>
     <string name="choose_quick_action">Choose quick action</string>
     <string name="search_contacts">Search contacts</string>
-    <string name="search_bookmarks">Search bookmarks</string>
+    <string name="search_group_chats">Search group chats</string>
     <string name="send_private_message">Send private message</string>
     <string name="user_has_left_conference">%1$s has left the group chat</string>
     <string name="username">Username</string>
@@ -542,9 +542,9 @@
     <string name="share_uri_with">Share URI with…</string>
     <string name="welcome_header" translatable="false">Become a Ninja</string>
     <string name="welcome_header_quicksy" translatable="false">Have some Quick Conversations</string>
-    <string name="welcome_text_quicksy"><![CDATA[Quicksy is a spin off of the popular XMPP client Conversations with automatic contact discovery.<br><br>You sign up with your phone number and Quicksy will automatically—based on the phone numbers in your address book—suggest possible contacts to you.<br><br>By signing up you agree to our <a href="https://quicksy.im/#privacy">privacy policy</a>.]]></string>
+    <string name="welcome_text_quicksy_static" translatable="false"><![CDATA[Quicksy is a spin off of the popular XMPP client Conversations with automatic contact discovery.<br><br>You sign up with your phone number and Quicksy will automatically—based on the phone numbers in your address book—suggest possible contacts to you.<br>Quicksy stores your contacts’ phone numbers to make suggestions about possible contacts who are already on Quicksy.<br>By signing up you agree to our <a href="https://quicksy.im/privacy.htm">Privacy Policy</a> and our <a href="https://quicksy.im/tos.htm">Terms &amp; Conditions</a>.]]></string>
     <string name="agree_and_continue">Agree and continue</string>
-    <string name="magic_create_text">We will guide you through the process of creating a Ninja Chat account.\nWhen picking Ninja Chat as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
+    <string name="magic_create_text">A guide is set up for account creation on ninja.chat.\nWhen picking ninja.chat as a provider you will be able to communicate with users of other providers by giving them your full XMPP address.</string>
     <string name="your_full_jid_will_be">Your full XMPP address will be: %s</string>
     <string name="create_account">Create Account</string>
     <string name="use_own_provider">Custom Server</string>
@@ -933,10 +933,11 @@
     <string name="reconnecting_video_call">Reconnecting video call</string>
     <string name="disable_tor_to_make_call">Disable Tor to make calls</string>
     <string name="incoming_call">Incoming call</string>
-    <string name="incoming_call_duration">Incoming call · %s</string>
+    <string name="incoming_call_duration_timestamp">Incoming call (%s) · %s</string>
+    <string name="outgoing_call_duration_timestamp">Outgoing call (%s) · %s</string>
     <string name="missed_call_timestamp">Missed call · %s</string>
     <string name="outgoing_call">Outgoing call</string>
-    <string name="outgoing_call_duration">Outgoing call · %s</string>
+    <string name="outgoing_call_timestamp">Outgoing call · %s</string>
     <string name="missed_call">Missed call</string>
     <plurals name="n_missed_calls_from_x">
         <item quantity="one">%1$d missed call from %2$s</item>
@@ -1005,5 +1006,8 @@
     <string name="pref_up_push_server_title">Push Server</string>
     <string name="pref_up_push_server_summary">A user-chosen push server to relay push messages via XMPP to your device.</string>
     <string name="no_account_deactivated">None (deactivated)</string>
+    <string name="decline">Decline</string>
+    <string name="delete_from_server">Remove account from server</string>
+    <string name="could_not_delete_account_from_server">Could not delete account from server</string>
 
 </resources>
