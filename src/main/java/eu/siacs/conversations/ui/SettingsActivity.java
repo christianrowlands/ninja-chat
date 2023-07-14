@@ -504,10 +504,10 @@ public class SettingsActivity extends XmppActivity implements OnSharedPreference
             }
         } else if (name.equals(PREVENT_SCREENSHOTS)) {
             SettingsUtils.applyScreenshotPreventionSetting(this);
-        } else if (UnifiedPushDistributor.PREFERENCES.contains(name)) {
-            if (xmppConnectionService.reconfigurePushDistributor()) {
-                xmppConnectionService.renewUnifiedPushEndpoints();
-            }
+//        } else if (UnifiedPushDistributor.PREFERENCES.contains(name)) {
+//            if (xmppConnectionService.reconfigurePushDistributor()) {
+//                xmppConnectionService.renewUnifiedPushEndpoints();
+//            }
         }
     }
 

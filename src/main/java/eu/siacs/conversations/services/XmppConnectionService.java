@@ -222,7 +222,7 @@ public class XmppConnectionService extends Service {
     private final FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
     private final NotificationService mNotificationService = new NotificationService(this);
-    private final UnifiedPushBroker unifiedPushBroker = new UnifiedPushBroker(this);
+//    private final UnifiedPushBroker unifiedPushBroker = new UnifiedPushBroker(this);
     private final ChannelDiscoveryService mChannelDiscoveryService = new ChannelDiscoveryService(this);
     private final ShortcutService mShortcutService = new ShortcutService(this);
     private final AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
@@ -381,7 +381,7 @@ public class XmppConnectionService extends Service {
             connectMultiModeConversations(account);
             syncDirtyContacts(account);
 
-            unifiedPushBroker.renewUnifiedPushEndpointsOnBind(account);
+//            unifiedPushBroker.renewUnifiedPushEndpointsOnBind(account);
         }
     };
     private final AtomicLong mLastExpiryRun = new AtomicLong(0);
@@ -811,13 +811,13 @@ public class XmppConnectionService extends Service {
                 case ACTION_FCM_TOKEN_REFRESH:
                     refreshAllFcmTokens();
                     break;
-                case ACTION_RENEW_UNIFIED_PUSH_ENDPOINTS:
-                    final String instance = intent.getStringExtra("instance");
-                    final Optional<UnifiedPushBroker.Transport> transport = renewUnifiedPushEndpoints();
-                    if (instance != null && transport.isPresent()) {
-                        unifiedPushBroker.rebroadcastEndpoint(instance, transport.get());
-                    }
-                    break;
+//                case ACTION_RENEW_UNIFIED_PUSH_ENDPOINTS:
+//                    final String instance = intent.getStringExtra("instance");
+//                    final Optional<UnifiedPushBroker.Transport> transport = renewUnifiedPushEndpoints();
+//                    if (instance != null && transport.isPresent()) {
+//                        unifiedPushBroker.rebroadcastEndpoint(instance, transport.get());
+//                    }
+//                    break;
                 case ACTION_IDLE_PING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         scheduleNextIdlePing();
@@ -947,9 +947,9 @@ public class XmppConnectionService extends Service {
         return pingNow;
     }
 
-    public boolean processUnifiedPushMessage(final Account account, final Jid transport, final Element push) {
-        return unifiedPushBroker.processPushMessage(account, transport, push);
-    }
+//    public boolean processUnifiedPushMessage(final Account account, final Jid transport, final Element push) {
+//        return unifiedPushBroker.processPushMessage(account, transport, push);
+//    }
 
     public void reinitializeMuclumbusService() {
         mChannelDiscoveryService.initializeMuclumbusService();
@@ -1185,7 +1185,7 @@ public class XmppConnectionService extends Service {
         editor.putBoolean(EventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts).apply();
         editor.apply();
         toggleSetProfilePictureActivity(hasEnabledAccounts);
-        reconfigurePushDistributor();
+//        reconfigurePushDistributor();
 
         restoreFromDatabase();
 
@@ -2357,13 +2357,13 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public boolean reconfigurePushDistributor() {
-        return this.unifiedPushBroker.reconfigurePushDistributor();
-    }
+//    public boolean reconfigurePushDistributor() {
+//        return this.unifiedPushBroker.reconfigurePushDistributor();
+//    }
 
-    public Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints() {
-        return this.unifiedPushBroker.renewUnifiedPushEndpoints();
-    }
+//    public Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints() {
+//        return this.unifiedPushBroker.renewUnifiedPushEndpoints();
+//    }
 
     private void provisionAccount(final String address, final String password) {
         final Jid jid = Jid.ofEscaped(address);
