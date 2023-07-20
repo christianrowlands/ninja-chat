@@ -105,7 +105,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 42060
-        versionName "2.12.6"
+        versionName "2.12.9"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
