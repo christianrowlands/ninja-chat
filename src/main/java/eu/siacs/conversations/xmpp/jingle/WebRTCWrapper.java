@@ -2,8 +2,6 @@ package eu.siacs.conversations.xmpp.jingle;
 
 import android.content.Context;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.google.common.base.Optional;
@@ -13,6 +11,9 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
+
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.services.XmppConnectionService;
 
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
@@ -33,7 +34,6 @@ import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
 import org.webrtc.VideoTrack;
 import org.webrtc.audio.JavaAudioDeviceModule;
-import org.webrtc.voiceengine.WebRtcAudioEffects;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,21 +41,20 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import eu.siacs.conversations.Config;
-import eu.siacs.conversations.services.AppRTCAudioManager;
-import eu.siacs.conversations.services.XmppConnectionService;
-
-@SuppressWarnings("UnstableApiUsage")
 public class WebRTCWrapper {
 
     private static final String EXTENDED_LOGGING_TAG = WebRTCWrapper.class.getSimpleName();
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService localDescriptionExecutorService =
+            Executors.newSingleThreadExecutor();
 
     private static final Set<String> HARDWARE_AEC_BLACKLIST =
             new ImmutableSet.Builder<String>()
@@ -70,6 +69,7 @@ public class WebRTCWrapper {
                     .add("E5823") // Sony z5 compact
                     .add("Redmi Note 5")
                     .add("FP2") // Fairphone FP2
+                    .add("FP4") // Fairphone FP4
                     .add("MI 5")
                     .add("GT-I9515") // Samsung Galaxy S4 Value Edition (jfvelte)
                     .add("GT-I9515L") // Samsung Galaxy S4 Value Edition (jfvelte)
@@ -79,19 +79,11 @@ public class WebRTCWrapper {
     private final EventCallback eventCallback;
     private final AtomicBoolean readyToReceivedIceCandidates = new AtomicBoolean(false);
     private final Queue<IceCandidate> iceCandidates = new LinkedList<>();
-    private final AppRTCAudioManager.AudioManagerEvents audioManagerEvents =
-            new AppRTCAudioManager.AudioManagerEvents() {
-                @Override
-                public void onAudioDeviceChanged(
-                        AppRTCAudioManager.AudioDevice selectedAudioDevice,
-                        Set<AppRTCAudioManager.AudioDevice> availableAudioDevices) {
-                    eventCallback.onAudioDeviceChanged(selectedAudioDevice, availableAudioDevices);
-                }
-            };
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private TrackWrapper<AudioTrack> localAudioTrack = null;
     private TrackWrapper<VideoTrack> localVideoTrack = null;
     private VideoTrack remoteVideoTrack = null;
+
+    private final SettableFuture<Void> iceGatheringComplete = SettableFuture.create();
     private final PeerConnection.Observer peerConnectionObserver =
             new PeerConnection.Observer() {
                 @Override
@@ -126,8 +118,11 @@ public class WebRTCWrapper {
 
                 @Override
                 public void onIceGatheringChange(
-                        PeerConnection.IceGatheringState iceGatheringState) {
+                        final PeerConnection.IceGatheringState iceGatheringState) {
                     Log.d(EXTENDED_LOGGING_TAG, "onIceGatheringChange(" + iceGatheringState + ")");
+                    if (iceGatheringState == PeerConnection.IceGatheringState.COMPLETE) {
+                        iceGatheringComplete.set(null);
+                    }
                 }
 
                 @Override
@@ -205,8 +200,6 @@ public class WebRTCWrapper {
             };
     @Nullable private PeerConnectionFactory peerConnectionFactory = null;
     @Nullable private PeerConnection peerConnection = null;
-    private AppRTCAudioManager appRTCAudioManager = null;
-    private ToneManager toneManager = null;
     private Context context = null;
     private EglBase eglBase = null;
     private VideoSourceWrapper videoSourceWrapper;
@@ -223,10 +216,7 @@ public class WebRTCWrapper {
         }
     }
 
-    public void setup(
-            final XmppConnectionService service,
-            @Nonnull final AppRTCAudioManager.SpeakerPhonePreference speakerPhonePreference)
-            throws InitializationException {
+    public void setup(final XmppConnectionService service) throws InitializationException {
         try {
             PeerConnectionFactory.initialize(
                     PeerConnectionFactory.InitializationOptions.builder(service)
@@ -241,28 +231,19 @@ public class WebRTCWrapper {
             throw new InitializationException("Unable to create EGL base", e);
         }
         this.context = service;
-        this.toneManager = service.getJingleConnectionManager().toneManager;
-        mainHandler.post(
-                () -> {
-                    appRTCAudioManager = AppRTCAudioManager.create(service, speakerPhonePreference);
-                    toneManager.setAppRtcAudioManagerHasControl(true);
-                    appRTCAudioManager.start(audioManagerEvents);
-                    eventCallback.onAudioDeviceChanged(
-                            appRTCAudioManager.getSelectedAudioDevice(),
-                            appRTCAudioManager.getAudioDevices());
-                });
     }
 
     synchronized void initializePeerConnection(
-            final Set<Media> media, final List<PeerConnection.IceServer> iceServers)
+            final Set<Media> media,
+            final List<PeerConnection.IceServer> iceServers,
+            final boolean trickle)
             throws InitializationException {
         Preconditions.checkState(this.eglBase != null);
         Preconditions.checkNotNull(media);
         Preconditions.checkArgument(
                 media.size() > 0, "media can not be empty when initializing peer connection");
         final boolean setUseHardwareAcousticEchoCanceler =
-                WebRtcAudioEffects.canUseAcousticEchoCanceler()
-                        && !HARDWARE_AEC_BLACKLIST.contains(Build.MODEL);
+                !HARDWARE_AEC_BLACKLIST.contains(Build.MODEL);
         Log.d(
                 Config.LOGTAG,
                 String.format(
@@ -282,7 +263,7 @@ public class WebRTCWrapper {
                                         .createAudioDeviceModule())
                         .createPeerConnectionFactory();
 
-        final PeerConnection.RTCConfiguration rtcConfig = buildConfiguration(iceServers);
+        final PeerConnection.RTCConfiguration rtcConfig = buildConfiguration(iceServers, trickle);
         final PeerConnection peerConnection =
                 requirePeerConnectionFactory()
                         .createPeerConnection(rtcConfig, peerConnectionObserver);
@@ -396,39 +377,44 @@ public class WebRTCWrapper {
         }
     }
 
-    private static PeerConnection.RTCConfiguration buildConfiguration(
-            final List<PeerConnection.IceServer> iceServers) {
+    public static PeerConnection.RTCConfiguration buildConfiguration(
+            final List<PeerConnection.IceServer> iceServers, final boolean trickle) {
         final PeerConnection.RTCConfiguration rtcConfig =
                 new PeerConnection.RTCConfiguration(iceServers);
         rtcConfig.tcpCandidatePolicy =
                 PeerConnection.TcpCandidatePolicy.DISABLED; // XEP-0176 doesn't support tcp
-        rtcConfig.continualGatheringPolicy =
-                PeerConnection.ContinualGatheringPolicy.GATHER_CONTINUALLY;
+        if (trickle) {
+            rtcConfig.continualGatheringPolicy =
+                    PeerConnection.ContinualGatheringPolicy.GATHER_CONTINUALLY;
+        } else {
+            rtcConfig.continualGatheringPolicy =
+                    PeerConnection.ContinualGatheringPolicy.GATHER_ONCE;
+        }
         rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN;
         rtcConfig.rtcpMuxPolicy = PeerConnection.RtcpMuxPolicy.NEGOTIATE;
         rtcConfig.enableImplicitRollback = true;
         return rtcConfig;
     }
 
-    void reconfigurePeerConnection(final List<PeerConnection.IceServer> iceServers) {
-        requirePeerConnection().setConfiguration(buildConfiguration(iceServers));
+    void reconfigurePeerConnection(
+            final List<PeerConnection.IceServer> iceServers, final boolean trickle) {
+        requirePeerConnection().setConfiguration(buildConfiguration(iceServers, trickle));
     }
 
-    void restartIce() {
-        executorService.execute(
-                () -> {
-                    final PeerConnection peerConnection;
-                    try {
-                        peerConnection = requirePeerConnection();
-                    } catch (final PeerConnectionNotInitialized e) {
-                        Log.w(
-                                EXTENDED_LOGGING_TAG,
-                                "PeerConnection vanished before we could execute restart");
-                        return;
-                    }
-                    setIsReadyToReceiveIceCandidates(false);
-                    peerConnection.restartIce();
-                });
+    void restartIceAsync() {
+        this.execute(this::restartIce);
+    }
+
+    private void restartIce() {
+        final PeerConnection peerConnection;
+        try {
+            peerConnection = requirePeerConnection();
+        } catch (final PeerConnectionNotInitialized e) {
+            Log.w(EXTENDED_LOGGING_TAG, "PeerConnection vanished before we could execute restart");
+            return;
+        }
+        setIsReadyToReceiveIceCandidates(false);
+        peerConnection.restartIce();
     }
 
     public void setIsReadyToReceiveIceCandidates(final boolean ready) {
@@ -447,15 +433,10 @@ public class WebRTCWrapper {
         final PeerConnection peerConnection = this.peerConnection;
         final PeerConnectionFactory peerConnectionFactory = this.peerConnectionFactory;
         final VideoSourceWrapper videoSourceWrapper = this.videoSourceWrapper;
-        final AppRTCAudioManager audioManager = this.appRTCAudioManager;
         final EglBase eglBase = this.eglBase;
         if (peerConnection != null) {
             this.peerConnection = null;
             dispose(peerConnection);
-        }
-        if (audioManager != null) {
-            toneManager.setAppRtcAudioManagerHasControl(false);
-            mainHandler.post(audioManager::stop);
         }
         this.localVideoTrack = null;
         this.remoteVideoTrack = null;
@@ -483,8 +464,8 @@ public class WebRTCWrapper {
                 || this.eglBase != null
                 || this.localVideoTrack != null
                 || this.remoteVideoTrack != null) {
-            final IllegalStateException e =
-                    new IllegalStateException("WebRTCWrapper hasn't been closed properly");
+            final AssertionError e =
+                    new AssertionError("WebRTCWrapper hasn't been closed properly");
             Log.e(Config.LOGTAG, "verifyClosed() failed. Going to throw", e);
             throw e;
         }
@@ -521,7 +502,7 @@ public class WebRTCWrapper {
                 return false;
             }
         } else {
-            throw new IllegalStateException("Local audio track does not exist (yet)");
+            return false;
         }
     }
 
@@ -561,7 +542,9 @@ public class WebRTCWrapper {
         throw new IllegalStateException("Local video track does not exist");
     }
 
-    synchronized ListenableFuture<SessionDescription> setLocalDescription() {
+    synchronized ListenableFuture<SessionDescription> setLocalDescription(
+            final boolean waitForCandidates) {
+        this.setIsReadyToReceiveIceCandidates(false);
         return Futures.transformAsync(
                 getPeerConnectionFuture(),
                 peerConnection -> {
@@ -574,11 +557,20 @@ public class WebRTCWrapper {
                             new SetSdpObserver() {
                                 @Override
                                 public void onSetSuccess() {
-                                    final SessionDescription description =
-                                            peerConnection.getLocalDescription();
-                                    Log.d(EXTENDED_LOGGING_TAG, "set local description:");
-                                    logDescription(description);
-                                    future.set(description);
+                                    if (waitForCandidates) {
+                                        final var delay = getIceGatheringCompleteOrTimeout();
+                                        final var delayedSessionDescription =
+                                                Futures.transformAsync(
+                                                        delay,
+                                                        v -> {
+                                                            iceCandidates.clear();
+                                                            return getLocalDescriptionFuture();
+                                                        },
+                                                        MoreExecutors.directExecutor());
+                                        future.setFuture(delayedSessionDescription);
+                                    } else {
+                                        future.setFuture(getLocalDescriptionFuture());
+                                    }
                                 }
 
                                 @Override
@@ -590,6 +582,35 @@ public class WebRTCWrapper {
                     return future;
                 },
                 MoreExecutors.directExecutor());
+    }
+
+    private ListenableFuture<Void> getIceGatheringCompleteOrTimeout() {
+        return Futures.catching(
+                Futures.withTimeout(
+                        iceGatheringComplete,
+                        2,
+                        TimeUnit.SECONDS,
+                        JingleConnectionManager.SCHEDULED_EXECUTOR_SERVICE),
+                TimeoutException.class,
+                ex -> {
+                    Log.d(
+                            EXTENDED_LOGGING_TAG,
+                            "timeout while waiting for ICE gathering to complete");
+                    return null;
+                },
+                MoreExecutors.directExecutor());
+    }
+
+    private ListenableFuture<SessionDescription> getLocalDescriptionFuture() {
+        return Futures.submit(
+                () -> {
+                    final SessionDescription description =
+                            requirePeerConnection().getLocalDescription();
+                    Log.d(EXTENDED_LOGGING_TAG, "local description:");
+                    logDescription(description);
+                    return description;
+                },
+                localDescriptionExecutorService);
     }
 
     public static void logDescription(final SessionDescription sessionDescription) {
@@ -695,16 +716,8 @@ public class WebRTCWrapper {
         return context;
     }
 
-    AppRTCAudioManager getAudioManager() {
-        return appRTCAudioManager;
-    }
-
     void execute(final Runnable command) {
-        executorService.execute(command);
-    }
-
-    public void switchSpeakerPhonePreference(AppRTCAudioManager.SpeakerPhonePreference preference) {
-        mainHandler.post(() -> appRTCAudioManager.switchSpeakerPhonePreference(preference));
+        this.executorService.execute(command);
     }
 
     public interface EventCallback {
@@ -712,14 +725,10 @@ public class WebRTCWrapper {
 
         void onConnectionChange(PeerConnection.PeerConnectionState newState);
 
-        void onAudioDeviceChanged(
-                AppRTCAudioManager.AudioDevice selectedAudioDevice,
-                Set<AppRTCAudioManager.AudioDevice> availableAudioDevices);
-
         void onRenegotiationNeeded();
     }
 
-    private abstract static class SetSdpObserver implements SdpObserver {
+    public abstract static class SetSdpObserver implements SdpObserver {
 
         @Override
         public void onCreateSuccess(org.webrtc.SessionDescription sessionDescription) {
@@ -745,12 +754,12 @@ public class WebRTCWrapper {
 
     public static class PeerConnectionNotInitialized extends IllegalStateException {
 
-        private PeerConnectionNotInitialized() {
+        public PeerConnectionNotInitialized() {
             super("initialize PeerConnection first");
         }
     }
 
-    private static class FailureToSetDescriptionException extends IllegalArgumentException {
+    public static class FailureToSetDescriptionException extends IllegalArgumentException {
         public FailureToSetDescriptionException(String message) {
             super(message);
         }

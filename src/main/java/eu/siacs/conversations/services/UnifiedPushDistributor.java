@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Message;
 import android.os.Messenger;
 import android.os.Parcelable;
+import android.os.RemoteException;
 import android.util.Log;
 
 import com.google.common.base.Charsets;
@@ -27,15 +29,29 @@ import eu.siacs.conversations.utils.Compatibility;
 
 public class UnifiedPushDistributor extends BroadcastReceiver {
 
+    // distributor actions (these are actios used for connector->distributor broadcasts)
+    // we, the distributor, have a broadcast receiver listening for those actions
+
     public static final String ACTION_REGISTER = "org.unifiedpush.android.distributor.REGISTER";
     public static final String ACTION_UNREGISTER = "org.unifiedpush.android.distributor.UNREGISTER";
+
+
+    // connector actions (these are actions used for distributor->connector broadcasts)
+    public static final String ACTION_UNREGISTERED = "org.unifiedpush.android.connector.UNREGISTERED";
     public static final String ACTION_BYTE_MESSAGE =
             "org.unifiedpush.android.distributor.feature.BYTES_MESSAGE";
     public static final String ACTION_REGISTRATION_FAILED =
             "org.unifiedpush.android.connector.REGISTRATION_FAILED";
+
+    // this action is only used in 'messenger' communication to tell the app that a registration is
+    // probably fine but can not be processed right now; for example due to spotty internet
+    public static final String ACTION_REGISTRATION_DELAYED =
+            "org.unifiedpush.android.connector.REGISTRATION_DELAYED";
     public static final String ACTION_MESSAGE = "org.unifiedpush.android.connector.MESSAGE";
     public static final String ACTION_NEW_ENDPOINT =
             "org.unifiedpush.android.connector.NEW_ENDPOINT";
+
+    public static final String EXTRA_MESSAGE = "message";
 
     public static final String PREFERENCE_ACCOUNT = "up_push_account";
     public static final String PREFERENCE_PUSH_SERVER = "up_push_server";
@@ -50,9 +66,8 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
         }
         final String action = intent.getAction();
         final String application;
-        final Parcelable appByPendingIntent = intent.getParcelableExtra("app");
-        if (appByPendingIntent instanceof PendingIntent) {
-            final PendingIntent pendingIntent = (PendingIntent) appByPendingIntent;
+        final Parcelable appVerification = intent.getParcelableExtra("app");
+        if (appVerification instanceof PendingIntent pendingIntent) {
             application = pendingIntent.getIntentSender().getCreatorPackage();
             Log.d(Config.LOGTAG,"received application name via pending intent "+ application);
         } else {
@@ -62,18 +77,12 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
         final String instance = intent.getStringExtra("token");
         final List<String> features = intent.getStringArrayListExtra("features");
         switch (Strings.nullToEmpty(action)) {
-            case ACTION_REGISTER:
-                register(context, application, instance, features, messenger);
-                break;
-            case ACTION_UNREGISTER:
-                unregister(context, instance);
-                break;
-            case Intent.ACTION_PACKAGE_FULLY_REMOVED:
-                unregisterApplication(context, intent.getData());
-                break;
-            default:
-                Log.d(Config.LOGTAG, "UnifiedPushDistributor received unknown action " + action);
-                break;
+            case ACTION_REGISTER -> register(context, application, instance, features, messenger);
+            case ACTION_UNREGISTER -> unregister(context, instance);
+            case Intent.ACTION_PACKAGE_FULLY_REMOVED ->
+                    unregisterApplication(context, intent.getData());
+            default ->
+                    Log.d(Config.LOGTAG, "UnifiedPushDistributor received unknown action " + action);
         }
     }
 
@@ -102,6 +111,7 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
                 Log.d(
                         Config.LOGTAG,
                         "successfully created UnifiedPush entry. waking up XmppConnectionService");
+                quickLog(context, String.format("successfully registered %s (token = %s) for UnifiedPushed", application, instance));
                 final Intent serviceIntent = new Intent(context, XmppConnectionService.class);
                 serviceIntent.setAction(XmppConnectionService.ACTION_RENEW_UNIFIED_PUSH_ENDPOINTS);
                 serviceIntent.putExtra("instance", instance);
@@ -113,15 +123,41 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
             } else {
                 Log.d(Config.LOGTAG, "not successful. sending error message back to application");
                 final Intent registrationFailed = new Intent(ACTION_REGISTRATION_FAILED);
+                registrationFailed.putExtra(EXTRA_MESSAGE, "instance already exits");
                 registrationFailed.setPackage(application);
                 registrationFailed.putExtra("token", instance);
-                context.sendBroadcast(registrationFailed);
+                if (messenger instanceof Messenger m) {
+                    final var message = new Message();
+                    message.obj = registrationFailed;
+                    try {
+                        m.send(message);
+                    } catch (final RemoteException e) {
+                        context.sendBroadcast(registrationFailed);
+                    }
+                } else {
+                    context.sendBroadcast(registrationFailed);
+                }
             }
         } else {
+            if (messenger instanceof Messenger m) {
+                sendRegistrationFailed(m,"Your application is not registered to receive messages");
+            }
             Log.d(
                     Config.LOGTAG,
                     "ignoring invalid UnifiedPush registration. Unknown application "
                             + application);
+        }
+    }
+
+    private void sendRegistrationFailed(final Messenger messenger, final String error) {
+        final Intent intent = new Intent(ACTION_REGISTRATION_FAILED);
+        intent.putExtra(EXTRA_MESSAGE, error);
+        final var message = new Message();
+        message.obj = intent;
+        try {
+            messenger.send(message);
+        } catch (final RemoteException e) {
+            Log.d(Config.LOGTAG,"unable to tell messenger of failed registration",e);
         }
     }
 
@@ -141,7 +177,9 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
         }
         final UnifiedPushDatabase unifiedPushDatabase = UnifiedPushDatabase.getInstance(context);
         if (unifiedPushDatabase.deleteInstance(instance)) {
+            quickLog(context, String.format("successfully unregistered token %s from UnifiedPushed (application requested unregister)", instance));
             Log.d(Config.LOGTAG, "successfully removed " + instance + " from UnifiedPush");
+            // TODO send UNREGISTERED broadcast back to app?!
         }
     }
 
@@ -154,6 +192,7 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
             Log.d(Config.LOGTAG, "app " + application + " has been removed from the system");
             final UnifiedPushDatabase database = UnifiedPushDatabase.getInstance(context);
             if (database.deleteApplication(application)) {
+                quickLog(context, String.format("successfully removed %s from UnifiedPushed (ACTION_PACKAGE_FULLY_REMOVED)", application));
                 Log.d(Config.LOGTAG, "successfully removed " + application + " from UnifiedPush");
             }
         }
@@ -165,5 +204,12 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
                         Hashing.sha256()
                                 .hashString(Joiner.on('\0').join(components), Charsets.UTF_8)
                                 .asBytes());
+    }
+
+    public static void quickLog(final Context context, final String message) {
+        final Intent intent = new Intent(context, XmppConnectionService.class);
+        intent.setAction(XmppConnectionService.ACTION_QUICK_LOG);
+        intent.putExtra("message", message);
+        context.startService(intent);
     }
 }

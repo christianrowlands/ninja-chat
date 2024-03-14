@@ -31,10 +31,7 @@
     <string name="minutes_ago">%d min. geleden</string>
     <plurals name="x_unread_conversations">
         <item quantity="one">%d ongelezen gesprek</item>
-
-    
         <item quantity="other">%d ongelezen gesprekken</item>
-
     </plurals>
     <string name="sending">versturen…</string>
     <string name="message_decrypting">Bericht aan het ontsleutelen. Even geduld…</string>
@@ -53,7 +50,6 @@
     <string name="unblock_domain_text">Alle contacten van %s deblokkeren?</string>
     <string name="contact_blocked">Contact geblokkeerd</string>
     <string name="blocked">Geblokkeerd</string>
-    <string name="remove_bookmark_text">Wil je %s als bladwijzer verwijderen? De gesprekken met deze bladwijzer zullen niet worden verwijderd.</string>
     <string name="register_account">Nieuwe account op server registreren</string>
     <string name="change_password_on_server">Wachtwoord op server veranderen</string>
     <string name="share_with">Delen met…</string>
@@ -168,7 +164,8 @@
     <string name="mgmt_account_publish_avatar">Avatar publiceren</string>
     <string name="mgmt_account_publish_pgp">OpenPGP-publieke sleutel publiceren</string>
     <string name="unpublish_pgp">OpenPGP-publieke sleutel verwijderen</string>
-    <string name="unpublish_pgp_message">Weet je zeker dat je je OpenPGP-publieke sleutel uit je aanwezigheidsaankondiging wil verwijderen?\nJe contacten zullen je geen OpenPGP-versleutelde berichten meer kunnen sturen.</string>
+    <string name="unpublish_pgp_message">Weet je zeker dat je je publieke OpenPGP-sleutel uit je aankondiging van aanwezigheid wilt verwijderen\?
+\nJe contacten zullen je geen versleutelde OpenPGP-berichten meer kunnen sturen.</string>
     <string name="openpgp_has_been_published">OpenPGP-publieke sleutel gepubliceerd.</string>
     <string name="mgmt_account_enable">Account inschakelen</string>
     <string name="attach_record_voice">Stem opnemen</string>
@@ -818,4 +815,5 @@
     <string name="unable_to_enable_video">Kan video niet schakelen.</string>
     <string name="plain_text_document">Onversleuteld document</string>
     <string name="account_registrations_are_not_supported">Accountregistraties zijn niet ondersteund</string>
-    </resources>
+    <string name="pref_never_send_crash_summary">Door crashrapportages te versturen help je de ontwikkeling</string>
+</resources>

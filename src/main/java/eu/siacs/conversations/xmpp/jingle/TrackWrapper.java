@@ -6,6 +6,8 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
+import eu.siacs.conversations.Config;
+
 import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
 import org.webrtc.RtpSender;
@@ -15,8 +17,6 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import eu.siacs.conversations.Config;
 
 class TrackWrapper<T extends MediaStreamTrack> {
     public final T track;
@@ -43,7 +43,13 @@ class TrackWrapper<T extends MediaStreamTrack> {
         final RtpTransceiver transceiver =
                 peerConnection == null ? null : getTransceiver(peerConnection, trackWrapper);
         if (transceiver == null) {
-            Log.w(Config.LOGTAG, "unable to detect transceiver for " + trackWrapper.rtpSender.id());
+            final String id;
+            try {
+                id = trackWrapper.rtpSender.id();
+            } catch (final IllegalStateException e) {
+                return Optional.absent();
+            }
+            Log.w(Config.LOGTAG, "unable to detect transceiver for " + id);
             return Optional.of(trackWrapper.track);
         }
         final RtpTransceiver.RtpTransceiverDirection direction = transceiver.getDirection();
@@ -59,8 +65,14 @@ class TrackWrapper<T extends MediaStreamTrack> {
     public static <T extends MediaStreamTrack> RtpTransceiver getTransceiver(
             @Nonnull final PeerConnection peerConnection, final TrackWrapper<T> trackWrapper) {
         final RtpSender rtpSender = trackWrapper.rtpSender;
+        final String rtpSenderId;
+        try {
+            rtpSenderId = rtpSender.id();
+        } catch (final IllegalStateException e) {
+            return null;
+        }
         for (final RtpTransceiver transceiver : peerConnection.getTransceivers()) {
-            if (transceiver.getSender().id().equals(rtpSender.id())) {
+            if (transceiver.getSender().id().equals(rtpSenderId)) {
                 return transceiver;
             }
         }

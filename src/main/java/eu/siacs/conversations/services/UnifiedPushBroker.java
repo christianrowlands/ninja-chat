@@ -1,5 +1,6 @@
 package eu.siacs.conversations.services;
 
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,10 +10,19 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.io.BaseEncoding;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
@@ -76,23 +86,41 @@ public class UnifiedPushBroker {
         service.sendPresencePacket(account, presence);
     }
 
-    public Optional<Transport> renewUnifiedPushEndpoints() {
-        return renewUnifiedPushEndpoints(null);
+    public void renewUnifiedPushEndpoints() {
+        renewUnifiedPushEndpoints(null);
     }
 
-    public Optional<Transport> renewUnifiedPushEndpoints(final PushTargetMessenger pushTargetMessenger) {
+    public Optional<Transport> renewUnifiedPushEndpoints(@Nullable final PushTargetMessenger pushTargetMessenger) {
         final Optional<Transport> transportOptional = getTransport();
         if (transportOptional.isPresent()) {
             final Transport transport = transportOptional.get();
             if (transport.account.isEnabled()) {
                 renewUnifiedEndpoint(transportOptional.get(), pushTargetMessenger);
             } else {
+                if (pushTargetMessenger != null && pushTargetMessenger.messenger != null) {
+                    sendRegistrationDelayed(pushTargetMessenger.messenger,"account is disabled");
+                }
                 Log.d(Config.LOGTAG, "skipping UnifiedPush endpoint renewal. Account is disabled");
             }
         } else {
+            if (pushTargetMessenger != null && pushTargetMessenger.messenger != null) {
+                sendRegistrationDelayed(pushTargetMessenger.messenger,"no transport selected");
+            }
             Log.d(Config.LOGTAG, "skipping UnifiedPush endpoint renewal. No transport selected");
         }
         return transportOptional;
+    }
+
+    private void sendRegistrationDelayed(final Messenger messenger, final String error) {
+        final Intent intent = new Intent(UnifiedPushDistributor.ACTION_REGISTRATION_DELAYED);
+        intent.putExtra(UnifiedPushDistributor.EXTRA_MESSAGE, error);
+        final var message = new Message();
+        message.obj = intent;
+        try {
+            messenger.send(message);
+        } catch (final RemoteException e) {
+            Log.d(Config.LOGTAG,"unable to tell messenger of delayed registration",e);
+        }
     }
 
     private void renewUnifiedEndpoint(final Transport transport, final PushTargetMessenger pushTargetMessenger) {
@@ -112,6 +140,7 @@ public class UnifiedPushBroker {
             Log.d(
                     Config.LOGTAG,
                     account.getJid().asBareJid() + ": try to renew UnifiedPush " + renewal);
+            UnifiedPushDistributor.quickLog(service,String.format("%s: try to renew UnifiedPush %s", account.getJid(), renewal.toString()));
             final String hashedApplication =
                     UnifiedPushDistributor.hash(account.getUuid(), renewal.application);
             final String hashedInstance =
@@ -186,7 +215,16 @@ public class UnifiedPushBroker {
                             + renewal.instance
                             + " was updated to "
                             + endpoint);
-            final UnifiedPushDatabase.ApplicationEndpoint applicationEndpoint = new UnifiedPushDatabase.ApplicationEndpoint(renewal.application, endpoint);
+            UnifiedPushDistributor.quickLog(
+                    service,
+                    "endpoint for "
+                            + renewal.application
+                            + "/"
+                            + renewal.instance
+                            + " was updated to "
+                            + endpoint);
+            final UnifiedPushDatabase.ApplicationEndpoint applicationEndpoint =
+                    new UnifiedPushDatabase.ApplicationEndpoint(renewal.application, endpoint);
             sendEndpoint(messenger, renewal.instance, applicationEndpoint);
         }
     }
@@ -210,6 +248,9 @@ public class UnifiedPushBroker {
     public boolean reconfigurePushDistributor() {
         final boolean enabled = getTransport().isPresent();
         setUnifiedPushDistributorEnabled(enabled);
+        if (!enabled) {
+            unregisterCurrentPushTargets();
+        }
         return enabled;
     }
 
@@ -230,6 +271,43 @@ public class UnifiedPushBroker {
                     PackageManager.DONT_KILL_APP);
             Log.d(Config.LOGTAG, "UnifiedPushDistributor has been disabled");
         }
+    }
+
+    private void unregisterCurrentPushTargets() {
+        final var future = deletePushTargets();
+        Futures.addCallback(
+                future,
+                new FutureCallback<>() {
+                    @Override
+                    public void onSuccess(
+                            final List<UnifiedPushDatabase.PushTarget> pushTargets) {
+                        broadcastUnregistered(pushTargets);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Throwable throwable) {
+                        Log.d(
+                                Config.LOGTAG,
+                                "could not delete endpoints after UnifiedPushDistributor was disabled");
+                    }
+                },
+                MoreExecutors.directExecutor());
+    }
+
+    private ListenableFuture<List<UnifiedPushDatabase.PushTarget>> deletePushTargets() {
+        return Futures.submit(() -> UnifiedPushDatabase.getInstance(service).deletePushTargets(),SCHEDULER);
+    }
+
+    private void broadcastUnregistered(final List<UnifiedPushDatabase.PushTarget> pushTargets) {
+        for(final UnifiedPushDatabase.PushTarget pushTarget : pushTargets) {
+            Log.d(Config.LOGTAG,"sending unregistered to "+pushTarget);
+            broadcastUnregistered(pushTarget);
+        }
+    }
+
+    private void broadcastUnregistered(final UnifiedPushDatabase.PushTarget pushTarget) {
+        final var intent = unregisteredIntent(pushTarget);
+        service.sendBroadcast(intent);
     }
 
     public boolean processPushMessage(
@@ -326,6 +404,12 @@ public class UnifiedPushBroker {
         updateIntent.putExtra("token", target.instance);
         updateIntent.putExtra("bytesMessage", payload);
         updateIntent.putExtra("message", new String(payload, StandardCharsets.UTF_8));
+        final var distributorVerificationIntent = new Intent();
+        distributorVerificationIntent.setPackage(service.getPackageName());
+        final var pendingIntent =
+                PendingIntent.getBroadcast(
+                        service, 0, distributorVerificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        updateIntent.putExtra("distributor", pendingIntent);
         service.sendBroadcast(updateIntent);
     }
 
@@ -336,11 +420,30 @@ public class UnifiedPushBroker {
         service.sendBroadcast(updateIntent);
     }
 
-    private static Intent endpointIntent(final String instance, final UnifiedPushDatabase.ApplicationEndpoint endpoint) {
+    private Intent endpointIntent(final String instance, final UnifiedPushDatabase.ApplicationEndpoint endpoint) {
         final Intent intent = new Intent(UnifiedPushDistributor.ACTION_NEW_ENDPOINT);
         intent.setPackage(endpoint.application);
         intent.putExtra("token", instance);
         intent.putExtra("endpoint", endpoint.endpoint);
+        final var distributorVerificationIntent = new Intent();
+        distributorVerificationIntent.setPackage(service.getPackageName());
+        final var pendingIntent =
+                PendingIntent.getBroadcast(
+                        service, 0, distributorVerificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        intent.putExtra("distributor", pendingIntent);
+        return intent;
+    }
+
+    private Intent unregisteredIntent(final UnifiedPushDatabase.PushTarget pushTarget) {
+        final Intent intent = new Intent(UnifiedPushDistributor.ACTION_UNREGISTERED);
+        intent.setPackage(pushTarget.application);
+        intent.putExtra("token", pushTarget.instance);
+        final var distributorVerificationIntent = new Intent();
+        distributorVerificationIntent.setPackage(service.getPackageName());
+        final var pendingIntent =
+                PendingIntent.getBroadcast(
+                        service, 0, distributorVerificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        intent.putExtra("distributor", pendingIntent);
         return intent;
     }
 
@@ -368,7 +471,7 @@ public class UnifiedPushBroker {
 
     public static class PushTargetMessenger {
         private final UnifiedPushDatabase.PushTarget pushTarget;
-        private final Messenger messenger;
+        public final Messenger messenger;
 
         public PushTargetMessenger(UnifiedPushDatabase.PushTarget pushTarget, Messenger messenger) {
             this.pushTarget = pushTarget;

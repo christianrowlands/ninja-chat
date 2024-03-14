@@ -83,6 +83,12 @@ public class Presences {
         }
     }
 
+    public boolean isEmpty() {
+        synchronized (this.presences) {
+            return this.presences.isEmpty();
+        }
+    }
+
     public String[] toResourceArray() {
         synchronized (this.presences) {
             final String[] presencesArray = new String[presences.size()];
@@ -134,20 +140,6 @@ public class Presences {
         return true;
     }
 
-    public boolean anySupport(final String namespace) {
-        synchronized (this.presences) {
-            if (this.presences.size() == 0) {
-                return true;
-            }
-            for (Presence presence : this.presences.values()) {
-                ServiceDiscoveryResult disco = presence.getServiceDiscoveryResult();
-                if (disco != null && disco.getFeatures().contains(namespace)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     public Pair<Map<String, String>, Map<String, String>> toTypeAndNameMap() {
         Map<String, String> typeMap = new HashMap<>();

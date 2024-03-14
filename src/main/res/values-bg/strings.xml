@@ -31,10 +31,7 @@
     <string name="minutes_ago">преди %d минути</string>
     <plurals name="x_unread_conversations">
         <item quantity="one">%d непрочетен разговор</item>
-
-    
         <item quantity="other">%d непрочетени разговора</item>
-
     </plurals>
     <string name="sending">изпращане…</string>
     <string name="message_decrypting">Дешифроване на съобщението. Моля, изчакайте…</string>
@@ -53,7 +50,6 @@
     <string name="unblock_domain_text">Деблокиране на всички контакти от %s?</string>
     <string name="contact_blocked">Контактът е блокиран</string>
     <string name="blocked">Блокиран</string>
-    <string name="remove_bookmark_text">Искате ли да премахнете отметката за %s? Разговорите, свързани с тази отметка, няма да бъдат премахнати.</string>
     <string name="register_account">Регистриране на нов профил на сървъра</string>
     <string name="change_password_on_server">Промяна на паролата в сървъра</string>
     <string name="share_with">Споделяне с…</string>
@@ -508,7 +504,10 @@
     <string name="no_storage_permission">Дайте на %1$s разрешение за достъп до външната памет</string>
     <string name="no_camera_permission">Дайте на %1$s разрешение за достъп до камерата</string>
     <string name="sync_with_contacts">Синхронизиране с контактите</string>
-    <string name="sync_with_contacts_long">%1$s иска разрешение за достъп до адресната Ви книга, за да потърси съвпадения със списъка от контакти в XMPP.\nТова ще покаже пълните имена и аватари на контактите Ви.\n\n%1$s само ще прочете адресната книга и ще потърси съвпадения на това устройство – нищо няма да се качва на сървъра Ви.</string>
+    <string name="sync_with_contacts_long">%1$s иска разрешение за достъп до адресната Ви книга, за да потърси съвпадения със списъка от контакти в XMPP.
+\nТова ще покаже пълните имена и аватари на контактите Ви.
+\n
+\n%1$s само ще прочете адресната книга и ще потърси съвпадения на това устройство – нищо няма да се качва на сървъра Ви.</string>
     <string name="notify_on_all_messages">Известяване за всички съобщения</string>
     <string name="notify_only_when_highlighted">Известяване само при споменаване</string>
     <string name="notify_never">Известията са изключени</string>
@@ -519,7 +518,9 @@
     <string name="large_images_only">Само за големи изображения</string>
     <string name="battery_optimizations_enabled">Оптимизациите за използв. на батерията са вкл.</string>
     <string name="battery_optimizations_enabled_explained">Устройството Ви прилага сериозни оптимизации за използването на батерията върху %1$s, които може да доведат до забавени известия и дори пропуснати съобщения.\nПрепоръчително е да ги изключите.</string>
-    <string name="battery_optimizations_enabled_dialog">Устройството Ви прилага сериозни оптимизации за използването на батерията върху %1$s, които може да доведат до забавени известия и дори пропуснати съобщения.\nСега ще бъдете помолен(а) да ги изключите.</string>
+    <string name="battery_optimizations_enabled_dialog">Устройството Ви прилага сериозни оптимизации за използването на батерията върху %1$s, които може да доведат до забавени известия и дори пропуснати съобщения.
+\n
+\nСега ще бъдете помолен(а) да ги изключите.</string>
     <string name="disable">Изключване</string>
     <string name="selection_too_large">Избраната област е твърде голяма</string>
     <string name="no_accounts">(Няма активирани профили)</string>
@@ -955,4 +956,4 @@
     <string name="backup_started_message">Създаването на резервно копие е стартирано. Ще получите известие, когато приключи.</string>
     <string name="unable_to_enable_video">Видеото не може да бъде включено.</string>
     <string name="plain_text_document">Обикновен текстов документ</string>
-    </resources>
+</resources>

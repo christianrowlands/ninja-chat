@@ -118,11 +118,7 @@ Conversations is entirely open source and licensed under GPLv3. So if you are a
 software developer you can check out the sources from GitHub and use Gradle to
 build your apk file.
 
-The more convenient way — which not only gives you automatic updates but also
-supports the further development of Conversations — is to buy the App in the
-Google [Play Store](https://play.google.com/store/apps/details?id=eu.siacs.conversations&referrer=utm_source%3Dcodeberg).
-
-Buying the App from the Play Store will also give you access to our [beta test](#beta).
+Conversations is available on [Google Play](https://play.google.com/store/apps/details?id=eu.siacs.conversations) and on [F-Droid](https://f-droid.org/en/packages/eu.siacs.conversations/).
 
 #### I don't have a Google Account but I would still like to make a donation
 
@@ -139,11 +135,11 @@ Learn more about [conversations.im Jabber/XMPP domain hosting](https://account.c
 ##### Running your own
 If you already have a server somewhere and are willing and able to put the necessary work in you can run your own XMPP server.
 
-As of 2019 we recommend you use [ejabberd](https://ejabberd.im). The default configuration file already enables everything you need to pass the [Conversations Compliance Suite](https://compliance.conversations.im). Make sure your Linux distribution ships a fairly recent version.
+As of 2023 XMPP has reached a level of maturity where all major XMPP servers ([ejabberd](https://ejabberd.im), [Prosody](https://prosody.im), [Openfire](https://www.igniterealtime.org/projects/openfire/), [Tigase](https://tigase.net/xmpp-server/)) should work well with Conversations.
 
-With a little bit of effort [Prosody](https://prosody.im) can be configured to support all necessary extensions as well. However you will have to rely on so called [Community Modules](https://modules.prosody.im/) of varying quality. Prosody can be interesting to people who like to modify their server and create / prototype own modules.
+Interoperability with Prosody and ejabberd is tested fairly regularly just because of their market share but we occasionally test with other servers too and fix issues as soon as we are being made aware of them.
 
-Performance wise - for small deployments - both ejabberd and Prosody should be fine. 
+The default configurations are usually fine but you might want to use the [Conversations Compliance Suite](https://compliance.conversations.im) after install just to be sure.
 
 #### Where can I set up a custom hostname / port
 Conversations will automatically look up the SRV records for your domain name
@@ -389,16 +385,6 @@ this.)
 #### What is Blind Trust Before Verification / why are messages marked with a red lock?
 
 Read more about the concept on https://gultsch.de/trust.html
-
-#### What happened to OTR support?
-OTR was removed because it was highly unreliable. It didn’t work with multiple devices and was never really specified to work with XMPP. The codebase was a mess (There was an HTML parser in there for crying out loud to deal with the garbage some OTR clients would send.) Verification was implemented in a non-blocking way. It would tell you if the current session was using an unknown fingerprint but it didn’t actively stopped you from sending messages until you have confirmed the new fingerprint. (Like Conversations would do now with BTBV after verification or when BTBV is turned off.) Considering the previous points there was little to no desire from my point to fix this potential security issue or clean up the code base. Another reason for the removal was that people would use it *accidentally* even to communicate between two Conversations clients because they read somewhere that OTR is good.
-
-### What clients do I use on other platforms
-There are XMPP Clients available for all major platforms.
-#### Windows / Linux
-For your desktop computer we recommend that you use [Gajim](https://gajim.org). You need to install the `OMEMO` plugin to get the best compatibility with Conversations. Plugins can be installed from within the app, from your distribution, or from flatpak if you installed it from there.
-#### iOS
-Unfortunately we don‘t have a recommendation for iPhones right now. There are three clients available [Siskin](https://siskin.im/), [ChatSecure](https://chatsecure.org/) and [Monal](https://monal.im/). Each with their own pros and cons.
 
 
 ### Development
