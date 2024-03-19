@@ -48,3 +48,6 @@ import-summary.txt
 .navigation/
 
 lint*
+
+.DS_Store
+google-services.json
