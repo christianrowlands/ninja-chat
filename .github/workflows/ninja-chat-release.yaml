@@ -127,7 +127,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: ./gradlew assembleRegularRelease
+        run: ./gradlew assembleConversationsFreeRelease
           -Pandroid.injected.signing.store.file=$(pwd)/my.keystore
           -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD
           -Pandroid.injected.signing.key.alias=$KEY_ALIAS
