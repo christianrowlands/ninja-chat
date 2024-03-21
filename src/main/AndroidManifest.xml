@@ -311,8 +311,8 @@
         <activity
             android:name=".ui.ShareWithActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:exported="false">
+            android:exported="true"
+            android:launchMode="singleTop">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -343,8 +343,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.AboutActivity"
-            android:parentActivityName=".ui.SettingsActivity"
-            android:exported="true">
+            android:parentActivityName=".ui.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.siacs.conversations.ui.SettingsActivity" />
@@ -375,8 +374,8 @@
 
         <activity
             android:name=".ui.ShortcutActivity"
-            android:label="@string/contact"
-            android:exported="false">
+            android:exported="true"
+            android:label="@string/contact">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
             </intent-filter>
