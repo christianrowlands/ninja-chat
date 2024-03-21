@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Виберіть постачальника послуг обміну повідомленнями XMPP</string>
-    <string name="use_conversations.im">Скористатися conversations.im</string>
+    <string name="use_ninja.chat">Скористатися ninja.chat</string>
     <string name="create_new_account">Створити новий обліковий запис</string>
     <string name="do_you_have_an_account">Уже маєте обліковий запис XMPP\? Можливо, користуєтеся іншою програмою XMPP або користувалися Ninja Chat раніше. Якщо ні, можете створити новий обліковий запис XMPP просто зараз.
 \nЗверніть увагу, що деякі постачальники електронної пошти у той же час надають облікові записи XMPP.</string>
