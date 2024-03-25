@@ -25,12 +25,12 @@ modified. Conversations.im is an outstanding app so hats off to Daniel Gultsch! 
 
 To build a development debug version of Ninja Chat, you can use the command:
 ```
-./gradlew assembleConversationsFreeSystemDebug
+./gradlew assembleConversationsFreeDebug
 ```
 
 To build and install the apk onto a connected device us the command:
 ```
-./gradlew installConversationsFreeSystemDebug
+./gradlew installConversationsFreeDebug
 ```
 
 ### Release
@@ -45,13 +45,12 @@ keystore.alias=
 
 Then, build the release bundle using the following command
 ```
-./gradlew bundleConversationsFreeSystemRelease
+./gradlew bundleConversationsFreeRelease
 ```
 
 There is also a GitLab CI/CD job setup to build the release APK and bundle.
 
 ----- Everything that follows in this README is from the original Conversations.im repo. -----
->>>>>>> ninja-master
 
 ## Design principles
 
