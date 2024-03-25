@@ -1,22 +1,22 @@
 package eu.siacs.conversations.ui;
 
-import static java.util.Arrays.asList;
 import static eu.siacs.conversations.utils.PermissionUtils.getFirstDenied;
+
+import static java.util.Arrays.asList;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.PictureInPictureParams;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.opengl.GLException;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.util.Log;
 import android.util.Rational;
 import android.view.KeyEvent;
@@ -40,6 +40,30 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
+import eu.siacs.conversations.databinding.ActivityRtpSessionBinding;
+import eu.siacs.conversations.entities.Account;
+import eu.siacs.conversations.entities.Contact;
+import eu.siacs.conversations.entities.Conversation;
+import eu.siacs.conversations.services.CallIntegration;
+import eu.siacs.conversations.services.CallIntegrationConnectionService;
+import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.ui.util.AvatarWorkerTask;
+import eu.siacs.conversations.ui.util.MainThreadExecutor;
+import eu.siacs.conversations.ui.util.Rationals;
+import eu.siacs.conversations.utils.PermissionUtils;
+import eu.siacs.conversations.utils.TimeFrameUtils;
+import eu.siacs.conversations.xmpp.Jid;
+import eu.siacs.conversations.xmpp.jingle.AbstractJingleConnection;
+import eu.siacs.conversations.xmpp.jingle.ContentAddition;
+import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
+import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
+import eu.siacs.conversations.xmpp.jingle.Media;
+import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
+import eu.siacs.conversations.xmpp.jingle.RtpCapability;
+import eu.siacs.conversations.xmpp.jingle.RtpEndUserState;
+
 import org.webrtc.RendererCommon;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoTrack;
@@ -49,28 +73,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-import eu.siacs.conversations.databinding.ActivityRtpSessionBinding;
-import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.Contact;
-import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.services.AppRTCAudioManager;
-import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.ui.util.AvatarWorkerTask;
-import eu.siacs.conversations.ui.util.MainThreadExecutor;
-import eu.siacs.conversations.ui.util.Rationals;
-import eu.siacs.conversations.utils.PermissionUtils;
-import eu.siacs.conversations.utils.TimeFrameUtils;
-import eu.siacs.conversations.xml.Namespace;
-import eu.siacs.conversations.xmpp.Jid;
-import eu.siacs.conversations.xmpp.jingle.AbstractJingleConnection;
-import eu.siacs.conversations.xmpp.jingle.ContentAddition;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
-import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
-import eu.siacs.conversations.xmpp.jingle.Media;
-import eu.siacs.conversations.xmpp.jingle.RtpEndUserState;
 
 public class RtpSessionActivity extends XmppActivity
         implements XmppConnectionService.OnJingleRtpConnectionUpdate,
@@ -91,6 +93,7 @@ public class RtpSessionActivity extends XmppActivity
                     RtpEndUserState.APPLICATION_ERROR,
                     RtpEndUserState.SECURITY_ERROR,
                     RtpEndUserState.DECLINED_OR_BUSY,
+                    RtpEndUserState.CONTACT_OFFLINE,
                     RtpEndUserState.CONNECTIVITY_ERROR,
                     RtpEndUserState.CONNECTIVITY_LOST_ERROR,
                     RtpEndUserState.RETRACTED);
@@ -106,14 +109,20 @@ public class RtpSessionActivity extends XmppActivity
                     RtpEndUserState.RECONNECTING,
                     RtpEndUserState.INCOMING_CONTENT_ADD);
     private static final List<RtpEndUserState> STATES_CONSIDERED_CONNECTED =
-            Arrays.asList(
-                    RtpEndUserState.CONNECTED,
-                    RtpEndUserState.RECONNECTING);
+            Arrays.asList(RtpEndUserState.CONNECTED, RtpEndUserState.RECONNECTING);
     private static final List<RtpEndUserState> STATES_SHOWING_PIP_PLACEHOLDER =
             Arrays.asList(
                     RtpEndUserState.ACCEPTING_CALL,
                     RtpEndUserState.CONNECTING,
                     RtpEndUserState.RECONNECTING);
+    private static final List<RtpEndUserState> STATES_SHOWING_SPEAKER_CONFIGURATION =
+            new ImmutableList.Builder<RtpEndUserState>()
+                    .add(RtpEndUserState.FINDING_DEVICE)
+                    .add(RtpEndUserState.RINGING)
+                    .add(RtpEndUserState.ACCEPTING_CALL)
+                    .add(RtpEndUserState.CONNECTING)
+                    .addAll(STATES_CONSIDERED_CONNECTED)
+                    .build();
     private static final String PROXIMITY_WAKE_LOCK_TAG = "conversations:in-rtp-session";
     private static final int REQUEST_ACCEPT_CALL = 0x1111;
     private static final int REQUEST_ACCEPT_CONTENT = 0x1112;
@@ -133,11 +142,16 @@ public class RtpSessionActivity extends XmppActivity
                 }
             };
 
-    private static Set<Media> actionToMedia(final String action) {
+    public static Set<Media> actionToMedia(final String action) {
         if (ACTION_MAKE_VIDEO_CALL.equals(action)) {
             return ImmutableSet.of(Media.AUDIO, Media.VIDEO);
-        } else {
+        } else if (ACTION_MAKE_VOICE_CALL.equals(action)) {
             return ImmutableSet.of(Media.AUDIO);
+        } else {
+            Log.w(
+                    Config.LOGTAG,
+                    "actionToMedia can not get media set from unknown action " + action);
+            return Collections.emptySet();
         }
     }
 
@@ -230,18 +244,19 @@ public class RtpSessionActivity extends XmppActivity
     }
 
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_help:
-                launchHelpInBrowser();
-                return true;
-            case R.id.action_goto_chat:
-                switchToConversation();
-                return true;
-            case R.id.action_switch_to_video:
-                requestPermissionAndSwitchToVideo();
-                return true;
+        final var itemItem = item.getItemId();
+        if (itemItem == R.id.action_help) {
+            launchHelpInBrowser();
+            return true;
+        } else if (itemItem == R.id.action_goto_chat) {
+            switchToConversation();
+            return true;
+        } else if (itemItem == R.id.action_switch_to_video) {
+            requestPermissionAndSwitchToVideo();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void launchHelpInBrowser() {
@@ -270,14 +285,15 @@ public class RtpSessionActivity extends XmppActivity
     private void retractSessionProposal() {
         final Intent intent = getIntent();
         final String action = intent.getAction();
+        final String lastAction = intent.getStringExtra(EXTRA_LAST_ACTION);
         final Account account = extractAccount(intent);
         final Jid with = Jid.ofEscaped(intent.getStringExtra(EXTRA_WITH));
         final String state = intent.getStringExtra(EXTRA_LAST_REPORTED_STATE);
         if (!Intent.ACTION_VIEW.equals(action)
                 || state == null
                 || !END_CARD.contains(RtpEndUserState.valueOf(state))) {
-            resetIntent(
-                    account, with, RtpEndUserState.RETRACTED, actionToMedia(intent.getAction()));
+            final Set<Media> media = actionToMedia(lastAction == null ? action : lastAction);
+            resetIntent(account, with, RtpEndUserState.RETRACTED, media);
         }
         xmppConnectionService
                 .getJingleConnectionManager()
@@ -318,8 +334,9 @@ public class RtpSessionActivity extends XmppActivity
     }
 
     private void acceptContentAdd(final ContentAddition contentAddition) {
-        if (contentAddition == null || contentAddition.direction != ContentAddition.Direction.INCOMING) {
-            Log.d(Config.LOGTAG,"ignore press on content-accept button");
+        if (contentAddition == null
+                || contentAddition.direction != ContentAddition.Direction.INCOMING) {
+            Log.d(Config.LOGTAG, "ignore press on content-accept button");
             return;
         }
         requestPermissionAndAcceptContentAdd(contentAddition);
@@ -328,7 +345,11 @@ public class RtpSessionActivity extends XmppActivity
     private void requestPermissionAndAcceptContentAdd(final ContentAddition contentAddition) {
         final List<String> permissions = permissions(contentAddition.media());
         if (PermissionUtils.hasPermission(this, permissions, REQUEST_ACCEPT_CONTENT)) {
-            requireRtpConnection().acceptContentAdd(contentAddition.summary);
+            try {
+                requireRtpConnection().acceptContentAdd(contentAddition.summary);
+            } catch (final IllegalStateException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -340,7 +361,7 @@ public class RtpSessionActivity extends XmppActivity
         final List<String> permissions = permissions(getMedia());
         if (PermissionUtils.hasPermission(this, permissions, REQUEST_ACCEPT_CALL)) {
             putScreenInCallMode();
-            checkRecorderAndAcceptCall();
+            acceptCall();
         }
     }
 
@@ -357,8 +378,7 @@ public class RtpSessionActivity extends XmppActivity
         return permissions.build();
     }
 
-    private void checkRecorderAndAcceptCall() {
-        checkMicrophoneAvailabilityAsync();
+    private void acceptCall() {
         try {
             requireRtpConnection().acceptCall();
         } catch (final IllegalStateException e) {
@@ -366,40 +386,6 @@ public class RtpSessionActivity extends XmppActivity
         }
     }
 
-    private void checkMicrophoneAvailabilityAsync() {
-        new Thread(new MicrophoneAvailabilityCheck(this)).start();
-    }
-
-    private static class MicrophoneAvailabilityCheck implements Runnable {
-
-        private final WeakReference<Activity> activityReference;
-
-        private MicrophoneAvailabilityCheck(final Activity activity) {
-            this.activityReference = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void run() {
-            final long start = SystemClock.elapsedRealtime();
-            final boolean isMicrophoneAvailable = AppRTCAudioManager.isMicrophoneAvailable();
-            final long stop = SystemClock.elapsedRealtime();
-            Log.d(Config.LOGTAG, "checking microphone availability took " + (stop - start) + "ms");
-            if (isMicrophoneAvailable) {
-                return;
-            }
-            final Activity activity = activityReference.get();
-            if (activity == null) {
-                return;
-            }
-            activity.runOnUiThread(
-                    () ->
-                            Toast.makeText(
-                                            activity,
-                                            R.string.microphone_unavailable,
-                                            Toast.LENGTH_LONG)
-                                    .show());
-        }
-    }
 
     private void putScreenInCallMode() {
         putScreenInCallMode(requireRtpConnection().getMedia());
@@ -410,11 +396,11 @@ public class RtpSessionActivity extends XmppActivity
         if (Media.audioOnly(media)) {
             final JingleRtpConnection rtpConnection =
                     rtpConnectionReference != null ? rtpConnectionReference.get() : null;
-            final AppRTCAudioManager audioManager =
-                    rtpConnection == null ? null : rtpConnection.getAudioManager();
-            if (audioManager == null
-                    || audioManager.getSelectedAudioDevice()
-                            == AppRTCAudioManager.AudioDevice.EARPIECE) {
+            final CallIntegration callIntegration =
+                    rtpConnection == null ? null : rtpConnection.getCallIntegration();
+            if (callIntegration == null
+                    || callIntegration.getSelectedAudioDevice()
+                            == CallIntegration.AudioDevice.EARPIECE) {
                 acquireProximityWakeLock();
             }
         }
@@ -459,9 +445,8 @@ public class RtpSessionActivity extends XmppActivity
         }
     }
 
-    private void putProximityWakeLockInProperState(
-            final AppRTCAudioManager.AudioDevice audioDevice) {
-        if (audioDevice == AppRTCAudioManager.AudioDevice.EARPIECE) {
+    private void putProximityWakeLockInProperState(final CallIntegration.AudioDevice audioDevice) {
+        if (audioDevice == CallIntegration.AudioDevice.EARPIECE) {
             acquireProximityWakeLock();
         } else {
             releaseProximityWakeLock();
@@ -525,6 +510,8 @@ public class RtpSessionActivity extends XmppActivity
             setWith(account.getRoster().getContact(with), null);
         } else if (Intent.ACTION_VIEW.equals(action)) {
             final String extraLastState = intent.getStringExtra(EXTRA_LAST_REPORTED_STATE);
+            final String lastAction = intent.getStringExtra(EXTRA_LAST_ACTION);
+            final Set<Media> media = actionToMedia(lastAction);
             final RtpEndUserState state =
                     extraLastState == null ? null : RtpEndUserState.valueOf(extraLastState);
             if (state != null) {
@@ -541,10 +528,13 @@ public class RtpSessionActivity extends XmppActivity
                     .fireJingleRtpConnectionStateUpdates()) {
                 return;
             }
-            if (END_CARD.contains(state)
-                    || xmppConnectionService
-                            .getJingleConnectionManager()
-                            .hasMatchingProposal(account, with)) {
+            if (END_CARD.contains(state)) {
+                return;
+            }
+            if (xmppConnectionService
+                    .getJingleConnectionManager()
+                    .hasMatchingProposal(account, with)) {
+                putScreenInCallMode(media);
                 return;
             }
             Log.d(Config.LOGTAG, "restored state (" + state + ") was not an end card. finishing");
@@ -569,18 +559,13 @@ public class RtpSessionActivity extends XmppActivity
 
     private void proposeJingleRtpSession(
             final Account account, final Jid with, final Set<Media> media) {
-        checkMicrophoneAvailabilityAsync();
         if (with.isBareJid()) {
             xmppConnectionService
                     .getJingleConnectionManager()
                     .proposeJingleRtpSession(account, with, media);
         } else {
-            final String sessionId =
-                    xmppConnectionService
-                            .getJingleConnectionManager()
-                            .initializeRtpSession(account, with, media);
-            initializeActivityWithRunningRtpSession(account, with, sessionId);
-            resetIntent(account, with, sessionId);
+            throw new IllegalStateException(
+                    "We should not be initializing direct calls from the RtpSessionActivity. Go through CallIntegrationConnectionService.placeCall instead!");
         }
         putScreenInCallMode(media);
     }
@@ -593,7 +578,7 @@ public class RtpSessionActivity extends XmppActivity
                 PermissionUtils.removeBluetoothConnect(permissions, grantResults);
         if (PermissionUtils.allGranted(permissionResult.grantResults)) {
             if (requestCode == REQUEST_ACCEPT_CALL) {
-                checkRecorderAndAcceptCall();
+                acceptCall();
             } else if (requestCode == REQUEST_ACCEPT_CONTENT) {
                 acceptContentAdd();
             } else if (requestCode == REQUEST_ADD_CONTENT) {
@@ -680,8 +665,10 @@ public class RtpSessionActivity extends XmppActivity
     private boolean isConnected() {
         final JingleRtpConnection connection =
                 this.rtpConnectionReference != null ? this.rtpConnectionReference.get() : null;
-        final RtpEndUserState endUserState = connection == null ? null : connection.getEndUserState();
-        return STATES_CONSIDERED_CONNECTED.contains(endUserState) || endUserState == RtpEndUserState.INCOMING_CONTENT_ADD;
+        final RtpEndUserState endUserState =
+                connection == null ? null : connection.getEndUserState();
+        return STATES_CONSIDERED_CONNECTED.contains(endUserState)
+                || endUserState == RtpEndUserState.INCOMING_CONTENT_ADD;
     }
 
     private boolean switchToPictureInPicture() {
@@ -829,8 +816,12 @@ public class RtpSessionActivity extends XmppActivity
         surfaceViewRenderer.setVisibility(View.VISIBLE);
         try {
             surfaceViewRenderer.init(requireRtpConnection().getEglBaseContext(), null);
-        } catch (final IllegalStateException e) {
-            // Log.d(Config.LOGTAG, "SurfaceViewRenderer was already initialized");
+        } catch (final IllegalStateException ignored) {
+            // SurfaceViewRenderer was already initialized
+        } catch (final RuntimeException e) {
+            if (Throwables.getRootCause(e) instanceof GLException glException) {
+                Log.w(Config.LOGTAG, "could not set up hardware renderer", glException);
+            }
         }
         surfaceViewRenderer.setEnableHardwareScaler(true);
     }
@@ -839,68 +830,44 @@ public class RtpSessionActivity extends XmppActivity
         updateStateDisplay(state, Collections.emptySet(), null);
     }
 
-    private void updateStateDisplay(final RtpEndUserState state, final Set<Media> media, final ContentAddition contentAddition) {
+    private void updateStateDisplay(
+            final RtpEndUserState state,
+            final Set<Media> media,
+            final ContentAddition contentAddition) {
         switch (state) {
-            case INCOMING_CALL:
+            case INCOMING_CALL -> {
                 Preconditions.checkArgument(media.size() > 0, "Media must not be empty");
                 if (media.contains(Media.VIDEO)) {
                     setTitle(R.string.rtp_state_incoming_video_call);
                 } else {
                     setTitle(R.string.rtp_state_incoming_call);
                 }
-                break;
-            case INCOMING_CONTENT_ADD:
+            }
+            case INCOMING_CONTENT_ADD -> {
                 if (contentAddition != null && contentAddition.media().contains(Media.VIDEO)) {
                     setTitle(R.string.rtp_state_content_add_video);
                 } else {
                     setTitle(R.string.rtp_state_content_add);
                 }
-                break;
-            case CONNECTING:
-                setTitle(R.string.rtp_state_connecting);
-                break;
-            case CONNECTED:
-                setTitle(R.string.rtp_state_connected);
-                break;
-            case RECONNECTING:
-                setTitle(R.string.rtp_state_reconnecting);
-                break;
-            case ACCEPTING_CALL:
-                setTitle(R.string.rtp_state_accepting_call);
-                break;
-            case ENDING_CALL:
-                setTitle(R.string.rtp_state_ending_call);
-                break;
-            case FINDING_DEVICE:
-                setTitle(R.string.rtp_state_finding_device);
-                break;
-            case RINGING:
-                setTitle(R.string.rtp_state_ringing);
-                break;
-            case DECLINED_OR_BUSY:
-                setTitle(R.string.rtp_state_declined_or_busy);
-                break;
-            case CONNECTIVITY_ERROR:
-                setTitle(R.string.rtp_state_connectivity_error);
-                break;
-            case CONNECTIVITY_LOST_ERROR:
-                setTitle(R.string.rtp_state_connectivity_lost_error);
-                break;
-            case RETRACTED:
-                setTitle(R.string.rtp_state_retracted);
-                break;
-            case APPLICATION_ERROR:
-                setTitle(R.string.rtp_state_application_failure);
-                break;
-            case SECURITY_ERROR:
-                setTitle(R.string.rtp_state_security_error);
-                break;
-            case ENDED:
-                throw new IllegalStateException(
-                        "Activity should have called finishAndReleaseWakeLock();");
-            default:
-                throw new IllegalStateException(
-                        String.format("State %s has not been handled in UI", state));
+            }
+            case CONNECTING -> setTitle(R.string.rtp_state_connecting);
+            case CONNECTED -> setTitle(R.string.rtp_state_connected);
+            case RECONNECTING -> setTitle(R.string.rtp_state_reconnecting);
+            case ACCEPTING_CALL -> setTitle(R.string.rtp_state_accepting_call);
+            case ENDING_CALL -> setTitle(R.string.rtp_state_ending_call);
+            case FINDING_DEVICE -> setTitle(R.string.rtp_state_finding_device);
+            case RINGING -> setTitle(R.string.rtp_state_ringing);
+            case DECLINED_OR_BUSY -> setTitle(R.string.rtp_state_declined_or_busy);
+            case CONTACT_OFFLINE -> setTitle(R.string.rtp_state_contact_offline);
+            case CONNECTIVITY_ERROR -> setTitle(R.string.rtp_state_connectivity_error);
+            case CONNECTIVITY_LOST_ERROR -> setTitle(R.string.rtp_state_connectivity_lost_error);
+            case RETRACTED -> setTitle(R.string.rtp_state_retracted);
+            case APPLICATION_ERROR -> setTitle(R.string.rtp_state_application_failure);
+            case SECURITY_ERROR -> setTitle(R.string.rtp_state_security_error);
+            case ENDED -> throw new IllegalStateException(
+                    "Activity should have called finishAndReleaseWakeLock();");
+            default -> throw new IllegalStateException(
+                    String.format("State %s has not been handled in UI", state));
         }
     }
 
@@ -956,7 +923,10 @@ public class RtpSessionActivity extends XmppActivity
     }
 
     @SuppressLint("RestrictedApi")
-    private void updateButtonConfiguration(final RtpEndUserState state, final Set<Media> media, final ContentAddition contentAddition) {
+    private void updateButtonConfiguration(
+            final RtpEndUserState state,
+            final Set<Media> media,
+            final ContentAddition contentAddition) {
         if (state == RtpEndUserState.ENDING_CALL || isPictureInPicture()) {
             this.binding.rejectCall.setVisibility(View.INVISIBLE);
             this.binding.endCall.setVisibility(View.INVISIBLE);
@@ -972,7 +942,8 @@ public class RtpSessionActivity extends XmppActivity
             this.binding.acceptCall.setImageResource(R.drawable.ic_call_white_48dp);
             this.binding.acceptCall.setVisibility(View.VISIBLE);
         } else if (state == RtpEndUserState.INCOMING_CONTENT_ADD) {
-            this.binding.rejectCall.setContentDescription(getString(R.string.reject_switch_to_video));
+            this.binding.rejectCall.setContentDescription(
+                    getString(R.string.reject_switch_to_video));
             this.binding.rejectCall.setOnClickListener(this::rejectContentAdd);
             this.binding.rejectCall.setImageResource(R.drawable.ic_clear_white_48dp);
             this.binding.rejectCall.setVisibility(View.VISIBLE);
@@ -981,7 +952,8 @@ public class RtpSessionActivity extends XmppActivity
             this.binding.acceptCall.setOnClickListener((v -> acceptContentAdd(contentAddition)));
             this.binding.acceptCall.setImageResource(R.drawable.ic_baseline_check_24);
             this.binding.acceptCall.setVisibility(View.VISIBLE);
-        } else if (state == RtpEndUserState.DECLINED_OR_BUSY) {
+        } else if (asList(RtpEndUserState.DECLINED_OR_BUSY, RtpEndUserState.CONTACT_OFFLINE)
+                .contains(state)) {
             this.binding.rejectCall.setContentDescription(getString(R.string.exit));
             this.binding.rejectCall.setOnClickListener(this::exit);
             this.binding.rejectCall.setImageResource(R.drawable.ic_clear_white_48dp);
@@ -1041,10 +1013,10 @@ public class RtpSessionActivity extends XmppActivity
                 updateInCallButtonConfigurationVideo(
                         rtpConnection.isVideoEnabled(), rtpConnection.isCameraSwitchable());
             } else {
-                final AppRTCAudioManager audioManager = requireRtpConnection().getAudioManager();
+                final CallIntegration callIntegration = requireRtpConnection().getCallIntegration();
                 updateInCallButtonConfigurationSpeaker(
-                        audioManager.getSelectedAudioDevice(),
-                        audioManager.getAudioDevices().size());
+                        callIntegration.getSelectedAudioDevice(),
+                        callIntegration.getAudioDevices().size());
                 this.binding.inCallActionFarRight.setVisibility(View.GONE);
             }
             if (media.contains(Media.AUDIO)) {
@@ -1053,6 +1025,14 @@ public class RtpSessionActivity extends XmppActivity
             } else {
                 this.binding.inCallActionLeft.setVisibility(View.GONE);
             }
+        } else if (STATES_SHOWING_SPEAKER_CONFIGURATION.contains(state)
+                && !isPictureInPicture()
+                && Media.audioOnly(media)) {
+            final CallIntegration callIntegration = requireCallIntegration();
+            updateInCallButtonConfigurationSpeaker(
+                    callIntegration.getSelectedAudioDevice(),
+                    callIntegration.getAudioDevices().size());
+            this.binding.inCallActionFarRight.setVisibility(View.GONE);
         } else {
             this.binding.inCallActionLeft.setVisibility(View.GONE);
             this.binding.inCallActionRight.setVisibility(View.GONE);
@@ -1062,9 +1042,9 @@ public class RtpSessionActivity extends XmppActivity
 
     @SuppressLint("RestrictedApi")
     private void updateInCallButtonConfigurationSpeaker(
-            final AppRTCAudioManager.AudioDevice selectedAudioDevice, final int numberOfChoices) {
+            final CallIntegration.AudioDevice selectedAudioDevice, final int numberOfChoices) {
         switch (selectedAudioDevice) {
-            case EARPIECE:
+            case EARPIECE -> {
                 this.binding.inCallActionRight.setImageResource(
                         R.drawable.ic_volume_off_black_24dp);
                 if (numberOfChoices >= 2) {
@@ -1073,13 +1053,13 @@ public class RtpSessionActivity extends XmppActivity
                     this.binding.inCallActionRight.setOnClickListener(null);
                     this.binding.inCallActionRight.setClickable(false);
                 }
-                break;
-            case WIRED_HEADSET:
+            }
+            case WIRED_HEADSET -> {
                 this.binding.inCallActionRight.setImageResource(R.drawable.ic_headset_black_24dp);
                 this.binding.inCallActionRight.setOnClickListener(null);
                 this.binding.inCallActionRight.setClickable(false);
-                break;
-            case SPEAKER_PHONE:
+            }
+            case SPEAKER_PHONE -> {
                 this.binding.inCallActionRight.setImageResource(R.drawable.ic_volume_up_black_24dp);
                 if (numberOfChoices >= 2) {
                     this.binding.inCallActionRight.setOnClickListener(this::switchToEarpiece);
@@ -1087,13 +1067,13 @@ public class RtpSessionActivity extends XmppActivity
                     this.binding.inCallActionRight.setOnClickListener(null);
                     this.binding.inCallActionRight.setClickable(false);
                 }
-                break;
-            case BLUETOOTH:
+            }
+            case BLUETOOTH -> {
                 this.binding.inCallActionRight.setImageResource(
                         R.drawable.ic_bluetooth_audio_black_24dp);
                 this.binding.inCallActionRight.setOnClickListener(null);
                 this.binding.inCallActionRight.setClickable(false);
-                break;
+            }
         }
         this.binding.inCallActionRight.setVisibility(View.VISIBLE);
     }
@@ -1122,10 +1102,10 @@ public class RtpSessionActivity extends XmppActivity
     private void switchCamera(final View view) {
         Futures.addCallback(
                 requireRtpConnection().switchCamera(),
-                new FutureCallback<Boolean>() {
+                new FutureCallback<>() {
                     @Override
                     public void onSuccess(@Nullable Boolean isFrontCamera) {
-                        binding.localVideo.setMirror(isFrontCamera);
+                        binding.localVideo.setMirror(Boolean.TRUE.equals(isFrontCamera));
                     }
 
                     @Override
@@ -1301,21 +1281,17 @@ public class RtpSessionActivity extends XmppActivity
         }
     }
 
-    private void switchToEarpiece(View view) {
-        requireRtpConnection()
-                .getAudioManager()
-                .setDefaultAudioDevice(AppRTCAudioManager.AudioDevice.EARPIECE);
+    private void switchToEarpiece(final View view) {
+        requireCallIntegration().setAudioDevice(CallIntegration.AudioDevice.EARPIECE);
         acquireProximityWakeLock();
     }
 
-    private void switchToSpeaker(View view) {
-        requireRtpConnection()
-                .getAudioManager()
-                .setDefaultAudioDevice(AppRTCAudioManager.AudioDevice.SPEAKER_PHONE);
+    private void switchToSpeaker(final View view) {
+        requireCallIntegration().setAudioDevice(CallIntegration.AudioDevice.SPEAKER_PHONE);
         releaseProximityWakeLock();
     }
 
-    private void retry(View view) {
+    private void retry(final View view) {
         final Intent intent = getIntent();
         final Account account = extractAccount(intent);
         final Jid with = Jid.ofEscaped(intent.getStringExtra(EXTRA_WITH));
@@ -1324,7 +1300,7 @@ public class RtpSessionActivity extends XmppActivity
         final Set<Media> media = actionToMedia(lastAction == null ? action : lastAction);
         this.rtpConnectionReference = null;
         Log.d(Config.LOGTAG, "attempting retry with " + with.toEscapedString());
-        proposeJingleRtpSession(account, with, media);
+        CallIntegrationConnectionService.placeCall(xmppConnectionService, account, with, media);
     }
 
     private void exit(final View view) {
@@ -1361,6 +1337,33 @@ public class RtpSessionActivity extends XmppActivity
             throw new IllegalStateException("No RTP connection found");
         }
         return connection;
+    }
+
+    private CallIntegration requireCallIntegration() {
+        return requireOngoingRtpSession().getCallIntegration();
+    }
+
+    private OngoingRtpSession requireOngoingRtpSession() {
+        final JingleRtpConnection connection =
+                this.rtpConnectionReference != null ? this.rtpConnectionReference.get() : null;
+        if (connection != null) {
+            return connection;
+        }
+        final Intent currentIntent = getIntent();
+        final String withExtra =
+                currentIntent == null ? null : currentIntent.getStringExtra(EXTRA_WITH);
+        final var account = extractAccount(currentIntent);
+        if (withExtra == null) {
+            throw new IllegalStateException("Current intent has no EXTRA_WITH");
+        }
+        final var matching =
+                xmppConnectionService
+                        .getJingleConnectionManager()
+                        .matchingProposal(account, Jid.of(withExtra));
+        if (matching.isPresent()) {
+            return matching.get();
+        }
+        throw new IllegalStateException("No matching session proposal");
     }
 
     @Override
@@ -1420,8 +1423,8 @@ public class RtpSessionActivity extends XmppActivity
 
     @Override
     public void onAudioDeviceChanged(
-            final AppRTCAudioManager.AudioDevice selectedAudioDevice,
-            final Set<AppRTCAudioManager.AudioDevice> availableAudioDevices) {
+            final CallIntegration.AudioDevice selectedAudioDevice,
+            final Set<CallIntegration.AudioDevice> availableAudioDevices) {
         Log.d(
                 Config.LOGTAG,
                 "onAudioDeviceChanged in activity: selected:"
@@ -1429,19 +1432,26 @@ public class RtpSessionActivity extends XmppActivity
                         + ", available:"
                         + availableAudioDevices);
         try {
-            final RtpEndUserState endUserState = requireRtpConnection().getEndUserState();
-            final Set<Media> media = getMedia();
+            final OngoingRtpSession ongoingRtpSession = requireOngoingRtpSession();
+            final RtpEndUserState endUserState;
+            if (ongoingRtpSession instanceof JingleRtpConnection jingleRtpConnection) {
+                endUserState = jingleRtpConnection.getEndUserState();
+            } else {
+                // for session proposals all end user states are functionally the same
+                endUserState = RtpEndUserState.RINGING;
+            }
+            final Set<Media> media = ongoingRtpSession.getMedia();
             if (END_CARD.contains(endUserState)) {
                 Log.d(
                         Config.LOGTAG,
                         "onAudioDeviceChanged() nothing to do because end card has been reached");
             } else {
-                if (Media.audioOnly(media) && endUserState == RtpEndUserState.CONNECTED) {
-                    final AppRTCAudioManager audioManager =
-                            requireRtpConnection().getAudioManager();
+                if (Media.audioOnly(media)
+                        && STATES_SHOWING_SPEAKER_CONFIGURATION.contains(endUserState)) {
+                    final CallIntegration callIntegration = requireCallIntegration();
                     updateInCallButtonConfigurationSpeaker(
-                            audioManager.getSelectedAudioDevice(),
-                            audioManager.getAudioDevices().size());
+                            callIntegration.getSelectedAudioDevice(),
+                            callIntegration.getAudioDevices().size());
                 }
                 Log.d(
                         Config.LOGTAG,
@@ -1461,16 +1471,17 @@ public class RtpSessionActivity extends XmppActivity
         if (withExtra == null) {
             return;
         }
+        final Set<Media> media = actionToMedia(currentIntent.getStringExtra(EXTRA_LAST_ACTION));
         if (Jid.ofEscaped(withExtra).asBareJid().equals(with)) {
             runOnUiThread(
                     () -> {
                         updateVerifiedShield(false);
                         updateStateDisplay(state);
-                        updateButtonConfiguration(state);
+                        updateButtonConfiguration(state, media, null);
                         updateIncomingCallScreen(state);
                         invalidateOptionsMenu();
                     });
-            resetIntent(account, with, state, actionToMedia(currentIntent.getAction()));
+            resetIntent(account, with, state, media);
         }
     }
 
@@ -1484,10 +1495,7 @@ public class RtpSessionActivity extends XmppActivity
             final Account account, Jid with, final RtpEndUserState state, final Set<Media> media) {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.putExtra(EXTRA_ACCOUNT, account.getJid().toEscapedString());
-        if (account.getRoster()
-                .getContact(with)
-                .getPresences()
-                .anySupport(Namespace.JINGLE_MESSAGE)) {
+        if (RtpCapability.jmiSupport(account.getRoster().getContact(with))) {
             intent.putExtra(EXTRA_WITH, with.asBareJid().toEscapedString());
         } else {
             intent.putExtra(EXTRA_WITH, with.toEscapedString());

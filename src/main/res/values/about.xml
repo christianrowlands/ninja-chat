@@ -31,8 +31,8 @@
 <resources>
     <string name="pref_about_message" translatable="false">
 			Ninja Chat • Become a Ninja.
-		    \n\nCopyright © 2014-2023 Ninja DevOps
-			\n\nCopyright for Conversations.im © 2014-2023 Daniel Gultsch
+		    \n\nCopyright © 2014-2024 Ninja DevOps
+			\n\nCopyright for Conversations.im © 2014-2024 Daniel Gultsch
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
 			the Free Software Foundation, either version 3 of the License, or

@@ -49,6 +49,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
+import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
 import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
 import eu.siacs.conversations.databinding.ActivityEditAccountBinding;
 import eu.siacs.conversations.databinding.DialogPresenceBinding;
@@ -66,6 +67,7 @@ import eu.siacs.conversations.ui.util.AvatarWorkerTask;
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PendingItem;
 import eu.siacs.conversations.ui.util.SoftKeyboardUtils;
+import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.Resolver;
 import eu.siacs.conversations.utils.SignupUtils;
@@ -149,7 +151,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             if (mInitMode && mAccount != null) {
                 mAccount.setOption(Account.OPTION_DISABLED, false);
             }
-            if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED && !accountInfoEdited) {
+            if (mAccount != null && Arrays.asList(Account.State.DISABLED, Account.State.LOGGED_OUT).contains(mAccount.getStatus()) && !accountInfoEdited) {
+                mAccount.setOption(Account.OPTION_SOFT_DISABLED, false);
                 mAccount.setOption(Account.OPTION_DISABLED, false);
                 if (!xmppConnectionService.updateAccount(mAccount)) {
                     Toast.makeText(EditAccountActivity.this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
@@ -471,6 +474,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (requestCode == REQUEST_BATTERY_OP || requestCode == REQUEST_DATA_SAVER) {
             updateAccountInformation(mAccount == null);
         }
+        if (requestCode == REQUEST_BATTERY_OP) {
+            // the result code is always 0 even when battery permission were granted
+            XmppConnectionService.toggleForegroundService(xmppConnectionService);
+        }
         if (requestCode == REQUEST_CHANGE_STATUS) {
             PresenceTemplate template = mPendingPresenceTemplate.pop();
             if (template != null && resultCode == Activity.RESULT_OK) {
@@ -624,6 +631,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.accountRegisterNew.setVisibility(View.GONE);
         }
         this.binding.actionEditYourName.setOnClickListener(this::onEditYourNameClicked);
+        this.binding.scanButton.setOnClickListener((v) -> ScanActivity.scan(this));
     }
 
     private void onEditYourNameClicked(View view) {
@@ -977,7 +985,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             public void userInputRequired(PendingIntent pi, String object) {
                 mPendingPresenceTemplate.push(template);
                 try {
-                    startIntentSenderForResult(pi.getIntentSender(), REQUEST_CHANGE_STATUS, null, 0, 0, 0);
+                    startIntentSenderForResult(pi.getIntentSender(), REQUEST_CHANGE_STATUS, null, 0, 0, 0, Compatibility.pgpStartIntentSenderOptions());
                 } catch (final IntentSender.SendIntentException ignored) {
                 }
             }
@@ -1025,7 +1033,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
 
         final boolean togglePassword = mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
-        final boolean editPassword = !mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || (!mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY) && QuickConversationsService.isConversations()) || mAccount.getLastErrorStatus() == Account.State.UNAUTHORIZED;
+        final boolean neverLoggedIn = !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY) && QuickConversationsService.isConversations();
+        final boolean editPassword = mAccount.unauthorized() || neverLoggedIn;
 
         this.binding.accountPasswordLayout.setPasswordVisibilityToggleEnabled(togglePassword);
 
@@ -1153,18 +1162,23 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                     this.binding.ownFingerprintDesc.setText(R.string.omemo_fingerprint);
                 }
                 this.binding.axolotlFingerprint.setText(CryptoHelper.prettifyFingerprint(ownAxolotlFingerprint.substring(2)));
-                this.binding.actionCopyAxolotlToClipboard.setVisibility(View.VISIBLE);
-                this.binding.actionCopyAxolotlToClipboard.setOnClickListener(v -> copyOmemoFingerprint(ownAxolotlFingerprint));
+                this.binding.showQrCodeButton.setVisibility(View.VISIBLE);
+                this.binding.showQrCodeButton.setOnClickListener(v -> showQrCode());
             } else {
                 this.binding.axolotlFingerprintBox.setVisibility(View.GONE);
             }
             boolean hasKeys = false;
+            boolean showUnverifiedWarning = false;
             binding.otherDeviceKeys.removeAllViews();
-            for (XmppAxolotlSession session : mAccount.getAxolotlService().findOwnSessions()) {
-                if (!session.getTrust().isCompromised()) {
+            for (final XmppAxolotlSession session : mAccount.getAxolotlService().findOwnSessions()) {
+                final FingerprintStatus trust = session.getTrust();
+                if (!trust.isCompromised()) {
                     boolean highlight = session.getFingerprint().equals(messageFingerprint);
                     addFingerprintRow(binding.otherDeviceKeys, session, highlight);
                     hasKeys = true;
+                }
+                if (trust.isUnverified()) {
+                    showUnverifiedWarning = true;
                 }
             }
             if (hasKeys && Config.supportOmemo()) { //TODO: either the button should be visible if we print an active device or the device list should be fed with reactived devices
@@ -1175,6 +1189,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 } else {
                     binding.clearDevices.setVisibility(View.VISIBLE);
                 }
+                binding.unverifiedWarning.setVisibility(showUnverifiedWarning ? View.VISIBLE : View.GONE);
+                binding.scanButton.setVisibility(showUnverifiedWarning ? View.VISIBLE : View.GONE);
             } else {
                 this.binding.otherDeviceKeysCard.setVisibility(View.GONE);
             }

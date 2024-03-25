@@ -18,7 +18,7 @@
     <string name="action_unblock_domain">Desbloquear dominio</string>
     <string name="action_block_participant">Bloquear persoa</string>
     <string name="action_unblock_participant">Desbloquear persoa</string>
-    <string name="title_activity_manage_accounts">Xestionar contas</string>
+    <string name="title_activity_manage_accounts">Xestionar Contas</string>
     <string name="title_activity_settings">Axustes</string>
     <string name="title_activity_sharewith">Compartir na conversa</string>
     <string name="title_activity_start_conversation">Iniciar conversa</string>
@@ -39,7 +39,7 @@
     <string name="nick_in_use">O alcume xa está en uso</string>
     <string name="invalid_muc_nick">Alcume non válido</string>
     <string name="admin">Admin</string>
-    <string name="owner">Dono</string>
+    <string name="owner">Dona</string>
     <string name="moderator">Moderador</string>
     <string name="participant">Participante</string>
     <string name="visitor">Visitante</string>
@@ -50,7 +50,6 @@
     <string name="unblock_domain_text">Desbloquear todos os contactos desde 1%s?</string>
     <string name="contact_blocked">Contacto bloqueado</string>
     <string name="blocked">Bloqueado</string>
-    <string name="remove_bookmark_text">Desexas eliminar o marcador %s? As conversas deste marcador non se eliminarán. </string>
     <string name="register_account">Rexistrar nova conta no servidor</string>
     <string name="change_password_on_server">Cambiar o contrasinal no servidor</string>
     <string name="share_with">Compartir con…</string>
@@ -157,7 +156,7 @@
 \n<small>Usa un xestor de ficheiros diferente para escoller a imaxe</small>.</string>
     <string name="error_security_exception">A app que usaches para compartir este ficheiro non concedeu os permisos suficientes.</string>
     <string name="account_status_unknown">Descoñecido</string>
-    <string name="account_status_disabled">Desactivado temporalmente</string>
+    <string name="account_status_disabled">Desactivada temporalmente</string>
     <string name="account_status_online">Conectado</string>
     <string name="account_status_connecting">Conectando\u2026</string>
     <string name="account_status_offline">Desconectado</string>
@@ -251,7 +250,7 @@
     <string name="could_not_destroy_room">Non se desfixo a conversa en grupo</string>
     <string name="could_not_destroy_channel">Non se puido eliminar a canle</string>
     <string name="action_edit_subject">Editar o tema da conversa en grupo</string>
-    <string name="topic">Asunto</string>
+    <string name="topic">Tema</string>
     <string name="joining_conference">Entrando na conversa en grupo…</string>
     <string name="leave">Saír</string>
     <string name="contact_added_you">Contacto engadido a túa lista de contactos</string>
@@ -300,7 +299,7 @@
     <string name="pref_autojoin_summary">Poñer marca de \"autojoin\" ao entrar ou deixar unha MUC e reaccionar ás modificacións feitas desde outros clientes.</string>
     <string name="toast_message_omemo_fingerprint">Copiouse a impresión dixital OMEMO ao portapapeis</string>
     <string name="conference_banned">Non podes acceder a esta conversa en grupo</string>
-    <string name="conference_members_only">Esta conversa en grupo é so para membros</string>
+    <string name="conference_members_only">Este chat en grupo é so para membros</string>
     <string name="conference_resource_constraint">Restrición do recurso</string>
     <string name="conference_kicked">Xa foi expulsado de esta conversa en grupo</string>
     <string name="conference_shutdown">A conversa en grupo foi apagada</string>
@@ -322,8 +321,8 @@
     <string name="jabber_id_copied_to_clipboard">Copiouse o enderezo XMPP ao portapapeis</string>
     <string name="error_message_copied_to_clipboard">Mensaxe do fallo copiado ao portapapeis</string>
     <string name="web_address">Dirección Web</string>
-    <string name="scan_qr_code">Escanear código de barras 2D</string>
-    <string name="show_qr_code">Mostar código de barras 2D</string>
+    <string name="scan_qr_code">Escanear código QR</string>
+    <string name="show_qr_code">Mostar código QR</string>
     <string name="show_block_list">Mostrar lista de bloqueo</string>
     <string name="account_details">Detalles da conta</string>
     <string name="confirm">Confirmar</string>
@@ -354,7 +353,7 @@
     <string name="no_application_found_to_open_file">Non se atopou unha app para abrir o ficheiro</string>
     <string name="no_application_found_to_open_link">Non se atopou app para abrir a ligazón</string>
     <string name="no_application_found_to_view_contact">Non se atopou app para ver o contacto</string>
-    <string name="pref_show_dynamic_tags">Información do estado</string>
+    <string name="pref_show_dynamic_tags">Etiquetas dinámicas</string>
     <string name="pref_show_dynamic_tags_summary">Mostra o estado debaixo do nome do contacto</string>
     <string name="enable_notifications">Habilitar notificacións</string>
     <string name="no_conference_server_found">Non se atopou ningún servidor de conversa en grupo</string>
@@ -517,8 +516,10 @@
     <string name="shared_text_with_x">Texto compartido con %s</string>
     <string name="no_storage_permission">Permitir que %1$s acceda ao almacenaxe externo</string>
     <string name="no_camera_permission">Permitir que %1$s acceda á cámara</string>
-    <string name="sync_with_contacts">Sincronice con todos os contactos</string>
-    <string name="sync_with_contacts_long">%1$s quere ter permiso para acceder á túa libreta de enderezos para comparala coa lista de contactos XMPP.\nDeste xeito poderá mostrar o nome completo e avatares dos teus contactos.\n\n%1$s só utilizará de xeito local a túa lista de contactos, sen subila a ningún servidor.</string>
+    <string name="sync_with_contacts">Integración coa lista de contactos</string>
+    <string name="sync_with_contacts_long">%1$s procesa a túa lista de contactos de xeito local, no teu dispositivo, para mostrar os nomes e fotos de perfil dos contactos con conta XMPP.
+\n
+\nNingún dato da túa lista de contactos sae do teu dispositivo!</string>
     <string name="notify_on_all_messages">Notificar todas as mensaxes</string>
     <string name="notify_only_when_highlighted">Notificar só cando é mencionada</string>
     <string name="notify_never">Notificacións desactivadas</string>
@@ -536,7 +537,7 @@
     <string name="this_field_is_required">Este campo é requerido</string>
     <string name="correct_message">Correxir mensaxe</string>
     <string name="send_corrected_message">Enviar mensaxe correxida</string>
-    <string name="no_keys_just_confirm">Xa validaches as impresións dixitais destas persoas de xeito seguro para confiar nelas. Ao escoller \"Feito\" estás simplemente confirmando que %s é parte desta conversa en grupo.</string>
+    <string name="no_keys_just_confirm">Xa confiaches na impresión dixital destas persoas. Ao escoller \"Feito\" estás simplemente confirmando que %s é parte desta conversa en grupo.</string>
     <string name="this_account_is_disabled">Desactivou esta conta</string>
     <string name="security_error_invalid_file_access">Fallo de seguridade: Acceso non válido ao ficheiro!</string>
     <string name="no_application_to_share_uri">Non se atopou unha app para compartir URI</string>
@@ -618,7 +619,7 @@
     <string name="pref_blind_trust_before_verification_summary">Confiar en dispositivos novos de contactos non verificados, pero solicitar confirmación manual de novos dispositivos para contactos verificados.</string>
     <string name="blindly_trusted_omemo_keys">Chaves OMEMO de confianza cega, significa que podería ser calquera outra persoa ou algunha impostora.</string>
     <string name="not_trusted">Non confiables</string>
-    <string name="invalid_barcode">Código de barras 2D non válido</string>
+    <string name="invalid_barcode">Código QR non válido</string>
     <string name="pref_clean_cache_summary">Baleirar o cartafol da caché (utilizado pola cámara)</string>
     <string name="pref_clean_cache">Baleirar caché</string>
     <string name="pref_clean_private_storage">Baleirar almacenaxe privada</string>
@@ -750,7 +751,7 @@
     <string name="pref_start_search_summary">Na pantalla \'Iniciar Conversa\' abrir teclado e pór o cursor no campo de busca</string>
     <string name="group_chat_avatar">Avatar da conversa de grupo</string>
     <string name="host_does_not_support_group_chat_avatars">O servidor non soporta o avatar na conversa de grupo</string>
-    <string name="only_the_owner_can_change_group_chat_avatar">Só o dono pode cambiar o avatar da conversa de grupo</string>
+    <string name="only_the_owner_can_change_group_chat_avatar">Só a propietaria pode cambiar o avatar da conversa</string>
     <string name="contact_name">Nome do contacto</string>
     <string name="nickname">Alcume</string>
     <string name="group_chat_name">Nome</string>
@@ -792,7 +793,7 @@
     <string name="phone_number">número de teléfono</string>
     <string name="verify_your_phone_number">Valida o teu número de teléfono</string>
     <string name="enter_country_code_and_phone_number">Quicksy vaiche enviar unha mensaxe SMS (podería ter custos) para validar o teu número de teléfono. Escribe o código de país e número de teléfono:</string>
-    <string name="we_will_be_verifying"><![CDATA[Validaremos o número de teléfono<br/><br/><b>%s</b><br/><br/>É correcto, ou quere modificar o número?]]></string>
+    <string name="we_will_be_verifying">Validaremos o número de teléfono<br/><br/><b>%s</b><br/><br/>É correcto, ou queres modificar o número?</string>
     <string name="not_a_valid_phone_number">%s non é un número de teléfono válido.</string>
     <string name="please_enter_your_phone_number">Por favor escribe o teu número de teléfono.</string>
     <string name="search_countries">Buscar países</string>
@@ -863,11 +864,11 @@
     <string name="channel_already_exists">Esta canle xa existe</string>
     <string name="joined_an_existing_channel">Entraches nunha canle existente</string>
     <string name="unable_to_set_channel_configuration">Non se gardaron os axustes da canle</string>
-    <string name="allow_participants_to_edit_subject">Permitir que calquera cambie o asunto</string>
+    <string name="allow_participants_to_edit_subject">Permitir que calquera cambie o tema</string>
     <string name="allow_participants_to_invite_others">Permitir que calquera poida convidar</string>
-    <string name="anyone_can_edit_subject">Calquera pode editar o asunto.</string>
-    <string name="owners_can_edit_subject">As propietarias poden editar o asunto.</string>
-    <string name="admins_can_edit_subject">Admins poden editar o asunto.</string>
+    <string name="anyone_can_edit_subject">Calquera pode editar o tema.</string>
+    <string name="owners_can_edit_subject">As propietarias poden editar o tema.</string>
+    <string name="admins_can_edit_subject">Admins poden editar o tema.</string>
     <string name="owners_can_invite_others">Propietarias poden convidar a outras.</string>
     <string name="anyone_can_invite_others">Calquera pode convidar a outras.</string>
     <string name="jabber_ids_are_visible_to_admins">Os enderezos XMPP son visibles para a administración.</string>
@@ -909,7 +910,7 @@
     <string name="rtp_state_incoming_call">Chamada entrante</string>
     <string name="rtp_state_incoming_video_call">Videochamada entrante</string>
     <string name="rtp_state_content_add_video">Cambiar a unha chamada de vídeo?</string>
-    <string name="rtp_state_content_add">Engadir pistas adicionais?</string>
+    <string name="rtp_state_content_add">Engadir rutas adicionais\?</string>
     <string name="rtp_state_connecting">Conectando</string>
     <string name="rtp_state_connected">Conectado</string>
     <string name="rtp_state_reconnecting">Reconectando</string>
@@ -1011,5 +1012,28 @@
     <string name="save_as_group_chat">Gardar como conversa en grupo</string>
     <string name="search_group_chats">Buscar conversas en grupo</string>
     <string name="group_chats">Conversas en grupo</string>
-    <string name="channel_discover_opt_in_message">O descubrimento de canles usa un servizo externo chamado &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Ao usar esta ferramenta transmitirás o teu enderezo IP e termos de busca a ese servizo. Le a súa &lt;a href=https://search.jabber.network/privacy&gt;Política de Privacidade&lt;/a&gt; para saber máis.</string>
+    <string name="restore_warning_continued">Non intentes restablecer unha copia de apoio que non tiveses creado ti!</string>
+    <string name="outdated_backup_file_format">Estás intentando importar un ficheiro de apoio co formato antigo</string>
+    <string name="audiobook">Audiolibro</string>
+    <string name="reconnect_on_other_host">Volver conectar noutro servidor</string>
+    <string name="this_account_is_logged_out">Pechaches a sesión desta conta</string>
+    <string name="log_in">Acceder</string>
+    <string name="hide_notification">Agochar notificación</string>
+    <string name="contact_uses_unverified_keys">O teu contacto usa dispositivos non verificados. Escanea o seu código QR para verficalo e impedir ataques MITM.</string>
+    <string name="log_out">Saír da sesión</string>
+    <string name="account_state_logged_out">Sesión pechada</string>
+    <string name="unverified_devices">Estás a usar dispositivos non verificados. Escanea os códigos QR nos teus outros dispositivos para verificalos e impedir ataques MITM.</string>
+    <string name="report_spam_and_block">Informar de spam e bloquear conta</string>
+    <string name="report_spam">Informar de spam</string>
+    <string name="welcome_header_quicksy">Benvida a Quicksy!</string>
+    <string name="quicksy_wants_your_consent">Quicksy solicita permiso para usar os teus datos</string>
+    <string name="privacy_policy">Política de privacidade</string>
+    <string name="contact_list_integration_not_available">Non está dispoñible a integración coa lista de contactos</string>
+    <string name="no_permission_to_place_call">Sen permiso para chamar por teléfono</string>
+    <string name="call_integration_not_available">Non está dispoñible o servizo de chamadas!</string>
+    <string name="rtp_state_contact_offline">O contacto non está dispoñible</string>
+    <string name="remove_bookmark_and_close">Queres eliminar o marcador para %s e pechar a conversa?</string>
+    <string name="remove_bookmark">Queres eliminar o marcador para %s?</string>
+    <string name="delete_and_close">Eliminar e Pechar</string>
+    <string name="channel_discover_opt_in_message">O descubrimento de canles usa un servicio alleo chamado &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Ao usar esta ferramenta transmites o teu enderezo IP e os termos de busca a ese servizo. Le a súa &lt;a href=https://search.jabber.network/privacy&gt;Política de Privacidade&lt;/a&gt; para saber máis.</string>
 </resources>

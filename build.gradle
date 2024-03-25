@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
     }
@@ -35,25 +35,27 @@ configurations {
 }
 
 dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+
     implementation 'androidx.viewpager:viewpager:1.0.0'
 
-    playstoreImplementation('com.google.firebase:firebase-messaging:23.1.2') {
+    playstoreImplementation('com.google.firebase:firebase-messaging:23.4.1') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
     }
     conversationsPlaystoreImplementation("com.android.installreferrer:installreferrer:2.2")
-    quicksyPlaystoreImplementation 'com.google.android.gms:play-services-auth-api-phone:18.0.1'
+    quicksyPlaystoreImplementation 'com.google.android.gms:play-services-auth-api-phone:18.0.2'
     implementation 'com.github.open-keychain.open-keychain:openpgp-api:v5.7.1'
     implementation("com.github.CanHub:Android-Image-Cropper:2.0.0")
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.exifinterface:exifinterface:1.3.6'
+    implementation 'androidx.exifinterface:exifinterface:1.3.7'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
-    implementation "androidx.emoji2:emoji2:1.2.0"
-    freeImplementation "androidx.emoji2:emoji2-bundled:1.2.0"
+    implementation "androidx.emoji2:emoji2:1.4.0"
+    freeImplementation "androidx.emoji2:emoji2-bundled:1.4.0"
 
     implementation 'org.bouncycastle:bcmail-jdk15on:1.64'
     //zxing stopped supporting Java 7 so we have to stick with 3.3.3
@@ -80,9 +82,9 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
-    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
 
-    implementation 'com.google.guava:guava:31.1-android'
+    implementation 'com.google.guava:guava:31.1.3-android'
     quicksyImplementation 'io.michaelrocks:libphonenumber-android:8.12.49'
     implementation 'im.conversations.webrtc:webrtc-android:104.0.0'
 
@@ -99,13 +101,13 @@ ext {
 
 android {
     namespace 'eu.siacs.conversations'
-    compileSdkVersion 33
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 42060
-        versionName "2.12.9"
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 42101
+        versionName "2.14.0"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
@@ -118,6 +120,9 @@ android {
         abi {
             universalApk true
             enable true
+            reset()
+            //noinspection ChromeOsAbiSupport
+            include project.ext.abiCodes.keySet() as String[]
         }
     }
 
@@ -130,11 +135,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    flavorDimensions("mode", "distribution")
+    flavorDimensions += "mode"
+    flavorDimensions += "distribution"
 
     productFlavors {
 
@@ -146,10 +153,12 @@ android {
             def appName = "Quicksy"
             resValue "string", "app_name", appName
             buildConfigField "String", "APP_NAME", "\"$appName\""
+            buildConfigField "String", "PRIVACY_POLICY", "\"https://quicksy.im/privacy.htm\""
         }
 
         conversations {
             dimension "mode"
+            buildConfigField "String", "PRIVACY_POLICY", "\"https://conversations.im/privacy.html\""
         }
 
         playstore {
@@ -240,10 +249,13 @@ android {
         }
     }
     lint {
-        disable 'MissingTranslation', 'InvalidPackage', 'AppCompatResource', 'ExtraTranslation'
+        disable 'MissingTranslation', 'InvalidPackage', 'AppCompatResource'
+    }
+    buildFeatures {
+        buildConfig true
     }
 
-    android.applicationVariants.all { variant ->
+    android.applicationVariants.configureEach { variant ->
         variant.outputs.each { output ->
             def baseAbiVersionCode = project.ext.abiCodes.get(output.getFilter(com.android.build.OutputFile.ABI))
             if (baseAbiVersionCode != null) {

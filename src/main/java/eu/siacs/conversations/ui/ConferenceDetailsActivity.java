@@ -137,8 +137,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             builder.setMultiChoiceItems(configuration.names, values, (dialog, which, isChecked) -> values[which] = isChecked);
             builder.setNegativeButton(R.string.cancel, null);
             builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                Bundle options = configuration.toBundle(values);
+                final Bundle options = configuration.toBundle(values);
                 options.putString("muc#roomconfig_persistentroom", "1");
+                options.putString("{http://prosody.im/protocol/muc}roomconfig_allowmemberinvites", options.getString("muc#roomconfig_allowinvites"));
                 xmppConnectionService.pushConferenceConfiguration(mConversation,
                         options,
                         ConferenceDetailsActivity.this);
@@ -242,9 +243,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             case R.id.action_save_as_bookmark:
                 saveAsBookmark();
                 break;
-            case R.id.action_delete_bookmark:
-                deleteBookmark();
-                break;
             case R.id.action_destroy_room:
                 destroyRoom();
                 break;
@@ -344,28 +342,21 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItemSaveBookmark = menu.findItem(R.id.action_save_as_bookmark);
-        MenuItem menuItemDeleteBookmark = menu.findItem(R.id.action_delete_bookmark);
-        MenuItem menuItemAdvancedMode = menu.findItem(R.id.action_advanced_mode);
-        MenuItem menuItemDestroyRoom = menu.findItem(R.id.action_destroy_room);
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        final MenuItem menuItemSaveBookmark = menu.findItem(R.id.action_save_as_bookmark);
+        final MenuItem menuItemAdvancedMode = menu.findItem(R.id.action_advanced_mode);
+        final MenuItem menuItemDestroyRoom = menu.findItem(R.id.action_destroy_room);
         menuItemAdvancedMode.setChecked(mAdvancedMode);
         if (mConversation == null) {
             return true;
         }
-        if (mConversation.getBookmark() != null) {
-            menuItemSaveBookmark.setVisible(false);
-            menuItemDeleteBookmark.setVisible(true);
-        } else {
-            menuItemDeleteBookmark.setVisible(false);
-            menuItemSaveBookmark.setVisible(true);
-        }
+        menuItemSaveBookmark.setVisible(mConversation.getBookmark() == null);
         menuItemDestroyRoom.setVisible(mConversation.getMucOptions().getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER));
         return true;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         final boolean groupChat = mConversation != null && mConversation.isPrivateAndNonAnonymous();
         getMenuInflater().inflate(R.menu.muc_details, menu);
         final MenuItem share = menu.findItem(R.id.action_share);
@@ -389,14 +380,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
     protected void saveAsBookmark() {
         xmppConnectionService.saveConversationAsBookmark(mConversation, mConversation.getMucOptions().getName());
-    }
-
-    protected void deleteBookmark() {
-        final Account account = mConversation.getAccount();
-        final Bookmark bookmark = mConversation.getBookmark();
-        bookmark.setConversation(null);
-        xmppConnectionService.deleteBookmark(account, bookmark);
-        updateView();
     }
 
     protected void destroyRoom() {

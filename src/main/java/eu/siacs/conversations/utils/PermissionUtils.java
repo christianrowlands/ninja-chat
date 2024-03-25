@@ -24,9 +24,23 @@ public class PermissionUtils {
         return true;
     }
 
-    public static boolean writeGranted(int[] grantResults, String[] permission) {
+    public static boolean writeGranted(final int[] grantResults, final String[] permissions) {
+        return permissionGranted(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, grantResults, permissions);
+    }
+
+    public static boolean audioGranted(final int[] grantResults, final String[] permissions) {
+        return permissionGranted(Manifest.permission.RECORD_AUDIO, grantResults, permissions);
+    }
+
+    public static boolean cameraGranted(final int[] grantResults, final String[] permissions) {
+        return permissionGranted(Manifest.permission.CAMERA, grantResults, permissions);
+    }
+
+    private static boolean permissionGranted(
+            final String permission, final int[] grantResults, final String[] permissions) {
         for (int i = 0; i < grantResults.length; ++i) {
-            if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission[i])) {
+            if (permission.equals(permissions[i])) {
                 return grantResults[i] == PackageManager.PERMISSION_GRANTED;
             }
         }
@@ -72,7 +86,7 @@ public class PermissionUtils {
 
     public static boolean hasPermission(
             final Activity activity, final List<String> permissions, final int requestCode) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final ImmutableList.Builder<String> missingPermissions = new ImmutableList.Builder<>();
             for (final String permission : permissions) {
                 if (ActivityCompat.checkSelfPermission(activity, permission)
