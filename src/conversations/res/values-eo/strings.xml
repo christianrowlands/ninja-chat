@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="use_conversations.im">Uzi conversations.im</string>
+    <string name="use_ninja.chat">Uzi ninja.chat</string>
     <string name="easy_invite_share_text">Aliĝu al %1$s kaj babilu kun mi: %2$s</string>
     <string name="magic_create_text_on_x">Vi estis invitita al %1$s. Ni gvidos vin tra la procezo de kreado de konto.
 \nElektante %1$s kiel provizanton vi povos komuniki kun uzantoj de aliaj provizantoj donante al ili vian plenan XMPP-adreson.</string>

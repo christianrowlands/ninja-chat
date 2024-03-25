@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">选择您的 XMPP 提供者</string>
-    <string name="use_conversations.im">使用 ninja.chat</string>
+    <string name="use_ninja.chat">使用 ninja.chat</string>
     <string name="create_new_account">创建新账号</string>
     <string name="do_you_have_an_account">您已经有 XMPP 账号了吗？如果您之前使用过 Ninja Chat 或其他 XMPP 客户端，那么您已经有账号了。如果没有，您可以立即创建一个。
 \n提示：一些电子邮件服务也提供 XMPP 账号。</string>

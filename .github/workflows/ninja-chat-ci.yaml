@@ -1,0 +1,81 @@
+name: Ninja Chat CI
+
+on:
+  pull_request:
+    branches:
+      - 'ninja-main'
+  push:
+    branches:
+      - 'ninja-main'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Save google-services.json
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+        run: echo "$GOOGLE_SERVICES" > google-services.json
+
+      - name: Build Regular APK
+        run: ./gradlew assembleConversationsFreeDebug --stacktrace
+
+      - name: Get APK name
+        run: echo "base_name=`./gradlew properties -q | grep 'archivesBaseName:' | awk '{print $2}'`" >> $GITHUB_ENV
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: Ninja Chat Debug APK
+          path: build/outputs/apk/conversationsFree/debug/${{ env.base_name }}-conversations-free-arm64-v8a-debug.apk
+
+
+  test:
+    name: Run Tests
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        api-level: [ 26, 34 ]
+        target: [ default, google_apis ]
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Save google-services.json
+        env:
+          GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+        run: echo "$GOOGLE_SERVICES" > google-services.json
+
+      - name: Unit Tests
+        run: ./gradlew -Pci --console=plain testConversationsFreeDebugUnitTest
+
+      # Only upload the reports on failure
+      - name: Upload Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test-Reports
+          path: build/reports
+        if: failure()

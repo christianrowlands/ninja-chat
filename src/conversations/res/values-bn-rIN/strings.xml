@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">আপনার XMPP প্রোভাইডার নির্বাচন করুন</string>
-    <string name="use_conversations.im">ninja.chat ব্যবহার করুন</string>
+    <string name="use_ninja.chat">ninja.chat ব্যবহার করুন</string>
     <string name="create_new_account">নতুন অ্যকাউন্ট তৈরী করুন</string>
     <string name="do_you_have_an_account">আপনার কি কোনও XMPP অ্যকাউন্ট ইতিমধ্যে করা আছে? সেরকমটা হতেই পারে যদি এর আগে আপনি কোনো অন্য XMPP প্রোগ্রাম বা অ্যাপ ব্যবহার করে থাকেন। যদি না করে থাকেন, তাহলে আপনি এখন একটি XMPP অ্যাকাউন্ট বানাতে পারেন।
 \nসূত্র: মাঝে মধ্যে কিছু ইমেল প্রোভাইডাররা XMPP অ্যাকাউন্ট দেয়।</string>
