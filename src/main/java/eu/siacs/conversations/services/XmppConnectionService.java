@@ -49,6 +49,7 @@ import android.util.Pair;
 import androidx.annotation.BoolRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.RemoteInput;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
@@ -56,6 +57,8 @@ import androidx.core.util.Consumer;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 
 import org.conscrypt.Conscrypt;
 import org.jxmpp.stringprep.libidn.LibIdnXmppStringprep;
@@ -153,6 +156,7 @@ import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.LocalizedContent;
 import eu.siacs.conversations.xml.Namespace;
+import eu.siacs.conversations.xmpp.InvalidJid;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnBindListener;
 import eu.siacs.conversations.xmpp.OnContactStatusChanged;
@@ -240,7 +244,7 @@ public class XmppConnectionService extends Service {
     private final ChannelDiscoveryService mChannelDiscoveryService = new ChannelDiscoveryService(this);
     private final ShortcutService mShortcutService = new ShortcutService(this);
     private final AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
-    private final AtomicBoolean mForceForegroundService = new AtomicBoolean(false);
+    private final AtomicBoolean mOngoingVideoTranscoding = new AtomicBoolean(false);
     private final AtomicBoolean mForceDuringOnCreate = new AtomicBoolean(false);
     private final AtomicReference<OngoingCall> ongoingCall = new AtomicReference<>();
     private final OnMessagePacketReceived mMessageParser = new MessageParser(this);
@@ -369,6 +373,12 @@ public class XmppConnectionService extends Service {
             } else if (!account.getXmppConnection().getFeatures().bookmarksConversion()) {
                 fetchBookmarks(account);
             }
+
+            if (connection.getFeatures().mds()) {
+                fetchMessageDisplayedSynchronization(account);
+            } else {
+                Log.d(Config.LOGTAG,account.getJid()+": server has no support for mds");
+            }
             final boolean flexible = account.getXmppConnection().getFeatures().flexibleOfflineMessageRetrieval();
             final boolean catchup = getMessageArchiveService().inCatchup(account);
             final boolean trackOfflineMessageRetrieval;
@@ -393,6 +403,7 @@ public class XmppConnectionService extends Service {
 //            unifiedPushBroker.renewUnifiedPushEndpointsOnBind(account);
         }
     };
+
     private final AtomicLong mLastExpiryRun = new AtomicLong(0);
     private final LruCache<Pair<String, String>, ServiceDiscoveryResult> discoCache = new LruCache<>(20);
     private final OnStatusChanged statusListener = new OnStatusChanged() {
@@ -516,13 +527,13 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public void startForcingForegroundNotification() {
-        mForceForegroundService.set(true);
+    public void startOngoingVideoTranscodingForegroundNotification() {
+        mOngoingVideoTranscoding.set(true);
         toggleForegroundService();
     }
 
-    public void stopForcingForegroundNotification() {
-        mForceForegroundService.set(false);
+    public void stopOngoingVideoTranscodingForegroundNotification() {
+        mOngoingVideoTranscoding.set(false);
         toggleForegroundService();
     }
 
@@ -1457,35 +1468,47 @@ public class XmppConnectionService extends Service {
     private void toggleForegroundService(final boolean force) {
         final boolean status;
         final OngoingCall ongoing = ongoingCall.get();
-        if (force || mForceDuringOnCreate.get() || mForceForegroundService.get() || ongoing != null || (Compatibility.keepForegroundService(this) && hasEnabledAccounts())) {
+        final boolean ongoingVideoTranscoding = mOngoingVideoTranscoding.get();
+        final int id;
+        if (force
+                || mForceDuringOnCreate.get()
+                || ongoingVideoTranscoding
+                || ongoing != null
+                || (Compatibility.keepForegroundService(this) && hasEnabledAccounts())) {
             final Notification notification;
-            final int id;
             if (ongoing != null) {
                 notification = this.mNotificationService.getOngoingCallNotification(ongoing);
                 id = NotificationService.ONGOING_CALL_NOTIFICATION_ID;
                 startForegroundOrCatch(id, notification, true);
-                mNotificationService.cancel(NotificationService.FOREGROUND_NOTIFICATION_ID);
+            } else if (ongoingVideoTranscoding) {
+                notification = this.mNotificationService.getIndeterminateVideoTranscoding();
+                id = NotificationService.ONGOING_VIDEO_TRANSCODING_NOTIFICATION_ID;
+                startForegroundOrCatch(id, notification, false);
             } else {
                 notification = this.mNotificationService.createForegroundNotification();
                 id = NotificationService.FOREGROUND_NOTIFICATION_ID;
                 startForegroundOrCatch(id, notification, false);
             }
-
-            if (!mForceForegroundService.get()) {
-                mNotificationService.notify(id, notification);
-            }
+            mNotificationService.notify(id, notification);
             status = true;
         } else {
+            id = 0;
             stopForeground(true);
             status = false;
         }
-        if (!mForceForegroundService.get()) {
-            mNotificationService.cancel(NotificationService.FOREGROUND_NOTIFICATION_ID);
+
+        for (final int toBeRemoved :
+                Collections2.filter(
+                        Arrays.asList(
+                                NotificationService.FOREGROUND_NOTIFICATION_ID,
+                                NotificationService.ONGOING_CALL_NOTIFICATION_ID,
+                                NotificationService.ONGOING_VIDEO_TRANSCODING_NOTIFICATION_ID),
+                        i -> i != id)) {
+            mNotificationService.cancel(toBeRemoved);
         }
-        if (ongoing == null) {
-            mNotificationService.cancel(NotificationService.ONGOING_CALL_NOTIFICATION_ID);
-        }
-        Log.d(Config.LOGTAG, "ForegroundService: " + (status ? "on" : "off"));
+        Log.d(
+                Config.LOGTAG,
+                "ForegroundService: " + (status ? "on" : "off") + ", notification: " + id);
     }
 
     private void startForegroundOrCatch(
@@ -1521,13 +1544,13 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean foregroundNotificationNeedsUpdatingWhenErrorStateChanges() {
-        return !mForceForegroundService.get() && ongoingCall.get() == null && Compatibility.keepForegroundService(this) && hasEnabledAccounts();
+        return !mOngoingVideoTranscoding.get() && ongoingCall.get() == null && Compatibility.keepForegroundService(this) && hasEnabledAccounts();
     }
 
     @Override
     public void onTaskRemoved(final Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        if ((Compatibility.keepForegroundService(this) && hasEnabledAccounts()) || mForceForegroundService.get() || ongoingCall.get() != null) {
+        if ((Compatibility.keepForegroundService(this) && hasEnabledAccounts()) || mOngoingVideoTranscoding.get() || ongoingCall.get() != null) {
             Log.d(Config.LOGTAG, "ignoring onTaskRemoved because foreground service is activated");
         } else {
             this.logoutAndSave(false);
@@ -1903,16 +1926,86 @@ public class XmppConnectionService extends Service {
 
     public void fetchBookmarks2(final Account account) {
         final IqPacket retrieve = mIqGenerator.retrieveBookmarks();
-        sendIqPacket(account, retrieve, new OnIqPacketReceived() {
-            @Override
-            public void onIqPacketReceived(final Account account, final IqPacket response) {
-                if (response.getType() == IqPacket.TYPE.RESULT) {
-                    final Element pubsub = response.findChild("pubsub", Namespace.PUBSUB);
-                    final Map<Jid, Bookmark> bookmarks = Bookmark.parseFromPubsub(pubsub, account);
-                    processBookmarksInitial(account, bookmarks, true);
-                }
+        sendIqPacket(account, retrieve, (a, response) -> {
+            if (response.getType() == IqPacket.TYPE.RESULT) {
+                final Element pubsub = response.findChild("pubsub", Namespace.PUBSUB);
+                final Map<Jid, Bookmark> bookmarks = Bookmark.parseFromPubsub(pubsub, a);
+                processBookmarksInitial(a, bookmarks, true);
             }
         });
+    }
+
+    private void fetchMessageDisplayedSynchronization(final Account account) {
+        Log.d(Config.LOGTAG, account.getJid() + ": retrieve mds");
+        final var retrieve = mIqGenerator.retrieveMds();
+        sendIqPacket(
+                account,
+                retrieve,
+                (a, response) -> {
+                    if (response.getType() != IqPacket.TYPE.RESULT) {
+                        return;
+                    }
+                    final var pubSub = response.findChild("pubsub", Namespace.PUBSUB);
+                    final Element items = pubSub == null ? null : pubSub.findChild("items");
+                    if (items == null
+                            || !Namespace.MDS_DISPLAYED.equals(items.getAttribute("node"))) {
+                        return;
+                    }
+                    for (final Element child : items.getChildren()) {
+                        if ("item".equals(child.getName())) {
+                            processMdsItem(account, child);
+                        }
+                    }
+                });
+    }
+
+    public void processMdsItem(final Account account, final Element item) {
+        final Jid jid =
+                item == null ? null : InvalidJid.getNullForInvalid(item.getAttributeAsJid("id"));
+        if (jid == null) {
+            return;
+        }
+        final Element displayed = item.findChild("displayed", Namespace.MDS_DISPLAYED);
+        final Element stanzaId =
+                displayed == null ? null : displayed.findChild("stanza-id", Namespace.STANZA_IDS);
+        final String id = stanzaId == null ? null : stanzaId.getAttribute("id");
+        final Conversation conversation = find(account, jid);
+        if (id != null && conversation != null) {
+            conversation.setDisplayState(id);
+            markReadUpToStanzaId(conversation, id);
+        }
+    }
+
+    public void markReadUpToStanzaId(final Conversation conversation, final String stanzaId) {
+        final Message message = conversation.findMessageWithServerMsgId(stanzaId);
+        if (message == null) { // do we want to check if isRead?
+            return;
+        }
+        markReadUpTo(conversation, message);
+    }
+
+    public void markReadUpTo(final Conversation conversation, final Message message) {
+        final boolean isDismissNotification = isDismissNotification(message);
+        final var uuid = message.getUuid();
+        Log.d(
+                Config.LOGTAG,
+                conversation.getAccount().getJid().asBareJid()
+                        + ": mark "
+                        + conversation.getJid().asBareJid()
+                        + " as read up to "
+                        + uuid);
+        markRead(conversation, uuid, isDismissNotification);
+    }
+
+    private static boolean isDismissNotification(final Message message) {
+        Message next = message.next();
+        while (next != null) {
+            if (message.getStatus() == Message.STATUS_RECEIVED) {
+                return false;
+            }
+            next = next.next();
+        }
+        return true;
     }
 
     public void processBookmarksInitial(Account account, Map<Jid, Bookmark> bookmarks, final boolean pep) {
@@ -2051,7 +2144,7 @@ public class XmppConnectionService extends Service {
                     }
                 });
             } else {
-                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error publishing bookmarks (retry=" + retry + ") " + response);
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error publishing "+node+" (retry=" + retry + ") " + response);
             }
         });
     }
@@ -3301,7 +3394,7 @@ public class XmppConnectionService extends Service {
         new Thread(() -> onMediaLoaded.onMediaLoaded(fileBackend.convertToAttachments(databaseBackend.getRelativeFilePaths(account, jid, limit)))).start();
     }
 
-    public void persistSelfNick(MucOptions.User self) {
+    public void persistSelfNick(final MucOptions.User self) {
         final Conversation conversation = self.getConversation();
         final boolean tookProposedNickFromBookmark = conversation.getMucOptions().isTookProposedNickFromBookmark();
         Jid full = self.getFullJid();
@@ -3313,11 +3406,10 @@ public class XmppConnectionService extends Service {
 
         final Bookmark bookmark = conversation.getBookmark();
         final String bookmarkedNick = bookmark == null ? null : bookmark.getNick();
-        if (bookmark != null && (tookProposedNickFromBookmark || TextUtils.isEmpty(bookmarkedNick)) && !full.getResource().equals(bookmarkedNick)) {
+        if (bookmark != null && (tookProposedNickFromBookmark || Strings.isNullOrEmpty(bookmarkedNick)) && !full.getResource().equals(bookmarkedNick)) {
             final Account account = conversation.getAccount();
             final String defaultNick = MucOptions.defaultNick(account);
-            if (TextUtils.isEmpty(bookmarkedNick) && full.getResource().equals(defaultNick)) {
-                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": do not overwrite empty bookmark nick with default nick for " + conversation.getJid().asBareJid());
+            if (Strings.isNullOrEmpty(bookmarkedNick) && full.getResource().equals(defaultNick)) {
                 return;
             }
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": persist nick '" + full.getResource() + "' into bookmark for " + conversation.getJid().asBareJid());
@@ -4535,22 +4627,99 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public void sendReadMarker(final Conversation conversation, String upToUuid) {
-        final boolean isPrivateAndNonAnonymousMuc = conversation.getMode() == Conversation.MODE_MULTI && conversation.isPrivateAndNonAnonymous();
+    public void sendReadMarker(final Conversation conversation, final String upToUuid) {
+        final boolean isPrivateAndNonAnonymousMuc =
+                conversation.getMode() == Conversation.MODE_MULTI
+                        && conversation.isPrivateAndNonAnonymous();
         final List<Message> readMessages = this.markRead(conversation, upToUuid, true);
-        if (readMessages.size() > 0) {
-            updateConversationUi();
+        if (readMessages.isEmpty()) {
+            return;
         }
-        final Message markable = Conversation.getLatestMarkableMessage(readMessages, isPrivateAndNonAnonymousMuc);
-        if (confirmMessages()
-                && markable != null
-                && (markable.trusted() || isPrivateAndNonAnonymousMuc)
-                && markable.getRemoteMsgId() != null) {
-            Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": sending read marker to " + markable.getCounterpart().toString());
-            final Account account = conversation.getAccount();
-            final MessagePacket packet = mMessageGenerator.confirm(markable);
+        final var account = conversation.getAccount();
+        final var connection = account.getXmppConnection();
+        updateConversationUi();
+        final var last =
+                Iterables.getLast(
+                        Collections2.filter(
+                                readMessages,
+                                m ->
+                                        !m.isPrivateMessage()
+                                                && m.getStatus() == Message.STATUS_RECEIVED),
+                        null);
+        if (last == null) {
+            return;
+        }
+
+        final boolean sendDisplayedMarker =
+                confirmMessages()
+                        && (last.trusted() || isPrivateAndNonAnonymousMuc)
+                        && last.getRemoteMsgId() != null
+                        && (last.markable || isPrivateAndNonAnonymousMuc);
+        final boolean serverAssist =
+                connection != null && connection.getFeatures().mdsServerAssist();
+
+        final String stanzaId = last.getServerMsgId();
+
+        if (sendDisplayedMarker && serverAssist) {
+            final var mdsDisplayed = mIqGenerator.mdsDisplayed(stanzaId, conversation);
+            final MessagePacket packet = mMessageGenerator.confirm(last);
+            packet.addChild(mdsDisplayed);
+            if (!last.isPrivateMessage()) {
+                packet.setTo(packet.getTo().asBareJid());
+            }
+            Log.d(Config.LOGTAG,account.getJid().asBareJid()+": server assisted "+packet);
             this.sendMessagePacket(account, packet);
+        } else {
+            publishMds(last);
+            // read markers will be sent after MDS to flush the CSI stanza queue
+            if (sendDisplayedMarker) {
+                Log.d(
+                        Config.LOGTAG,
+                        conversation.getAccount().getJid().asBareJid()
+                                + ": sending displayed marker to "
+                                + last.getCounterpart().toString());
+                final MessagePacket packet = mMessageGenerator.confirm(last);
+                this.sendMessagePacket(account, packet);
+            }
         }
+    }
+
+    private void publishMds(@Nullable final Message message) {
+        final String stanzaId = message == null ? null : message.getServerMsgId();
+        if (Strings.isNullOrEmpty(stanzaId)) {
+            return;
+        }
+        final Conversation conversation;
+        final var conversational = message.getConversation();
+        if (conversational instanceof Conversation c) {
+            conversation = c;
+        } else {
+            return;
+        }
+        final var account = conversation.getAccount();
+        final var connection = account.getXmppConnection();
+        if (connection == null || !connection.getFeatures().mds()) {
+            return;
+        }
+        final Jid itemId;
+        if (message.isPrivateMessage()) {
+            itemId = message.getCounterpart();
+        } else {
+            itemId = conversation.getJid().asBareJid();
+        }
+        Log.d(Config.LOGTAG,"publishing mds for "+itemId+"/"+stanzaId);
+        publishMds(account, itemId, stanzaId, conversation);
+    }
+
+    private void publishMds(
+            final Account account, final Jid itemId, final String stanzaId, final Conversation conversation) {
+        final var item = mIqGenerator.mdsDisplayed(stanzaId, conversation);
+        pushNodeAndEnforcePublishOptions(
+                account,
+                Namespace.MDS_DISPLAYED,
+                item,
+                itemId.toEscapedString(),
+                PublishOptions.persistentWhitelistAccessMaxItems());
     }
 
     public MemorizingTrustManager getMemorizingTrustManager() {

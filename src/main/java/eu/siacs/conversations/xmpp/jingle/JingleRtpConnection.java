@@ -2237,6 +2237,24 @@ public class JingleRtpConnection extends AbstractJingleConnection
         }
     }
 
+    public synchronized void integrationFailure() {
+        final var state = getState();
+        if (state == State.PROPOSED) {
+            Log.e(
+                    Config.LOGTAG,
+                    id.account.getJid().asBareJid()
+                            + ": failed call integration in state proposed");
+            rejectCallFromProposed();
+        } else if (state == State.SESSION_INITIALIZED) {
+            Log.e(Config.LOGTAG, id.account.getJid().asBareJid() + ": failed call integration");
+            this.webRTCWrapper.close();
+            sendSessionTerminate(Reason.FAILED_APPLICATION, "CallIntegration failed");
+        } else {
+            throw new IllegalStateException(
+                    String.format("Can not fail integration in state %s", state));
+        }
+    }
+
     public synchronized void endCall() {
         if (isTerminated()) {
             Log.w(
@@ -2690,7 +2708,16 @@ public class JingleRtpConnection extends AbstractJingleConnection
     }
 
     @Override
-    public void onCallIntegrationShowIncomingCallUi() {
+    public synchronized void onCallIntegrationShowIncomingCallUi() {
+        if (isTerminated()) {
+            // there might be race conditions with the call integration service invoking this
+            // callback when the rtp session has already ended.
+            Log.w(
+                    Config.LOGTAG,
+                    "CallIntegration requested incoming call UI but session was already terminated");
+            return;
+        }
+        // TODO apparently this can be called too early as well?
         xmppConnectionService.getNotificationService().startRinging(id, getMedia());
     }
 
