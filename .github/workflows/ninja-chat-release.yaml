@@ -173,4 +173,3 @@ jobs:
           releaseFiles: build/outputs/bundle/conversationsFreeRelease/${{ env.base_name }}-conversations-free-release.aab
           track: internal
           status: completed
-          changesNotSentForReview: true
