@@ -1243,6 +1243,13 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         if (transition(target)) {
             // we change state before terminating transport so we don't consume the following
             // IOException and turn it into a connectivity error
+
+            if (isInitiator() && reason == Reason.CANCEL) {
+                // message hooks have already run so we need to mark to persist the 'cancelled'
+                // status
+                xmppConnectionService.markMessage(
+                        message, Message.STATUS_SEND_FAILED, Message.ERROR_MESSAGE_CANCELLED);
+            }
             terminateTransport();
             final JinglePacket jinglePacket =
                     new JinglePacket(JinglePacket.Action.SESSION_TERMINATE, id.sessionId);

@@ -3,11 +3,10 @@ package eu.siacs.conversations.ui.adapter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -20,24 +19,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.color.MaterialColors;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
@@ -52,12 +55,14 @@ import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.MessageArchiveService;
 import eu.siacs.conversations.services.NotificationService;
+import eu.siacs.conversations.ui.Activities;
 import eu.siacs.conversations.ui.ConversationFragment;
 import eu.siacs.conversations.ui.ConversationsActivity;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.ui.service.AudioPlayer;
 import eu.siacs.conversations.ui.text.DividerSpan;
 import eu.siacs.conversations.ui.text.QuoteSpan;
+import eu.siacs.conversations.ui.util.Attachment;
 import eu.siacs.conversations.ui.util.AvatarWorkerTask;
 import eu.siacs.conversations.ui.util.MyLinkify;
 import eu.siacs.conversations.ui.util.QuoteHelper;
@@ -73,6 +78,12 @@ import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.mam.MamReference;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MessageAdapter extends ArrayAdapter<Message> {
 
     public static final String DATE_SEPARATOR_BODY = "DATE_SEPARATOR";
@@ -87,10 +98,11 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     private final DisplayMetrics metrics;
     private OnContactPictureClicked mOnContactPictureClickedListener;
     private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
-    private boolean mUseGreenBackground = false;
+    private BubbleDesign bubbleDesign = new BubbleDesign(false, false);
     private final boolean mForceNames;
 
-    public MessageAdapter(final XmppActivity activity, final List<Message> messages, final boolean forceNames) {
+    public MessageAdapter(
+            final XmppActivity activity, final List<Message> messages, final boolean forceNames) {
         super(activity, 0, messages);
         this.audioPlayer = new AudioPlayer(this);
         this.activity = activity;
@@ -129,8 +141,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         return activity;
     }
 
-    public void setOnContactPictureLongClicked(
-            OnContactPictureLongClicked listener) {
+    public void setOnContactPictureLongClicked(OnContactPictureLongClicked listener) {
         this.mOnContactPictureLongClickedListener = listener;
     }
 
@@ -160,210 +171,243 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         return this.getItemViewType(getItem(position));
     }
 
-    private int getMessageTextColor(boolean onDark, boolean primary) {
-        if (onDark) {
-            return ContextCompat.getColor(activity, primary ? R.color.white : R.color.white70);
-        } else {
-            return ContextCompat.getColor(activity, primary ? R.color.black87 : R.color.black54);
-        }
-    }
-
-    private void displayStatus(ViewHolder viewHolder, Message message, int type, boolean darkBackground) {
-        String filesize = null;
-        String info = null;
-        boolean error = false;
+    private void displayStatus(
+            final ViewHolder viewHolder,
+            final Message message,
+            final int type,
+            final BubbleColor bubbleColor) {
+        final int mergedStatus = message.getMergedStatus();
+        final boolean error;
         if (viewHolder.indicatorReceived != null) {
             viewHolder.indicatorReceived.setVisibility(View.GONE);
         }
-
-        if (viewHolder.edit_indicator != null) {
-            if (message.edited()) {
-                viewHolder.edit_indicator.setVisibility(View.VISIBLE);
-                viewHolder.edit_indicator.setImageResource(darkBackground ? R.drawable.ic_mode_edit_white_18dp : R.drawable.ic_mode_edit_black_18dp);
-                viewHolder.edit_indicator.setAlpha(darkBackground ? 0.7f : 0.57f);
-            } else {
-                viewHolder.edit_indicator.setVisibility(View.GONE);
-            }
-        }
         final Transferable transferable = message.getTransferable();
-        boolean multiReceived = message.getConversation().getMode() == Conversation.MODE_MULTI
-                && message.getMergedStatus() <= Message.STATUS_RECEIVED;
-        if (message.isFileOrImage() || transferable != null || MessageUtils.unInitiatedButKnownSize(message)) {
-            FileParams params = message.getFileParams();
-            filesize = params.size != null ? UIHelper.filesizeToString(params.size) : null;
-            if (transferable != null && (transferable.getStatus() == Transferable.STATUS_FAILED || transferable.getStatus() == Transferable.STATUS_CANCELLED)) {
+        final boolean multiReceived =
+                message.getConversation().getMode() == Conversation.MODE_MULTI
+                        && mergedStatus <= Message.STATUS_RECEIVED;
+        final String fileSize;
+        if (message.isFileOrImage()
+                || transferable != null
+                || MessageUtils.unInitiatedButKnownSize(message)) {
+            final FileParams params = message.getFileParams();
+            fileSize = params.size != null ? UIHelper.filesizeToString(params.size) : null;
+            if (message.getStatus() == Message.STATUS_SEND_FAILED
+                    || (transferable != null
+                            && (transferable.getStatus() == Transferable.STATUS_FAILED
+                                    || transferable.getStatus()
+                                            == Transferable.STATUS_CANCELLED))) {
                 error = true;
-            }
-        }
-        switch (message.getMergedStatus()) {
-            case Message.STATUS_WAITING:
-                info = getContext().getString(R.string.waiting);
-                break;
-            case Message.STATUS_UNSEND:
-                if (transferable != null) {
-                    info = getContext().getString(R.string.sending_file, transferable.getProgress());
-                } else {
-                    info = getContext().getString(R.string.sending);
-                }
-                break;
-            case Message.STATUS_OFFERED:
-                info = getContext().getString(R.string.offering);
-                break;
-            case Message.STATUS_SEND_RECEIVED:
-            case Message.STATUS_SEND_DISPLAYED:
-                viewHolder.indicatorReceived.setImageResource(darkBackground ? R.drawable.ic_done_white_18dp : R.drawable.ic_done_black_18dp);
-                viewHolder.indicatorReceived.setAlpha(darkBackground ? 0.7f : 0.57f);
-                viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
-                break;
-            case Message.STATUS_SEND_FAILED:
-                final String errorMessage = message.getErrorMessage();
-                if (Message.ERROR_MESSAGE_CANCELLED.equals(errorMessage)) {
-                    info = getContext().getString(R.string.cancelled);
-                } else if (errorMessage != null) {
-                    final String[] errorParts = errorMessage.split("\\u001f", 2);
-                    if (errorParts.length == 2) {
-                        switch (errorParts[0]) {
-                            case "file-too-large":
-                                info = getContext().getString(R.string.file_too_large);
-                                break;
-                            default:
-                                info = getContext().getString(R.string.send_failed);
-                                break;
-                        }
-                    } else {
-                        info = getContext().getString(R.string.send_failed);
-                    }
-                } else {
-                    info = getContext().getString(R.string.send_failed);
-                }
-                error = true;
-                break;
-            default:
-                if (mForceNames || multiReceived) {
-                    info = UIHelper.getMessageDisplayName(message);
-                }
-                break;
-        }
-        if (error && type == SENT) {
-            if (darkBackground) {
-                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Warning_OnDark);
             } else {
-                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Warning);
+                error = message.getStatus() == Message.STATUS_SEND_FAILED;
             }
         } else {
-            if (darkBackground) {
-                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
+            fileSize = null;
+            error = message.getStatus() == Message.STATUS_SEND_FAILED;
+        }
+        if (type == SENT) {
+            final @DrawableRes Integer receivedIndicator =
+                    getMessageStatusAsDrawable(message, mergedStatus);
+            if (receivedIndicator == null) {
+                viewHolder.indicatorReceived.setVisibility(View.INVISIBLE);
             } else {
-                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption);
+                viewHolder.indicatorReceived.setImageResource(receivedIndicator);
+                if (mergedStatus == Message.STATUS_SEND_FAILED) {
+                    setImageTintError(viewHolder.indicatorReceived);
+                } else {
+                    setImageTint(viewHolder.indicatorReceived, bubbleColor);
+                }
+                viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
             }
-            viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
+        }
+        final var additionalStatusInfo = getAdditionalStatusInfo(message, mergedStatus);
+
+        if (error && type == SENT) {
+            viewHolder.time.setTextColor(
+                    MaterialColors.getColor(
+                            viewHolder.time, com.google.android.material.R.attr.colorError));
+        } else {
+            setTextColor(viewHolder.time, bubbleColor);
         }
         if (message.getEncryption() == Message.ENCRYPTION_NONE) {
             viewHolder.indicator.setVisibility(View.GONE);
         } else {
             boolean verified = false;
             if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-                final FingerprintStatus status = message.getConversation()
-                        .getAccount().getAxolotlService().getFingerprintTrust(
-                                message.getFingerprint());
+                final FingerprintStatus status =
+                        message.getConversation()
+                                .getAccount()
+                                .getAxolotlService()
+                                .getFingerprintTrust(message.getFingerprint());
                 if (status != null && status.isVerified()) {
                     verified = true;
                 }
             }
             if (verified) {
-                viewHolder.indicator.setImageResource(darkBackground ? R.drawable.ic_verified_user_white_18dp : R.drawable.ic_verified_user_black_18dp);
+                viewHolder.indicator.setImageResource(R.drawable.ic_verified_user_24dp);
             } else {
-                viewHolder.indicator.setImageResource(darkBackground ? R.drawable.ic_lock_white_18dp : R.drawable.ic_lock_black_18dp);
+                viewHolder.indicator.setImageResource(R.drawable.ic_lock_24dp);
             }
-            if (darkBackground) {
-                viewHolder.indicator.setAlpha(0.7f);
+            if (error && type == SENT) {
+                setImageTintError(viewHolder.indicator);
             } else {
-                viewHolder.indicator.setAlpha(0.57f);
+                setImageTint(viewHolder.indicator, bubbleColor);
             }
             viewHolder.indicator.setVisibility(View.VISIBLE);
         }
 
-        final String formattedTime = UIHelper.readableTimeDifferenceFull(getContext(), message.getMergedTimeSent());
-        final String bodyLanguage = message.getBodyLanguage();
-        final String bodyLanguageInfo = bodyLanguage == null ? "" : String.format(" \u00B7 %s", bodyLanguage.toUpperCase(Locale.US));
-        if (message.getStatus() <= Message.STATUS_RECEIVED) {
-            if ((filesize != null) && (info != null)) {
-                viewHolder.time.setText(formattedTime + " \u00B7 " + filesize + " \u00B7 " + info + bodyLanguageInfo);
-            } else if ((filesize == null) && (info != null)) {
-                viewHolder.time.setText(formattedTime + " \u00B7 " + info + bodyLanguageInfo);
-            } else if ((filesize != null) && (info == null)) {
-                viewHolder.time.setText(formattedTime + " \u00B7 " + filesize + bodyLanguageInfo);
-            } else {
-                viewHolder.time.setText(formattedTime + bodyLanguageInfo);
-            }
-        } else {
-            if ((filesize != null) && (info != null)) {
-                viewHolder.time.setText(filesize + " \u00B7 " + info + bodyLanguageInfo);
-            } else if ((filesize == null) && (info != null)) {
-                if (error) {
-                    viewHolder.time.setText(info + " \u00B7 " + formattedTime + bodyLanguageInfo);
+        if (viewHolder.edit_indicator != null) {
+            if (message.edited()) {
+                viewHolder.edit_indicator.setVisibility(View.VISIBLE);
+                if (error && type == SENT) {
+                    setImageTintError(viewHolder.edit_indicator);
                 } else {
-                    viewHolder.time.setText(info);
+                    setImageTint(viewHolder.edit_indicator, bubbleColor);
                 }
-            } else if ((filesize != null) && (info == null)) {
-                viewHolder.time.setText(filesize + " \u00B7 " + formattedTime + bodyLanguageInfo);
             } else {
-                viewHolder.time.setText(formattedTime + bodyLanguageInfo);
+                viewHolder.edit_indicator.setVisibility(View.GONE);
             }
         }
+
+        final String formattedTime =
+                UIHelper.readableTimeDifferenceFull(getContext(), message.getMergedTimeSent());
+        final String bodyLanguage = message.getBodyLanguage();
+        final ImmutableList.Builder<String> timeInfoBuilder = new ImmutableList.Builder<>();
+        if (message.getStatus() <= Message.STATUS_RECEIVED) {
+            timeInfoBuilder.add(formattedTime);
+            if (fileSize != null) {
+                timeInfoBuilder.add(fileSize);
+            }
+            if (mForceNames || multiReceived) {
+                final String displayName = UIHelper.getMessageDisplayName(message);
+                if (displayName != null) {
+                    timeInfoBuilder.add(displayName);
+                }
+            }
+            if (bodyLanguage != null) {
+                timeInfoBuilder.add(bodyLanguage.toUpperCase(Locale.US));
+            }
+        } else {
+            if (bodyLanguage != null) {
+                timeInfoBuilder.add(bodyLanguage.toUpperCase(Locale.US));
+            }
+            if (fileSize != null) {
+                timeInfoBuilder.add(fileSize);
+            }
+            // for space reasons we display only 'additional status info' (send progress or concrete
+            // failure reason) or the time
+            if (additionalStatusInfo != null) {
+                timeInfoBuilder.add(additionalStatusInfo);
+            } else {
+                timeInfoBuilder.add(formattedTime);
+            }
+        }
+        final var timeInfo = timeInfoBuilder.build();
+        viewHolder.time.setText(Joiner.on(" \u00B7 ").join(timeInfo));
     }
 
-    private void displayInfoMessage(ViewHolder viewHolder, CharSequence text, boolean darkBackground) {
+    public static @DrawableRes Integer getMessageStatusAsDrawable(
+            final Message message, final int status) {
+        final var transferable = message.getTransferable();
+        return switch (status) {
+            case Message.STATUS_WAITING -> R.drawable.ic_more_horiz_24dp;
+            case Message.STATUS_UNSEND -> transferable == null ? null : R.drawable.ic_upload_24dp;
+            case Message.STATUS_SEND -> R.drawable.ic_done_24dp;
+            case Message.STATUS_SEND_RECEIVED, Message.STATUS_SEND_DISPLAYED -> R.drawable
+                    .ic_done_all_24dp;
+            case Message.STATUS_SEND_FAILED -> {
+                final String errorMessage = message.getErrorMessage();
+                if (Message.ERROR_MESSAGE_CANCELLED.equals(errorMessage)) {
+                    yield R.drawable.ic_cancel_24dp;
+                } else {
+                    yield R.drawable.ic_error_24dp;
+                }
+            }
+            case Message.STATUS_OFFERED -> R.drawable.ic_p2p_24dp;
+            default -> null;
+        };
+    }
+
+    @Nullable
+    private String getAdditionalStatusInfo(final Message message, final int mergedStatus) {
+        final String additionalStatusInfo;
+        if (mergedStatus == Message.STATUS_SEND_FAILED) {
+            final String errorMessage = Strings.nullToEmpty(message.getErrorMessage());
+            final String[] errorParts = errorMessage.split("\\u001f", 2);
+            if (errorParts.length == 2 && errorParts[0].equals("file-too-large")) {
+                additionalStatusInfo = getContext().getString(R.string.file_too_large);
+            } else {
+                additionalStatusInfo = null;
+            }
+        } else if (mergedStatus == Message.STATUS_UNSEND) {
+            final var transferable = message.getTransferable();
+            if (transferable == null) {
+                return null;
+            }
+            return getContext().getString(R.string.sending_file, transferable.getProgress());
+        } else {
+            additionalStatusInfo = null;
+        }
+        return additionalStatusInfo;
+    }
+
+    private void displayInfoMessage(
+            ViewHolder viewHolder, CharSequence text, final BubbleColor bubbleColor) {
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setText(text);
-        if (darkBackground) {
-            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary_OnDark);
-        } else {
-            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary);
-        }
+        viewHolder.messageBody.setTextColor(
+                bubbleToOnSurfaceVariant(viewHolder.messageBody, bubbleColor));
         viewHolder.messageBody.setTextIsSelectable(false);
     }
 
-    private void displayEmojiMessage(final ViewHolder viewHolder, final String body, final boolean darkBackground) {
+    private void displayEmojiMessage(
+            final ViewHolder viewHolder, final String body, final BubbleColor bubbleColor) {
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
-        if (darkBackground) {
-            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Emoji_OnDark);
-        } else {
-            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Emoji);
-        }
-        Spannable span = new SpannableString(body);
+        setTextColor(viewHolder.messageBody, bubbleColor);
+        final Spannable span = new SpannableString(body);
         float size = Emoticons.isEmoji(body) ? 3.0f : 2.0f;
-        span.setSpan(new RelativeSizeSpan(size), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span.setSpan(
+                new RelativeSizeSpan(size), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         viewHolder.messageBody.setText(span);
     }
 
-    private void applyQuoteSpan(SpannableStringBuilder body, int start, int end, boolean darkBackground) {
+    private void applyQuoteSpan(
+            final TextView textView,
+            SpannableStringBuilder body,
+            int start,
+            int end,
+            final BubbleColor bubbleColor) {
         if (start > 1 && !"\n\n".equals(body.subSequence(start - 2, start).toString())) {
             body.insert(start++, "\n");
-            body.setSpan(new DividerSpan(false), start - 2, start, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            body.setSpan(
+                    new DividerSpan(false), start - 2, start, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             end++;
         }
         if (end < body.length() - 1 && !"\n\n".equals(body.subSequence(end, end + 2).toString())) {
             body.insert(end, "\n");
             body.setSpan(new DividerSpan(false), end, end + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        int color = darkBackground ? this.getMessageTextColor(darkBackground, false)
-                : ContextCompat.getColor(activity, R.color.green700_desaturated);
-        DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        body.setSpan(new QuoteSpan(color, metrics), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        final DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
+        body.setSpan(
+                new QuoteSpan(bubbleToOnSurfaceVariant(textView, bubbleColor), metrics),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     /**
-     * Applies QuoteSpan to group of lines which starts with > or » characters.
-     * Appends likebreaks and applies DividerSpan to them to show a padding between quote and text.
+     * Applies QuoteSpan to group of lines which starts with > or » characters. Appends likebreaks
+     * and applies DividerSpan to them to show a padding between quote and text.
      */
-    private boolean handleTextQuotes(SpannableStringBuilder body, boolean darkBackground) {
+    private boolean handleTextQuotes(
+            final TextView textView,
+            final SpannableStringBuilder body,
+            final BubbleColor bubbleColor) {
         boolean startsWithQuote = false;
         int quoteDepth = 1;
         while (QuoteHelper.bodyContainsQuoteStart(body) && quoteDepth <= Config.QUOTE_MAX_DEPTH) {
@@ -382,7 +426,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                             if (i == 0) startsWithQuote = true;
                         } else if (quoteStart >= 0) {
                             // Line start without quote, apply spans there
-                            applyQuoteSpan(body, quoteStart, i - 1, darkBackground);
+                            applyQuoteSpan(textView, body, quoteStart, i - 1, bubbleColor);
                             quoteStart = -1;
                         }
                     }
@@ -407,26 +451,21 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             }
             if (quoteStart >= 0) {
                 // Apply spans to finishing open quote
-                applyQuoteSpan(body, quoteStart, body.length(), darkBackground);
+                applyQuoteSpan(textView, body, quoteStart, body.length(), bubbleColor);
             }
             quoteDepth++;
         }
         return startsWithQuote;
     }
 
-    private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground, int type) {
+    private void displayTextMessage(
+            final ViewHolder viewHolder, final Message message, final BubbleColor bubbleColor) {
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
-
-        if (darkBackground) {
-            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_OnDark);
-        } else {
-            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
-        }
-        viewHolder.messageBody.setHighlightColor(ContextCompat.getColor(activity, darkBackground
-                ? (type == SENT || !mUseGreenBackground ? R.color.black26 : R.color.grey800) : R.color.grey500));
+        setTextColor(viewHolder.messageBody, bubbleColor);
+        setTextSize(viewHolder.messageBody, this.bubbleDesign.largeFont);
         viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
 
         if (message.getBody() != null) {
@@ -440,16 +479,20 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 body = new SpannableStringBuilder(body, 0, Config.MAX_DISPLAY_MESSAGE_CHARS);
                 body.append("\u2026");
             }
-            Message.MergeSeparator[] mergeSeparators = body.getSpans(0, body.length(), Message.MergeSeparator.class);
+            Message.MergeSeparator[] mergeSeparators =
+                    body.getSpans(0, body.length(), Message.MergeSeparator.class);
             for (Message.MergeSeparator mergeSeparator : mergeSeparators) {
                 int start = body.getSpanStart(mergeSeparator);
                 int end = body.getSpanEnd(mergeSeparator);
                 body.setSpan(new DividerSpan(true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            boolean startsWithQuote = handleTextQuotes(body, darkBackground);
+            boolean startsWithQuote = handleTextQuotes(viewHolder.messageBody, body, bubbleColor);
             if (!message.isPrivateMessage()) {
                 if (hasMeCommand) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 0, nick.length(),
+                    body.setSpan(
+                            new StyleSpan(Typeface.BOLD_ITALIC),
+                            0,
+                            nick.length(),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             } else {
@@ -458,44 +501,72 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     privateMarker = activity.getString(R.string.private_message);
                 } else {
                     Jid cp = message.getCounterpart();
-                    privateMarker = activity.getString(R.string.private_message_to, Strings.nullToEmpty(cp == null ? null : cp.getResource()));
+                    privateMarker =
+                            activity.getString(
+                                    R.string.private_message_to,
+                                    Strings.nullToEmpty(cp == null ? null : cp.getResource()));
                 }
                 body.insert(0, privateMarker);
                 int privateMarkerIndex = privateMarker.length();
                 if (startsWithQuote) {
                     body.insert(privateMarkerIndex, "\n\n");
-                    body.setSpan(new DividerSpan(false), privateMarkerIndex, privateMarkerIndex + 2,
+                    body.setSpan(
+                            new DividerSpan(false),
+                            privateMarkerIndex,
+                            privateMarkerIndex + 2,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
                     body.insert(privateMarkerIndex, " ");
                 }
-                body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                body.setSpan(
+                        new ForegroundColorSpan(
+                                bubbleToOnSurfaceVariant(viewHolder.messageBody, bubbleColor)),
+                        0,
+                        privateMarkerIndex,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                body.setSpan(
+                        new StyleSpan(Typeface.BOLD),
+                        0,
+                        privateMarkerIndex,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if (hasMeCommand) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1,
-                            privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    body.setSpan(
+                            new StyleSpan(Typeface.BOLD_ITALIC),
+                            privateMarkerIndex + 1,
+                            privateMarkerIndex + 1 + nick.length(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
-            if (message.getConversation().getMode() == Conversation.MODE_MULTI && message.getStatus() == Message.STATUS_RECEIVED) {
-                if (message.getConversation() instanceof Conversation) {
-                    final Conversation conversation = (Conversation) message.getConversation();
-                    Pattern pattern = NotificationService.generateNickHighlightPattern(conversation.getMucOptions().getActualNick());
+            if (message.getConversation().getMode() == Conversation.MODE_MULTI
+                    && message.getStatus() == Message.STATUS_RECEIVED) {
+                if (message.getConversation() instanceof Conversation conversation) {
+                    Pattern pattern =
+                            NotificationService.generateNickHighlightPattern(
+                                    conversation.getMucOptions().getActualNick());
                     Matcher matcher = pattern.matcher(body);
                     while (matcher.find()) {
-                        body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        body.setSpan(
+                                new StyleSpan(Typeface.BOLD),
+                                matcher.start(),
+                                matcher.end(),
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             }
             Matcher matcher = Emoticons.getEmojiPattern(body).matcher(body);
             while (matcher.find()) {
                 if (matcher.start() < matcher.end()) {
-                    body.setSpan(new RelativeSizeSpan(1.2f), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    body.setSpan(
+                            new RelativeSizeSpan(1.2f),
+                            matcher.start(),
+                            matcher.end(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
 
             StylingHelper.format(body, viewHolder.messageBody.getCurrentTextColor());
             if (highlightedTerm != null) {
-                StylingHelper.highlight(activity, body, highlightedTerm, StylingHelper.isDarkText(viewHolder.messageBody));
+                StylingHelper.highlight(viewHolder.messageBody, body, highlightedTerm);
             }
             MyLinkify.addLinks(body, true);
             viewHolder.messageBody.setAutoLinkMask(0);
@@ -507,45 +578,66 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         }
     }
 
-    private void displayDownloadableMessage(ViewHolder viewHolder, final Message message, String text, final boolean darkBackground) {
-        toggleWhisperInfo(viewHolder, message, darkBackground);
+    private void displayDownloadableMessage(
+            ViewHolder viewHolder,
+            final Message message,
+            String text,
+            final BubbleColor bubbleColor) {
+        toggleWhisperInfo(viewHolder, message, bubbleColor);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(text);
-        viewHolder.download_button.setOnClickListener(v -> ConversationFragment.downloadFile(activity, message));
+        final var attachment = Attachment.of(message);
+        final @DrawableRes int imageResource = MediaAdapter.getImageDrawable(attachment);
+        viewHolder.download_button.setIconResource(imageResource);
+        viewHolder.download_button.setOnClickListener(
+                v -> ConversationFragment.downloadFile(activity, message));
     }
 
-    private void displayOpenableMessage(ViewHolder viewHolder, final Message message, final boolean darkBackground) {
-        toggleWhisperInfo(viewHolder, message, darkBackground);
+    private void displayOpenableMessage(
+            ViewHolder viewHolder, final Message message, final BubbleColor bubbleColor) {
+        toggleWhisperInfo(viewHolder, message, bubbleColor);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
-        viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
+        viewHolder.download_button.setText(
+                activity.getString(
+                        R.string.open_x_file,
+                        UIHelper.getFileDescriptionString(activity, message)));
+        final var attachment = Attachment.of(message);
+        final @DrawableRes int imageResource = MediaAdapter.getImageDrawable(attachment);
+        viewHolder.download_button.setIconResource(imageResource);
         viewHolder.download_button.setOnClickListener(v -> openDownloadable(message));
     }
 
-    private void displayLocationMessage(ViewHolder viewHolder, final Message message, final boolean darkBackground) {
-        toggleWhisperInfo(viewHolder, message, darkBackground);
+    private void displayLocationMessage(
+            ViewHolder viewHolder, final Message message, final BubbleColor bubbleColor) {
+        toggleWhisperInfo(viewHolder, message, bubbleColor);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(R.string.show_location);
+        final var attachment = Attachment.of(message);
+        final @DrawableRes int imageResource = MediaAdapter.getImageDrawable(attachment);
+        viewHolder.download_button.setIconResource(imageResource);
         viewHolder.download_button.setOnClickListener(v -> showLocation(message));
     }
 
-    private void displayAudioMessage(ViewHolder viewHolder, Message message, boolean darkBackground) {
-        toggleWhisperInfo(viewHolder, message, darkBackground);
+    private void displayAudioMessage(
+            ViewHolder viewHolder, Message message, final BubbleColor bubbleColor) {
+        toggleWhisperInfo(viewHolder, message, bubbleColor);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.GONE);
         final RelativeLayout audioPlayer = viewHolder.audioPlayer;
         audioPlayer.setVisibility(View.VISIBLE);
-        AudioPlayer.ViewHolder.get(audioPlayer).setDarkBackground(darkBackground);
+        AudioPlayer.ViewHolder.get(audioPlayer).setBubbleColor(bubbleColor);
         this.audioPlayer.init(audioPlayer, message);
     }
 
-    private void displayMediaPreviewMessage(ViewHolder viewHolder, final Message message, final boolean darkBackground) {
-        toggleWhisperInfo(viewHolder, message, darkBackground);
+    private void displayMediaPreviewMessage(
+            ViewHolder viewHolder, final Message message, final BubbleColor bubbleColor) {
+        toggleWhisperInfo(viewHolder, message, bubbleColor);
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.VISIBLE);
@@ -566,25 +658,39 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             scaledW = (int) target;
             scaledH = (int) (params.height / ((double) params.width / target));
         }
-        final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(scaledW, scaledH);
+        final LinearLayout.LayoutParams layoutParams =
+                new LinearLayout.LayoutParams(scaledW, scaledH);
         layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
         viewHolder.image.setLayoutParams(layoutParams);
         activity.loadBitmap(message, viewHolder.image);
         viewHolder.image.setOnClickListener(v -> openDownloadable(message));
     }
 
-    private void toggleWhisperInfo(ViewHolder viewHolder, final Message message, final boolean darkBackground) {
+    private void toggleWhisperInfo(
+            ViewHolder viewHolder, final Message message, final BubbleColor bubbleColor) {
         if (message.isPrivateMessage()) {
             final String privateMarker;
             if (message.getStatus() <= Message.STATUS_RECEIVED) {
                 privateMarker = activity.getString(R.string.private_message);
             } else {
                 Jid cp = message.getCounterpart();
-                privateMarker = activity.getString(R.string.private_message_to, Strings.nullToEmpty(cp == null ? null : cp.getResource()));
+                privateMarker =
+                        activity.getString(
+                                R.string.private_message_to,
+                                Strings.nullToEmpty(cp == null ? null : cp.getResource()));
             }
             final SpannableString body = new SpannableString(privateMarker);
-            body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            body.setSpan(
+                    new ForegroundColorSpan(
+                            bubbleToOnSurfaceVariant(viewHolder.messageBody, bubbleColor)),
+                    0,
+                    privateMarker.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            body.setSpan(
+                    new StyleSpan(Typeface.BOLD),
+                    0,
+                    privateMarker.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             viewHolder.messageBody.setText(body);
             viewHolder.messageBody.setVisibility(View.VISIBLE);
         } else {
@@ -602,19 +708,28 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             timestamp = System.currentTimeMillis();
         }
         conversation.messagesLoaded.set(true);
-        MessageArchiveService.Query query = activity.xmppConnectionService.getMessageArchiveService().query(conversation, new MamReference(0), timestamp, false);
+        MessageArchiveService.Query query =
+                activity.xmppConnectionService
+                        .getMessageArchiveService()
+                        .query(conversation, new MamReference(0), timestamp, false);
         if (query != null) {
-            Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG)
+                    .show();
         } else {
-            Toast.makeText(activity, R.string.not_fetching_history_retention_period, Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                            activity,
+                            R.string.not_fetching_history_retention_period,
+                            Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, final @NonNull ViewGroup parent) {
         final Message message = getItem(position);
         final boolean omemoEncryption = message.getEncryption() == Message.ENCRYPTION_AXOLOTL;
-        final boolean isInValidSession = message.isValidInSession() && (!omemoEncryption || message.isTrusted());
+        final boolean isInValidSession =
+                message.isValidInSession() && (!omemoEncryption || message.isTrusted());
         final Conversational conversation = message.getConversation();
         final Account account = conversation.getAccount();
         final int type = getItemViewType(position);
@@ -623,19 +738,24 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             viewHolder = new ViewHolder();
             switch (type) {
                 case DATE_SEPARATOR:
-                    view = activity.getLayoutInflater().inflate(R.layout.message_date_bubble, parent, false);
+                    view =
+                            activity.getLayoutInflater()
+                                    .inflate(R.layout.item_message_date_bubble, parent, false);
                     viewHolder.status_message = view.findViewById(R.id.message_body);
                     viewHolder.message_box = view.findViewById(R.id.message_box);
-                    viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     break;
                 case RTP_SESSION:
-                    view = activity.getLayoutInflater().inflate(R.layout.message_rtp_session, parent, false);
+                    view =
+                            activity.getLayoutInflater()
+                                    .inflate(R.layout.item_message_rtp_session, parent, false);
                     viewHolder.status_message = view.findViewById(R.id.message_body);
                     viewHolder.message_box = view.findViewById(R.id.message_box);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     break;
                 case SENT:
-                    view = activity.getLayoutInflater().inflate(R.layout.message_sent, parent, false);
+                    view =
+                            activity.getLayoutInflater()
+                                    .inflate(R.layout.item_message_sent, parent, false);
                     viewHolder.message_box = view.findViewById(R.id.message_box);
                     viewHolder.contact_picture = view.findViewById(R.id.message_photo);
                     viewHolder.download_button = view.findViewById(R.id.download_button);
@@ -648,7 +768,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
                     break;
                 case RECEIVED:
-                    view = activity.getLayoutInflater().inflate(R.layout.message_received, parent, false);
+                    view =
+                            activity.getLayoutInflater()
+                                    .inflate(R.layout.item_message_received, parent, false);
                     viewHolder.message_box = view.findViewById(R.id.message_box);
                     viewHolder.contact_picture = view.findViewById(R.id.message_photo);
                     viewHolder.download_button = view.findViewById(R.id.download_button);
@@ -662,7 +784,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
                     break;
                 case STATUS:
-                    view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
+                    view =
+                            activity.getLayoutInflater()
+                                    .inflate(R.layout.item_message_status, parent, false);
                     viewHolder.contact_picture = view.findViewById(R.id.message_photo);
                     viewHolder.status_message = view.findViewById(R.id.status_message);
                     viewHolder.load_more_messages = view.findViewById(R.id.load_more_messages);
@@ -678,7 +802,17 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             }
         }
 
-        boolean darkBackground = type == RECEIVED && (!isInValidSession || mUseGreenBackground) || activity.isDarkTheme();
+        final boolean colorfulBackground = this.bubbleDesign.colorfulChatBubbles;
+        final BubbleColor bubbleColor;
+        if (type == RECEIVED) {
+            if (isInValidSession) {
+                bubbleColor = colorfulBackground ? BubbleColor.SECONDARY : BubbleColor.SURFACE;
+            } else {
+                bubbleColor = BubbleColor.WARNING;
+            }
+        } else {
+            bubbleColor = colorfulBackground ? BubbleColor.TERTIARY : BubbleColor.SURFACE_HIGH;
+        }
 
         if (type == DATE_SEPARATOR) {
             if (UIHelper.today(message.getTimeSent())) {
@@ -686,40 +820,76 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             } else if (UIHelper.yesterday(message.getTimeSent())) {
                 viewHolder.status_message.setText(R.string.yesterday);
             } else {
-                viewHolder.status_message.setText(DateUtils.formatDateTime(activity, message.getTimeSent(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
+                viewHolder.status_message.setText(
+                        DateUtils.formatDateTime(
+                                activity,
+                                message.getTimeSent(),
+                                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
             }
-            viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.date_bubble_grey : R.drawable.date_bubble_white);
+            if (colorfulBackground) {
+                setBackgroundTint(viewHolder.message_box, BubbleColor.PRIMARY);
+                setTextColor(viewHolder.status_message, BubbleColor.PRIMARY);
+            } else {
+                setBackgroundTint(viewHolder.message_box, BubbleColor.SURFACE_HIGH);
+                setTextColor(viewHolder.status_message, BubbleColor.SURFACE_HIGH);
+            }
             return view;
         } else if (type == RTP_SESSION) {
-            final boolean isDarkTheme = activity.isDarkTheme();
             final boolean received = message.getStatus() <= Message.STATUS_RECEIVED;
             final RtpSessionStatus rtpSessionStatus = RtpSessionStatus.of(message.getBody());
             final long duration = rtpSessionStatus.duration;
             if (received) {
                 if (duration > 0) {
-                    viewHolder.status_message.setText(activity.getString(R.string.incoming_call_duration_timestamp, TimeFrameUtils.resolve(activity, duration), UIHelper.readableTimeDifferenceFull(activity, message.getTimeSent())));
+                    viewHolder.status_message.setText(
+                            activity.getString(
+                                    R.string.incoming_call_duration_timestamp,
+                                    TimeFrameUtils.resolve(activity, duration),
+                                    UIHelper.readableTimeDifferenceFull(
+                                            activity, message.getTimeSent())));
                 } else if (rtpSessionStatus.successful) {
                     viewHolder.status_message.setText(R.string.incoming_call);
                 } else {
-                    viewHolder.status_message.setText(activity.getString(R.string.missed_call_timestamp, UIHelper.readableTimeDifferenceFull(activity, message.getTimeSent())));
+                    viewHolder.status_message.setText(
+                            activity.getString(
+                                    R.string.missed_call_timestamp,
+                                    UIHelper.readableTimeDifferenceFull(
+                                            activity, message.getTimeSent())));
                 }
             } else {
                 if (duration > 0) {
-                    viewHolder.status_message.setText(activity.getString(R.string.outgoing_call_duration_timestamp, TimeFrameUtils.resolve(activity, duration), UIHelper.readableTimeDifferenceFull(activity, message.getTimeSent())));
+                    viewHolder.status_message.setText(
+                            activity.getString(
+                                    R.string.outgoing_call_duration_timestamp,
+                                    TimeFrameUtils.resolve(activity, duration),
+                                    UIHelper.readableTimeDifferenceFull(
+                                            activity, message.getTimeSent())));
                 } else {
-                    viewHolder.status_message.setText(activity.getString(R.string.outgoing_call_timestamp, UIHelper.readableTimeDifferenceFull(activity, message.getTimeSent())));
+                    viewHolder.status_message.setText(
+                            activity.getString(
+                                    R.string.outgoing_call_timestamp,
+                                    UIHelper.readableTimeDifferenceFull(
+                                            activity, message.getTimeSent())));
                 }
             }
-            viewHolder.indicatorReceived.setImageResource(RtpSessionStatus.getDrawable(received, rtpSessionStatus.successful, isDarkTheme));
-            viewHolder.indicatorReceived.setAlpha(isDarkTheme ? 0.7f : 0.57f);
-            viewHolder.message_box.setBackgroundResource(isDarkTheme ? R.drawable.date_bubble_grey : R.drawable.date_bubble_white);
+            if (colorfulBackground) {
+                setBackgroundTint(viewHolder.message_box, BubbleColor.SECONDARY);
+                setTextColor(viewHolder.status_message, BubbleColor.SECONDARY);
+                setImageTint(viewHolder.indicatorReceived, BubbleColor.SECONDARY);
+            } else {
+                setBackgroundTint(viewHolder.message_box, BubbleColor.SURFACE_HIGH);
+                setTextColor(viewHolder.status_message, BubbleColor.SURFACE_HIGH);
+                setImageTint(viewHolder.indicatorReceived, BubbleColor.SURFACE_HIGH);
+            }
+            viewHolder.indicatorReceived.setImageResource(
+                    RtpSessionStatus.getDrawable(received, rtpSessionStatus.successful));
             return view;
         } else if (type == STATUS) {
             if ("LOAD_MORE".equals(message.getBody())) {
                 viewHolder.status_message.setVisibility(View.GONE);
                 viewHolder.contact_picture.setVisibility(View.GONE);
                 viewHolder.load_more_messages.setVisibility(View.VISIBLE);
-                viewHolder.load_more_messages.setOnClickListener(v -> loadMoreMessages((Conversation) message.getConversation()));
+                viewHolder.load_more_messages.setOnClickListener(
+                        v -> loadMoreMessages((Conversation) message.getConversation()));
             } else {
                 viewHolder.status_message.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setVisibility(View.GONE);
@@ -727,10 +897,15 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 boolean showAvatar;
                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                     showAvatar = true;
-                    AvatarWorkerTask.loadAvatar(message, viewHolder.contact_picture, R.dimen.avatar_on_status_message);
-                } else if (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0)) {
+                    AvatarWorkerTask.loadAvatar(
+                            message, viewHolder.contact_picture, R.dimen.avatar_on_status_message);
+                } else if (message.getCounterpart() != null
+                        || message.getTrueCounterpart() != null
+                        || (message.getCounterparts() != null
+                                && message.getCounterparts().size() > 0)) {
                     showAvatar = true;
-                    AvatarWorkerTask.loadAvatar(message, viewHolder.contact_picture, R.dimen.avatar_on_status_message);
+                    AvatarWorkerTask.loadAvatar(
+                            message, viewHolder.contact_picture, R.dimen.avatar_on_status_message);
                 } else {
                     showAvatar = false;
                 }
@@ -748,107 +923,143 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         resetClickListener(viewHolder.message_box, viewHolder.messageBody);
 
-        viewHolder.contact_picture.setOnClickListener(v -> {
-            if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
-                MessageAdapter.this.mOnContactPictureClickedListener
-                        .onContactPictureClicked(message);
-            }
-
-        });
-        viewHolder.contact_picture.setOnLongClickListener(v -> {
-            if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
-                MessageAdapter.this.mOnContactPictureLongClickedListener
-                        .onContactPictureLongClicked(v, message);
-                return true;
-            } else {
-                return false;
-            }
-        });
+        viewHolder.contact_picture.setOnClickListener(
+                v -> {
+                    if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
+                        MessageAdapter.this.mOnContactPictureClickedListener
+                                .onContactPictureClicked(message);
+                    }
+                });
+        viewHolder.contact_picture.setOnLongClickListener(
+                v -> {
+                    if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
+                        MessageAdapter.this.mOnContactPictureLongClickedListener
+                                .onContactPictureLongClicked(v, message);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
 
         final Transferable transferable = message.getTransferable();
         final boolean unInitiatedButKnownSize = MessageUtils.unInitiatedButKnownSize(message);
-        if (unInitiatedButKnownSize || message.isDeleted() || (transferable != null && transferable.getStatus() != Transferable.STATUS_UPLOADING)) {
-            if (unInitiatedButKnownSize || transferable != null && transferable.getStatus() == Transferable.STATUS_OFFER) {
-                displayDownloadableMessage(viewHolder, message, activity.getString(R.string.download_x_file, UIHelper.getFileDescriptionString(activity, message)), darkBackground);
-            } else if (transferable != null && transferable.getStatus() == Transferable.STATUS_OFFER_CHECK_FILESIZE) {
-                displayDownloadableMessage(viewHolder, message, activity.getString(R.string.check_x_filesize, UIHelper.getFileDescriptionString(activity, message)), darkBackground);
+        if (unInitiatedButKnownSize
+                || message.isDeleted()
+                || (transferable != null
+                        && transferable.getStatus() != Transferable.STATUS_UPLOADING)) {
+            if (unInitiatedButKnownSize
+                    || transferable != null
+                            && transferable.getStatus() == Transferable.STATUS_OFFER) {
+                displayDownloadableMessage(
+                        viewHolder,
+                        message,
+                        activity.getString(
+                                R.string.download_x_file,
+                                UIHelper.getFileDescriptionString(activity, message)),
+                        bubbleColor);
+            } else if (transferable != null
+                    && transferable.getStatus() == Transferable.STATUS_OFFER_CHECK_FILESIZE) {
+                displayDownloadableMessage(
+                        viewHolder,
+                        message,
+                        activity.getString(
+                                R.string.check_x_filesize,
+                                UIHelper.getFileDescriptionString(activity, message)),
+                        bubbleColor);
             } else {
-                displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground);
+                displayInfoMessage(
+                        viewHolder,
+                        UIHelper.getMessagePreview(activity, message).first,
+                        bubbleColor);
             }
-        } else if (message.isFileOrImage() && message.getEncryption() != Message.ENCRYPTION_PGP && message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED) {
+        } else if (message.isFileOrImage()
+                && message.getEncryption() != Message.ENCRYPTION_PGP
+                && message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED) {
             if (message.getFileParams().width > 0 && message.getFileParams().height > 0) {
-                displayMediaPreviewMessage(viewHolder, message, darkBackground);
+                displayMediaPreviewMessage(viewHolder, message, bubbleColor);
             } else if (message.getFileParams().runtime > 0) {
-                displayAudioMessage(viewHolder, message, darkBackground);
+                displayAudioMessage(viewHolder, message, bubbleColor);
             } else {
-                displayOpenableMessage(viewHolder, message, darkBackground);
+                displayOpenableMessage(viewHolder, message, bubbleColor);
             }
         } else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
             if (account.isPgpDecryptionServiceConnected()) {
-                if (conversation instanceof Conversation && !account.hasPendingPgpIntent((Conversation) conversation)) {
-                    displayInfoMessage(viewHolder, activity.getString(R.string.message_decrypting), darkBackground);
+                if (conversation instanceof Conversation
+                        && !account.hasPendingPgpIntent((Conversation) conversation)) {
+                    displayInfoMessage(
+                            viewHolder,
+                            activity.getString(R.string.message_decrypting),
+                            bubbleColor);
                 } else {
-                    displayInfoMessage(viewHolder, activity.getString(R.string.pgp_message), darkBackground);
+                    displayInfoMessage(
+                            viewHolder, activity.getString(R.string.pgp_message), bubbleColor);
                 }
             } else {
-                displayInfoMessage(viewHolder, activity.getString(R.string.install_openkeychain), darkBackground);
+                displayInfoMessage(
+                        viewHolder, activity.getString(R.string.install_openkeychain), bubbleColor);
                 viewHolder.message_box.setOnClickListener(this::promptOpenKeychainInstall);
                 viewHolder.messageBody.setOnClickListener(this::promptOpenKeychainInstall);
             }
         } else if (message.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
-            displayInfoMessage(viewHolder, activity.getString(R.string.decryption_failed), darkBackground);
+            displayInfoMessage(
+                    viewHolder, activity.getString(R.string.decryption_failed), bubbleColor);
         } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE) {
-            displayInfoMessage(viewHolder, activity.getString(R.string.not_encrypted_for_this_device), darkBackground);
+            displayInfoMessage(
+                    viewHolder,
+                    activity.getString(R.string.not_encrypted_for_this_device),
+                    bubbleColor);
         } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_FAILED) {
-            displayInfoMessage(viewHolder, activity.getString(R.string.omemo_decryption_failed), darkBackground);
+            displayInfoMessage(
+                    viewHolder, activity.getString(R.string.omemo_decryption_failed), bubbleColor);
         } else {
             if (message.isGeoUri()) {
-                displayLocationMessage(viewHolder, message, darkBackground);
+                displayLocationMessage(viewHolder, message, bubbleColor);
             } else if (message.bodyIsOnlyEmojis() && message.getType() != Message.TYPE_PRIVATE) {
-                displayEmojiMessage(viewHolder, message.getBody().trim(), darkBackground);
+                displayEmojiMessage(viewHolder, message.getBody().trim(), bubbleColor);
             } else if (message.treatAsDownloadable()) {
                 try {
                     final URI uri = new URI(message.getBody());
-                    displayDownloadableMessage(viewHolder,
+                    displayDownloadableMessage(
+                            viewHolder,
                             message,
-                            activity.getString(R.string.check_x_filesize_on_host,
+                            activity.getString(
+                                    R.string.check_x_filesize_on_host,
                                     UIHelper.getFileDescriptionString(activity, message),
                                     uri.getHost()),
-                            darkBackground);
+                            bubbleColor);
                 } catch (Exception e) {
-                    displayDownloadableMessage(viewHolder,
+                    displayDownloadableMessage(
+                            viewHolder,
                             message,
-                            activity.getString(R.string.check_x_filesize,
+                            activity.getString(
+                                    R.string.check_x_filesize,
                                     UIHelper.getFileDescriptionString(activity, message)),
-                            darkBackground);
+                            bubbleColor);
                 }
             } else {
-                displayTextMessage(viewHolder, message, darkBackground, type);
+                displayTextMessage(viewHolder, message, bubbleColor);
             }
         }
 
+        setBackgroundTint(viewHolder.message_box, bubbleColor);
+        setTextColor(viewHolder.messageBody, bubbleColor);
+
         if (type == RECEIVED) {
+            setTextColor(viewHolder.encryption, bubbleColor);
             if (isInValidSession) {
-                int bubble;
-                if (!mUseGreenBackground) {
-                    bubble = activity.getThemeResource(R.attr.message_bubble_received_monochrome, R.drawable.message_bubble_received_white);
-                } else {
-                    bubble = activity.getThemeResource(R.attr.message_bubble_received_green, R.drawable.message_bubble_received);
-                }
-                viewHolder.message_box.setBackgroundResource(bubble);
                 viewHolder.encryption.setVisibility(View.GONE);
             } else {
-                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 if (omemoEncryption && !message.isTrusted()) {
                     viewHolder.encryption.setText(R.string.not_trusted);
                 } else {
-                    viewHolder.encryption.setText(CryptoHelper.encryptionTypeToText(message.getEncryption()));
+                    viewHolder.encryption.setText(
+                            CryptoHelper.encryptionTypeToText(message.getEncryption()));
                 }
             }
         }
 
-        displayStatus(viewHolder, message, type, darkBackground);
+        displayStatus(viewHolder, message, type, bubbleColor);
 
         return view;
     }
@@ -874,12 +1085,19 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     }
 
     public void openDownloadable(Message message) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(
+                                activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
             ConversationFragment.registerPendingMessage(activity, message);
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationsActivity.REQUEST_OPEN_MESSAGE);
+            ActivityCompat.requestPermissions(
+                    activity,
+                    new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    ConversationsActivity.REQUEST_OPEN_MESSAGE);
             return;
         }
-        final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
+        final DownloadableFile file =
+                activity.xmppConnectionService.getFileBackend().getFile(message);
         ViewUtil.view(activity, file);
     }
 
@@ -890,14 +1108,18 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 return;
             }
         }
-        Toast.makeText(activity, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                        activity,
+                        R.string.no_application_found_to_display_location,
+                        Toast.LENGTH_SHORT)
+                .show();
     }
 
     public void updatePreferences() {
-        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
-        this.mUseGreenBackground = p.getBoolean("use_green_background", activity.getResources().getBoolean(R.bool.use_green_background));
+        final AppSettings appSettings = new AppSettings(activity);
+        this.bubbleDesign =
+                new BubbleDesign(appSettings.isColorfulChatBubbles(), appSettings.isLargeFont());
     }
-
 
     public void setHighlightedTerm(List<String> terms) {
         this.highlightedTerm = terms == null ? null : StylingHelper.filterHighlightedWords(terms);
@@ -911,13 +1133,112 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         void onContactPictureLongClicked(View v, Message message);
     }
 
+    private static void setBackgroundTint(final View view, final BubbleColor bubbleColor) {
+        view.setBackgroundTintList(bubbleToColorStateList(view, bubbleColor));
+    }
+
+    private static ColorStateList bubbleToColorStateList(
+            final View view, final BubbleColor bubbleColor) {
+        final @AttrRes int colorAttributeResId =
+                switch (bubbleColor) {
+                    case SURFACE -> Activities.isNightMode(view.getContext())
+                            ? com.google.android.material.R.attr.colorSurfaceContainerHigh
+                            : com.google.android.material.R.attr.colorSurfaceContainerLow;
+                    case SURFACE_HIGH -> Activities.isNightMode(view.getContext())
+                            ? com.google.android.material.R.attr.colorSurfaceContainerHighest
+                            : com.google.android.material.R.attr.colorSurfaceContainerHigh;
+                    case PRIMARY -> com.google.android.material.R.attr.colorPrimaryContainer;
+                    case SECONDARY -> com.google.android.material.R.attr.colorSecondaryContainer;
+                    case TERTIARY -> com.google.android.material.R.attr.colorTertiaryContainer;
+                    case WARNING -> com.google.android.material.R.attr.colorErrorContainer;
+                };
+        return ColorStateList.valueOf(MaterialColors.getColor(view, colorAttributeResId));
+    }
+
+    public static void setImageTint(final ImageView imageView, final BubbleColor bubbleColor) {
+        ImageViewCompat.setImageTintList(
+                imageView, bubbleToOnSurfaceColorStateList(imageView, bubbleColor));
+    }
+
+    public static void setImageTintError(final ImageView imageView) {
+        ImageViewCompat.setImageTintList(
+                imageView,
+                ColorStateList.valueOf(
+                        MaterialColors.getColor(
+                                imageView, com.google.android.material.R.attr.colorError)));
+    }
+
+    public static void setTextColor(final TextView textView, final BubbleColor bubbleColor) {
+        textView.setTextColor(bubbleToOnSurfaceColor(textView, bubbleColor));
+    }
+
+    private static void setTextSize(final TextView textView, final boolean largeFont) {
+        if (largeFont) {
+            textView.setTextAppearance(
+                    com.google.android.material.R.style.TextAppearance_Material3_BodyLarge);
+        } else {
+            textView.setTextAppearance(
+                    com.google.android.material.R.style.TextAppearance_Material3_BodyMedium);
+        }
+    }
+
+    private static @ColorInt int bubbleToOnSurfaceVariant(
+            final View view, final BubbleColor bubbleColor) {
+        final @AttrRes int colorAttributeResId;
+        if (bubbleColor == BubbleColor.SURFACE_HIGH || bubbleColor == BubbleColor.SURFACE) {
+            colorAttributeResId = com.google.android.material.R.attr.colorOnSurfaceVariant;
+        } else {
+            colorAttributeResId = bubbleToOnSurface(bubbleColor);
+        }
+        return MaterialColors.getColor(view, colorAttributeResId);
+    }
+
+    private static @ColorInt int bubbleToOnSurfaceColor(
+            final View view, final BubbleColor bubbleColor) {
+        return MaterialColors.getColor(view, bubbleToOnSurface(bubbleColor));
+    }
+
+    public static ColorStateList bubbleToOnSurfaceColorStateList(
+            final View view, final BubbleColor bubbleColor) {
+        return ColorStateList.valueOf(bubbleToOnSurfaceColor(view, bubbleColor));
+    }
+
+    private static @AttrRes int bubbleToOnSurface(final BubbleColor bubbleColor) {
+        return switch (bubbleColor) {
+            case SURFACE, SURFACE_HIGH -> com.google.android.material.R.attr.colorOnSurface;
+            case PRIMARY -> com.google.android.material.R.attr.colorOnPrimaryContainer;
+            case SECONDARY -> com.google.android.material.R.attr.colorOnSecondaryContainer;
+            case TERTIARY -> com.google.android.material.R.attr.colorOnTertiaryContainer;
+            case WARNING -> com.google.android.material.R.attr.colorOnErrorContainer;
+        };
+    }
+
+    public enum BubbleColor {
+        SURFACE,
+        SURFACE_HIGH,
+        PRIMARY,
+        SECONDARY,
+        TERTIARY,
+        WARNING
+    }
+
+    private static class BubbleDesign {
+        public final boolean colorfulChatBubbles;
+        public final boolean largeFont;
+
+        private BubbleDesign(final boolean colorfulChatBubbles, final boolean largeFont) {
+            this.colorfulChatBubbles = colorfulChatBubbles;
+            this.largeFont = largeFont;
+        }
+    }
+
     private static class ViewHolder {
 
-        public Button load_more_messages;
+        public MaterialButton load_more_messages;
         public ImageView edit_indicator;
         public RelativeLayout audioPlayer;
         protected LinearLayout message_box;
-        protected Button download_button;
+        protected MaterialButton download_button;
         protected ImageView image;
         protected ImageView indicator;
         protected ImageView indicatorReceived;

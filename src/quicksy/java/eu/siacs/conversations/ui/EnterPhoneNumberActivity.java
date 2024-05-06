@@ -2,9 +2,10 @@ package eu.siacs.conversations.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -13,8 +14,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -80,7 +79,7 @@ public class EnterPhoneNumberActivity extends XmppActivity implements QuickConve
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
         xmppConnectionService.getQuickConversationsService().addOnVerificationRequestedListener(this);
         final Account account = AccountUtils.getFirst(xmppConnectionService);
         if (account != null) {
@@ -104,7 +103,8 @@ public class EnterPhoneNumberActivity extends XmppActivity implements QuickConve
         this.binding.countryCode.setCompoundDrawables(new TextDrawable(this.binding.countryCode, "+"), null, null, null);
         this.binding.country.setOnClickListener(this::onSelectCountryClick);
         this.binding.next.setOnClickListener(this::onNextClick);
-        setSupportActionBar((Toolbar) this.binding.toolbar);
+        Activities.setStatusAndNavigationBarColors(this, binding.getRoot());
+        setSupportActionBar(this.binding.toolbar);
         this.binding.countryCode.addTextChangedListener(this.countryCodeTextWatcher);
         this.binding.countryCode.setText(String.valueOf(PhoneNumberUtilWrapper.getInstance(this).getCountryCodeForRegion(this.region)));
         this.binding.number.setOnKeyListener((v, keyCode, event) -> {
@@ -128,7 +128,7 @@ public class EnterPhoneNumberActivity extends XmppActivity implements QuickConve
     }
 
     @Override
-    public void onSaveInstanceState(@NotNull Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         if (this.region != null) {
             savedInstanceState.putString("region", this.region);
         }

@@ -2329,6 +2329,7 @@ public class JingleRtpConnection extends AbstractJingleConnection
     private void acceptCallFromProposed() {
         transitionOrThrow(State.PROCEED);
         xmppConnectionService.getNotificationService().cancelIncomingCallNotification();
+        this.callIntegration.startAudioRouting();
         this.sendJingleMessage("accept", id.account.getJid().asBareJid());
         this.sendJingleMessage("proceed");
     }
@@ -2397,6 +2398,7 @@ public class JingleRtpConnection extends AbstractJingleConnection
 
     private void acceptCallFromSessionInitialized() {
         xmppConnectionService.getNotificationService().cancelIncomingCallNotification();
+        this.callIntegration.startAudioRouting();
         sendSessionAccept();
     }
 
@@ -2804,7 +2806,7 @@ public class JingleRtpConnection extends AbstractJingleConnection
                     request,
                     (account, response) -> {
                         final var iceServers = IceServers.parse(response);
-                        if (iceServers.size() == 0) {
+                        if (iceServers.isEmpty()) {
                             Log.w(
                                     Config.LOGTAG,
                                     id.account.getJid().asBareJid()

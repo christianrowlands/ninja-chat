@@ -128,6 +128,12 @@ public class CallIntegrationConnectionService extends ConnectionService {
                 final var proposal =
                         service.getJingleConnectionManager()
                                 .proposeJingleRtpSession(account, with, media);
+                if (proposal == null) {
+                    // TODO instead of just null checking try to get the sessionID
+                    return Connection.createFailedConnection(
+                            new DisconnectCause(
+                                    DisconnectCause.ERROR, "a call is already in progress"));
+                }
                 intent.putExtra(
                         RtpSessionActivity.EXTRA_LAST_REPORTED_STATE,
                         RtpEndUserState.FINDING_DEVICE.toString());
@@ -357,6 +363,7 @@ public class CallIntegrationConnectionService extends ConnectionService {
             try {
                 service.getSystemService(TelecomManager.class).placeCall(address, extras);
             } catch (final SecurityException e) {
+                Log.e(Config.LOGTAG, "call integration not available", e);
                 Toast.makeText(service, R.string.call_integration_not_available, Toast.LENGTH_LONG)
                         .show();
             }
@@ -366,7 +373,10 @@ public class CallIntegrationConnectionService extends ConnectionService {
                 Log.d(
                         Config.LOGTAG,
                         "not adding outgoing call to TelecomManager on Android "
-                                + Build.VERSION.RELEASE);
+                                + Build.VERSION.RELEASE
+                                + " ("
+                                + Build.DEVICE
+                                + ")");
             }
         }
     }
@@ -377,7 +387,10 @@ public class CallIntegrationConnectionService extends ConnectionService {
             Log.d(
                     Config.LOGTAG,
                     "not adding incoming call to TelecomManager on Android "
-                            + Build.VERSION.RELEASE);
+                            + Build.VERSION.RELEASE
+                            + " ("
+                            + Build.DEVICE
+                            + ")");
             return true;
         }
         final var phoneAccountHandle =

@@ -4,6 +4,8 @@ import android.telecom.VideoProfile;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -646,6 +648,18 @@ public class JingleConnectionManager extends AbstractConnectionManager {
         return Optional.absent();
     }
 
+    public JingleRtpConnection getOngoingRtpConnection() {
+        for(final AbstractJingleConnection jingleConnection : this.connections.values()) {
+            if (jingleConnection instanceof JingleRtpConnection jingleRtpConnection) {
+                if (jingleRtpConnection.isTerminated()) {
+                    continue;
+                }
+                return jingleRtpConnection;
+            }
+        }
+        return null;
+    }
+
     void finishConnectionOrThrow(final AbstractJingleConnection connection) {
         final AbstractJingleConnection.Id id = connection.getId();
         if (this.connections.remove(id) == null) {
@@ -722,12 +736,13 @@ public class JingleConnectionManager extends AbstractConnectionManager {
         final JingleRtpConnection rtpConnection =
                 new JingleRtpConnection(this, id, account.getJid());
         rtpConnection.setProposedMedia(media);
+        rtpConnection.getCallIntegration().startAudioRouting();
         this.connections.put(id, rtpConnection);
         rtpConnection.sendSessionInitiate();
         return rtpConnection;
     }
 
-    public RtpSessionProposal proposeJingleRtpSession(
+    public @Nullable RtpSessionProposal proposeJingleRtpSession(
             final Account account, final Jid with, final Set<Media> media) {
         synchronized (this.rtpSessionProposals) {
             for (final Map.Entry<RtpSessionProposal, DeviceDiscoveryState> entry :
@@ -762,6 +777,7 @@ public class JingleConnectionManager extends AbstractConnectionManager {
                             ? VideoProfile.STATE_AUDIO_ONLY
                             : VideoProfile.STATE_BIDIRECTIONAL);
             callIntegration.setInitialAudioDevice(CallIntegration.initialAudioDevice(media));
+            callIntegration.startAudioRouting();
             final RtpSessionProposal proposal =
                     RtpSessionProposal.of(account, with.asBareJid(), media, callIntegration);
             callIntegration.setCallback(new ProposalStateCallback(proposal));

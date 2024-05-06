@@ -1,34 +1,36 @@
 package eu.siacs.conversations.ui.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.core.widget.ImageViewCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
-
-import java.util.List;
 
 import eu.siacs.conversations.R;
-import eu.siacs.conversations.databinding.ConversationListRowBinding;
+import eu.siacs.conversations.databinding.ItemConversationBinding;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.ui.ConversationFragment;
 import eu.siacs.conversations.ui.XmppActivity;
+import eu.siacs.conversations.ui.util.Attachment;
 import eu.siacs.conversations.ui.util.AvatarWorkerTask;
-import eu.siacs.conversations.ui.util.StyledAttributes;
 import eu.siacs.conversations.utils.IrregularUnicodeDetector;
-import eu.siacs.conversations.utils.MimeUtils;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
+
+import java.util.List;
 
 public class ConversationAdapter
         extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
@@ -48,7 +50,7 @@ public class ConversationAdapter
         return new ConversationViewHolder(
                 DataBindingUtil.inflate(
                         LayoutInflater.from(parent.getContext()),
-                        R.layout.conversation_list_row,
+                        R.layout.item_conversation,
                         parent,
                         false));
     }
@@ -68,16 +70,50 @@ public class ConversationAdapter
         }
 
         if (conversation == ConversationFragment.getConversation(activity)) {
-            viewHolder.binding.frame.setBackgroundColor(
-                    StyledAttributes.getColor(activity, R.attr.color_background_tertiary));
+            viewHolder.binding.frame.setBackgroundResource(
+                    R.drawable.background_selected_item_conversation);
+            // viewHolder.binding.frame.setBackgroundColor(MaterialColors.getColor(viewHolder.binding.frame, com.google.android.material.R.attr.colorSurfaceDim));
         } else {
             viewHolder.binding.frame.setBackgroundColor(
-                    StyledAttributes.getColor(activity, R.attr.color_background_primary));
+                    MaterialColors.getColor(
+                            viewHolder.binding.frame,
+                            com.google.android.material.R.attr.colorSurface));
         }
 
-        Message message = conversation.getLatestMessage();
+        final Message message = conversation.getLatestMessage();
+        final int status = message.getStatus();
         final int unreadCount = conversation.unreadCount();
         final boolean isRead = conversation.isRead();
+        final @DrawableRes Integer messageStatusDrawable =
+                MessageAdapter.getMessageStatusAsDrawable(message, status);
+        if (message.getType() == Message.TYPE_RTP_SESSION) {
+            viewHolder.binding.messageStatus.setVisibility(View.GONE);
+        } else if (messageStatusDrawable == null) {
+            if (status <= Message.STATUS_RECEIVED) {
+                viewHolder.binding.messageStatus.setVisibility(View.GONE);
+            } else {
+                viewHolder.binding.messageStatus.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            viewHolder.binding.messageStatus.setImageResource(messageStatusDrawable);
+            if (status == Message.STATUS_SEND_DISPLAYED) {
+                viewHolder.binding.messageStatus.setImageResource(R.drawable.ic_done_all_bold_24dp);
+                ImageViewCompat.setImageTintList(
+                        viewHolder.binding.messageStatus,
+                        ColorStateList.valueOf(
+                                MaterialColors.getColor(
+                                        viewHolder.binding.messageStatus,
+                                        com.google.android.material.R.attr.colorPrimary)));
+            } else {
+                ImageViewCompat.setImageTintList(
+                        viewHolder.binding.messageStatus,
+                        ColorStateList.valueOf(
+                                MaterialColors.getColor(
+                                        viewHolder.binding.messageStatus,
+                                        com.google.android.material.R.attr.colorControlNormal)));
+            }
+            viewHolder.binding.messageStatus.setVisibility(View.VISIBLE);
+        }
         final Conversation.Draft draft = isRead ? conversation.getDraft() : null;
         if (unreadCount > 0) {
             viewHolder.binding.unreadCount.setVisibility(View.VISIBLE);
@@ -106,68 +142,9 @@ public class ConversationAdapter
                     && (message.isFileOrImage()
                             || message.treatAsDownloadable()
                             || message.isGeoUri())) {
-                final int imageResource;
-                if (message.isGeoUri()) {
-                    imageResource =
-                            activity.getThemeResource(
-                                    R.attr.ic_attach_location, R.drawable.ic_attach_location);
-                    showPreviewText = false;
-                } else {
-                    // TODO move this into static MediaPreview method and use same icons as in
-                    // MediaAdapter
-                    final String mime = message.getMimeType();
-                    if (MimeUtils.AMBIGUOUS_CONTAINER_FORMATS.contains(mime)) {
-                        final Message.FileParams fileParams = message.getFileParams();
-                        if (fileParams.width > 0 && fileParams.height > 0) {
-                            imageResource =
-                                    activity.getThemeResource(
-                                            R.attr.ic_attach_videocam,
-                                            R.drawable.ic_attach_videocam);
-                            showPreviewText = false;
-                        } else if (fileParams.runtime > 0) {
-                            imageResource =
-                                    activity.getThemeResource(
-                                            R.attr.ic_attach_record, R.drawable.ic_attach_record);
-                            showPreviewText = false;
-                        } else {
-                            imageResource =
-                                    activity.getThemeResource(
-                                            R.attr.ic_attach_document,
-                                            R.drawable.ic_attach_document);
-                            showPreviewText = true;
-                        }
-                    } else {
-                        switch (Strings.nullToEmpty(mime).split("/")[0]) {
-                            case "image":
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_photo, R.drawable.ic_attach_photo);
-                                showPreviewText = false;
-                                break;
-                            case "video":
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_videocam,
-                                                R.drawable.ic_attach_videocam);
-                                showPreviewText = false;
-                                break;
-                            case "audio":
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_record,
-                                                R.drawable.ic_attach_record);
-                                showPreviewText = false;
-                                break;
-                            default:
-                                imageResource =
-                                        activity.getThemeResource(
-                                                R.attr.ic_attach_document,
-                                                R.drawable.ic_attach_document);
-                                showPreviewText = true;
-                                break;
-                        }
-                    }
-                }
+                final var attachment = Attachment.of(message);
+                final @DrawableRes int imageResource = MediaAdapter.getImageDrawable(attachment);
+                showPreviewText = false;
                 viewHolder.binding.conversationLastmsgImg.setImageResource(imageResource);
                 viewHolder.binding.conversationLastmsgImg.setVisibility(View.VISIBLE);
             } else {
@@ -203,7 +180,7 @@ public class ConversationAdapter
                     viewHolder.binding.senderName.setTypeface(null, Typeface.BOLD);
                 }
             }
-            if (message.getStatus() == Message.STATUS_RECEIVED) {
+            if (status == Message.STATUS_RECEIVED) {
                 if (conversation.getMode() == Conversation.MODE_MULTI) {
                     viewHolder.binding.senderName.setVisibility(View.VISIBLE);
                     viewHolder.binding.senderName.setText(
@@ -231,36 +208,25 @@ public class ConversationAdapter
 
         if (ongoingCall.isPresent()) {
             viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
-            final int ic_ongoing_call =
-                    activity.getThemeResource(
-                            R.attr.ic_ongoing_call_hint, R.drawable.ic_phone_in_talk_black_18dp);
-            viewHolder.binding.notificationStatus.setImageResource(ic_ongoing_call);
+            viewHolder.binding.notificationStatus.setImageResource(
+                    R.drawable.ic_phone_in_talk_24dp);
         } else {
             final long muted_till =
                     conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
             if (muted_till == Long.MAX_VALUE) {
                 viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
-                int ic_notifications_off =
-                        activity.getThemeResource(
-                                R.attr.icon_notifications_off,
-                                R.drawable.ic_notifications_off_black_24dp);
-                viewHolder.binding.notificationStatus.setImageResource(ic_notifications_off);
+                viewHolder.binding.notificationStatus.setImageResource(
+                        R.drawable.ic_notifications_off_24dp);
             } else if (muted_till >= System.currentTimeMillis()) {
                 viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
-                int ic_notifications_paused =
-                        activity.getThemeResource(
-                                R.attr.icon_notifications_paused,
-                                R.drawable.ic_notifications_paused_black_24dp);
-                viewHolder.binding.notificationStatus.setImageResource(ic_notifications_paused);
+                viewHolder.binding.notificationStatus.setImageResource(
+                        R.drawable.ic_notifications_paused_24dp);
             } else if (conversation.alwaysNotify()) {
                 viewHolder.binding.notificationStatus.setVisibility(View.GONE);
             } else {
                 viewHolder.binding.notificationStatus.setVisibility(View.VISIBLE);
-                int ic_notifications_none =
-                        activity.getThemeResource(
-                                R.attr.icon_notifications_none,
-                                R.drawable.ic_notifications_none_black_24dp);
-                viewHolder.binding.notificationStatus.setImageResource(ic_notifications_none);
+                viewHolder.binding.notificationStatus.setImageResource(
+                        R.drawable.ic_notifications_none_24dp);
             }
         }
 
@@ -307,9 +273,9 @@ public class ConversationAdapter
     }
 
     static class ConversationViewHolder extends RecyclerView.ViewHolder {
-        private final ConversationListRowBinding binding;
+        private final ItemConversationBinding binding;
 
-        private ConversationViewHolder(ConversationListRowBinding binding) {
+        private ConversationViewHolder(final ItemConversationBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -188,12 +189,7 @@ public class ImportBackupService extends Service {
                         }
                     }
                     Collections.sort(
-                            backupFiles,
-                            (a, b) ->
-                                    a.header
-                                            .getJid()
-                                            .toString()
-                                            .compareTo(b.header.getJid().toString()));
+                            backupFiles, Comparator.comparing(a -> a.header.getJid().toString()));
                     onBackupFilesLoaded.onBackupFilesLoaded(backupFiles);
                 });
     }
@@ -225,7 +221,7 @@ public class ImportBackupService extends Service {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getBaseContext(), "backup");
         mBuilder.setContentTitle(getString(R.string.restoring_backup))
-                .setSmallIcon(R.drawable.ic_unarchive_white_24dp)
+                .setSmallIcon(R.drawable.ic_unarchive_24dp)
                 .setProgress(max, progress, max == 1 && progress == 0);
         return mBuilder.build();
     }
@@ -415,7 +411,7 @@ public class ImportBackupService extends Service {
                                         ? PendingIntent.FLAG_IMMUTABLE
                                                 | PendingIntent.FLAG_UPDATE_CURRENT
                                         : PendingIntent.FLAG_UPDATE_CURRENT))
-                .setSmallIcon(R.drawable.ic_unarchive_white_24dp);
+                .setSmallIcon(R.drawable.ic_unarchive_24dp);
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 

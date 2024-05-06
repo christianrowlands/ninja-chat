@@ -9,28 +9,35 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
+import eu.siacs.conversations.databinding.ItemMediaPreviewBinding;
+import eu.siacs.conversations.persistance.FileBackend;
+import eu.siacs.conversations.ui.ConversationFragment;
+import eu.siacs.conversations.ui.ShowLocationActivity;
+import eu.siacs.conversations.ui.XmppActivity;
+import eu.siacs.conversations.ui.util.Attachment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.RejectedExecutionException;
 
-import eu.siacs.conversations.R;
-import eu.siacs.conversations.databinding.MediaPreviewBinding;
-import eu.siacs.conversations.persistance.FileBackend;
-import eu.siacs.conversations.ui.ConversationFragment;
-import eu.siacs.conversations.ui.XmppActivity;
-import eu.siacs.conversations.ui.util.Attachment;
-
-public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder> {
+public class MediaPreviewAdapter
+        extends RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder> {
 
     private final ArrayList<Attachment> mediaPreviews = new ArrayList<>();
 
@@ -43,8 +50,9 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
     @NonNull
     @Override
     public MediaPreviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        MediaPreviewBinding binding = DataBindingUtil.inflate(layoutInflater, R.layout.media_preview, parent, false);
+        final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ItemMediaPreviewBinding binding =
+                DataBindingUtil.inflate(layoutInflater, R.layout.item_media_preview, parent, false);
         return new MediaPreviewViewHolder(binding);
     }
 
@@ -53,32 +61,43 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
         final Context context = conversationFragment.getActivity();
         final Attachment attachment = mediaPreviews.get(position);
         if (attachment.renderThumbnail()) {
-            holder.binding.mediaPreview.setImageAlpha(255);
+            ImageViewCompat.setImageTintList(holder.binding.mediaPreview, null);
             loadPreview(attachment, holder.binding.mediaPreview);
         } else {
             cancelPotentialWork(attachment, holder.binding.mediaPreview);
-            MediaAdapter.renderPreview(context, attachment, holder.binding.mediaPreview);
+            MediaAdapter.renderPreview(attachment, holder.binding.mediaPreview);
         }
-        holder.binding.deleteButton.setOnClickListener(v -> {
-            final int pos = mediaPreviews.indexOf(attachment);
-            mediaPreviews.remove(pos);
-            notifyItemRemoved(pos);
-            conversationFragment.toggleInputMethod();
-        });
+        holder.binding.deleteButton.setOnClickListener(
+                v -> {
+                    final int pos = mediaPreviews.indexOf(attachment);
+                    mediaPreviews.remove(pos);
+                    notifyItemRemoved(pos);
+                    conversationFragment.toggleInputMethod();
+                });
         holder.binding.mediaPreview.setOnClickListener(v -> view(context, attachment));
     }
 
-    private static void view(final Context context, Attachment attachment) {
+    private static void view(final Context context, final Attachment attachment) {
         final Intent view = new Intent(Intent.ACTION_VIEW);
-        final Uri uri = FileBackend.getUriForUri(context, attachment.getUri());
-        view.setDataAndType(uri, attachment.getMime());
-        view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (attachment.getType() == Attachment.Type.LOCATION) {
+            view.setClass(context, ShowLocationActivity.class);
+            view.setData(attachment.getUri());
+        } else {
+            final Uri uri = FileBackend.getUriForUri(context, attachment.getUri());
+            view.setDataAndType(uri, attachment.getMime());
+            view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
         try {
             context.startActivity(view);
         } catch (final ActivityNotFoundException e) {
-            Toast.makeText(context, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT)
+                    .show();
         } catch (final SecurityException e) {
-            Toast.makeText(context, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                            context,
+                            R.string.sharing_application_not_grant_permission,
+                            Toast.LENGTH_SHORT)
+                    .show();
         }
     }
 
@@ -90,16 +109,27 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
     private void loadPreview(Attachment attachment, ImageView imageView) {
         if (cancelPotentialWork(attachment, imageView)) {
             XmppActivity activity = (XmppActivity) conversationFragment.getActivity();
-            final Bitmap bm = activity.xmppConnectionService.getFileBackend().getPreviewForUri(attachment,Math.round(activity.getResources().getDimension(R.dimen.media_preview_size)),true);
+            final Bitmap bm =
+                    activity.xmppConnectionService
+                            .getFileBackend()
+                            .getPreviewForUri(
+                                    attachment,
+                                    Math.round(
+                                            activity.getResources()
+                                                    .getDimension(R.dimen.media_preview_size)),
+                                    true);
             if (bm != null) {
                 cancelPotentialWork(attachment, imageView);
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(0x00000000);
             } else {
-                imageView.setBackgroundColor(0xff333333);
+                imageView.setBackgroundColor(
+                        ContextCompat.getColor(imageView.getContext(), R.color.gray_800));
                 imageView.setImageDrawable(null);
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(conversationFragment.getActivity().getResources(), null, task);
+                final AsyncDrawable asyncDrawable =
+                        new AsyncDrawable(
+                                conversationFragment.getActivity().getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {
                     task.execute(attachment);
@@ -126,8 +156,7 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
     private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
         if (imageView != null) {
             final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+            if (drawable instanceof AsyncDrawable asyncDrawable) {
                 return asyncDrawable.getBitmapWorkerTask();
             }
         }
@@ -140,7 +169,7 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
     }
 
     public boolean hasAttachments() {
-        return mediaPreviews.size() > 0;
+        return !mediaPreviews.isEmpty();
     }
 
     public ArrayList<Attachment> getAttachments() {
@@ -153,9 +182,9 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
 
     static class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
-        private final MediaPreviewBinding binding;
+        private final ItemMediaPreviewBinding binding;
 
-        MediaPreviewViewHolder(MediaPreviewBinding binding) {
+        MediaPreviewViewHolder(ItemMediaPreviewBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -189,7 +218,14 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
             if (activity == null) {
                 return null;
             }
-            return activity.xmppConnectionService.getFileBackend().getPreviewForUri(this.attachment, Math.round(activity.getResources().getDimension(R.dimen.media_preview_size)), false);
+            return activity.xmppConnectionService
+                    .getFileBackend()
+                    .getPreviewForUri(
+                            this.attachment,
+                            Math.round(
+                                    activity.getResources()
+                                            .getDimension(R.dimen.media_preview_size)),
+                            false);
         }
 
         @Override
