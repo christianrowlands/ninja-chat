@@ -660,8 +660,6 @@
     <string name="message_copied_to_clipboard">Đã chép tin nhắn vào clipboard</string>
     <string name="message">Tin nhắn</string>
     <string name="private_messages_are_disabled">Tin nhắn riêng tư bị tắt</string>
-    <string name="huawei_protected_apps">Ứng dụng được bảo vệ</string>
-    <string name="huawei_protected_apps_summary">Để tiếp tục nhận các thông báo, kể cả khi màn hình đã tắt, bạn cần thêm Conversations vào danh sách các ứng dụng được bảo vệ.</string>
     <string name="mtm_accept_cert">Chấp nhận chứng chỉ không xác định?</string>
     <string name="mtm_trust_anchor">Chứng chỉ máy chủ này không được một người có quyền chứng chỉ đã biết ký.</string>
     <string name="mtm_accept_servername">Chấp nhận tên máy chủ không khớp?</string>
@@ -957,7 +955,6 @@
     <string name="pref_up_push_server_title">Máy chủ đẩy</string>
     <string name="no_account_deactivated">Không tồn tại (đã vô hiệu hóa)</string>
     <string name="decline">Từ chối</string>
-    <string name="save_as_group_chat">Lưu thành nhóm trò chuyện</string>
     <string name="conference_technical_problems">Bạn đã rời khỏi nhóm trò chuyện này vì lý do kỹ thuật</string>
     <string name="verifying_omemo_keys_trusted_source_account">Bạn chuẩn bị xác minh các khoá OMEMO cho tài khoản của chính bạn. Việc làm này chỉ an toàn nếu bạn đã đến liên kết này từ một nguồn đáng tin tưởng, chỉ có bạn mới có thể cho ra liên kết này trước đó.</string>
     <string name="continue_btn">Tiếp tục</string>

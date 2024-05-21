@@ -129,6 +129,7 @@ import eu.siacs.conversations.parser.PresenceParser;
 import eu.siacs.conversations.persistance.DatabaseBackend;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.persistance.UnifiedPushDatabase;
+import eu.siacs.conversations.receiver.SystemEventReceiver;
 import eu.siacs.conversations.ui.ChooseAccountForProfilePictureActivity;
 import eu.siacs.conversations.ui.ConversationsActivity;
 import eu.siacs.conversations.ui.RtpSessionActivity;
@@ -679,7 +680,7 @@ public class XmppConnectionService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         final String action = Strings.nullToEmpty(intent == null ? null : intent.getAction());
-        final boolean needsForegroundService = intent != null && intent.getBooleanExtra(EventReceiver.EXTRA_NEEDS_FOREGROUND_SERVICE, false);
+        final boolean needsForegroundService = intent != null && intent.getBooleanExtra(SystemEventReceiver.EXTRA_NEEDS_FOREGROUND_SERVICE, false);
         if (needsForegroundService) {
             Log.d(Config.LOGTAG, "toggle forced foreground service after receiving event (action=" + action + ")");
             toggleForegroundService(true);
@@ -1261,13 +1262,11 @@ public class XmppConnectionService extends Service {
         toggleForegroundService();
         this.destroyed = false;
         OmemoSetting.load(this);
-        ExceptionHelper.init(getApplicationContext());
         try {
             Security.insertProviderAt(Conscrypt.newProvider(), 1);
         } catch (Throwable throwable) {
             Log.e(Config.LOGTAG, "unable to initialize security provider", throwable);
         }
-        Resolver.init(this);
         updateMemorizingTrustManager();
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         final int cacheSize = maxMemory / 8;
@@ -1287,7 +1286,7 @@ public class XmppConnectionService extends Service {
         this.accounts = databaseBackend.getAccounts();
         final SharedPreferences.Editor editor = getPreferences().edit();
         final boolean hasEnabledAccounts = hasEnabledAccounts();
-        editor.putBoolean(EventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts).apply();
+        editor.putBoolean(SystemEventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts).apply();
         editor.apply();
         toggleSetProfilePictureActivity(hasEnabledAccounts);
 //        reconfigurePushDistributor();
@@ -1583,7 +1582,7 @@ public class XmppConnectionService extends Service {
             return;
         }
         final long triggerAtMillis = SystemClock.elapsedRealtime() + (Config.POST_CONNECTIVITY_CHANGE_PING_INTERVAL * 1000);
-        final Intent intent = new Intent(this, EventReceiver.class);
+        final Intent intent = new Intent(this, SystemEventReceiver.class);
         intent.setAction(ACTION_POST_CONNECTIVITY_CHANGE);
         try {
             final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, s()
@@ -1605,7 +1604,7 @@ public class XmppConnectionService extends Service {
         if (alarmManager == null) {
             return;
         }
-        final Intent intent = new Intent(this, EventReceiver.class);
+        final Intent intent = new Intent(this, SystemEventReceiver.class);
         intent.setAction(ACTION_PING);
         try {
             final PendingIntent pendingIntent =
@@ -1624,7 +1623,7 @@ public class XmppConnectionService extends Service {
         if (alarmManager == null) {
             return;
         }
-        final Intent intent = new Intent(this, EventReceiver.class);
+        final Intent intent = new Intent(this, SystemEventReceiver.class);
         intent.setAction(ACTION_IDLE_PING);
         try {
             final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, s()
@@ -2018,20 +2017,32 @@ public class XmppConnectionService extends Service {
             processModifiedBookmark(bookmark, pep);
         }
         if (pep) {
-            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": " + previousBookmarks.size() + " bookmarks have been removed");
-            for (Jid jid : previousBookmarks) {
-                processDeletedBookmark(account, jid);
-            }
+            processDeletedBookmarks(account, previousBookmarks);
         }
         account.setBookmarks(bookmarks);
     }
 
-    public void processDeletedBookmark(Account account, Jid jid) {
-        final Conversation conversation = find(account, jid);
-        if (conversation != null && conversation.getMucOptions().getError() == MucOptions.Error.DESTROYED) {
-            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": archiving destroyed conference (" + conversation.getJid() + ") after receiving pep");
-            archiveConversation(conversation, false);
+    public void processDeletedBookmarks(final Account account, final Collection<Jid> bookmarks) {
+        Log.d(
+                Config.LOGTAG,
+                account.getJid().asBareJid()
+                        + ": "
+                        + bookmarks.size()
+                        + " bookmarks have been removed");
+        for (final Jid bookmark : bookmarks) {
+            processDeletedBookmark(account, bookmark);
         }
+    }
+
+    public void processDeletedBookmark(final Account account, final Jid jid) {
+        final Conversation conversation = find(account, jid);
+        if (conversation == null) {
+            return;
+        }
+        Log.d(
+                Config.LOGTAG,
+                account.getJid().asBareJid() + ": archiving MUC " + jid + " after PEP update");
+        archiveConversation(conversation, false);
     }
 
     private void processModifiedBookmark(final Bookmark bookmark, final boolean pep) {
@@ -2574,7 +2585,7 @@ public class XmppConnectionService extends Service {
 
     private void syncEnabledAccountSetting() {
         final boolean hasEnabledAccounts = hasEnabledAccounts();
-        getPreferences().edit().putBoolean(EventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts).apply();
+        getPreferences().edit().putBoolean(SystemEventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts).apply();
         toggleSetProfilePictureActivity(hasEnabledAccounts);
     }
 
@@ -2752,7 +2763,9 @@ public class XmppConnectionService extends Service {
             };
             mDatabaseWriterExecutor.execute(runnable);
             this.accounts.remove(account);
-            CallIntegrationConnectionService.unregisterPhoneAccount(this, account);
+            if (CallIntegration.hasSystemFeature(this)) {
+                CallIntegrationConnectionService.unregisterPhoneAccount(this, account);
+            }
             this.mRosterSyncTaskManager.clear(account);
             updateAccountUi();
             mNotificationService.updateErrorNotification();
@@ -3650,7 +3663,7 @@ public class XmppConnectionService extends Service {
                     Element configuration = pubsub == null ? null : pubsub.findChild("configure");
                     Element x = configuration == null ? null : configuration.findChild("x", Namespace.DATA);
                     if (x != null) {
-                        Data data = Data.parse(x);
+                        final Data data = Data.parse(x);
                         data.submit(options);
                         sendIqPacket(account, mIqGenerator.publishPubsubConfiguration(jid, node, data), new OnIqPacketReceived() {
                             @Override
@@ -3682,6 +3695,12 @@ public class XmppConnectionService extends Service {
             final boolean moderated = "1".equals(options.getString("muc#roomconfig_moderatedroom"));
             options.putString("members_by_default", moderated ? "0" : "1");
         }
+        if (options.containsKey("muc#roomconfig_allowpm")) {
+            // ejabberd :-/
+            final boolean allow = "anyone".equals(options.getString("muc#roomconfig_allowpm"));
+            options.putString("allow_private_messages", allow ? "1" : "0");
+            options.putString("allow_private_messages_from_visitors", allow ? "anyone" : "nobody");
+        }
         final IqPacket request = new IqPacket(IqPacket.TYPE.GET);
         request.setTo(conversation.getJid().asBareJid());
         request.query("http://jabber.org/protocol/muc#owner");
@@ -3701,6 +3720,7 @@ public class XmppConnectionService extends Service {
                                 if (packet.getType() == IqPacket.TYPE.RESULT) {
                                     callback.onPushSucceeded();
                                 } else {
+                                    Log.d(Config.LOGTAG,"failed: "+packet.toString());
                                     callback.onPushFailed();
                                 }
                             }

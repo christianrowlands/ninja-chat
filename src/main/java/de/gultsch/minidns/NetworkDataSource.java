@@ -11,12 +11,14 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.collect.ImmutableList;
 
-import de.measite.minidns.DNSMessage;
-import de.measite.minidns.MiniDNSException;
-import de.measite.minidns.source.DNSDataSource;
-import de.measite.minidns.util.MultipleIoException;
-
 import eu.siacs.conversations.Config;
+
+import org.minidns.MiniDnsException;
+import org.minidns.dnsmessage.DnsMessage;
+import org.minidns.dnsname.InvalidDnsNameException;
+import org.minidns.dnsqueryresult.DnsQueryResult;
+import org.minidns.dnsqueryresult.StandardDnsQueryResult;
+import org.minidns.util.MultipleIoException;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -28,7 +30,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class NetworkDataSource extends DNSDataSource {
+public class NetworkDataSource extends org.minidns.source.NetworkDataSource {
 
     private static final LoadingCache<DNSServer, DNSSocket> socketCache =
             CacheBuilder.newBuilder()
@@ -66,7 +68,8 @@ public class NetworkDataSource extends DNSDataSource {
     }
 
     @Override
-    public DNSMessage query(final DNSMessage message, final InetAddress address, final int port)
+    public StandardDnsQueryResult query(
+            final DnsMessage message, final InetAddress address, final int port)
             throws IOException {
         final List<Transport> transports = transportsForPort(port);
         Log.w(
@@ -80,16 +83,21 @@ public class NetworkDataSource extends DNSDataSource {
         return query(message, new DNSServer(address, port, transports));
     }
 
-    public DNSMessage query(final DNSMessage message, final DNSServer dnsServer)
+    public StandardDnsQueryResult query(final DnsMessage message, final DNSServer dnsServer)
             throws IOException {
         Log.d(Config.LOGTAG, "using " + dnsServer);
         final List<IOException> ioExceptions = new ArrayList<>();
         for (final Transport transport : dnsServer.transports) {
             try {
-                final DNSMessage response =
+                final DnsMessage response =
                         queryWithUniqueTransport(message, dnsServer.asUniqueTransport(transport));
                 if (response != null && !response.truncated) {
-                    return response;
+                    return new StandardDnsQueryResult(
+                            dnsServer.inetAddress,
+                            dnsServer.port,
+                            transportToMethod(transport),
+                            message,
+                            response);
                 }
             } catch (final IOException e) {
                 ioExceptions.add(e);
@@ -101,23 +109,26 @@ public class NetworkDataSource extends DNSDataSource {
         return null;
     }
 
-    private DNSMessage queryWithUniqueTransport(final DNSMessage message, final DNSServer dnsServer)
-            throws IOException, InterruptedException {
-        final Transport transport = dnsServer.uniqueTransport();
-        switch (transport) {
-            case UDP:
-                return queryUdp(message, dnsServer.inetAddress, dnsServer.port);
-            case TCP:
-            case TLS:
-                return queryDnsSocket(message, dnsServer);
-            default:
-                throw new IOException(
-                        String.format("Transport %s has not been implemented", transport));
-        }
+    private static DnsQueryResult.QueryMethod transportToMethod(final Transport transport) {
+        return switch (transport) {
+            case UDP -> DnsQueryResult.QueryMethod.udp;
+            default -> DnsQueryResult.QueryMethod.tcp;
+        };
     }
 
-    protected DNSMessage queryUdp(
-            final DNSMessage message, final InetAddress address, final int port)
+    private DnsMessage queryWithUniqueTransport(final DnsMessage message, final DNSServer dnsServer)
+            throws IOException, InterruptedException {
+        final Transport transport = dnsServer.uniqueTransport();
+        return switch (transport) {
+            case UDP -> queryUdp(message, dnsServer.inetAddress, dnsServer.port);
+            case TCP, TLS -> queryDnsSocket(message, dnsServer);
+            default -> throw new IOException(
+                    String.format("Transport %s has not been implemented", transport));
+        };
+    }
+
+    protected DnsMessage queryUdp(
+            final DnsMessage message, final InetAddress address, final int port)
             throws IOException {
         final DatagramPacket request = message.asDatagram(address, port);
         final byte[] buffer = new byte[udpPayloadSize];
@@ -126,15 +137,15 @@ public class NetworkDataSource extends DNSDataSource {
             socket.send(request);
             final DatagramPacket response = new DatagramPacket(buffer, buffer.length);
             socket.receive(response);
-            final DNSMessage dnsMessage = readDNSMessage(response.getData());
+            final DnsMessage dnsMessage = readDNSMessage(response.getData());
             if (dnsMessage.id != message.id) {
-                throw new MiniDNSException.IdMismatch(message, dnsMessage);
+                throw new MiniDnsException.IdMismatch(message, dnsMessage);
             }
             return dnsMessage;
         }
     }
 
-    protected DNSMessage queryDnsSocket(final DNSMessage message, final DNSServer dnsServer)
+    protected DnsMessage queryDnsSocket(final DnsMessage message, final DNSServer dnsServer)
             throws IOException, InterruptedException {
         final DNSSocket cachedDnsSocket = socketCache.getIfPresent(dnsServer);
         if (cachedDnsSocket != null) {
@@ -159,10 +170,10 @@ public class NetworkDataSource extends DNSDataSource {
         }
     }
 
-    public static DNSMessage readDNSMessage(final byte[] bytes) throws IOException {
+    public static DnsMessage readDNSMessage(final byte[] bytes) throws IOException {
         try {
-            return new DNSMessage(bytes);
-        } catch (final IllegalArgumentException e) {
+            return new DnsMessage(bytes);
+        } catch (final InvalidDnsNameException | IllegalArgumentException e) {
             throw new IOException(Throwables.getRootCause(e));
         }
     }
