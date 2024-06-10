@@ -2516,10 +2516,10 @@ public class XmppConnectionService extends Service {
 //    public Optional<UnifiedPushBroker.Transport> renewUnifiedPushEndpoints() {
 //        return this.unifiedPushBroker.renewUnifiedPushEndpoints(null);
 //    }
-
-    public UnifiedPushBroker getUnifiedPushBroker() {
-        return this.unifiedPushBroker;
-    }
+//
+//    public UnifiedPushBroker getUnifiedPushBroker() {
+//        return this.unifiedPushBroker;
+//    }
 
     private void provisionAccount(final String address, final String password) {
         final Jid jid = Jid.ofEscaped(address);

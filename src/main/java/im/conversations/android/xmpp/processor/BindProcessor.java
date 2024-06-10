@@ -84,7 +84,7 @@ public class BindProcessor implements Runnable {
         service.connectMultiModeConversations(account);
         service.syncDirtyContacts(account);
 
-        service.getUnifiedPushBroker().renewUnifiedPushEndpointsOnBind(account);
+        //service.getUnifiedPushBroker().renewUnifiedPushEndpointsOnBind(account);
 
     }
 }
