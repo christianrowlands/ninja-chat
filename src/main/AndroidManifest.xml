@@ -158,10 +158,6 @@
         </service>
 
         <receiver
-            android:name=".receiver.WorkManagerEventReceiver"
-            android:exported="false" />
-
-        <receiver
             android:name=".receiver.SystemEventReceiver"
             android:exported="false">
             <intent-filter>

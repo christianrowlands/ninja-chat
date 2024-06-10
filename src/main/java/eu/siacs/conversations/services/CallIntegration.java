@@ -42,8 +42,12 @@ public class CallIntegration extends Connection {
      *
      * <p>Samsung Galaxy Tab A claims to have FEATURE_CONNECTION_SERVICE but then throws
      * SecurityException when invoking placeCall(). Both Stock and LineageOS have this problem.
+     *
+     * <p>Lenovo Yoga Smart Tab YT-X705F claims to have FEATURE_CONNECTION_SERVICE but throws
+     * SecurityException
      */
-    private static final List<String> BROKEN_DEVICE_MODELS = Arrays.asList("OnePlus6", "gtaxlwifi");
+    private static final List<String> BROKEN_DEVICE_MODELS =
+            Arrays.asList("OnePlus6", "gtaxlwifi", "YT-X705F");
 
     public static final int DEFAULT_TONE_VOLUME = 60;
     private static final int DEFAULT_MEDIA_PLAYER_VOLUME = 90;
@@ -524,6 +528,12 @@ public class CallIntegration extends Connection {
         }
         // all Realme devices at least up to and including Android 11 are broken
         if ("realme".equalsIgnoreCase(Build.MANUFACTURER)
+                && Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            return false;
+        }
+        // we are relatively sure that old Oppo devices are broken too. We get reports of 'number
+        // not sent' from Oppo R15x (Android 10)
+        if ("OPPO".equalsIgnoreCase(Build.MANUFACTURER)
                 && Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
             return false;
         }
