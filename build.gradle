@@ -8,8 +8,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:8.3.2'
 
-        classpath 'com.google.gms:google-services:4.4.1'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
 }
 
@@ -95,7 +95,7 @@ dependencies {
     implementation 'im.conversations.webrtc:webrtc-android:119.0.1'
 
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:32.7.4')
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
 }
