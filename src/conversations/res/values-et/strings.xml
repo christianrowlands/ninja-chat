@@ -10,7 +10,7 @@
 \nKui valid serveriks %1$s, siis jagades oma XMPP-aadressi saad suhelda kõikide teiste XMPP kasutajatega.</string>
     <string name="magic_create_text_fixed">Sa oled saanud kutse kasutama serverit %1$s. Kasutajanimi on juba sulle valitud. Järgnevaga aitame sind kasutajakonto loomise kõikides sammudes.
 \nJagades oma XMPP-aadressi saad suhelda kõikide teiste XMPP kasutajatega kõikides teistes serverites.</string>
-    <string name="use_conversations.im">Kasuta conversations.im teenust</string>
+    <string name="use_ninja.chat">Kasuta conversations.im teenust</string>
     <string name="your_server_invitation">Sinu kutse serveri kasutajaks</string>
     <string name="improperly_formatted_provisioning">Vigaselt vormindatud eeltäidetud kutse kood</string>
     <string name="tap_share_button_send_invite">Klõpsi „Jaga“ nuppu ja saada oma kontaktile kutse kasutamaks serverit %1$s.</string>

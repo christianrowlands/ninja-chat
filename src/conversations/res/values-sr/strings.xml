@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Одабери свог XMPP провајдера</string>
-    <string name="use_conversations.im">Одабери ninja.chat</string>
+    <string name="use_ninja.chat">Одабери ninja.chat</string>
     <string name="create_new_account">Направи нови налог</string>
     <string name="do_you_have_an_account">Да ли већ имаш XMPP налог? Могуће је да имаш ако већ користиш неки други XMPP клијент или ако си раније користио/ла Ninja Chat. Ако немаш, можеш сада да направиш нови XMPP налог.
 \nУспут: поједини имејл провајдери пружају и XMPP налоге.</string>
