@@ -123,7 +123,6 @@ public final class Config {
     public static final boolean USE_DIRECT_JINGLE_CANDIDATES = true;
     public static final boolean USE_JINGLE_MESSAGE_INIT = true;
 
-    public static final boolean JINGLE_MESSAGE_INIT_STRICT_OFFLINE_CHECK = false;
     public static final boolean DISABLE_HTTP_UPLOAD = false;
     public static final boolean EXTENDED_SM_LOGGING = false; // log stanza counts
     public static final boolean BACKGROUND_STANZA_LOGGING =
@@ -137,6 +136,9 @@ public final class Config {
             false; // use x509 certificates to verify OMEMO keys
     public static final boolean REQUIRE_RTP_VERIFICATION =
             false; // require a/v calls to be verified with OMEMO
+    public static final boolean JINGLE_MESSAGE_INIT_STRICT_OFFLINE_CHECK = false;
+    public static final boolean JINGLE_MESSAGE_INIT_STRICT_DEVICE_TIMEOUT = false;
+    public static final long DEVICE_DISCOVERY_TIMEOUT = 6000; // in milliseconds
 
     public static final boolean ONLY_INTERNAL_STORAGE =
             true; // use internal storage instead of sdcard to save attachments

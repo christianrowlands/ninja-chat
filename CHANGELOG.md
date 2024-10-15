@@ -1,5 +1,13 @@
 # Changelog
 
+### Version 2.17.0
+
+* Support Message Reactions
+
+### Version 2.16.7
+
+* Add timeout to call initiation
+
 ### Version 2.16.6
 
 * Offer higher automatic file accept values
