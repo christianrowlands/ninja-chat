@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="16dp"
-                        android:text="@string/server_select_text"
+                        android:text="@string/server_select_text_ninja_chat"
                         android:textAppearance="?textAppearanceBodyMedium" />
 
                     <Button
@@ -65,6 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
+                        android:visibility="gone"
                         android:text="@string/use_ninja.chat" />
 
                     <Button
