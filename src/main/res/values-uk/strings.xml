@@ -455,7 +455,7 @@
     <string name="download_failed_could_not_write_file">Завантаження не вдалося: неможливо записати файл</string>
     <string name="account_status_tor_unavailable">Мережа Tor недоступна</string>
     <string name="account_status_bind_failure">Прив\'язка не спрацювала</string>
-    <string name="account_status_host_unknown">Сервер не відповідає за цей домен</string>
+    <string name="account_status_host_unknown">Не несе відповідальності за домен</string>
     <string name="server_info_broken">Поламано</string>
     <string name="pref_presence_settings">Доступність</string>
     <string name="pref_treat_vibrate_as_silent">Вважати вібро за безшумний режим</string>
@@ -760,12 +760,12 @@
     <string name="phone_number">номер телефону</string>
     <string name="verify_your_phone_number">Перевірте номер телефону</string>
     <string name="enter_country_code_and_phone_number">Quicksy надішле SMS, щоб перевірити Ваш номер телефону. Тарифами Вашого оператора може бути передбачено плату за отримання SMS. Зазначте код Вашої країни та номер телефону:</string>
-    <string name="we_will_be_verifying">Ми перевіримо номер телефону<br/><br/><b>%s</b><br/><br/>Гаразд чи бажаєте вказати інший номер\?</string>
+    <string name="we_will_be_verifying"><![CDATA[Ми перевіримо номер телефону<br/><br/><b>%s</b><br/><br/>Гаразд чи бажаєте вказати інший номер?]]></string>
     <string name="not_a_valid_phone_number">%s не є дійсним номером телефону.</string>
     <string name="please_enter_your_phone_number">Будь ласка, введіть свій номер телефону.</string>
     <string name="search_countries">Шукати країну</string>
     <string name="verify_x">Перевірити %s</string>
-    <string name="we_have_sent_you_an_sms_to_x">SMS надіслано на <b>%s</b>.</string>
+    <string name="we_have_sent_you_an_sms_to_x"><![CDATA[SMS надіслано на <b>%s</b>.]]></string>
     <string name="we_have_sent_you_another_sms">Ми надіслали Вам SMS із 6-цифровим кодом.</string>
     <string name="please_enter_pin_below">Будь ласка, введіть нижче 6 цифр коду.</string>
     <string name="resend_sms">Надіслати нове SMS</string>
@@ -793,7 +793,7 @@
     <string name="try_again_in_x">Будь ласка, спробуйте ще раз через %s</string>
     <string name="rate_limited">Ви обмежені за рейтингом</string>
     <string name="too_many_attempts">Забагато спроб</string>
-    <string name="the_app_is_out_of_date">Версія Вашого застосунку застаріла.</string>
+    <string name="the_app_is_out_of_date">Ви користуєтеся застарілою версією застосунку.</string>
     <string name="update">Оновити</string>
     <string name="logged_in_with_another_device">Зараз цей номер телефону авторизований на іншому пристрої.</string>
     <string name="enter_your_name_instructions">Будь ласка, вкажіть своє ім\'я, щоб надати можливість людям, які не мають Вашого контакту, дізнатися, хто Ви є.</string>
@@ -883,7 +883,7 @@
     <string name="answer_call">Відповісти</string>
     <string name="dismiss_call">Відхилити</string>
     <string name="rtp_state_finding_device">Пошук пристроїв</string>
-    <string name="rtp_state_ringing">Викликаю</string>
+    <string name="rtp_state_ringing">Виклик</string>
     <string name="rtp_state_declined_or_busy">Зайнято</string>
     <string name="rtp_state_connectivity_error">Неможливо здійснити виклик</string>
     <string name="rtp_state_connectivity_lost_error">З\'єднання втрачено</string>
@@ -952,7 +952,7 @@
     <string name="add_contact_or_create_or_join_group_chat">Додати контакт, створити чи приєднатися до групи або знайти канали</string>
     <string name="pref_up_push_account_title">Обліковий запис XMPP</string>
     <string name="outgoing_call_timestamp">Вихідний виклик · %s</string>
-    <string name="openkeychain_required_long">%1$s використовує &lt;b&gt;OpenKeychain&lt;/b&gt; для шифрування/дешифрування повідомлень і керування публічними ключами.&lt;br&gt;&lt;br&gt;OpenKeychain поширюється на умовах ліцензії GPLv3+ і доступний для завантаження на F-Droid та Google Play.&lt;br&gt;&lt;br&gt;&lt;small&gt;(Після встановлення необхідно перезапустити %1$s.)&lt;/small&gt;</string>
+    <string name="openkeychain_required_long"><![CDATA[%1$s використовує <b>OpenKeychain</b> для шифрування/дешифрування повідомлень і керування публічними ключами.<br><br>OpenKeychain поширюється на умовах ліцензії GPLv3+ і доступний для завантаження на F-Droid та Google Play.<br><br><small>(Після встановлення необхідно перезапустити %1$s.)</small>]]></string>
     <string name="more_options">Додатково</string>
     <string name="unable_to_enable_video">Не вдалося увімкнути відео.</string>
     <string name="no_active_accounts_support_this">Жоден з активних облікових записів не підтримує цієї функції</string>
@@ -1067,7 +1067,7 @@
     <string name="pref_dynamic_colors">Динамічні кольори</string>
     <string name="pref_dynamic_colors_summary">Системні кольори (Material You)</string>
     <string name="pref_use_colorful_bubbles_summary">Різні кольори фону для надісланих та отриманих повідомлень</string>
-    <string name="pref_use_colorful_bubbles">Кольорові бульбашки в розмовах</string>
+    <string name="pref_use_colorful_bubbles">Кольорові бульбашки повідомлень</string>
     <string name="title_activity_new_chat">Нова розмова</string>
     <string name="action_archive_chat">Архівувати розмову</string>
     <string name="archive_this_chat">Після цього видалити розмову</string>
@@ -1141,4 +1141,22 @@
     <string name="add_reaction">Додати реакцію…</string>
     <string name="more_reactions">Більше реакцій</string>
     <string name="add_reaction_title">Додати реакцію</string>
+    <string name="could_not_modify_call">Не вдалося змінити виклик</string>
+    <string name="clients_may_not_support_av">Можливо, клієнт XMPP Вашого контакту не підтримує аудіо- та відеовиклики.</string>
+    <string name="pref_show_avatars">Показувати аватари</string>
+    <string name="pref_chat_bubbles">Бульбашки повідомлень</string>
+    <string name="pref_chat_bubbles_summary">Колір фону, розмір шрифту, аватари</string>
+    <string name="pref_title_bubbles">Вигляд повідомлень</string>
+    <string name="pref_show_avatars_summary">Крім групових чатів, показувати аватари також у Ваших повідомленнях і приватних чатах.</string>
+    <string name="pref_call_integration">Інтеграція викликів</string>
+    <string name="pref_call_integration_summary">Виклики з цього застосунку взаємодіють зі звичайними телефонними дзвінками — наприклад, завершення одного дзвінка, коли починається інший.</string>
+    <string name="pref_align_start">Вирівнювання повідомлень ліворуч</string>
+    <string name="pref_align_start_summary">Вирівнювати всі повідомлення, включно з надісланими, по лівому краю для одноманітного вигляду розмов.</string>
+    <string name="custom_notifications_enable">Увімкнути індивідуальні налаштування сповіщень (важливість, звук, вібрація) для цієї розмови?</string>
+    <string name="custom_notifications">Індивідуальні сповіщення</string>
+    <string name="show_to_contacts_only">Показувати лише контактам</string>
+    <string name="delete_avatar_message">Бажаєте видалити свій аватар? Деякі клієнти можуть продовжувати відображати копію Вашого аватара з кешу.</string>
+    <string name="account_status_connection_timeout">Час очікування з\'єднання вичерпано</string>
+    <string name="retry_with_p2p">Повторити спробу з P2P</string>
+    <string name="account_status_channel_binding">Прив\'язка каналу недоступна</string>
 </resources>
