@@ -44,6 +44,11 @@ spotless {
     }
 }
 
+configurations.configureEach {
+    exclude group: 'com.google.android.gms', module : 'play-services-ads'
+    exclude group: 'com.google.android.gms', module : 'play-services-ads-identifier'
+    exclude group: 'com.google.android.gms', module : 'play-services-ads-lite'
+}
 
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
