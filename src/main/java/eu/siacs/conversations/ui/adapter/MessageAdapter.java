@@ -43,6 +43,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import de.gultsch.common.Linkify;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -70,10 +71,10 @@ import eu.siacs.conversations.ui.ConversationsActivity;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.ui.service.AudioPlayer;
 import eu.siacs.conversations.ui.text.DividerSpan;
+import eu.siacs.conversations.ui.text.FixedURLSpan;
 import eu.siacs.conversations.ui.text.QuoteSpan;
 import eu.siacs.conversations.ui.util.Attachment;
 import eu.siacs.conversations.ui.util.AvatarWorkerTask;
-import eu.siacs.conversations.ui.util.MyLinkify;
 import eu.siacs.conversations.ui.util.QuoteHelper;
 import eu.siacs.conversations.ui.util.ViewUtil;
 import eu.siacs.conversations.ui.widget.ClickableMovementMethod;
@@ -108,7 +109,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     private final DisplayMetrics metrics;
     private OnContactPictureClicked mOnContactPictureClickedListener;
     private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
-    private BubbleDesign bubbleDesign = new BubbleDesign(false, false, false, true);
+    private BubbleDesign bubbleDesign = new BubbleDesign(false, false, false, true, true);
     private final boolean mForceNames;
 
     public MessageAdapter(
@@ -236,8 +237,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     .time()
                     .setTextColor(
                             MaterialColors.getColor(
-                                    viewHolder.time(),
-                                    com.google.android.material.R.attr.colorError));
+                                    viewHolder.time(), androidx.appcompat.R.attr.colorError));
         } else {
             setTextColor(viewHolder.time(), bubbleColor);
         }
@@ -577,7 +577,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         }
 
         StylingHelper.format(body, viewHolder.messageBody().getCurrentTextColor());
-        MyLinkify.addLinks(body, true);
+        Linkify.addLinks(body);
+        FixedURLSpan.fix(body);
         if (highlightedTerm != null) {
             StylingHelper.highlight(viewHolder.messageBody(), body, highlightedTerm);
         }
@@ -849,10 +850,16 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         final var mergeIntoTop = mergeIntoTop(position, message);
         final var mergeIntoBottom = mergeIntoBottom(position, message);
-        final var showAvatar =
-                bubbleDesign.showAvatars
-                        || (viewHolder instanceof StartBubbleMessageItemViewHolder
-                                && message.getConversation().getMode() == Conversation.MODE_MULTI);
+        final boolean showAvatar;
+        if (viewHolder instanceof StartBubbleMessageItemViewHolder) {
+            showAvatar =
+                    bubbleDesign.showAvatars11
+                            || message.getConversation().getMode() == Conversation.MODE_MULTI;
+        } else if (viewHolder instanceof EndBubbleMessageItemViewHolder) {
+            showAvatar = bubbleDesign.showAvatarsAccounts;
+        } else {
+            throw new IllegalStateException("Unrecognized BubbleMessageItemViewHolder");
+        }
         setBubblePadding(viewHolder.root(), mergeIntoTop, mergeIntoBottom);
         if (showAvatar) {
             final var requiresAvatar =
@@ -1348,7 +1355,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                         appSettings.isColorfulChatBubbles(),
                         appSettings.isAlignStart(),
                         appSettings.isLargeFont(),
-                        appSettings.isShowAvatars());
+                        appSettings.isShowAvatars11(),
+                        appSettings.isShowAvatarsAccounts());
     }
 
     public void setHighlightedTerm(List<String> terms) {
@@ -1397,8 +1405,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         ImageViewCompat.setImageTintList(
                 imageView,
                 ColorStateList.valueOf(
-                        MaterialColors.getColor(
-                                imageView, com.google.android.material.R.attr.colorError)));
+                        MaterialColors.getColor(imageView, androidx.appcompat.R.attr.colorError)));
     }
 
     public static void setTextColor(final TextView textView, final BubbleColor bubbleColor) {
@@ -1406,8 +1413,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         textView.setTextColor(color);
         if (BubbleColor.SURFACES.contains(bubbleColor)) {
             textView.setLinkTextColor(
-                    MaterialColors.getColor(
-                            textView, com.google.android.material.R.attr.colorPrimary));
+                    MaterialColors.getColor(textView, androidx.appcompat.R.attr.colorPrimary));
         } else {
             textView.setLinkTextColor(color);
         }
@@ -1470,23 +1476,26 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         public final boolean colorfulChatBubbles;
         public final boolean alignStart;
         public final boolean largeFont;
-        public final boolean showAvatars;
+        public final boolean showAvatars11;
+        public final boolean showAvatarsAccounts;
 
         private BubbleDesign(
                 final boolean colorfulChatBubbles,
                 final boolean alignStart,
                 final boolean largeFont,
-                final boolean showAvatars) {
+                final boolean showAvatars11,
+                final boolean showAvatarsAccounts) {
             this.colorfulChatBubbles = colorfulChatBubbles;
             this.alignStart = alignStart;
             this.largeFont = largeFont;
-            this.showAvatars = showAvatars;
+            this.showAvatars11 = showAvatars11;
+            this.showAvatarsAccounts = showAvatarsAccounts;
         }
     }
 
     private abstract static class MessageItemViewHolder /*extends RecyclerView.ViewHolder*/ {
 
-        private View itemView;
+        private final View itemView;
 
         private MessageItemViewHolder(@NonNull View itemView) {
             this.itemView = itemView;

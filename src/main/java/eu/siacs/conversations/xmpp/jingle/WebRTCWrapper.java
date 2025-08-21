@@ -3,18 +3,27 @@ package eu.siacs.conversations.xmpp.jingle;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
-
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.services.XmppConnectionService;
-
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
 import org.webrtc.CandidatePairChangeEvent;
@@ -34,19 +43,6 @@ import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
 import org.webrtc.VideoTrack;
 import org.webrtc.audio.JavaAudioDeviceModule;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class WebRTCWrapper {
 
@@ -74,6 +70,7 @@ public class WebRTCWrapper {
                     .add("GT-I9515") // Samsung Galaxy S4 Value Edition (jfvelte)
                     .add("GT-I9515L") // Samsung Galaxy S4 Value Edition (jfvelte)
                     .add("GT-I9505") // Samsung Galaxy S4 (jfltexx)
+                    .add("Nexus 7") // ASUS Nexus 7
                     .build();
 
     private final EventCallback eventCallback;
@@ -235,13 +232,13 @@ public class WebRTCWrapper {
 
     synchronized void initializePeerConnection(
             final Set<Media> media,
-            final List<PeerConnection.IceServer> iceServers,
+            final Collection<PeerConnection.IceServer> iceServers,
             final boolean trickle)
             throws InitializationException {
         Preconditions.checkState(this.eglBase != null);
         Preconditions.checkNotNull(media);
         Preconditions.checkArgument(
-                media.size() > 0, "media can not be empty when initializing peer connection");
+                !media.isEmpty(), "media can not be empty when initializing peer connection");
         final boolean setUseHardwareAcousticEchoCanceler =
                 !HARDWARE_AEC_BLACKLIST.contains(Build.MODEL);
         Log.d(
@@ -371,16 +368,16 @@ public class WebRTCWrapper {
         if (videoSourceWrapper != null) {
             try {
                 videoSourceWrapper.stopCapture();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (final InterruptedException e) {
+                Log.e(Config.LOGTAG, "could not stop capturing video source", e);
             }
         }
     }
 
     public static PeerConnection.RTCConfiguration buildConfiguration(
-            final List<PeerConnection.IceServer> iceServers, final boolean trickle) {
+            final Collection<PeerConnection.IceServer> iceServers, final boolean trickle) {
         final PeerConnection.RTCConfiguration rtcConfig =
-                new PeerConnection.RTCConfiguration(iceServers);
+                new PeerConnection.RTCConfiguration(ImmutableList.copyOf(iceServers));
         rtcConfig.tcpCandidatePolicy =
                 PeerConnection.TcpCandidatePolicy.DISABLED; // XEP-0176 doesn't support tcp
         if (trickle) {
@@ -397,7 +394,7 @@ public class WebRTCWrapper {
     }
 
     void reconfigurePeerConnection(
-            final List<PeerConnection.IceServer> iceServers, final boolean trickle) {
+            final Set<PeerConnection.IceServer> iceServers, final boolean trickle) {
         requirePeerConnection().setConfiguration(buildConfiguration(iceServers, trickle));
     }
 
@@ -665,7 +662,7 @@ public class WebRTCWrapper {
                 MoreExecutors.directExecutor());
     }
 
-    @Nonnull
+    @NonNull
     private ListenableFuture<PeerConnection> getPeerConnectionFuture() {
         final PeerConnection peerConnection = this.peerConnection;
         if (peerConnection == null) {
@@ -675,7 +672,7 @@ public class WebRTCWrapper {
         }
     }
 
-    @Nonnull
+    @NonNull
     private PeerConnection requirePeerConnection() {
         final PeerConnection peerConnection = this.peerConnection;
         if (peerConnection == null) {
@@ -684,7 +681,7 @@ public class WebRTCWrapper {
         return peerConnection;
     }
 
-    @Nonnull
+    @NonNull
     private PeerConnectionFactory requirePeerConnectionFactory() {
         final PeerConnectionFactory peerConnectionFactory = this.peerConnectionFactory;
         if (peerConnectionFactory == null) {
@@ -754,7 +751,7 @@ public class WebRTCWrapper {
         }
     }
 
-    static class InitializationException extends Exception {
+    public static class InitializationException extends Exception {
 
         private InitializationException(final String message, final Throwable throwable) {
             super(message, throwable);

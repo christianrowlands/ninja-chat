@@ -60,6 +60,8 @@
         android:name="android.hardware.microphone"
         android:required="false" />
 
+    <uses-sdk tools:overrideLibrary="androidx.heifwriter" />
+
     <queries>
         <!-- Browser -->
         <intent>
@@ -85,10 +87,6 @@
         </intent>
         <intent>
             <action android:name="eu.siacs.conversations.location.show" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.VIEW" />
-            <data android:mimeType="resource/folder" />
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -134,11 +132,6 @@
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
             tools:node="merge" />
-
-        <service
-            android:name=".services.ImportBackupService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
 
         <service
             android:name=".services.CallIntegrationConnectionService"
@@ -350,10 +343,10 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.AboutActivity"
-            android:parentActivityName=".ui.SettingsActivity">
+            android:parentActivityName=".ui.activity.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="eu.siacs.conversations.ui.SettingsActivity" />
+                android:value="eu.siacs.conversations.ui.activity.SettingsActivity" />
         </activity>
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
@@ -388,6 +381,8 @@
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.ViewProfilePictureActivity"
+            android:theme="@style/Theme.Conversations3.Dark"/>
         <activity
             android:name=".ui.MucUsersActivity"
             android:label="@string/group_chat_members" />
@@ -399,6 +394,60 @@
             android:autoRemoveFromRecents="true"
             android:launchMode="singleInstance"
             android:supportsPictureInPicture="true" />
+        <activity
+            android:name=".ui.ImportBackupActivity"
+            android:exported="true"
+            android:label="@string/restore_backup"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/vnd.conversations.backup" />
+                <data android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/vnd.conversations.backup" />
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.ceb" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.ceb" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.ceb" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
@@ -406,7 +455,6 @@
         <meta-data
             android:name="google_analytics_default_allow_ad_personalization_signals"
             android:value="false" />
-
     </application>
 
 </manifest>

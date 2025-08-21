@@ -101,6 +101,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                 this.xmppConnectionService.findOrCreateConversation(
                         id.account, id.with.asBareJid(), false, false);
         this.message = new Message(conversation, "", Message.ENCRYPTION_NONE);
+        this.message.setRemoteMsgId(id.sessionId);
         this.message.setStatus(Message.STATUS_RECEIVED);
         this.message.setErrorMessage(null);
         this.message.setTransferable(this);
@@ -180,7 +181,9 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                     }
 
                     @Override
-                    public void onFailure(@NonNull Throwable throwable) {}
+                    public void onFailure(@NonNull Throwable throwable) {
+                        Log.d(Config.LOGTAG, "could not prepare transport info", throwable);
+                    }
                 },
                 MoreExecutors.directExecutor());
     }
@@ -355,6 +358,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             Log.d(
                     Config.LOGTAG,
                     "got file offer " + file + " jet=" + Objects.nonNull(keyTransportMessage));
+            // TODO store hashes if there are any
             setFileOffer(file);
             if (keyTransportMessage != null) {
                 this.transportSecurity =
@@ -548,10 +552,13 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
 
     private void receiveSessionInfoChecksum(final FileTransferDescription.Checksum checksum) {
         Log.d(Config.LOGTAG, "received checksum " + checksum);
+        // TODO check that we are receiver
+        // TODO store hashes
     }
 
     private void receiveSessionInfoReceived(final FileTransferDescription.Received received) {
         Log.d(Config.LOGTAG, "peer confirmed received " + received);
+        // TODO check that we are sender
     }
 
     private synchronized void receiveSessionTerminate(final Iq jinglePacket, final Jingle jingle) {
@@ -902,6 +909,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             sendSessionInfoChecksum(hashes);
         } else {
             Log.d(Config.LOGTAG, "file transfer complete " + hashes);
+            // TODO compare with stored file hashes
             sendFileSessionInfoReceived();
             terminateTransport();
             messageReceivedSuccess();
@@ -1295,7 +1303,8 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             this.file = file;
             this.transportSecurity = transportSecurity;
             this.transportTerminationLatch = transportTerminationLatch;
-            this.total = transportSecurity == null ? total : (total + 16);
+            this.total =
+                    transportSecurity == null ? total : (total + GCM_AUTHENTICATION_TAG_LENGTH);
             this.updateRunnable = updateRunnable;
         }
 
@@ -1437,7 +1446,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             if (this.transportSecurity == null) {
                 return fileOutputStream;
             } else {
-                final AEADBlockCipher cipher = new GCMBlockCipher(new AESEngine());
+                final var cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
                 cipher.init(
                         false,
                         new AEADParameters(

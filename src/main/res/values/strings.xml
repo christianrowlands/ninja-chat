@@ -9,7 +9,6 @@
     <string name="channel_details">Channel details</string>
     <string name="action_add_account">Add account</string>
     <string name="action_edit_contact">Edit name</string>
-    <string name="action_add_phone_book">Add to address book</string>
     <string name="action_delete_contact">Delete from roster</string>
     <string name="action_block_contact">Block contact</string>
     <string name="action_unblock_contact">Unblock contact</string>
@@ -94,7 +93,7 @@
     <string name="send_message_to_x">Send message to %s</string>
     <string name="send_encrypted_message">Send encrypted message</string>
     <string name="send_omemo_x509_message">Send v\\OMEMO encrypted message</string>
-    <string name="your_nick_has_been_changed">New nickname in use</string>
+    <string name="your_nick_has_been_changed">Your nickname has been changed</string>
     <string name="send_unencrypted">Send clear text</string>
     <string name="decryption_failed">Decryption failed. Maybe you don’t have the proper private key.</string>
     <string name="openkeychain_required">OpenKeychain</string>
@@ -171,7 +170,7 @@
     <string name="account_status_incompatible_client">Incompatible client</string>
     <string name="account_status_stream_error">Stream error</string>
     <string name="account_status_stream_opening_error">Stream opening error</string>
-    <string name="account_status_channel_binding">Channel binding unavailable</string>
+    <string name="account_status_channel_binding">No channel binding</string>
     <string name="encryption_choice_unencrypted">Clear text</string>
     <string name="encryption_choice_otr">OTR</string>
     <string name="encryption_choice_pgp">OpenPGP</string>
@@ -209,13 +208,6 @@
     <string name="server_info_available">available</string>
     <string name="server_info_unavailable">unavailable</string>
     <string name="missing_public_keys">Missing public key announcements</string>
-    <string name="last_seen_now">last seen just now</string>
-    <string name="last_seen_min">last seen one minute ago</string>
-    <string name="last_seen_mins">last seen %d minutes ago</string>
-    <string name="last_seen_hour">last seen one hour ago</string>
-    <string name="last_seen_hours">last seen %d hours ago</string>
-    <string name="last_seen_day">last seen one day ago</string>
-    <string name="last_seen_days">last seen %d days ago</string>
     <string name="install_openkeychain">Encrypted message. Please install OpenKeychain to decrypt it.</string>
     <string name="openpgp_messages_found">New OpenPGP encrypted messages found</string>
     <string name="openpgp_key_id">OpenPGP Key ID</string>
@@ -319,6 +311,8 @@
     <string name="retry_with_p2p">Retry with P2P</string>
     <string name="file_url">File URL</string>
     <string name="url_copied_to_clipboard">Copied URL to clipboard</string>
+    <string name="uri_copied_to_clipboard">Copied URI to clipboard</string>
+    <string name="uri">URI</string>
     <string name="jabber_id_copied_to_clipboard">Copied XMPP address to clipboard</string>
     <string name="error_message_copied_to_clipboard">Copied error message to clipboard</string>
     <string name="web_address">web address</string>
@@ -331,7 +325,7 @@
     <string name="pref_keep_foreground_service">Foreground service</string>
     <string name="pref_keep_foreground_service_summary">Prevents the operating system from killing your connection</string>
     <string name="pref_create_backup">Create backup</string>
-    <string name="pref_create_backup_summary">Backup files will be stored in %s</string>
+    <string name="pref_create_backup_summary">Backups will be stored in %s</string>
     <string name="notification_create_backup_title">Creating backup files</string>
     <string name="notification_backup_created_title">Your backup has been created</string>
     <string name="notification_backup_created_subtitle">The backup files have been stored in %s</string>
@@ -422,6 +416,7 @@
     <string name="vector_graphic">vector graphic</string>
     <string name="multimedia_file">multimedia file</string>
     <string name="pdf_document">PDF document</string>
+    <string name="word_document">Word document</string>
     <string name="apk">Android App</string>
     <string name="audiobook">Audiobook</string>
     <string name="vcard">Contact</string>
@@ -518,6 +513,7 @@
     <string name="shared_text_with_x">Text shared with %s</string>
     <string name="no_storage_permission">Grant %1$s access to external storage</string>
     <string name="no_camera_permission">Grant %1$s access to the camera</string>
+    <string name="no_contacts_permission">%1$s needs access to your contacts</string>
     <string name="quicksy_wants_your_consent">Quicksy asks for your consent to use your data</string>
     <string name="sync_with_contacts">Contact list integration</string>
     <string name="sync_with_contacts_long"><![CDATA[%1$s processes your contact list locally, on your device, to show you the names and profile pictures for matching contacts on XMPP.\n\nNo contact list data ever leaves your device! \n\nFor more information read our <a href="https://github.com/christianrowlands/ninja-chat/blob/ninja-main/privacy_policy.md">privacy policy</a>.]]></string>
@@ -573,8 +569,8 @@
     <string name="gp_short">Short</string>
     <string name="gp_medium">Medium</string>
     <string name="gp_long">Long</string>
-    <string name="pref_broadcast_last_activity">Last seen</string>
-    <string name="pref_broadcast_last_activity_summary">Let your contacts see when you last used the app</string>
+    <string name="pref_broadcast_last_activity">Show last seen</string>
+    <string name="pref_broadcast_last_activity_summary">Let your contacts see the time you were last active in the app</string>
     <string name="pref_privacy">Privacy</string>
     <string name="pref_theme_options">Theme</string>
     <string name="pref_theme_options_summary">Select the color palette</string>
@@ -746,7 +742,13 @@
     <string name="pref_use_share_location_plugin">Share Location Plugin</string>
     <string name="pref_use_share_location_plugin_summary">Use the Share Location Plugin instead of the built-in map</string>
     <string name="copy_link">Copy web address</string>
+    <string name="copy_URI">Copy URI</string>
+    <string name="copy_telephone_number">Copy phone number</string>
+    <string name="copy_geo_uri">Copy geo location</string>
     <string name="copy_jabber_id">Copy XMPP address</string>
+    <string name="copy_email_address">Copy email address</string>
+    <string name="copied_email_address">Copied email address to clipboard</string>
+    <string name="copied_phone_number">Copied phone number to clipboard</string>
     <string name="p1_s3_filetransfer">HTTP File Sharing for S3</string>
     <string name="pref_start_search">Direct Search</string>
     <string name="pref_start_search_summary">At ‘New chat’ screen open keyboard and place cursor in search field</string>
@@ -842,13 +844,14 @@
     <string name="ebook">e-book</string>
     <string name="video_original">Original (uncompressed)</string>
     <string name="open_with">Open with…</string>
-    <string name="set_profile_picture">Ninja Chat profile picture</string>
+    <string name="set_profile_picture">Avatar</string>
     <string name="choose_account">Choose account</string>
     <string name="restore_backup">Restore backup</string>
     <string name="restore">Restore</string>
     <string name="enter_password_to_restore">Enter your password for the account %s to restore the backup.</string>
-    <string name="restore_warning">Do not use the restore backup feature in an attempt to clone (run simultaneously) an installation. Restoring a backup is only meant for migrations or in case you’ve lost the original device.</string>
-    <string name="restore_warning_continued">Do not attempt to restore backups that you have not created yourself!</string>
+    <string name="restore_omemo_key">Restore OMEMO keys</string>
+    <string name="restore_warning">Do not restore OMEMO keys in an attempt to clone (run simultaneously) an installation. Restoring OMEMO keys is only meant for migrations or in case you’ve lost the original device.</string>
+    <string name="restore_warning_continued">Only restore backups you’ve personally created.</string>
     <string name="unable_to_restore_backup">Could not restore backup.</string>
     <string name="unable_to_decrypt_backup">Could not decrypt backup. Is the password correct?</string>
     <string name="backup_channel_name">Backup &amp; Restore</string>
@@ -897,6 +900,7 @@
     <string name="open_backup">Open backup</string>
     <string name="not_a_backup_file">The file you selected is not a Ninja Chat backup file</string>
     <string name="outdated_backup_file_format">You are trying to import an outdated backup file format</string>
+    <string name="non_quicksy_backup">Quicksy can only restore backups for quicksy.im accounts</string>
     <string name="account_already_setup">This account has already been setup</string>
     <string name="please_enter_password">Please enter the password for this account</string>
     <string name="unable_to_perform_this_action">Could not perform this action</string>
@@ -984,6 +988,10 @@
     <plurals name="view_users">
         <item quantity="one">View %1$d Participant</item>
         <item quantity="other">View %1$d Participants</item>
+    </plurals>
+    <plurals name="x_participants">
+        <item quantity="one">%1$d Participant</item>
+        <item quantity="other">%1$d Participants</item>
     </plurals>
     <plurals name="some_messages_could_not_be_delivered">
         <item quantity="one">A message could not be delivered</item>
@@ -1091,8 +1099,6 @@
     <string name="more_reactions">More reactions</string>
     <string name="could_not_modify_call">Could not modify call</string>
     <string name="clients_may_not_support_av">Your contact’s XMPP client might not support audio/video calls.</string>
-    <string name="pref_show_avatars">Show avatars</string>
-    <string name="pref_show_avatars_summary">Display avatars for your messages and in 1:1 chats, in addition to group chats.</string>
     <string name="pref_chat_bubbles">Chat bubbles</string>
     <string name="pref_chat_bubbles_summary">Background color, Font size, Avatars</string>
     <string name="pref_title_bubbles">Chat Bubbles</string>
@@ -1104,4 +1110,23 @@
     <string name="custom_notifications_enable">Enable customized notification settings (importance, sound, vibration) settings for this conversation?</string>
     <string name="delete_avatar_message">Would you like to delete your avatar? Some clients might continue to display a cached copy of your avatar.</string>
     <string name="show_to_contacts_only">Show to contacts only</string>
+    <string name="pref_backup_location">Backup location</string>
+    <string name="account_status_service_outage_scheduled">Planned Downtime</string>
+    <string name="account_status_service_outage_known">Service Down (Known Issue)</string>
+    <string name="sos_scheduled_return">The service is scheduled to return at %s</string>
+    <string name="save_to_contact">Save to Contacts</string>
+    <string name="show_in_contacts">Show in Contacts</string>
+    <string name="pref_account_avatar">Accounts</string>
+    <string name="pref_account_avatar_summary">Display account avatars on outgoing messages for easy identification and management.</string>
+    <string name="pref_category_avatars">Avatars</string>
+    <string name="pref_show_11_chats">1:1 chats</string>
+    <string name="pref_show_11_chats_summary">Display avatars in 1:1 chats. (Avatars in group chats will always been shown.)</string>
+    <string name="pref_show_11_sender_chats_summary">Display avatars in 1:1 chats on received messages. (Avatars in group chats will always been shown.)</string>
+    <string name="moderate_delete_dot_dot_dot">Delete as moderator…</string>
+    <string name="moderate_delete">Delete as moderator</string>
+    <string name="could_not_moderate_message">Could not moderate message</string>
+    <string name="delete_message">Delete message</string>
+    <string name="moderation_explained">This message will be deleted for you and every participant of this public channel.</string>
+    <string name="do_not_show_this_warning_again">Don’t show this warning again.</string>
+    <string name="last_seen">last seen %s</string>
 </resources>

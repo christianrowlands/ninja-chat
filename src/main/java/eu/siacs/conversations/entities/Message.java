@@ -4,24 +4,23 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.util.Log;
-import com.google.common.base.Strings;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.primitives.Longs;
+import de.gultsch.common.Patterns;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
 import eu.siacs.conversations.http.URL;
 import eu.siacs.conversations.services.AvatarService;
-import eu.siacs.conversations.ui.util.PresenceSelector;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.Emoticons;
-import eu.siacs.conversations.utils.GeoHelper;
 import eu.siacs.conversations.utils.MessageUtils;
 import eu.siacs.conversations.utils.MimeUtils;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import org.json.JSONException;
 
-public class Message extends AbstractEntity implements AvatarService.Avatarable {
+public class Message extends AbstractEntity implements AvatarService.Avatar {
 
     public static final String TABLENAME = "messages";
 
@@ -122,7 +121,6 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     private Boolean treatAsDownloadable = null;
     private FileParams fileParams = null;
     private List<MucOptions.User> counterparts;
-    private WeakReference<MucOptions.User> user;
 
     protected Message(Conversational conversation) {
         this.conversation = conversation;
@@ -137,7 +135,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                 conversation,
                 java.util.UUID.randomUUID().toString(),
                 conversation.getUuid(),
-                conversation.getJid() == null ? null : conversation.getJid().asBareJid(),
+                conversation.getAddress() == null ? null : conversation.getAddress().asBareJid(),
                 null,
                 body,
                 System.currentTimeMillis(),
@@ -166,7 +164,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                 conversation,
                 java.util.UUID.randomUUID().toString(),
                 conversation.getUuid(),
-                conversation.getJid() == null ? null : conversation.getJid().asBareJid(),
+                conversation.getAddress() == null ? null : conversation.getAddress().asBareJid(),
                 null,
                 null,
                 System.currentTimeMillis(),
@@ -389,17 +387,6 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.isEmojisOnly = null;
         this.treatAsDownloadable = null;
         this.fileParams = null;
-    }
-
-    public void setMucUser(MucOptions.User user) {
-        this.user = new WeakReference<>(user);
-    }
-
-    public boolean sameMucUser(Message otherMessage) {
-        final MucOptions.User thisUser = this.user == null ? null : this.user.get();
-        final MucOptions.User otherUser =
-                otherMessage.user == null ? null : otherMessage.user.get();
-        return thisUser != null && thisUser == otherUser;
     }
 
     public String getErrorMessage() {
@@ -668,7 +655,10 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public boolean isEditable() {
-        return status != STATUS_RECEIVED && !isCarbon() && type != Message.TYPE_RTP_SESSION;
+        return status != STATUS_RECEIVED
+                && !isCarbon()
+                && type != Message.TYPE_RTP_SESSION
+                && type != Message.TYPE_STATUS;
     }
 
     public void setCounterparts(List<MucOptions.User> counterparts) {
@@ -730,16 +720,14 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public boolean fixCounterpart() {
-        final Presences presences = conversation.getContact().getPresences();
-        if (counterpart != null && presences.has(Strings.nullToEmpty(counterpart.getResource()))) {
+        final var fullAddresses = conversation.getContact().getFullAddresses();
+        if (counterpart != null && fullAddresses.contains(counterpart)) {
             return true;
-        } else if (presences.isEmpty()) {
+        } else if (fullAddresses.isEmpty()) {
             counterpart = null;
             return false;
         } else {
-            counterpart =
-                    PresenceSelector.getNextCounterpart(
-                            getContact(), presences.toResourceArray()[0]);
+            counterpart = Preconditions.checkNotNull(Iterables.getFirst(fullAddresses, null));
             return true;
         }
     }
@@ -796,7 +784,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
 
     public synchronized boolean isGeoUri() {
         if (isGeoUri == null) {
-            isGeoUri = GeoHelper.GEO_URI.matcher(body).matches();
+            isGeoUri = Patterns.URI_GEO.matcher(body).matches();
         }
         return isGeoUri;
     }

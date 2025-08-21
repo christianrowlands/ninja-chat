@@ -1,5 +1,36 @@
 # Changelog
 
+### Version 2.19.2
+
+* Show number of participants in subtitle for public channels
+* Fix joining MUCs on very old Prosody servers
+
+### Version 2.19.1
+
+* Show 'Last seen' prominently in chat title (when enabled)
+* Various bug fixes
+
+### Version 2.19.0
+
+* Upload and show high resolution avatars (profile pictures) on servers that have support for them
+* Support 'XEP-0425: Moderated Message Retraction' in public channels
+
+### Version 2.18.2
+
+* Support 'Service Outage Status'
+* Fix Backup Import
+* Minor security fixes for parsing multiple bodies, occupant-ids and stanza-id
+
+### Version 2.18.1
+
+* Fix reactions on files received via P2P
+* Improve URI matching
+
+### Version 2.18.0
+
+* Add ability to pick backup location
+* Make more URIs (tel:, mailto:) clickable
+
 ### Version 2.17.12
 
 * Fix crash on file transfer in fi translation

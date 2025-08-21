@@ -6,7 +6,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpDecryptionService;
@@ -18,25 +17,25 @@ import eu.siacs.conversations.crypto.sasl.HashedToken;
 import eu.siacs.conversations.crypto.sasl.HashedTokenSha256;
 import eu.siacs.conversations.crypto.sasl.HashedTokenSha512;
 import eu.siacs.conversations.crypto.sasl.SaslMechanism;
+import eu.siacs.conversations.http.ServiceOutageStatus;
 import eu.siacs.conversations.services.AvatarService;
-import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.utils.Resolver;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.jingle.RtpCapability;
+import eu.siacs.conversations.xmpp.manager.BlockingManager;
+import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
+import eu.siacs.conversations.xmpp.manager.RosterManager;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Account extends AbstractEntity implements AvatarService.Avatarable {
+public class Account extends AbstractEntity implements AvatarService.Avatar {
 
     public static final String TABLENAME = "accounts";
 
@@ -72,15 +71,9 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     private static final String KEY_PGP_SIGNATURE = "pgp_signature";
     private static final String KEY_PGP_ID = "pgp_id";
     private static final String KEY_PINNED_MECHANISM = "pinned_mechanism";
+    public static final String KEY_SOS_URL = "sos_url";
     public static final String KEY_PRE_AUTH_REGISTRATION_TOKEN = "pre_auth_registration";
-
     protected final JSONObject keys;
-    private final Roster roster = new Roster(this);
-    private final Collection<Jid> blocklist = new CopyOnWriteArraySet<>();
-    public final Set<Conversation> pendingConferenceJoins = new HashSet<>();
-    public final Set<Conversation> pendingConferenceLeaves = new HashSet<>();
-    public final Set<Conversation> inProgressConferenceJoins = new HashSet<>();
-    public final Set<Conversation> inProgressConferencePings = new HashSet<>();
     protected Jid jid;
     protected String password;
     protected int options = 0;
@@ -93,17 +86,15 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     protected boolean online = false;
     private String rosterVersion;
     private String displayName = null;
-    private AxolotlService axolotlService = null;
-    private PgpDecryptionService pgpDecryptionService = null;
     private XmppConnection xmppConnection = null;
     private long mEndGracePeriod = 0L;
-    private final Map<Jid, Bookmark> bookmarks = new HashMap<>();
-    private Presence.Status presenceStatus;
+    private im.conversations.android.xmpp.model.stanza.Presence.Availability presenceStatus;
     private String presenceStatusMessage;
     private String pinnedMechanism;
     private String pinnedChannelBinding;
     private String fastMechanism;
     private String fastToken;
+    private ServiceOutageStatus serviceOutageStatus;
 
     public Account(final Jid jid, final String password) {
         this(
@@ -116,8 +107,8 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
                 null,
                 null,
                 null,
-                5222,
-                Presence.Status.ONLINE,
+                Resolver.XMPP_PORT_STARTTLS,
+                im.conversations.android.xmpp.model.stanza.Presence.Availability.ONLINE,
                 null,
                 null,
                 null,
@@ -136,7 +127,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
             String displayName,
             String hostname,
             int port,
-            final Presence.Status status,
+            final im.conversations.android.xmpp.model.stanza.Presence.Availability status,
             String statusMessage,
             final String pinnedMechanism,
             final String pinnedChannelBinding,
@@ -147,13 +138,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
         this.password = password;
         this.options = options;
         this.rosterVersion = rosterVersion;
-        JSONObject tmp;
-        try {
-            tmp = new JSONObject(keys);
-        } catch (JSONException e) {
-            tmp = new JSONObject();
-        }
-        this.keys = tmp;
+        this.keys = parseKeys(keys);
         this.avatar = avatar;
         this.displayName = displayName;
         this.hostname = hostname;
@@ -164,6 +149,17 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
         this.pinnedChannelBinding = pinnedChannelBinding;
         this.fastMechanism = fastMechanism;
         this.fastToken = fastToken;
+    }
+
+    public static JSONObject parseKeys(final String keys) {
+        if (Strings.isNullOrEmpty(keys)) {
+            return new JSONObject();
+        }
+        try {
+            return new JSONObject(keys);
+        } catch (final JSONException e) {
+            return new JSONObject();
+        }
     }
 
     public static Account fromCursor(final Cursor cursor) {
@@ -194,7 +190,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
                 cursor.getString(cursor.getColumnIndexOrThrow(DISPLAY_NAME)),
                 cursor.getString(cursor.getColumnIndexOrThrow(HOSTNAME)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(PORT)),
-                Presence.Status.fromShowString(
+                im.conversations.android.xmpp.model.stanza.Presence.Availability.valueOfShown(
                         cursor.getString(cursor.getColumnIndexOrThrow(STATUS))),
                 cursor.getString(cursor.getColumnIndexOrThrow(STATUS_MESSAGE)),
                 cursor.getString(cursor.getColumnIndexOrThrow(PINNED_MECHANISM)),
@@ -203,12 +199,14 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
                 cursor.getString(cursor.getColumnIndexOrThrow(FAST_TOKEN)));
     }
 
-    public boolean httpUploadAvailable(long size) {
-        return xmppConnection != null && xmppConnection.getFeatures().httpUpload(size);
+    // TODO remove this method and call HttpUploadManager directly i
+    public boolean httpUploadAvailable(final long fileSize) {
+        return xmppConnection.getManager(HttpUploadManager.class).isAvailableForSize(fileSize);
     }
 
     public boolean httpUploadAvailable() {
-        return isOptionSet(OPTION_HTTP_UPLOAD_AVAILABLE) || httpUploadAvailable(0);
+        return isOptionSet(OPTION_HTTP_UPLOAD_AVAILABLE)
+                || xmppConnection.getManager(HttpUploadManager.class).isAvailableForSize(0);
     }
 
     public String getDisplayName() {
@@ -224,11 +222,11 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public boolean hasPendingPgpIntent(Conversation conversation) {
-        return pgpDecryptionService != null && pgpDecryptionService.hasPendingIntent(conversation);
+        return getPgpDecryptionService().hasPendingIntent(conversation);
     }
 
     public boolean isPgpDecryptionServiceConnected() {
-        return pgpDecryptionService != null && pgpDecryptionService.isConnected();
+        return getPgpDecryptionService().isConnected();
     }
 
     public boolean setShowErrorNotification(boolean newValue) {
@@ -276,11 +274,12 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
         final Jid prev = this.jid != null ? this.jid.asBareJid() : null;
         final boolean changed = prev == null || (next != null && !prev.equals(next.asBareJid()));
         if (changed) {
-            final AxolotlService oldAxolotlService = this.axolotlService;
+            final AxolotlService oldAxolotlService = xmppConnection.getAxolotlService();
+            // TODO check that changing JID and recreating the AxolotlService still works
             if (oldAxolotlService != null) {
                 oldAxolotlService.destroy();
                 this.jid = next;
-                this.axolotlService = oldAxolotlService.makeNew();
+                xmppConnection.setAxolotlService(oldAxolotlService.makeNew());
             }
         }
         this.jid = next;
@@ -442,11 +441,12 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
                 && getXmppConnection().getAttempt() >= 3;
     }
 
-    public Presence.Status getPresenceStatus() {
+    public im.conversations.android.xmpp.model.stanza.Presence.Availability getPresenceStatus() {
         return this.presenceStatus;
     }
 
-    public void setPresenceStatus(Presence.Status status) {
+    public void setPresenceStatus(
+            im.conversations.android.xmpp.model.stanza.Presence.Availability status) {
         this.presenceStatus = status;
     }
 
@@ -535,35 +535,19 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public AxolotlService getAxolotlService() {
-        return axolotlService;
-    }
-
-    public void initAccountServices(final XmppConnectionService context) {
-        this.axolotlService = new AxolotlService(this, context);
-        this.pgpDecryptionService = new PgpDecryptionService(context);
-        if (xmppConnection != null) {
-            xmppConnection.addOnAdvancedStreamFeaturesAvailableListener(axolotlService);
-        }
+        return this.xmppConnection.getAxolotlService();
     }
 
     public PgpDecryptionService getPgpDecryptionService() {
-        return this.pgpDecryptionService;
+        return this.xmppConnection.getPgpDecryptionService();
     }
 
     public XmppConnection getXmppConnection() {
         return this.xmppConnection;
     }
 
-    public void setXmppConnection(final XmppConnection connection) {
-        this.xmppConnection = connection;
-    }
-
     public String getRosterVersion() {
-        if (this.rosterVersion == null) {
-            return "";
-        } else {
-            return this.rosterVersion;
-        }
+        return Strings.emptyToNull(this.rosterVersion);
     }
 
     public void setRosterVersion(final String version) {
@@ -575,9 +559,13 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public int activeDevicesWithRtpCapability() {
+        final var connection = getXmppConnection();
+        if (connection == null) {
+            return 0;
+        }
         int i = 0;
-        for (Presence presence : getSelfContact().getPresences().getPresences()) {
-            if (RtpCapability.check(presence) != RtpCapability.Capability.NONE) {
+        for (final var optionalInfoQuery : getSelfContact().getCapabilities()) {
+            if (RtpCapability.check(optionalInfoQuery.orNull()) != RtpCapability.Capability.NONE) {
                 i++;
             }
         }
@@ -628,50 +616,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public Roster getRoster() {
-        return this.roster;
-    }
-
-    public Collection<Bookmark> getBookmarks() {
-        synchronized (this.bookmarks) {
-            return ImmutableList.copyOf(this.bookmarks.values());
-        }
-    }
-
-    public void setBookmarks(final Map<Jid, Bookmark> bookmarks) {
-        synchronized (this.bookmarks) {
-            this.bookmarks.clear();
-            this.bookmarks.putAll(bookmarks);
-        }
-    }
-
-    public void putBookmark(final Bookmark bookmark) {
-        synchronized (this.bookmarks) {
-            this.bookmarks.put(bookmark.getJid(), bookmark);
-        }
-    }
-
-    public void removeBookmark(Bookmark bookmark) {
-        synchronized (this.bookmarks) {
-            this.bookmarks.remove(bookmark.getJid());
-        }
-    }
-
-    public void removeBookmark(Jid jid) {
-        synchronized (this.bookmarks) {
-            this.bookmarks.remove(jid);
-        }
-    }
-
-    public Set<Jid> getBookmarkedJids() {
-        synchronized (this.bookmarks) {
-            return new HashSet<>(this.bookmarks.keySet());
-        }
-    }
-
-    public Bookmark getBookmark(final Jid jid) {
-        synchronized (this.bookmarks) {
-            return this.bookmarks.get(jid.asBareJid());
-        }
+        return xmppConnection.getManager(RosterManager.class);
     }
 
     public boolean setAvatar(final String filename) {
@@ -725,9 +670,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
 
     private List<XmppUri.Fingerprint> getFingerprints() {
         ArrayList<XmppUri.Fingerprint> fingerprints = new ArrayList<>();
-        if (axolotlService == null) {
-            return fingerprints;
-        }
+        final var axolotlService = getAxolotlService();
         fingerprints.add(
                 new XmppUri.Fingerprint(
                         XmppUri.FingerprintType.OMEMO,
@@ -746,21 +689,24 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public boolean isBlocked(final ListItem contact) {
-        final Jid jid = contact.getJid();
+        final Jid jid = contact.getAddress();
+        final var blocklist = getBlocklist();
         return jid != null
                 && (blocklist.contains(jid.asBareJid()) || blocklist.contains(jid.getDomain()));
     }
 
     public boolean isBlocked(final Jid jid) {
+        final var blocklist = getBlocklist();
         return jid != null && blocklist.contains(jid.asBareJid());
     }
 
-    public Collection<Jid> getBlocklist() {
-        return this.blocklist;
-    }
-
-    public void clearBlocklist() {
-        getBlocklist().clear();
+    // TODO get rid of this method in favor of calling manager directly
+    public Set<Jid> getBlocklist() {
+        final var connection = this.xmppConnection;
+        if (connection == null) {
+            return Collections.emptySet();
+        }
+        return connection.getManager(BlockingManager.class).getBlocklist();
     }
 
     public boolean isOnlineAndConnected() {
@@ -775,6 +721,28 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     @Override
     public String getAvatarName() {
         throw new IllegalStateException("This method should not be called");
+    }
+
+    public void setServiceOutageStatus(final ServiceOutageStatus sos) {
+        this.serviceOutageStatus = sos;
+    }
+
+    public ServiceOutageStatus getServiceOutageStatus() {
+        return this.serviceOutageStatus;
+    }
+
+    public boolean isServiceOutage() {
+        final var sos = this.serviceOutageStatus;
+        if (sos != null
+                && isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY)
+                && ServiceOutageStatus.isPossibleOutage(this.status)) {
+            return sos.isNow();
+        }
+        return false;
+    }
+
+    public void setXmppConnection(final XmppConnection connection) {
+        this.xmppConnection = connection;
     }
 
     public enum State {
@@ -838,78 +806,43 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
         }
 
         public int getReadableId() {
-            switch (this) {
-                case DISABLED:
-                    return R.string.account_status_disabled;
-                case LOGGED_OUT:
-                    return R.string.account_state_logged_out;
-                case ONLINE:
-                    return R.string.account_status_online;
-                case CONNECTING:
-                    return R.string.account_status_connecting;
-                case OFFLINE:
-                    return R.string.account_status_offline;
-                case UNAUTHORIZED:
-                    return R.string.account_status_unauthorized;
-                case SERVER_NOT_FOUND:
-                    return R.string.account_status_not_found;
-                case NO_INTERNET:
-                    return R.string.account_status_no_internet;
-                case CONNECTION_TIMEOUT:
-                    return R.string.account_status_connection_timeout;
-                case REGISTRATION_FAILED:
-                    return R.string.account_status_regis_fail;
-                case REGISTRATION_WEB:
-                    return R.string.account_status_regis_web;
-                case REGISTRATION_CONFLICT:
-                    return R.string.account_status_regis_conflict;
-                case REGISTRATION_SUCCESSFUL:
-                    return R.string.account_status_regis_success;
-                case REGISTRATION_NOT_SUPPORTED:
-                    return R.string.account_status_regis_not_sup;
-                case REGISTRATION_INVALID_TOKEN:
-                    return R.string.account_status_regis_invalid_token;
-                case TLS_ERROR:
-                    return R.string.account_status_tls_error;
-                case TLS_ERROR_DOMAIN:
-                    return R.string.account_status_tls_error_domain;
-                case INCOMPATIBLE_SERVER:
-                    return R.string.account_status_incompatible_server;
-                case INCOMPATIBLE_CLIENT:
-                    return R.string.account_status_incompatible_client;
-                case CHANNEL_BINDING:
-                    return R.string.account_status_channel_binding;
-                case TOR_NOT_AVAILABLE:
-                    return R.string.account_status_tor_unavailable;
-                case BIND_FAILURE:
-                    return R.string.account_status_bind_failure;
-                case SESSION_FAILURE:
-                    return R.string.session_failure;
-                case DOWNGRADE_ATTACK:
-                    return R.string.sasl_downgrade;
-                case HOST_UNKNOWN:
-                    return R.string.account_status_host_unknown;
-                case POLICY_VIOLATION:
-                    return R.string.account_status_policy_violation;
-                case REGISTRATION_PLEASE_WAIT:
-                    return R.string.registration_please_wait;
-                case REGISTRATION_PASSWORD_TOO_WEAK:
-                    return R.string.registration_password_too_weak;
-                case STREAM_ERROR:
-                    return R.string.account_status_stream_error;
-                case STREAM_OPENING_ERROR:
-                    return R.string.account_status_stream_opening_error;
-                case PAYMENT_REQUIRED:
-                    return R.string.payment_required;
-                case SEE_OTHER_HOST:
-                    return R.string.reconnect_on_other_host;
-                case MISSING_INTERNET_PERMISSION:
-                    return R.string.missing_internet_permission;
-                case TEMPORARY_AUTH_FAILURE:
-                    return R.string.account_status_temporary_auth_failure;
-                default:
-                    return R.string.account_status_unknown;
-            }
+            return switch (this) {
+                case DISABLED -> R.string.account_status_disabled;
+                case LOGGED_OUT -> R.string.account_state_logged_out;
+                case ONLINE -> R.string.account_status_online;
+                case CONNECTING -> R.string.account_status_connecting;
+                case OFFLINE -> R.string.account_status_offline;
+                case UNAUTHORIZED -> R.string.account_status_unauthorized;
+                case SERVER_NOT_FOUND -> R.string.account_status_not_found;
+                case NO_INTERNET -> R.string.account_status_no_internet;
+                case CONNECTION_TIMEOUT -> R.string.account_status_connection_timeout;
+                case REGISTRATION_FAILED -> R.string.account_status_regis_fail;
+                case REGISTRATION_WEB -> R.string.account_status_regis_web;
+                case REGISTRATION_CONFLICT -> R.string.account_status_regis_conflict;
+                case REGISTRATION_SUCCESSFUL -> R.string.account_status_regis_success;
+                case REGISTRATION_NOT_SUPPORTED -> R.string.account_status_regis_not_sup;
+                case REGISTRATION_INVALID_TOKEN -> R.string.account_status_regis_invalid_token;
+                case TLS_ERROR -> R.string.account_status_tls_error;
+                case TLS_ERROR_DOMAIN -> R.string.account_status_tls_error_domain;
+                case INCOMPATIBLE_SERVER -> R.string.account_status_incompatible_server;
+                case INCOMPATIBLE_CLIENT -> R.string.account_status_incompatible_client;
+                case CHANNEL_BINDING -> R.string.account_status_channel_binding;
+                case TOR_NOT_AVAILABLE -> R.string.account_status_tor_unavailable;
+                case BIND_FAILURE -> R.string.account_status_bind_failure;
+                case SESSION_FAILURE -> R.string.session_failure;
+                case DOWNGRADE_ATTACK -> R.string.sasl_downgrade;
+                case HOST_UNKNOWN -> R.string.account_status_host_unknown;
+                case POLICY_VIOLATION -> R.string.account_status_policy_violation;
+                case REGISTRATION_PLEASE_WAIT -> R.string.registration_please_wait;
+                case REGISTRATION_PASSWORD_TOO_WEAK -> R.string.registration_password_too_weak;
+                case STREAM_ERROR -> R.string.account_status_stream_error;
+                case STREAM_OPENING_ERROR -> R.string.account_status_stream_opening_error;
+                case PAYMENT_REQUIRED -> R.string.payment_required;
+                case SEE_OTHER_HOST -> R.string.reconnect_on_other_host;
+                case MISSING_INTERNET_PERMISSION -> R.string.missing_internet_permission;
+                case TEMPORARY_AUTH_FAILURE -> R.string.account_status_temporary_auth_failure;
+                default -> R.string.account_status_unknown;
+            };
         }
     }
 }

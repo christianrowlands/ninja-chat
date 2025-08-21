@@ -2,7 +2,6 @@
 <resources>
     <string name="action_settings">Seadistused</string>
     <string name="action_edit_contact">Muuda nime</string>
-    <string name="action_add_phone_book">Lisa aadressiraamatusse</string>
     <string name="title_activity_choose_contacts">Vali kontaktid</string>
     <string name="minute_ago">1 minut tagasi</string>
     <string name="action_contact_details">Kontaktandmed</string>
@@ -91,7 +90,7 @@
     <string name="send_message_to_x">Saada sõnum kasutajale %s</string>
     <string name="send_encrypted_message">Saada krüptitud sõnum</string>
     <string name="send_omemo_x509_message">Saada v\\OMEMO-krüptitud sõnum</string>
-    <string name="your_nick_has_been_changed">Uus hüüdnimi on juba kasutusel</string>
+    <string name="your_nick_has_been_changed">Sinu hüüdnimi on muutunud</string>
     <string name="send_unencrypted">Saada sõnum krüptimata tekstina</string>
     <string name="decryption_failed">Dekrüptimine ei õnnestunud. Võib-olla pole sul õiget privaatvõtit.</string>
     <string name="openkeychain_required">OpenKeychain</string>
@@ -243,14 +242,7 @@
     <string name="no_xmpp_adddress_found">XMPP-aadressi ei leidu</string>
     <string name="server_info_available">saadaval</string>
     <string name="missing_public_keys">Avalikke võtmeid pole avaldatud</string>
-    <string name="last_seen_now">viimati nähtud just nüüd</string>
     <string name="server_info_unavailable">pole saadaval</string>
-    <string name="last_seen_min">viimati nähtud ühe minuti eest</string>
-    <string name="last_seen_mins">viimati nähtud %d minutit tagasi</string>
-    <string name="last_seen_hour">viimati nähtud ühe tunni eest</string>
-    <string name="last_seen_hours">viimati nähtud %d tundi tagasi</string>
-    <string name="last_seen_day">viimati nähtud ühe päeva eest</string>
-    <string name="last_seen_days">viimati nähtud %d päeva tagasi</string>
     <string name="install_openkeychain">Krüptitud sõnum. Dekrüptimiseks palun paigalda OpenKeychain.</string>
     <string name="openpgp_messages_found">Leidub uus OpenPGPga krüptitud sõnum</string>
     <string name="openpgp_key_id">OpenPGP võtme tunnus</string>
@@ -341,7 +333,7 @@
     <string name="group_chat_members">Osalejad</string>
     <string name="only_the_owner_can_change_group_chat_avatar">Vaid omanik võib muuta vestlusrühma profiilipilte</string>
     <string name="contact_name">Kontakti nimi</string>
-    <string name="set_profile_picture">Conversationsi profiilipilt</string>
+    <string name="set_profile_picture">Tunnuspilt</string>
     <string name="enter_password_to_restore">Varukoopiast taastamiseks sisesta %s kasutajakonto salasõna.</string>
     <string name="enter_your_name_instructions">Selleks, et need, kellel pole sind oma aadressiraamatus, saaksid teada, kes sa oled, siis palun lisa oma nimi.</string>
     <string name="group_chat_will_make_your_jabber_id_public">See kanal teeb sinu XMPP-aadressi avalikuks</string>
@@ -441,7 +433,7 @@
     <string name="pref_keep_foreground_service">Teenus esiplaanil</string>
     <string name="pref_keep_foreground_service_summary">See eelistus takistab operatsioonisüsteemil sinu võrguühenduse sulgemist</string>
     <string name="pref_create_backup">Tee varukoopia</string>
-    <string name="pref_create_backup_summary">Varukoopia failide salvestamise asukoht: %s</string>
+    <string name="pref_create_backup_summary">Varukoopiate salvestamise asukoht: %s</string>
     <string name="notification_backup_created_title">Sinu varukoopia on tehtud</string>
     <string name="notification_create_backup_title">Teeme varukoopiat</string>
     <string name="notification_backup_created_subtitle">Varukoopia failid on salvestatud siin kaustas: %s</string>
@@ -764,8 +756,8 @@
     <string name="gp_short">Lühike</string>
     <string name="gp_medium">Keskmine</string>
     <string name="gp_long">Pikk</string>
-    <string name="pref_broadcast_last_activity">Viimati nähtud</string>
-    <string name="pref_broadcast_last_activity_summary">Luba oma kontaktidel näha, millal sa viimati vestlusrakendust kasutasid</string>
+    <string name="pref_broadcast_last_activity">Näita märget „viimati nähtud“</string>
+    <string name="pref_broadcast_last_activity_summary">Luba oma kontaktidel näha aega, millal sa viimati vestlusrakendust kasutasid</string>
     <string name="today">Täna</string>
     <string name="yesterday">Eile</string>
     <string name="pref_validate_hostname">Kontrolli hosti nime DNSSECi abil</string>
@@ -889,8 +881,8 @@
     <string name="try_again_in_x">Palun oota %s ja proovi uuesti</string>
     <string name="rate_limited">Sinu tehtavatele päringutele kehtib hetkel ajaühikuline piirang</string>
     <string name="too_many_attempts">Liiga palju päringuid</string>
-    <string name="restore_warning">Ära kasuta varukoopiat olemasoleva paigalduse kloonimiseks (samaaegseks käivitamiseks). Varukoopiast taastamine on mõeldud vaid teise seadmesse kolimise jaoks ning juhuks, kui kaotad oma algse nutiseadme.</string>
-    <string name="restore_warning_continued">Palun ära kasuta varukoopiaid, mida sa pole ise teinud!</string>
+    <string name="restore_warning">Ära kasuta OMEMO võtmete taastamist olemasoleva paigalduse kloonimiseks (samaaegseks käivitamiseks). OMEMO võtmete taastamine on mõeldud vaid teise seadmesse kolimise jaoks ning juhuks, kui kaotad oma algse nutiseadme.</string>
+    <string name="restore_warning_continued">Palun taasta varukoopiatest, mille sa oled ise teinud.</string>
     <string name="unable_to_restore_backup">Varukoopiast taastamine ei õnnestunud.</string>
     <string name="local_server">Kohalik server</string>
     <string name="pref_channel_discovery_summary">Enamus kasutajaid peaksid eelistama valikut „jabber.network“. See tagab asjakohasemad soovitused kogu avalikust XMPP võrgustikust.</string>
@@ -908,7 +900,7 @@
     <string name="rtp_state_accepting_call">Võtame kõnet vastu</string>
     <string name="rtp_state_ending_call">Lõpetame kõnet</string>
     <string name="answer_call">Vasta</string>
-    <string name="dismiss_call">Keeldu</string>
+    <string name="dismiss_call">Loobu</string>
     <string name="rtp_state_finding_device">Tuvastame seadmeid</string>
     <string name="rtp_state_ringing">Helistame</string>
     <string name="rtp_state_contact_offline">Kontakt pole kättesaadav</string>
@@ -1067,7 +1059,7 @@
     <string name="delete_from_server">Eemalda kasutajakonto serverist</string>
     <string name="could_not_delete_account_from_server">Kasutajakonto eemaldamine serverist ei õnnestunud</string>
     <string name="contact_uses_unverified_keys">Vestluse teine osapool kasutab verifitseerimata nutiseadmeid. Verifitseerimiseks skaneeri tema QR-koodi ja takista võimalikke vahendusründeid.</string>
-    <string name="privacy_policy">Privaatsuspoliitika</string>
+    <string name="privacy_policy">Andmekaitsepõhimõtted</string>
     <string name="contact_list_integration_not_available">Kontaktiloendi lõimimine pole hetkel saadaval</string>
     <string name="unverified_devices">Sina kasutad verifitseerimata nutiseadmeid. Verifitseerimiseks skaneeri oma muus sedames kuvatavat QR-koodi ja takista võimalikke vahendusründeid.</string>
     <string name="report_spam">Teata spämmist</string>
@@ -1115,8 +1107,6 @@
     </plurals>
     <string name="could_not_modify_call">Kõne muutmine ei õnnestunud</string>
     <string name="clients_may_not_support_av">Vestluse teise osapoole XMPP-klient ilmselt ei toeta hääl- ja videokõnesid.</string>
-    <string name="pref_show_avatars_summary">Näita oma sõnumite puhul tunnuspilte otsevestlustes ja vestlusrühmades.</string>
-    <string name="pref_show_avatars">Näita tunnuspilte</string>
     <string name="pref_chat_bubbles">Jutumullid</string>
     <string name="pref_chat_bubbles_summary">Taustavärv, kirjatüübi suurus, tunnuspildid</string>
     <string name="pref_title_bubbles">Jutumullid</string>
@@ -1130,5 +1120,40 @@
     <string name="show_to_contacts_only">Näita vaid kontaktidele</string>
     <string name="account_status_connection_timeout">Ühenduse on aegunud</string>
     <string name="retry_with_p2p">Proovi uuesti võrdõigusvõrguga</string>
-    <string name="account_status_channel_binding">Edastuskanaliga sidumine pole võimalik</string>
+    <string name="account_status_channel_binding">Edastuskanaliga sidumine puudub</string>
+    <string name="word_document">Wordi-dokument</string>
+    <string name="restore_omemo_key">Taasta OMEMO võtmed</string>
+    <string name="non_quicksy_backup">Quicksy saab taastada vaid quicksy.im teenuses asuvate kasutajakontode varukoopiaid</string>
+    <string name="pref_backup_location">Varukoopia asukoht</string>
+    <string name="uri">URI</string>
+    <string name="copy_URI">Kopeeri URI</string>
+    <string name="copy_geo_uri">Kopeeri geograafilised koordinaadid</string>
+    <string name="copy_email_address">Kopeeri e-posti aadress</string>
+    <string name="copied_email_address">Kopeerisime e-posti aadressi lõikelauale</string>
+    <string name="uri_copied_to_clipboard">Kopeerisime URI lõikelauale</string>
+    <string name="copy_telephone_number">Kopeeri telefoninumber</string>
+    <string name="copied_phone_number">Kopeerisime telefoninumbri lõikelauale</string>
+    <string name="account_status_service_outage_scheduled">Planeeritud teenuse katkestus</string>
+    <string name="account_status_service_outage_known">Teenus ei tööta (teadaolev probleem)</string>
+    <string name="sos_scheduled_return">Teenuse plaanilise taastumise aeg on %s</string>
+    <string name="save_to_contact">Salvesta kontaktidesse</string>
+    <string name="no_contacts_permission">%1$s vajab ligipääsu sinu kontaktidele</string>
+    <string name="show_in_contacts">Näita kontaktides</string>
+    <string name="pref_account_avatar">Kasutajakontod</string>
+    <string name="pref_category_avatars">Tunnuspildid ehk avatarid</string>
+    <string name="pref_show_11_chats">1:1 vestlused</string>
+    <string name="pref_show_11_chats_summary">Näita tunnuspilte ka 1:1 vestlustes. (Rühmavestlustes näidatakse alati tunnuspilte.)</string>
+    <string name="pref_account_avatar_summary">Lihtsamaks tuvastamiseks ja halduseks kuva ka saadetud sõnumite puhul konto tunnuspilti.</string>
+    <string name="pref_show_11_sender_chats_summary">Näita tunnuspilte ka 1:1 vestluste saabunud sõnumitel. (Rühmavestlustes näidatakse alati tunnuspilte.)</string>
+    <string name="moderate_delete_dot_dot_dot">Kustuta moderaatorina…</string>
+    <string name="moderate_delete">Kustuta moderaatorina</string>
+    <string name="could_not_moderate_message">Sõnumi modereerimine ei õnnestunud</string>
+    <string name="delete_message">Kustuta sõnum</string>
+    <string name="moderation_explained">Järgnevaga see sõnum kustub sinu ja kõikide teiste selles kanalis osalejate jaoks.</string>
+    <string name="do_not_show_this_warning_again">Ära näita seda hoiatust uuesti.</string>
+    <string name="last_seen">viimati nähtud %s</string>
+    <plurals name="x_participants">
+        <item quantity="one">%1$d osaleja</item>
+        <item quantity="other">%1$d osalejat</item>
+    </plurals>
 </resources>
