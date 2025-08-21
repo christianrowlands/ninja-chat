@@ -329,8 +329,8 @@ public class IqParser extends AbstractParser implements Consumer<Iq> {
             mXmppConnectionService
                     .getJingleConnectionManager()
                     .deliverIbbPacket(getAccount(), packet);
-//        } else if (packet.hasExtension(Push.class)) {
-//            this.getManager(UnifiedPushManager.class).push(packet);
+        } else if (packet.hasExtension(Push.class)) {
+            this.getManager(UnifiedPushManager.class).push(packet);
         } else {
             this.connection.sendErrorFor(
                     packet, Error.Type.CANCEL, new Condition.FeatureNotImplemented());

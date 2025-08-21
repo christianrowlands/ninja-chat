@@ -19,16 +19,16 @@ public class UnifiedPushManager extends AbstractManager {
     }
 
     public void push(final Iq packet) {
-        final Jid transport = packet.getFrom();
-        final var push = packet.getOnlyExtension(Push.class);
-        if (push == null || transport == null) {
-            connection.sendErrorFor(packet, Error.Type.MODIFY, new Condition.BadRequest());
-            return;
-        }
-        if (service.processUnifiedPushMessage(getAccount(), transport, push)) {
-            connection.sendResultFor(packet);
-        } else {
-            connection.sendErrorFor(packet, Error.Type.CANCEL, new Condition.ItemNotFound());
-        }
+//        final Jid transport = packet.getFrom();
+//        final var push = packet.getOnlyExtension(Push.class);
+//        if (push == null || transport == null) {
+//            connection.sendErrorFor(packet, Error.Type.MODIFY, new Condition.BadRequest());
+//            return;
+//        }
+//        if (service.processUnifiedPushMessage(getAccount(), transport, push)) {
+//            connection.sendResultFor(packet);
+//        } else {
+//            connection.sendErrorFor(packet, Error.Type.CANCEL, new Condition.ItemNotFound());
+//        }
     }
 }
