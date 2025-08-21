@@ -1,6 +1,6 @@
 package de.gultsch.common;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ public class MiniUriTest {
         Assert.assertEquals("https", miniUri.getScheme());
         Assert.assertEquals("example.com", miniUri.getAuthority());
         Assert.assertEquals("/test.cgi", miniUri.getPath());
-        Assert.assertEquals(ImmutableMap.of("foo", "bar"), miniUri.getParameter());
+        Assert.assertEquals(ImmutableMultimap.of("foo", "bar").asMap(), miniUri.getParameter());
     }
 
     @Test
@@ -45,7 +45,7 @@ public class MiniUriTest {
         Assert.assertEquals("xmpp", miniUri.getScheme());
         Assert.assertNull(miniUri.getAuthority());
         Assert.assertEquals("room@chat.example.com", miniUri.getPath());
-        Assert.assertEquals(ImmutableMap.of("join", ""), miniUri.getParameter());
+        Assert.assertEquals(ImmutableMultimap.of("join", "").asMap(), miniUri.getParameter());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class MiniUriTest {
         Assert.assertNull(miniUri.getAuthority());
         Assert.assertEquals("romeo@montague.net", miniUri.getPath());
         Assert.assertEquals(
-                ImmutableMap.of("message", "", "body", "Here's a test message"),
+                ImmutableMultimap.of("message", "", "body", "Here's a test message").asMap(),
                 miniUri.getParameter());
     }
 }
