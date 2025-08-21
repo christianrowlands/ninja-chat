@@ -139,8 +139,11 @@ android {
 
     splits {
         abi {
+            // Only enable splits for APK builds, not for Bundle builds
+            enable gradle.startParameter.taskNames.any { 
+                it.contains("assemble") && !it.contains("Bundle") 
+            }
             universalApk true
-            enable true
             reset()
             //noinspection ChromeOsAbiSupport
             include project.ext.abiCodes.keySet() as String[]
