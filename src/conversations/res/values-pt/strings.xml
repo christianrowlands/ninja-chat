@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pick_a_server">Selecione o provedor XMPP</string>
-    <string name="use_conversations.im">Usar conversations.im</string>
+    <string name="use_ninja.chat">Usar ninja.chat</string>
     <string name="create_new_account">Criar nova conta</string>
     <string name="do_you_have_an_account">Já tem uma conta XMPP? Esse pode ser o caso se já usou um cliente de XMPP diferente ou tenha usado o Conversations antes. Caso contrário, pode criar uma agora. \nDica: Alguns provedores de e-mail também fornecem contas XMPP.</string>
     <string name="your_server_invitation">O teu convite do servidor</string>
