@@ -24,6 +24,8 @@
 -dontwarn org.bouncycastle.cert.dane.**
 -dontwarn rocks.xmpp.addr.**
 -dontwarn com.google.firebase.analytics.connector.AnalyticsConnector
+-dontwarn com.google.android.gms.ads.identifier.AdvertisingIdClient
+-dontwarn com.google.android.gms.ads.identifier.AdvertisingIdClient$Info
 -dontwarn java.lang.**
 -dontwarn javax.lang.**
 -dontwarn org.webrtc.Dav1dDecoder
