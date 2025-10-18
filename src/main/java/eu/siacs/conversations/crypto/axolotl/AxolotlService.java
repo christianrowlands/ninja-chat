@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -75,7 +76,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     public static final String PEP_DEVICE_LIST_NOTIFY = PEP_DEVICE_LIST + "+notify";
     public static final String PEP_BUNDLES = PEP_PREFIX + ".bundles";
     public static final String PEP_VERIFICATION = PEP_PREFIX + ".verification";
-    public static final String PEP_OMEMO_WHITELISTED = PEP_PREFIX + ".whitelisted";
 
     public static final String LOGPREFIX = "AxolotlService";
 
@@ -199,7 +199,8 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         return axolotlStore.getContactKeysWithTrust(jid.asBareJid().toString(), status);
     }
 
-    public Set<IdentityKey> getKeysWithTrust(FingerprintStatus status, List<Jid> jids) {
+    public Set<IdentityKey> getKeysWithTrust(
+            final FingerprintStatus status, final Collection<Jid> jids) {
         Set<IdentityKey> keys = new HashSet<>();
         for (Jid jid : jids) {
             keys.addAll(axolotlStore.getContactKeysWithTrust(jid.toString(), status));
@@ -207,15 +208,11 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         return keys;
     }
 
-    public Set<Jid> findCounterpartsBySourceId(int sid) {
-        return sessions.findCounterpartsForSourceId(sid);
-    }
-
     public long getNumTrustedKeys(Jid jid) {
         return axolotlStore.getContactNumTrustedKeys(jid.asBareJid().toString());
     }
 
-    public boolean anyTargetHasNoTrustedKeys(List<Jid> jids) {
+    public boolean anyTargetHasNoTrustedKeys(final Collection<Jid> jids) {
         for (Jid jid : jids) {
             if (axolotlStore.getContactNumTrustedKeys(jid.asBareJid().toString()) == 0) {
                 return true;
@@ -967,15 +964,12 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 ownDeviceIds == null ? Collections.emptySet() : ownDeviceIds);
     }
 
-    public List<Jid> getCryptoTargets(Conversation conversation) {
-        final List<Jid> jids;
+    public ImmutableSet<Jid> getCryptoTargets(final Conversation conversation) {
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
-            jids = new ArrayList<>();
-            jids.add(conversation.getAddress().asBareJid());
+            return ImmutableSet.of(conversation.getAddress().asBareJid());
         } else {
-            jids = conversation.getMucOptions().getMembers(false);
+            return conversation.getMucOptions().getMembers();
         }
-        return jids;
     }
 
     public FingerprintStatus getFingerprintTrust(String fingerprint) {
@@ -1197,7 +1191,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         }
     }
 
-    private void fetchDeviceIds(List<Jid> jids, final OnMultipleDeviceIdFetched callback) {
+    private void fetchDeviceIds(Collection<Jid> jids, final OnMultipleDeviceIdFetched callback) {
         final ArrayList<Jid> unfinishedJids = new ArrayList<>(jids);
         synchronized (unfinishedJids) {
             for (Jid jid : unfinishedJids) {
@@ -1494,24 +1488,19 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public boolean createSessionsIfNeeded(final Conversation conversation) {
-        final List<Jid> jidsWithEmptyDeviceList = getCryptoTargets(conversation);
-        for (Iterator<Jid> iterator = jidsWithEmptyDeviceList.iterator(); iterator.hasNext(); ) {
-            final Jid jid = iterator.next();
-            if (!hasEmptyDeviceList(jid)) {
-                iterator.remove();
-            }
-        }
+        final var targets = getCryptoTargets(conversation);
+        final var jidsWithEmptyDeviceList = Collections2.filter(targets, this::hasEmptyDeviceList);
         Log.d(
                 Config.LOGTAG,
                 account.getJid().asBareJid()
                         + ": createSessionsIfNeeded() - jids with empty device list: "
                         + jidsWithEmptyDeviceList);
-        if (jidsWithEmptyDeviceList.size() > 0) {
+        if (jidsWithEmptyDeviceList.isEmpty()) {
+            return createSessionsIfNeededActual(conversation);
+        } else {
             fetchDeviceIds(
                     jidsWithEmptyDeviceList, () -> createSessionsIfNeededActual(conversation));
             return true;
-        } else {
-            return createSessionsIfNeededActual(conversation);
         }
     }
 
@@ -1563,7 +1552,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         return verified;
     }
 
-    public boolean hasPendingKeyFetches(List<Jid> jids) {
+    public boolean hasPendingKeyFetches(final Collection<Jid> jids) {
         SignalProtocolAddress ownAddress =
                 new SignalProtocolAddress(account.getJid().asBareJid().toString(), 0);
         if (fetchStatusMap.getAll(ownAddress.getName()).containsValue(FetchStatus.PENDING)) {
@@ -2194,19 +2183,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             this.xmppConnectionService = service;
             this.account = account;
             this.fillMap(store);
-        }
-
-        public Set<Jid> findCounterpartsForSourceId(Integer sid) {
-            Set<Jid> candidates = new HashSet<>();
-            synchronized (MAP_LOCK) {
-                for (Map.Entry<String, Map<Integer, XmppAxolotlSession>> entry : map.entrySet()) {
-                    String key = entry.getKey();
-                    if (entry.getValue().containsKey(sid)) {
-                        candidates.add(Jid.of(key));
-                    }
-                }
-            }
-            return candidates;
         }
 
         private void putDevicesForJid(

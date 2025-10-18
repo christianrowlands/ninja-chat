@@ -328,7 +328,7 @@ public class DiscoManager extends AbstractManager {
 
     ServiceDescription getServiceDescription() {
         final var appSettings = new AppSettings(context);
-        final var account = connection.getAccount();
+        final var account = this.getAccount();
         final ImmutableList.Builder<String> features = ImmutableList.builder();
         features.addAll(STATIC_FEATURES);
         if (Config.MESSAGE_DISPLAYED_SYNCHRONIZATION) {
@@ -423,7 +423,7 @@ public class DiscoManager extends AbstractManager {
 
     public Map<Jid, InfoQuery> getServerItems() {
         final var builder = new ImmutableMap.Builder<Jid, InfoQuery>();
-        final var domain = connection.getAccount().getDomain();
+        final var domain = this.getAccount().getDomain();
         final var domainInfoQuery = get(domain);
         if (domainInfoQuery != null) {
             builder.put(domain, domainInfoQuery);
@@ -443,7 +443,7 @@ public class DiscoManager extends AbstractManager {
     }
 
     private boolean hasServerItem(final Jid address) {
-        final var domain = connection.getAccount().getDomain();
+        final var domain = this.getAccount().getDomain();
         final var items = this.discoItems.get(domain);
         return items != null && items.contains(address);
     }
@@ -512,7 +512,10 @@ public class DiscoManager extends AbstractManager {
     }
 
     public void clear(final Jid address) {
-        if (hasServerItem(address)) {
+        final var account = getAccount().getJid().asBareJid();
+        if (hasServerItem(address)
+                || account.equals(address)
+                || account.getDomain().equals(address)) {
             Log.d(Config.LOGTAG, "do not clear disco#info for " + address);
             return;
         }

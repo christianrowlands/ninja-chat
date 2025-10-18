@@ -20,13 +20,13 @@ import eu.siacs.conversations.persistance.DatabaseBackend;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.worker.ExportBackupWorker;
-import eu.siacs.conversations.xmpp.Jid;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -82,7 +82,7 @@ public class BackupFile implements Comparable<BackupFile> {
 
     private static List<BackupFile> list(final Context context) {
         final var database = DatabaseBackend.getInstance(context);
-        final List<Jid> accounts = database.getAccountJids(false);
+        final var accounts = database.getAccountAddresses(false);
         final var backupFiles = new ImmutableList.Builder<BackupFile>();
         final var apps =
                 ImmutableSet.of("Conversations", "Quicksy", context.getString(R.string.app_name));
@@ -178,6 +178,9 @@ public class BackupFile implements Comparable<BackupFile> {
     @Override
     public int compareTo(final BackupFile o) {
         return ComparisonChain.start()
+                .compare(
+                        o.header.getInstant().truncatedTo(ChronoUnit.DAYS),
+                        header.getInstant().truncatedTo(ChronoUnit.DAYS))
                 .compare(header.getJid(), o.header.getJid())
                 .compare(o.header.getTimestamp(), header.getTimestamp())
                 .result();

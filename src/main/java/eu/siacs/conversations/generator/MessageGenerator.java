@@ -19,6 +19,7 @@ import eu.siacs.conversations.xmpp.jingle.stanzas.Reason;
 import im.conversations.android.xmpp.model.correction.Replace;
 import im.conversations.android.xmpp.model.hints.NoStore;
 import im.conversations.android.xmpp.model.hints.Store;
+import im.conversations.android.xmpp.model.markers.Markable;
 import im.conversations.android.xmpp.model.reactions.Reaction;
 import im.conversations.android.xmpp.model.reactions.Reactions;
 import im.conversations.android.xmpp.model.receipts.Received;
@@ -63,7 +64,7 @@ public class MessageGenerator extends AbstractGenerator {
             packet.setType(im.conversations.android.xmpp.model.stanza.Message.Type.GROUPCHAT);
         }
         if (conversation.isSingleOrPrivateAndNonAnonymous() && !message.isPrivateMessage()) {
-            packet.addChild("markable", "urn:xmpp:chat-markers:0");
+            packet.addExtension(new Markable());
         }
         packet.setFrom(account.getJid());
         packet.setId(message.getUuid());
@@ -166,32 +167,6 @@ public class MessageGenerator extends AbstractGenerator {
         return packet;
     }
 
-    public im.conversations.android.xmpp.model.stanza.Message confirm(final Message message) {
-        final boolean groupChat = message.getConversation().getMode() == Conversational.MODE_MULTI;
-        final Jid to = message.getCounterpart();
-        final im.conversations.android.xmpp.model.stanza.Message packet =
-                new im.conversations.android.xmpp.model.stanza.Message();
-        packet.setType(
-                groupChat
-                        ? im.conversations.android.xmpp.model.stanza.Message.Type.GROUPCHAT
-                        : im.conversations.android.xmpp.model.stanza.Message.Type.CHAT);
-        packet.setTo(groupChat ? to.asBareJid() : to);
-        final Element displayed = packet.addChild("displayed", "urn:xmpp:chat-markers:0");
-        if (groupChat) {
-            final String stanzaId = message.getServerMsgId();
-            if (stanzaId != null) {
-                displayed.setAttribute("id", stanzaId);
-            } else {
-                displayed.setAttribute("sender", to.toString());
-                displayed.setAttribute("id", message.getRemoteMsgId());
-            }
-        } else {
-            displayed.setAttribute("id", message.getRemoteMsgId());
-        }
-        packet.addExtension(new Store());
-        return packet;
-    }
-
     public im.conversations.android.xmpp.model.stanza.Message reaction(
             final Jid to,
             final boolean groupChat,
@@ -214,26 +189,20 @@ public class MessageGenerator extends AbstractGenerator {
     }
 
     public im.conversations.android.xmpp.model.stanza.Message received(
-            final Jid from,
+            final Jid to,
             final String id,
             final im.conversations.android.xmpp.model.stanza.Message.Type type) {
         final var receivedPacket = new im.conversations.android.xmpp.model.stanza.Message();
         receivedPacket.setType(type);
-        receivedPacket.setTo(from);
+        receivedPacket.setTo(to);
         receivedPacket.addExtension(new Received(id));
         receivedPacket.addExtension(new Store());
         return receivedPacket;
     }
 
     public im.conversations.android.xmpp.model.stanza.Message received(
-            Account account, Jid to, String id) {
-        im.conversations.android.xmpp.model.stanza.Message packet =
-                new im.conversations.android.xmpp.model.stanza.Message();
-        packet.setFrom(account.getJid());
-        packet.setTo(to);
-        packet.addChild("received", "urn:xmpp:receipts").setAttribute("id", id);
-        packet.addExtension(new Store());
-        return packet;
+            final Jid to, final String id) {
+        return received(to, id, im.conversations.android.xmpp.model.stanza.Message.Type.NORMAL);
     }
 
     public im.conversations.android.xmpp.model.stanza.Message sessionFinish(

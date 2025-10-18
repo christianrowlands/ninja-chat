@@ -16,11 +16,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
@@ -34,6 +35,7 @@ import im.conversations.android.xmpp.model.idle.LastUserInteraction;
 import im.conversations.android.xmpp.model.stanza.Presence;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -153,6 +155,7 @@ public class UIHelper {
         }
     }
 
+    @ColorInt
     public static int getColorForName(final String name) {
         return XEP0392Helper.rgbFromNick(name);
     }
@@ -410,40 +413,25 @@ public class UIHelper {
         return false;
     }
 
-    public static String getDisplayName(MucOptions.User user) {
-        Contact contact = user.getContact();
-        if (contact != null) {
-            return contact.getDisplayName();
-        } else {
-            final String name = user.getName();
-            if (name != null) {
-                return name;
-            }
-            final Jid realJid = user.getRealJid();
-            if (realJid != null) {
-                return JidHelper.localPartOrFallback(realJid);
-            }
-            return null;
-        }
+    public static String concatNames(final Collection<MucOptions.User> users) {
+        return concatNames(users, users.size() >= 3);
     }
 
-    public static String concatNames(List<MucOptions.User> users) {
-        return concatNames(users, users.size());
+    public static String concatNames(
+            final Collection<MucOptions.User> users, final boolean shortNames) {
+
+        return Joiner.on(", ")
+                .join(
+                        Collections2.transform(
+                                users,
+                                u -> {
+                                    final var name = u.getDisplayName();
+                                    return shortNames ? name.split("\\s+")[0] : name;
+                                }));
     }
 
-    public static String concatNames(List<MucOptions.User> users, int max) {
-        StringBuilder builder = new StringBuilder();
-        final boolean shortNames = users.size() >= 3;
-        for (int i = 0; i < Math.min(users.size(), max); ++i) {
-            if (builder.length() != 0) {
-                builder.append(", ");
-            }
-            final String name = UIHelper.getDisplayName(users.get(i));
-            if (name != null) {
-                builder.append(shortNames ? name.split("\\s+")[0] : name);
-            }
-        }
-        return builder.toString();
+    public static String concatNames(final Collection<MucOptions.User> users, final int max) {
+        return concatNames(ImmutableList.copyOf(Iterables.limit(users, max)));
     }
 
     public static String getFileDescriptionString(final Context context, final Message message) {
@@ -491,26 +479,28 @@ public class UIHelper {
     public static String getMessageDisplayName(final Message message) {
         final Conversational conversation = message.getConversation();
         if (message.getStatus() == Message.STATUS_RECEIVED) {
-            final Contact contact = message.getContact();
             if (conversation.getMode() == Conversation.MODE_MULTI) {
-                if (contact != null) {
-                    return contact.getDisplayName();
+                if (conversation instanceof Conversation c) {
+                    return c.getMucOptions().getUserOrStub(message).getDisplayName();
                 } else {
-                    return getDisplayedMucCounterpart(message.getCounterpart());
+                    final var counterpart = message.getCounterpart();
+                    return counterpart.isBareJid()
+                            ? counterpart.toString()
+                            : counterpart.getResource();
                 }
             } else {
-                return contact != null ? contact.getDisplayName() : "";
+                return conversation.getContact().getDisplayName();
             }
         } else {
-            if (conversation instanceof Conversation
+            if (conversation instanceof Conversation c
                     && conversation.getMode() == Conversation.MODE_MULTI) {
-                return ((Conversation) conversation).getMucOptions().getSelf().getName();
+                return c.getMucOptions().getSelf().getDisplayName();
             } else {
                 final Account account = conversation.getAccount();
                 final Jid jid = account.getJid();
                 final String displayName = account.getDisplayName();
                 if (Strings.isNullOrEmpty(displayName)) {
-                    return jid.getLocal() != null ? jid.getLocal() : jid.getDomain().toString();
+                    return jid.isDomainJid() ? jid.getDomain().toString() : jid.getLocal();
                 } else {
                     return displayName;
                 }
@@ -537,16 +527,6 @@ public class UIHelper {
             }
             default -> context.getString(R.string.send_encrypted_message);
         };
-    }
-
-    public static String getDisplayedMucCounterpart(final Jid counterpart) {
-        if (counterpart == null) {
-            return "";
-        } else if (!counterpart.isBareJid()) {
-            return counterpart.getResource().trim();
-        } else {
-            return counterpart.toString().trim();
-        }
     }
 
     public static boolean receivedLocationQuestion(final Message message) {

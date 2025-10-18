@@ -30,7 +30,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import org.json.JSONException;
 
-public class Message extends AbstractEntity implements AvatarService.Avatar {
+public class Message extends AbstractEntity
+        implements AvatarService.Avatar, MucOptions.IdentifiableUser {
 
     public static final String TABLENAME = "messages";
 
@@ -122,15 +123,19 @@ public class Message extends AbstractEntity implements AvatarService.Avatar {
     private FileParams fileParams = null;
     private List<MucOptions.User> counterparts;
 
-    protected Message(Conversational conversation) {
+    protected Message(final Conversational conversation) {
         this.conversation = conversation;
     }
 
-    public Message(Conversational conversation, String body, int encryption) {
+    public Message(final Conversational conversation, final String body, final int encryption) {
         this(conversation, body, encryption, STATUS_UNSEND);
     }
 
-    public Message(Conversational conversation, String body, int encryption, int status) {
+    public Message(
+            final Conversational conversation,
+            final String body,
+            final int encryption,
+            final int status) {
         this(
                 conversation,
                 java.util.UUID.randomUUID().toString(),
@@ -362,15 +367,16 @@ public class Message extends AbstractEntity implements AvatarService.Avatar {
     public Contact getContact() {
         if (this.conversation.getMode() == Conversation.MODE_SINGLE) {
             return this.conversation.getContact();
+        } else if (this.conversation instanceof Conversation c
+                && c.getMode() == Conversational.MODE_MULTI) {
+            return c.getMucOptions().getUserOrStub(this).getContact();
+        } else if (this.counterpart != null) {
+            return this.conversation
+                    .getAccount()
+                    .getRoster()
+                    .getContactFromContactList(this.trueCounterpart);
         } else {
-            if (this.trueCounterpart == null) {
-                return null;
-            } else {
-                return this.conversation
-                        .getAccount()
-                        .getRoster()
-                        .getContactFromContactList(this.trueCounterpart);
-            }
+            return null;
         }
     }
 
@@ -417,7 +423,18 @@ public class Message extends AbstractEntity implements AvatarService.Avatar {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(final int status) {
+        final var current = this.status;
+        if (current == Message.STATUS_RECEIVED) {
+            if (status != Message.STATUS_RECEIVED) {
+                throw new AssertionError(
+                        "A received message can not be converted to status=" + status);
+            }
+        } else {
+            if (status == Message.STATUS_RECEIVED) {
+                throw new AssertionError("A sent message can not be converted to received");
+            }
+        }
         this.status = status;
     }
 
@@ -681,8 +698,14 @@ public class Message extends AbstractEntity implements AvatarService.Avatar {
     }
 
     @Override
-    public String getAvatarName() {
-        return UIHelper.getMessageDisplayName(this);
+    public String getDisplayName() {
+        if (type == Message.TYPE_STATUS
+                && getCounterparts() != null
+                && getCounterparts().size() > 1) {
+            return "";
+        } else {
+            return UIHelper.getMessageDisplayName(this);
+        }
     }
 
     public boolean isOOb() {
@@ -860,6 +883,22 @@ public class Message extends AbstractEntity implements AvatarService.Avatar {
         return isFileOrImage() && getFileParams().url == null;
     }
 
+    @Override
+    public Jid mucUserAddress() {
+        return this.counterpart;
+    }
+
+    @Override
+    public Jid mucUserRealAddress() {
+        final var address = this.trueCounterpart;
+        return address == null ? null : address.asBareJid();
+    }
+
+    @Override
+    public String mucUserOccupantId() {
+        return this.occupantId;
+    }
+
     public static class FileParams {
         public String url;
         public Long size = null;
@@ -975,7 +1014,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatar {
         if (counterpart.equals(mucOptions.getSelf().getFullJid())) {
             message.setTrueCounterpart(conversation.getAccount().getJid().asBareJid());
         } else {
-            final var user = mucOptions.findUserByFullJid(counterpart);
+            final var user = mucOptions.getUser(counterpart);
             if (user != null) {
                 message.setTrueCounterpart(user.getRealJid());
                 message.setOccupantId(user.getOccupantId());

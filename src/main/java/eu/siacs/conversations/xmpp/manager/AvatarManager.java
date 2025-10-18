@@ -299,12 +299,16 @@ public class AvatarManager extends AbstractManager {
 
     private void setAvatarMucUser(final Jid from, final String id) {
         final var mucOptions = getManager(MultiUserChatManager.class).getState(from.asBareJid());
-        final var user = mucOptions == null ? null : mucOptions.findUserByFullJid(from);
+        final var user = mucOptions == null ? null : mucOptions.getUser(from);
         if (user == null) {
             return;
         }
         if (user.setAvatar(id)) {
             service.getAvatarService().clear(user);
+            if (Strings.isNullOrEmpty(mucOptions.getAvatar())
+                    && mucOptions.isPrivateAndNonAnonymous()) {
+                service.getAvatarService().clear(mucOptions);
+            }
             service.updateConversationUi();
             service.updateMucRosterUi();
         }

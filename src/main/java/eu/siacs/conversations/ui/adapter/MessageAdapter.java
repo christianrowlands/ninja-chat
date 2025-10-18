@@ -40,6 +40,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
@@ -62,7 +63,6 @@ import eu.siacs.conversations.entities.Message.FileParams;
 import eu.siacs.conversations.entities.RtpSessionStatus;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.persistance.FileBackend;
-import eu.siacs.conversations.services.MessageArchiveService;
 import eu.siacs.conversations.services.NotificationService;
 import eu.siacs.conversations.ui.Activities;
 import eu.siacs.conversations.ui.BindingAdapters;
@@ -87,6 +87,7 @@ import eu.siacs.conversations.utils.TimeFrameUtils;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.mam.MamReference;
+import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -721,6 +722,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     }
 
     private void loadMoreMessages(final Conversation conversation) {
+        final var connection = conversation.getAccount().getXmppConnection();
         conversation.setLastClearHistory(0, null);
         activity.xmppConnectionService.updateConversation(conversation);
         conversation.setHasMessagesLeftOnServer(true);
@@ -730,9 +732,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             timestamp = System.currentTimeMillis();
         }
         conversation.messagesLoaded.set(true);
-        MessageArchiveService.Query query =
-                activity.xmppConnectionService
-                        .getMessageArchiveService()
+        final var query =
+                connection
+                        .getManager(MessageArchiveManager.class)
                         .query(conversation, new MamReference(0), timestamp, false);
         if (query != null) {
             Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG)
@@ -1238,6 +1240,10 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         if (receivedA != receivedB) {
             return false;
         }
+        if (homogenizedEncryption(a.getEncryption()) != homogenizedEncryption(b.getEncryption())
+                || !Objects.equal(a.getFingerprint(), b.getFingerprint())) {
+            return false;
+        }
         if (a.getConversation().getMode() == Conversation.MODE_MULTI
                 && a.getStatus() == Message.STATUS_RECEIVED) {
             final var occupantIdA = a.getOccupantId();
@@ -1256,6 +1262,20 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         return b.getTimeSent() - a.getTimeSent() <= Config.MESSAGE_MERGE_WINDOW;
     }
 
+    private static int homogenizedEncryption(final int encryption) {
+        return switch (encryption) {
+            case Message.ENCRYPTION_AXOLOTL,
+                            Message.ENCRYPTION_AXOLOTL_FAILED,
+                            Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE ->
+                    Message.ENCRYPTION_AXOLOTL;
+            case Message.ENCRYPTION_PGP,
+                            Message.ENCRYPTION_DECRYPTED,
+                            Message.ENCRYPTION_DECRYPTION_FAILED ->
+                    Message.ENCRYPTION_PGP;
+            default -> encryption;
+        };
+    }
+
     private boolean showDetailedReaction(final Message message, final String emoji) {
         final var c = message.getConversation();
         if (c instanceof Conversation conversation && c.getMode() == Conversational.MODE_MULTI) {
@@ -1263,7 +1283,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     Collections2.filter(
                             message.getReactions(), r -> r.normalizedReaction().equals(emoji));
             final var mucOptions = conversation.getMucOptions();
-            final var users = mucOptions.findUsers(reactions);
+            final var users = mucOptions.getUsersOrStubs(reactions);
             if (users.isEmpty()) {
                 return true;
             }

@@ -2,17 +2,20 @@ package eu.siacs.conversations.entities;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+import com.google.common.primitives.Longs;
 import de.gultsch.common.IntMap;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.services.AvatarService;
-import eu.siacs.conversations.services.MessageArchiveService;
 import eu.siacs.conversations.utils.JidHelper;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xml.Namespace;
@@ -27,12 +30,14 @@ import im.conversations.android.xmpp.model.disco.info.InfoQuery;
 import im.conversations.android.xmpp.model.muc.Affiliation;
 import im.conversations.android.xmpp.model.muc.Item;
 import im.conversations.android.xmpp.model.muc.Role;
-import java.util.ArrayList;
+import im.conversations.android.xmpp.model.stanza.Presence;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 public class MucOptions {
 
@@ -55,14 +60,35 @@ public class MucOptions {
                             .put(Role.NONE, 0)
                             .build());
 
-    private final List<User> users = new ArrayList<>();
+    private static final Ordering<User> VISUAL_ORDERING =
+            new Ordering<User>() {
+                @Override
+                public int compare(User a, User b) {
+                    if (b.outranks(a.getAffiliation())) {
+                        return 1;
+                    } else if (a.outranks(b.getAffiliation())) {
+                        return -1;
+                    } else {
+                        if (a.getAvatar() != null && b.getAvatar() == null) {
+                            return -1;
+                        } else if (a.getAvatar() == null && b.getAvatar() != null) {
+                            return 1;
+                        } else {
+                            return a.getDisplayName().compareToIgnoreCase(b.getDisplayName());
+                        }
+                    }
+                }
+            };
+
+    private final Map<AddressableId, User> users = new HashMap<>();
+    private final Map<Id, User> usersByOccupantId = new HashMap<>();
     private final Conversation conversation;
+    private final Account account;
     public OnRenameListener onRenameListener = null;
     private boolean mAutoPushConfiguration = true;
-    private final Account account;
-    private boolean isOnline = false;
     private Error error = Error.NONE;
-    private User self;
+    private Self self;
+    // TODO get rid of password; access password through attributes
     private String password = null;
 
     public MucOptions(final Conversation conversation) {
@@ -70,31 +96,50 @@ public class MucOptions {
         this.conversation = conversation;
         final var affiliation = Item.affiliationOrNone(conversation.getAttribute("affiliation"));
         final var role = Item.roleOrNone(conversation.getAttribute("role"));
-        ;
-        this.self = new User(this, createJoinJid(getProposedNick()), null, null, role, affiliation);
+        this.self =
+                new Self(
+                        this,
+                        createJoinJid(getProposedNick()),
+                        this.account.getJid().asBareJid(),
+                        null,
+                        role,
+                        affiliation,
+                        false);
     }
 
     public Account getAccount() {
         return this.conversation.getAccount();
     }
 
-    public boolean setSelf(final User user) {
-        this.self = user;
-        final boolean roleChanged = this.conversation.setAttribute("role", user.role.toString());
+    public boolean setSelf(final Self user) {
+        Log.d(Config.LOGTAG, "setSelf(" + user + ")");
+        synchronized (this.users) {
+            // on same nick merges we need to remove the other device
+            if (java.util.Objects.nonNull(this.users.remove(Id.resource(user.getFullJid())))) {
+                Log.d(
+                        Config.LOGTAG,
+                        account.getJid().asBareJid()
+                                + ": remove preexisting same-nick merge "
+                                + user.getFullJid());
+            }
+            // this should not be happening but attempting to remove it does not hurt
+            this.users.remove(Id.realAddress(user.getRealJid()));
+            this.self = user.asConnectedSelf();
+            this.resetOccupantIdMap();
+        }
+        final boolean roleChanged =
+                this.conversation.setAttribute("role", user.getRole().toString());
         final boolean affiliationChanged =
-                this.conversation.setAttribute("affiliation", user.affiliation.toString());
+                this.conversation.setAttribute("affiliation", user.getAffiliation().toString());
         return roleChanged || affiliationChanged;
     }
 
     public void changeAffiliation(final Jid jid, final Affiliation affiliation) {
-        final User user = findUserByRealJid(jid);
-        synchronized (users) {
+        synchronized (this.users) {
+            final var user = this.users.get(Id.realAddress(jid));
             if (user != null && user.getRole() == Role.NONE) {
-                users.remove(user);
-                if (AFFILIATION_RANKS.getInt(affiliation)
-                        >= AFFILIATION_RANKS.getInt(Affiliation.MEMBER)) {
-                    users.add(user.withAffiliation(affiliation));
-                }
+                final var modifiedUser = user.withAffiliation(affiliation);
+                this.users.put(modifiedUser.asId(), modifiedUser);
             }
         }
     }
@@ -107,24 +152,31 @@ public class MucOptions {
         return mAutoPushConfiguration;
     }
 
+    // TODO rework isSelf to use User and match either occupantId or self
     public boolean isSelf(final Jid counterpart) {
         return counterpart.equals(self.getFullJid());
     }
 
-    public boolean isSelf(final String occupantId) {
-        return occupantId.equals(self.getOccupantId());
+    public boolean isOurAccount(@NonNull final User user) {
+        final var self = getSelf();
+        if (self == null) {
+            return false;
+        }
+        return self.getRealJid().equals(user.getRealJid())
+                || (self.getOccupantId() != null
+                        && self.getOccupantId().equals(user.getOccupantId()));
     }
 
     public void resetChatState() {
         synchronized (users) {
-            for (User user : users) {
+            for (final var user : users.values()) {
                 user.chatState = Config.DEFAULT_CHAT_STATE;
             }
         }
     }
 
     public boolean mamSupport() {
-        return MessageArchiveService.Version.has(getFeatures());
+        return getFeatures().contains(Namespace.MESSAGE_ARCHIVE_MANAGEMENT);
     }
 
     private InfoQuery getServiceDiscoveryResult() {
@@ -140,8 +192,7 @@ public class MucOptions {
             return null;
         }
         final var roomInfo =
-                serviceDiscoveryResult.getServiceDiscoveryExtension(
-                        "http://jabber.org/protocol/muc#roominfo");
+                serviceDiscoveryResult.getServiceDiscoveryExtension(Namespace.MUC_ROOM_INFO);
         final Field roomConfigName =
                 roomInfo == null ? null : roomInfo.getFieldByName("muc#roomconfig_roomname");
         if (roomConfigName != null) {
@@ -162,15 +213,11 @@ public class MucOptions {
     }
 
     public String getRoomConfigName() {
-        final var serviceDiscoveryResult = getServiceDiscoveryResult();
-        if (serviceDiscoveryResult == null) {
+        final var roomInfo = getRoomInfoForm();
+        if (roomInfo == null) {
             return null;
         }
-        final var roomInfo =
-                serviceDiscoveryResult.getServiceDiscoveryExtension(
-                        "http://jabber.org/protocol/muc#roominfo");
-        final var roomConfigName =
-                roomInfo == null ? null : roomInfo.getFieldByName("muc#roomconfig_roomname");
+        final var roomConfigName = roomInfo.getFieldByName("muc#roomconfig_roomname");
         return roomConfigName == null ? null : roomConfigName.getValue();
     }
 
@@ -294,225 +341,207 @@ public class MucOptions {
     }
 
     public User deleteUser(final Jid jid) {
-        final User user = findUserByFullJid(jid);
-        if (user == null) {
-            return null;
+        synchronized (this.users) {
+            final var user = this.users.remove(Id.resource(jid));
+            this.resetOccupantIdMap();
+            return user;
         }
-        synchronized (users) {
-            users.remove(user);
-            final boolean realJidInMuc =
-                    user.realJid != null
-                            && Iterables.any(this.users, u -> user.realJid.equals(u.realJid));
-            final boolean self =
-                    user.realJid != null && user.realJid.equals(account.getJid().asBareJid());
-            if (membersOnly()
-                    && nonanonymous()
-                    && user.ranks(Affiliation.MEMBER)
-                    && user.realJid != null
-                    && !realJidInMuc
-                    && !self) {
-                Log.d(Config.LOGTAG, "user " + jid + " left. keeping offline variant");
-                users.add(user.asOfflineUser());
-            }
-        }
-        return user;
     }
 
-    // returns true if real jid was new;
-    public boolean updateUser(final User user) {
-        final boolean realJidFound;
-        if (user.fullJid == null && user.realJid != null) {
-            final var existingRealJid = findUserByRealJid(user.realJid);
-            realJidFound = existingRealJid != null;
-            if (existingRealJid != null) {
-                if (existingRealJid.fullJid != null) {
-                    return false; // don't add. user already exists
+    public void updateUser(final User user) {
+        // these updates are coming from MUC status messages and from member/owner lookups
+        // figure out 'availability' based on role and resource
+        final Presence.Type availability;
+        if (user.getRole() == Role.NONE || user.resource() == null) {
+            availability = Presence.Type.UNAVAILABLE;
+        } else {
+            availability = null;
+        }
+        updateUser(user, availability);
+    }
+
+    public void updateUser(final User user, final Presence.Type type) {
+        synchronized (this.users) {
+            final var real = user.getRealJid();
+            final var resource = user.getFullJid();
+            if (real != null) {
+                this.users.remove(Id.realAddress(real));
+            }
+            if (resource != null) {
+                this.users.remove(Id.resource(resource));
+            }
+
+            // if type null add normal; if type == unavailable add as real jid
+            if (type == null) {
+                final var self = getSelf();
+                if (self != null && self.connected && self.getFullJid().equals(user.getFullJid())) {
+                    Log.d(
+                            Config.LOGTAG,
+                            account.getJid().asBareJid()
+                                    + ": ignore same-nick merge "
+                                    + user.getFullJid());
                 } else {
-                    synchronized (users) {
-                        users.remove(existingRealJid);
-                    }
+                    this.users.put(user.asId(), user);
+                }
+            } else if (type == Presence.Type.UNAVAILABLE
+                    && real != null
+                    && membersOnly()
+                    && user.ranks(Affiliation.MEMBER)) {
+                if (isOurAccount(user) || isOnline(real, this.users)) {
+                    // for our account and users that are online with a second device do not keep
+                    // offline variant
+                    this.resetOccupantIdMap();
+                    return;
+                }
+                final var offline = user.asOfflineUser();
+                this.users.put(offline.asId(), offline);
+            }
+            // TODO support nick changes so we don't go from
+            this.resetOccupantIdMap();
+        }
+    }
+
+    private static boolean isOnline(final Jid address, final Map<AddressableId, User> users) {
+        return Iterables.any(
+                users.values(), u -> u.getFullJid() != null && address.equals(u.getRealJid()));
+    }
+
+    private void resetOccupantIdMap() {
+        synchronized (this.usersByOccupantId) {
+            this.usersByOccupantId.clear();
+            final var builder = new ImmutableMap.Builder<Id, User>();
+            for (final var user : this.users.values()) {
+                // exclude our account in occupant id map. This map will be used for getUsersPreview
+                // and we generally don't want our account in there
+                if (isOurAccount(user)) {
+                    continue;
+                }
+                if (user.occupantId != null) {
+                    builder.put(Id.occupantId(user.occupantId), user);
+                } else if (user.realJid != null && user.fullJid == null) {
+                    // we include offline users here as well in order to make getUsersPreview work
+                    builder.put(Id.realAddress(user.realJid), user);
                 }
             }
-        } else if (user.realJid != null) {
-            final var existingRealJid = findUserByRealJid(user.realJid);
-            realJidFound = existingRealJid != null;
-            synchronized (users) {
-                if (existingRealJid != null
-                        && (existingRealJid.fullJid == null || existingRealJid.role == Role.NONE)) {
-                    users.remove(existingRealJid);
+            this.usersByOccupantId.putAll(builder.buildKeepingLast());
+        }
+    }
+
+    @Nullable
+    public User getUser(final Jid address) {
+        final var self = this.self;
+        if (self != null && address != null && address.equals(self.getFullJid())) {
+            return self;
+        }
+        synchronized (this.users) {
+            return this.users.get(Id.resource(address));
+        }
+    }
+
+    @Nullable
+    public User getUser(final String occupantId) {
+        final var self = this.self;
+        if (self != null && occupantId.equals(self.getOccupantId())) {
+            return self;
+        }
+        synchronized (this.usersByOccupantId) {
+            return this.usersByOccupantId.get(Id.occupantId(occupantId));
+        }
+    }
+
+    @Nullable
+    public User getUser(final IdentifiableUser identifiableUser) {
+        final var occupantId = identifiableUser.mucUserOccupantId();
+        final var realAddress = identifiableUser.mucUserRealAddress();
+        final var address = identifiableUser.mucUserAddress();
+        synchronized (this.users) {
+            if (occupantId != null) {
+                // online users will be found by occupant id. offline users by real address
+                // there is no need for a deep seek
+                final var byOccupantId = this.usersByOccupantId.get(Id.occupantId(occupantId));
+                if (byOccupantId != null) {
+                    return byOccupantId;
                 }
+                final var self = getSelf();
+                final var bySelf =
+                        self != null && occupantId.equals(self.getOccupantId()) ? self : null;
+                if (bySelf != null) {
+                    return bySelf;
+                }
+                if (realAddress != null) {
+                    return this.users.get(Id.realAddress(realAddress));
+                }
+                return null;
+            } else if (realAddress != null) {
+                // if we have a real address we first try to look up offline users because that look
+                // up is cheap before iterating through all online users
+                final var offline = this.users.get(Id.realAddress(realAddress));
+                if (offline != null) {
+                    return offline;
+                }
+                return Iterables.find(
+                        this.users.values(), u -> realAddress.equals(u.realJid), null);
+            } else if (address != null) {
+                return this.users.get(Id.resource(address));
+            } else {
+                return null;
             }
-        } else {
-            realJidFound = false;
-        }
-        final var existingFullJid = findUserByFullJid(user.getFullJid());
-
-        synchronized (this.users) {
-            if (existingFullJid != null) {
-                users.remove(existingFullJid);
-            }
-            boolean fullJidIsSelf =
-                    isOnline
-                            && user.getFullJid() != null
-                            && user.getFullJid().equals(self.getFullJid());
-            // TODO should we only look at the affiliation stuff for cases where full jid is null?
-            if ((!membersOnly() || user.ranks(Affiliation.MEMBER))
-                    && user.outranks(Affiliation.OUTCAST)
-                    && !fullJidIsSelf) {
-                this.users.add(user);
-                return !realJidFound && user.realJid != null;
-            }
-        }
-        return false;
-    }
-
-    public User findUserByFullJid(final Jid jid) {
-        synchronized (users) {
-            return jid == null
-                    ? null
-                    : Iterables.find(users, u -> jid.equals(u.getFullJid()), null);
         }
     }
 
-    public User findUserByRealJid(final Jid jid) {
-        synchronized (users) {
-            return jid == null
-                    ? null
-                    : Iterables.find(users, u -> jid.equals(u.getRealJid()), null);
-        }
-    }
-
-    public User findUserByOccupantId(final String occupantId) {
-        synchronized (this.users) {
-            return Strings.isNullOrEmpty(occupantId)
-                    ? null
-                    : Iterables.find(this.users, u -> occupantId.equals(u.occupantId), null);
-        }
-    }
-
-    public User findOrCreateUserByRealJid(final Jid jid, final Jid fullJid) {
-        final User existing = findUserByRealJid(jid);
+    public User getUserOrStub(final IdentifiableUser identifiableUser) {
+        final var existing = getUser(identifiableUser);
         if (existing != null) {
             return existing;
         }
-        return new User(this, fullJid, jid, null, Role.NONE, Affiliation.NONE);
+        return new Stub(
+                this,
+                identifiableUser.mucUserAddress(),
+                identifiableUser.mucUserRealAddress(),
+                identifiableUser.mucUserOccupantId());
     }
 
-    public User findUser(final ReadByMarker readByMarker) {
-        if (readByMarker.getRealJid() != null) {
-            return findOrCreateUserByRealJid(
-                    readByMarker.getRealJid().asBareJid(), readByMarker.getFullJid());
-        } else if (readByMarker.getFullJid() != null) {
-            return findUserByFullJid(readByMarker.getFullJid());
-        } else {
-            return null;
+    public Collection<User> getUsersOrStubs(
+            final Collection<? extends IdentifiableUser> identifiableUsers) {
+        return Collections2.transform(identifiableUsers, this::getUserOrStub);
+    }
+
+    // always all users (including offline)
+    public List<User> getUsers() {
+        synchronized (this.users) {
+            return ImmutableList.copyOf(Iterables.filter(this.users.values(), u -> !u.isDomain()));
         }
     }
 
-    private User findUser(final Reaction reaction) {
-        if (reaction.trueJid != null) {
-            return findOrCreateUserByRealJid(reaction.trueJid.asBareJid(), reaction.from);
-        }
-        final var existing = findUserByOccupantId(reaction.occupantId);
-        if (existing != null) {
-            return existing;
-        } else if (reaction.from != null) {
-            return new User(
-                    this, reaction.from, null, reaction.occupantId, Role.NONE, Affiliation.NONE);
-        } else {
-            return null;
+    public List<User> getOnlineUsers() {
+        synchronized (this.users) {
+            return ImmutableList.copyOf(
+                    Iterables.filter(
+                            this.users.values(), u -> !u.isDomain() && u.ranks(Role.PARTICIPANT)));
         }
     }
 
-    public List<User> findUsers(final Collection<Reaction> reactions) {
-        final ImmutableList.Builder<User> builder = new ImmutableList.Builder<>();
-        for (final Reaction reaction : reactions) {
-            final var user = findUser(reaction);
-            if (user != null) {
-                builder.add(user);
+    public List<User> getUsersWithChatState(final ChatState state, final int max) {
+        synchronized (this.users) {
+            synchronized (this.users) {
+                return ImmutableList.copyOf(
+                        Iterables.limit(
+                                Iterables.filter(this.users.values(), u -> u.chatState == state),
+                                max));
             }
         }
-        return builder.build();
     }
 
-    public boolean isContactInRoom(final Contact contact) {
-        return contact != null && findUserByRealJid(contact.getAddress().asBareJid()) != null;
-    }
-
-    public boolean isUserInRoom(Jid jid) {
-        return findUserByFullJid(jid) != null;
-    }
-
-    public boolean setOnline() {
-        boolean before = this.isOnline;
-        this.isOnline = true;
-        return !before;
-    }
-
-    public ArrayList<User> getUsers() {
-        return getUsers(true);
-    }
-
-    public ArrayList<User> getUsers(boolean includeOffline) {
-        synchronized (users) {
-            ArrayList<User> users = new ArrayList<>();
-            for (User user : this.users) {
-                if (!user.isDomain() && (includeOffline || user.ranks(Role.PARTICIPANT))) {
-                    users.add(user);
-                }
+    public List<User> getUsersPreview(final int max) {
+        synchronized (this.users) {
+            final Collection<User> users;
+            if (Iterables.any(this.usersByOccupantId.keySet(), id -> id instanceof OccupantId)) {
+                users = this.usersByOccupantId.values();
+            } else {
+                users = this.users.values();
             }
-            return users;
+            return ImmutableList.copyOf(Iterables.limit(VISUAL_ORDERING.sortedCopy(users), max));
         }
-    }
-
-    public ArrayList<User> getUsersWithChatState(ChatState state, int max) {
-        synchronized (users) {
-            ArrayList<User> list = new ArrayList<>();
-            for (User user : users) {
-                if (user.chatState == state) {
-                    list.add(user);
-                    if (list.size() >= max) {
-                        break;
-                    }
-                }
-            }
-            return list;
-        }
-    }
-
-    public List<User> getUsers(final int max) {
-        final ArrayList<User> subset = new ArrayList<>();
-        final HashSet<Jid> addresses = new HashSet<>();
-        addresses.add(account.getJid().asBareJid());
-        synchronized (users) {
-            for (User user : users) {
-                if (user.getRealJid() == null
-                        || (user.getRealJid().getLocal() != null
-                                && addresses.add(user.getRealJid()))) {
-                    subset.add(user);
-                }
-                if (subset.size() >= max) {
-                    break;
-                }
-            }
-        }
-        return subset;
-    }
-
-    public static List<User> sub(final List<User> users, final int max) {
-        final var subset = new ArrayList<User>();
-        final var addresses = new HashSet<Jid>();
-        for (final var user : users) {
-            addresses.add(user.getAccount().getJid().asBareJid());
-            final var address = user.getRealJid();
-            if (address == null || (address.getLocal() != null && addresses.add(address))) {
-                subset.add(user);
-            }
-            if (subset.size() >= max) {
-                return subset;
-            }
-        }
-        return subset;
     }
 
     public int getUserCount() {
@@ -567,31 +596,34 @@ public class MucOptions {
     }
 
     public String getActualNick() {
-        if (this.self.getName() != null) {
-            return this.self.getName();
+        if (this.self.resource() != null) {
+            return this.self.resource();
         } else {
             return this.getProposedNick();
         }
     }
 
     public boolean online() {
-        return this.isOnline;
+        final var self = getSelf();
+        return self != null && self.connected;
     }
 
     public Error getError() {
         return this.error;
     }
 
-    public void setError(Error error) {
-        this.isOnline = isOnline && error == Error.NONE;
+    // TODO inject 'self' from <x/> element
+    public void setError(final Error error) {
+        final var self = getSelf();
         this.error = error;
+        this.self = self.asDisconnected();
     }
 
     public void setOnRenameListener(OnRenameListener listener) {
         this.onRenameListener = listener;
     }
 
-    public User getSelf() {
+    public Self getSelf() {
         return self;
     }
 
@@ -605,91 +637,52 @@ public class MucOptions {
 
     private List<User> getFallbackUsersFromCryptoTargets() {
         return ImmutableList.copyOf(
-                Lists.transform(
+                Collections2.transform(
                         conversation.getAcceptedCryptoTargets(),
-                        jid -> new User(this, null, jid, null, Role.NONE, Affiliation.NONE)));
+                        jid -> new Stub(this, null, jid, null)));
     }
 
-    public List<User> getUsersRelevantForNameAndAvatar() {
+    public List<User> getUsersPreviewWithFallback() {
         final List<User> users;
-        if (isOnline) {
-            users = getUsers(5);
+        if (online()) {
+            users = getUsersPreview(5);
         } else {
             users = getFallbackUsersFromCryptoTargets();
         }
-        return users;
-    }
-
-    String createNameFromParticipants() {
-        List<User> users = getUsersRelevantForNameAndAvatar();
-        if (users.size() >= 2) {
-            StringBuilder builder = new StringBuilder();
-            for (User user : users) {
-                if (builder.length() != 0) {
-                    builder.append(", ");
-                }
-                String name = UIHelper.getDisplayName(user);
-                if (name != null) {
-                    builder.append(name.split("\\s+")[0]);
-                }
-            }
-            return builder.toString();
+        if (users.size() == 1) {
+            return new ImmutableList.Builder<User>().addAll(users).add(self).build();
         } else {
-            return null;
+            return users;
         }
     }
 
     public long[] getPgpKeyIds() {
-        List<Long> ids = new ArrayList<>();
-        for (User user : this.users) {
-            if (user.getPgpKeyId() != 0) {
-                ids.add(user.getPgpKeyId());
-            }
+        synchronized (this.users) {
+            return Longs.toArray(
+                    Collections2.filter(
+                            Collections2.transform(this.users.values(), User::getPgpKeyId),
+                            id -> id != 0));
         }
-        ids.add(account.getPgpId());
-        long[] primitiveLongArray = new long[ids.size()];
-        for (int i = 0; i < ids.size(); ++i) {
-            primitiveLongArray[i] = ids.get(i);
-        }
-        return primitiveLongArray;
     }
 
     public boolean pgpKeysInUse() {
         synchronized (users) {
-            for (User user : users) {
-                if (user.getPgpKeyId() != 0) {
-                    return true;
-                }
-            }
+            return Iterables.any(this.users.values(), u -> u.getPgpKeyId() != 0);
         }
-        return false;
     }
 
-    public boolean everybodyHasKeys() {
-        synchronized (users) {
-            for (User user : users) {
-                if (user.getPgpKeyId() == 0) {
-                    return false;
-                }
-            }
+    public boolean missingPgpKeys() {
+        synchronized (this.users) {
+            return Iterables.any(this.users.values(), u -> u.getPgpKeyId() == 0);
         }
-        return true;
     }
 
-    public Jid createJoinJid(String nick) {
+    public Jid createJoinJid(final String nick) {
         try {
             return conversation.getAddress().withResource(nick);
         } catch (final IllegalArgumentException e) {
             return null;
         }
-    }
-
-    public Jid getTrueCounterpart(Jid jid) {
-        if (jid.equals(getSelf().getFullJid())) {
-            return account.getJid().asBareJid();
-        }
-        User user = findUserByFullJid(jid);
-        return user == null ? null : user.realJid;
     }
 
     public String getPassword() {
@@ -724,21 +717,33 @@ public class MucOptions {
         return this.conversation;
     }
 
-    public List<Jid> getMembers(final boolean includeDomains) {
-        ArrayList<Jid> members = new ArrayList<>();
-        synchronized (users) {
-            for (User user : users) {
-                if (user.ranks(Affiliation.MEMBER)
-                        && user.realJid != null
-                        && !user.realJid
-                                .asBareJid()
-                                .equals(conversation.account.getJid().asBareJid())
-                        && (!user.isDomain() || includeDomains)) {
-                    members.add(user.realJid);
-                }
-            }
+    public ImmutableSet<Jid> getMembers() {
+        synchronized (this.users) {
+            return ImmutableSet.copyOf(
+                    Collections2.transform(
+                            Collections2.filter(
+                                    this.users.values(),
+                                    u ->
+                                            u.ranks(Affiliation.MEMBER)
+                                                    && u.realJid != null
+                                                    && !u.realJid.isDomainJid()
+                                                    && !u.realJidMatchesAccount()),
+                            u -> u.realJid));
         }
-        return members;
+    }
+
+    public ImmutableSet<Jid> getMembersWithDomains() {
+        synchronized (this.users) {
+            return ImmutableSet.copyOf(
+                    Collections2.transform(
+                            Collections2.filter(
+                                    this.users.values(),
+                                    u ->
+                                            u.ranks(Affiliation.MEMBER)
+                                                    && u.realJid != null
+                                                    && !u.realJidMatchesAccount()),
+                            u -> u.realJid));
+        }
     }
 
     public enum Error {
@@ -798,7 +803,17 @@ public class MucOptions {
             this.affiliation = affiliation;
         }
 
-        public String getName() {
+        public AddressableId asId() {
+            if (fullJid != null) {
+                return Id.resource(fullJid);
+            } else if (realJid != null) {
+                return Id.realAddress(realJid);
+            } else {
+                throw new IllegalStateException("can not create id");
+            }
+        }
+
+        public String resource() {
             return fullJid == null ? null : fullJid.getResource();
         }
 
@@ -884,17 +899,26 @@ public class MucOptions {
             } else if (outranks(another.getAffiliation())) {
                 return -1;
             } else {
-                return getComparableName().compareToIgnoreCase(another.getComparableName());
+                return getDisplayName().compareToIgnoreCase(another.getDisplayName());
             }
         }
 
-        public String getComparableName() {
-            Contact contact = getContact();
+        @Override
+        @NonNull
+        public String getDisplayName() {
+            final var contact = this.getContact();
             if (contact != null) {
                 return contact.getDisplayName();
             } else {
-                String name = getName();
-                return name == null ? "" : name;
+                final String resource = this.resource();
+                if (resource != null) {
+                    return resource;
+                }
+                if (realJid != null) {
+                    return JidHelper.localPartOrFallback(realJid);
+                } else {
+                    return fullJid.toString();
+                }
             }
         }
 
@@ -913,12 +937,7 @@ public class MucOptions {
         @Override
         public int getAvatarBackgroundColor() {
             final String seed = realJid != null ? realJid.asBareJid().toString() : null;
-            return UIHelper.getColorForName(seed == null ? getName() : seed);
-        }
-
-        @Override
-        public String getAvatarName() {
-            return getConversation().getName().toString();
+            return UIHelper.getColorForName(seed == null ? resource() : seed);
         }
 
         public String getOccupantId() {
@@ -970,6 +989,140 @@ public class MucOptions {
                     this.occupantId,
                     this.role,
                     affiliation);
+        }
+
+        public Self asConnectedSelf() {
+            final var address =
+                    this.realJid == null
+                            ? this.options.getAccount().getJid().asBareJid()
+                            : this.realJid;
+            return new Self(
+                    this.options,
+                    this.fullJid,
+                    address,
+                    this.occupantId,
+                    this.role,
+                    this.affiliation,
+                    true);
+        }
+
+        @Override
+        @NonNull
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                    .add("fullJid", fullJid)
+                    .add("realJid", realJid)
+                    .add("occupantId", occupantId)
+                    .add("role", role)
+                    .add("affiliation", affiliation)
+                    .add("pgpKeyId", pgpKeyId)
+                    .add("avatar", avatar)
+                    .add("chatState", chatState)
+                    .toString();
+        }
+    }
+
+    public static final class Self extends User {
+
+        private final boolean connected;
+
+        private Self(
+                final MucOptions options,
+                final Jid fullJid,
+                final Jid realJid,
+                final String occupantId,
+                final Role role,
+                final Affiliation affiliation,
+                final boolean connected) {
+            super(options, fullJid, realJid, occupantId, role, affiliation);
+            Preconditions.checkNotNull(
+                    realJid, "The self muc user should not have a null real jid");
+            Preconditions.checkArgument(
+                    fullJid != null && fullJid.isFullJid(), "the full jid needs to be a full jid");
+            this.connected = connected;
+        }
+
+        @Override
+        public Contact getContact() {
+            return null;
+        }
+
+        @Override
+        @NonNull
+        public String getDisplayName() {
+            return resource();
+        }
+
+        public Self asDisconnected() {
+            return new Self(
+                    getMucOptions(),
+                    getFullJid(),
+                    getRealJid(),
+                    getOccupantId(),
+                    Role.NONE,
+                    getAffiliation(),
+                    false);
+        }
+    }
+
+    public static final class Stub extends User {
+
+        private Stub(
+                final MucOptions options,
+                final Jid fullJid,
+                final Jid realJid,
+                final String occupantId) {
+            super(options, fullJid, realJid, occupantId, Role.NONE, Affiliation.NONE);
+        }
+    }
+
+    public sealed interface Id permits AddressableId, OccupantId {
+
+        static OccupantId occupantId(final String occupantId) {
+            return new OccupantId(occupantId);
+        }
+
+        static AddressableId realAddress(final Jid address) {
+            return new RealAddress(address);
+        }
+
+        static AddressableId resource(final Jid address) {
+            return new Resource(address);
+        }
+    }
+
+    public sealed interface AddressableId extends Id permits RealAddress, Resource {}
+
+    public record OccupantId(String occupantId) implements Id {}
+
+    public record RealAddress(Jid address) implements AddressableId {}
+
+    public record Resource(Jid address) implements AddressableId {}
+
+    public interface IdentifiableUser {
+        Jid mucUserAddress();
+
+        Jid mucUserRealAddress();
+
+        String mucUserOccupantId();
+
+        static IdentifiableUser realAddress(final Jid address) {
+            return new IdentifiableUser() {
+                @Override
+                public Jid mucUserAddress() {
+                    return null;
+                }
+
+                @Override
+                public Jid mucUserRealAddress() {
+                    return address;
+                }
+
+                @Override
+                public String mucUserOccupantId() {
+                    return null;
+                }
+            };
         }
     }
 }

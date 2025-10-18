@@ -11,7 +11,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
-import androidx.core.graphics.drawable.IconCompat;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -27,6 +26,7 @@ import eu.siacs.conversations.utils.ReplacingSerialSingleThreadExecutor;
 import eu.siacs.conversations.xmpp.Jid;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShortcutService {
 
@@ -67,10 +67,17 @@ public class ShortcutService {
                 ImmutableMap.copyOf(
                         Maps.uniqueIndex(xmppConnectionService.getAccounts(), Account::getUuid));
         final var contactBuilder = new ImmutableMap.Builder<FrequentContact, Contact>();
+        final var count = new AtomicInteger();
         for (final var frequentContact : frequentContacts) {
             final Account account = accounts.get(frequentContact.account);
-            if (account != null) {
-                final var contact = account.getRoster().getContact(frequentContact.contact);
+            if (account == null) {
+                continue;
+            }
+            final var contact = account.getRoster().getContact(frequentContact.contact);
+            if (contact.isSelf()) {
+                continue;
+            }
+            if (count.getAndIncrement() < 4) {
                 contactBuilder.put(frequentContact, contact);
             }
         }
@@ -108,9 +115,7 @@ public class ShortcutService {
                         .setShortLabel(contact.getDisplayName())
                         .setIntent(getShortcutIntent(contact))
                         .setIsConversation();
-        builder.setIcon(
-                IconCompat.createWithBitmap(
-                        xmppConnectionService.getAvatarService().getRoundedShortcut(contact)));
+        builder.setIcon(xmppConnectionService.getAvatarService().getAdaptive(contact));
         if (conversation != null) {
             setConversation(builder, conversation);
         }
@@ -123,9 +128,7 @@ public class ShortcutService {
                         .setShortLabel(mucOptions.getConversation().getName())
                         .setIntent(getShortcutIntent(mucOptions))
                         .setIsConversation();
-        builder.setIcon(
-                IconCompat.createWithBitmap(
-                        xmppConnectionService.getAvatarService().getRoundedShortcut(mucOptions)));
+        builder.setIcon(xmppConnectionService.getAvatarService().getAdaptive(mucOptions));
         setConversation(builder, mucOptions.getConversation().getUuid());
         return builder.build();
     }

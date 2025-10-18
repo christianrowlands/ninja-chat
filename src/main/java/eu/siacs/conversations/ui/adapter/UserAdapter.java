@@ -12,11 +12,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.common.base.Strings;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
 import eu.siacs.conversations.databinding.ItemContactBinding;
-import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.ConferenceDetailsActivity;
@@ -25,14 +23,13 @@ import eu.siacs.conversations.ui.util.AvatarWorkerTask;
 import eu.siacs.conversations.ui.util.MucDetailsContextMenuHelper;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.xmpp.Jid;
-import im.conversations.android.xmpp.model.muc.Role;
 import org.openintents.openpgp.util.OpenPgpUtils;
 
 public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHolder>
         implements View.OnCreateContextMenuListener {
 
     static final DiffUtil.ItemCallback<MucOptions.User> DIFF =
-            new DiffUtil.ItemCallback<MucOptions.User>() {
+            new DiffUtil.ItemCallback<>() {
                 @Override
                 public boolean areItemsTheSame(
                         @NonNull MucOptions.User a, @NonNull MucOptions.User b) {
@@ -87,17 +84,16 @@ public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHo
                             if (activity == null) {
                                 return;
                             }
-                            final var contact = user.getContact();
-                            if (user.getRole() == Role.NONE && contact != null) {
+                            if (user.resource() == null) {
                                 Toast.makeText(
                                                 activity,
                                                 activity.getString(
                                                         R.string.user_has_left_conference,
-                                                        contact.getDisplayName()),
+                                                        user.getDisplayName()),
                                                 Toast.LENGTH_SHORT)
                                         .show();
                             }
-                            activity.highlightInMuc(user.getConversation(), user.getName());
+                            activity.highlightInMuc(user.getConversation(), user.resource());
                         });
         viewHolder.binding.getRoot().setTag(user);
         viewHolder.binding.getRoot().setOnCreateContextMenuListener(this);
@@ -109,27 +105,19 @@ public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHo
                             selectedUser = user;
                             return false;
                         });
-        final String name = user.getName();
-        final Contact contact = user.getContact();
-        if (contact != null) {
-            final String displayName = contact.getDisplayName();
-            viewHolder.binding.contactDisplayName.setText(displayName);
-            if (name != null && !name.equals(displayName)) {
-                viewHolder.binding.contactJid.setText(
-                        String.format(
-                                "%s \u2022 %s",
-                                name,
-                                ConferenceDetailsActivity.getStatus(
-                                        viewHolder.binding.getRoot().getContext(),
-                                        user,
-                                        advancedMode)));
-            } else {
-                viewHolder.binding.contactJid.setText(
-                        ConferenceDetailsActivity.getStatus(
-                                viewHolder.binding.getRoot().getContext(), user, advancedMode));
-            }
+        final String resource = user.resource();
+        final String displayName = user.getDisplayName();
+        viewHolder.binding.contactDisplayName.setText(displayName);
+        if (resource != null && !resource.equals(displayName)) {
+            viewHolder.binding.contactJid.setText(
+                    String.format(
+                            "%s • %s",
+                            resource,
+                            ConferenceDetailsActivity.getStatus(
+                                    viewHolder.binding.getRoot().getContext(),
+                                    user,
+                                    advancedMode)));
         } else {
-            viewHolder.binding.contactDisplayName.setText(Strings.nullToEmpty(name));
             viewHolder.binding.contactJid.setText(
                     ConferenceDetailsActivity.getStatus(
                             viewHolder.binding.getRoot().getContext(), user, advancedMode));
@@ -176,7 +164,7 @@ public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHo
         MucDetailsContextMenuHelper.onCreateContextMenu(menu, v);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static final class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContactBinding binding;
 
