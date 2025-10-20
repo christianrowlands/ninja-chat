@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="use_conversations.im">Použít conversations.im</string>
+    <string name="use_ninja.chat">Použít conversations.im</string>
     <string name="create_new_account">Vytvořit nový účet</string>
     <string name="pick_a_server">Vyberte si poskytovatele XMPP</string>
     <string name="do_you_have_an_account">Máte účet XMPP? Pokud již používáte jiného XMPP klienta nebo jste již dříve používali Conversations, účet pravděpodobně máte. Pokud ne, můžete si nyní vytvořit nový.\nTip: Někteří poskytovatelé e-mailu zároveň nabízejí i účty XMPP.</string>
