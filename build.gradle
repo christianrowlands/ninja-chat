@@ -127,7 +127,7 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 36
-        versionCode 42162
+        versionCode 42163
         versionName "2.19.7"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
