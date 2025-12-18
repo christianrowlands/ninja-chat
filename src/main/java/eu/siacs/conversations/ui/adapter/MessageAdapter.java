@@ -88,6 +88,7 @@ import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.mam.MamReference;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
+import im.conversations.android.xmpp.model.reactions.Restrictions;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
@@ -360,9 +361,10 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         viewHolder.downloadButton().setVisibility(View.GONE);
         viewHolder.audioPlayer().setVisibility(View.GONE);
         viewHolder.image().setVisibility(View.GONE);
-        viewHolder.messageBody().setTypeface(null, Typeface.ITALIC);
         viewHolder.messageBody().setVisibility(View.VISIBLE);
         viewHolder.messageBody().setText(text);
+        setTextSize(viewHolder.messageBody(), this.bubbleDesign.largeFont);
+        viewHolder.messageBody().setTypeface(null, Typeface.ITALIC);
         viewHolder
                 .messageBody()
                 .setTextColor(bubbleToOnSurfaceVariant(viewHolder.messageBody(), bubbleColor));
@@ -475,7 +477,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         viewHolder.downloadButton().setVisibility(View.GONE);
         viewHolder.image().setVisibility(View.GONE);
         viewHolder.audioPlayer().setVisibility(View.GONE);
-        viewHolder.messageBody().setTypeface(null, Typeface.NORMAL);
         viewHolder.messageBody().setVisibility(View.VISIBLE);
         setTextColor(viewHolder.messageBody(), bubbleColor);
         setTextSize(viewHolder.messageBody(), this.bubbleDesign.largeFont);
@@ -1017,12 +1018,21 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                             .setText(CryptoHelper.encryptionTypeToText(message.getEncryption()));
                 }
             }
-            BindingAdapters.setReactionsOnReceived(
-                    viewHolder.reactions(),
-                    message.getAggregatedReactions(),
-                    reactions -> sendReactions(message, reactions),
-                    emoji -> showDetailedReaction(message, emoji),
-                    () -> addReaction(message));
+            final boolean remaining = Restrictions.reactionsPerUserRemaining(message);
+            if (remaining) {
+                BindingAdapters.setReactionsOnReceived(
+                        viewHolder.reactions(),
+                        message.getAggregatedReactions(),
+                        reactions -> sendReactions(message, reactions),
+                        emoji -> showDetailedReaction(message, emoji),
+                        () -> addReaction(message));
+            } else {
+                BindingAdapters.setReactionsOnSent(
+                        viewHolder.reactions(),
+                        message.getAggregatedReactions(),
+                        reactions -> sendReactions(message, reactions),
+                        emoji -> showDetailedReaction(message, emoji));
+            }
         } else {
             if (viewHolder instanceof StartBubbleMessageItemViewHolder startViewHolder) {
                 startViewHolder.encryption().setVisibility(View.GONE);
@@ -1265,12 +1275,12 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     private static int homogenizedEncryption(final int encryption) {
         return switch (encryption) {
             case Message.ENCRYPTION_AXOLOTL,
-                            Message.ENCRYPTION_AXOLOTL_FAILED,
-                            Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE ->
+                    Message.ENCRYPTION_AXOLOTL_FAILED,
+                    Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE ->
                     Message.ENCRYPTION_AXOLOTL;
             case Message.ENCRYPTION_PGP,
-                            Message.ENCRYPTION_DECRYPTED,
-                            Message.ENCRYPTION_DECRYPTION_FAILED ->
+                    Message.ENCRYPTION_DECRYPTED,
+                    Message.ENCRYPTION_DECRYPTION_FAILED ->
                     Message.ENCRYPTION_PGP;
             default -> encryption;
         };
@@ -1299,22 +1309,11 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     }
 
     private void sendReactions(final Message message, final Collection<String> reactions) {
-        if (activity.xmppConnectionService.sendReactions(message, reactions)) {
-            return;
-        }
-        Toast.makeText(activity, R.string.could_not_add_reaction, Toast.LENGTH_LONG).show();
+        activity.sendReactions(message, reactions);
     }
 
     private void addReaction(final Message message) {
-        activity.addReaction(
-                message,
-                reactions -> {
-                    if (activity.xmppConnectionService.sendReactions(message, reactions)) {
-                        return;
-                    }
-                    Toast.makeText(activity, R.string.could_not_add_reaction, Toast.LENGTH_LONG)
-                            .show();
-                });
+        activity.addReaction(message, reactions -> sendReactions(message, reactions));
     }
 
     private void promptOpenKeychainInstall(View view) {

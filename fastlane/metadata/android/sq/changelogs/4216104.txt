@@ -1,0 +1,4 @@
+* Dërgim, si parazgjedhje, dëftesash dërgimi dhe kthim i rregullimit në “Dëftesa leximi”
+* Sjellje për herë të parë rregullimi për përdorim përherë të releve
+* Ndreqje problemi ruajtjeje avatarësh në fshetinë
+* Ndreqje e mosftillimit, me raste, e DNS-së, kur është e aktivizuar DNS Private

@@ -1,0 +1,4 @@
+* Invia ricevute di consegna in modo predefinito e modifica dell'impostazione in "Ricevute di lettura"
+* Introdotta un'impostazione per usare sempre i relay
+* Corretto un problema di cache degli avatar
+* Corretta mancata risoluzione occasionale del DNS quando è attivo il DNS privato

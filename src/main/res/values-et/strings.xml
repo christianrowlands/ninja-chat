@@ -131,7 +131,7 @@
     <string name="pref_send_crash_reports">Saada krahhiaruandeid</string>
     <string name="pref_never_send_crash_summary">Saates rakenduse kokkujooksmise korral arendajatele teavet, aitad sa vigu parandada ja rakendust edasi arendada</string>
     <string name="pref_confirm_messages">Lugemisteatised</string>
-    <string name="pref_confirm_messages_summary">Luba oma kontaktidel teada saada, kui oled saanud ja lugenud nende sõnumeid</string>
+    <string name="pref_confirm_messages_summary">Kui eelistus on kasutusel, siis sinu kontaktid saavad teada, kui oled lugenud nende sõnumeid.</string>
     <string name="pref_prevent_screenshots">Keela ekraanitõmmised</string>
     <string name="pref_prevent_screenshots_summary">Peida rakenduste vahetajast selle rakenduse sisu ja blokeeri ekraanitõmmiste tegemine</string>
     <string name="pref_ui_options">Kasutajaliides</string>
@@ -716,7 +716,7 @@
     <string name="selection_too_large">Valitud ala on liiga suur</string>
     <string name="no_accounts">(Aktiveeritud kasutajakontosid pole)</string>
     <string name="this_field_is_required">Selle välja täitmine on kohustuslik</string>
-    <string name="correct_message">Muuda sõnumit</string>
+    <string name="correct_message">Muuda</string>
     <string name="send_corrected_message">Saada muudetud sõnum</string>
     <string name="device_does_not_support_battery_op">Sinu nutiseade et toeta akukasutuse optimeerimise rakendusekohast väljalülitamist</string>
     <string name="agree_and_continue">Nõustu ja jätka</string>
@@ -1081,7 +1081,7 @@
     <string name="pref_category_operating_system">Operatsioonisüsteem</string>
     <string name="pref_privacy_summary">Kirjutamisteatised, viimati nähtud, kättesaadavus</string>
     <string name="pref_connection_summary">Hosti nimi ja port, ühendus Tori võrguga</string>
-    <string name="pref_connection_summary_w_cd">Hosti nimi ja port, ühendus Tori võrguga, kanalite tuvastamine</string>
+    <string name="pref_connection_summary_w_cd">Hosti nimi ja port, ühendus Tori võrguga, võrdõigusvõrk, kanalite tuvastamine</string>
     <string name="pref_keyboard_options">Klahvistik</string>
     <string name="unsupported_operation">Tegevus pole toetatud</string>
     <string name="pref_category_engagement_notifications">Osalusest teavitamine</string>
@@ -1164,4 +1164,10 @@
     <string name="server_info_moderated_message_retraction">XEP-0425: Moderated Message Retraction (sõnumite eemaldamise võimalus moderaatorite poolt)</string>
     <string name="account_status_tls_error_protocol">Kehv võrguühenduse turvalisus (TLS 1.3 puudub)</string>
     <string name="account_status_tls_error_untrusted">Sertifikaat pole usaldusväärne</string>
+    <string name="number_reactions_are_restricted">Reageerimiste arvu ülempiir on käes.</string>
+    <string name="this_reaction_isnt_allowed">Selline reageerimine pole lubatud.</string>
+    <string name="enable_account_to_delete">See kasutajakonto on väljalülitatud olekus. Kui tahad ta serverist kustutada, siis pead ta esmalt sisse lülitama.</string>
+    <string name="peer_to_peer">Võrdõigusvõrk (P2P)</string>
+    <string name="pref_use_relays">Kasuta alati edastusservereid</string>
+    <string name="pref_use_relays_summary">Vältimaks sinu IP-aadressi avaldamist kasuta võrdõigusvõrgu ühenduste (kõned ja failiedastus) puhul oma serverit vaheapealse edastusserverina.</string>
 </resources>

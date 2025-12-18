@@ -123,8 +123,8 @@
     <string name="pref_notification_grace_period">Период тишине</string>
     <string name="pref_advanced_options">Напредне опције</string>
     <string name="pref_never_send_crash_summary">Слањем извештаја о грешкама помажеш развоју апликације</string>
-    <string name="pref_confirm_messages">Потврди поруке</string>
-    <string name="pref_confirm_messages_summary">Обавести контакте када си примио/ла и прочитао(ла њихове поруке</string>
+    <string name="pref_confirm_messages">Потврде читања</string>
+    <string name="pref_confirm_messages_summary">Када су укључене, твоји контакти ће видети када си прочитао/ла њихове поруке.</string>
     <string name="pref_ui_options">Сучеље</string>
     <string name="openpgp_error">OpenKeychain је произвео грешку.</string>
     <string name="bad_key_for_encryption">Лош кључ за шифровање.</string>
@@ -276,7 +276,7 @@
 \n
 \n<small>Иди у „Детаљи контакта” да потврдиш своје пријаве присутности.</small></string>
     <string name="pref_security_settings">Безбедност</string>
-    <string name="pref_allow_message_correction">Преправљање порука</string>
+    <string name="pref_allow_message_correction">Исправке порука</string>
     <string name="pref_allow_message_correction_summary">Дозволи својим контактима да ретроактивно измењују своје поруке</string>
     <string name="pref_expert_options">Стручна подешавања</string>
     <string name="pref_expert_options_summary">Буди пажљив/а са овим</string>
@@ -389,7 +389,7 @@
     <string name="channel_options">Подешавања јавног канала</string>
     <string name="members_only">Приватно, само чланови</string>
     <string name="non_anonymous">Учини XMPP адресе видљиве свима</string>
-    <string name="moderated">Учини канал модерисаним</string>
+    <string name="moderated">Учини канал уређеним</string>
     <string name="you_are_not_participating">Не учествујеш</string>
     <string name="modified_conference_options">Опције групне преписке измењене!</string>
     <string name="could_not_modify_conference_options">Није могуће изменити опције групне преписке</string>
@@ -513,8 +513,8 @@
     <string name="selection_too_large">Означена површина је превелика</string>
     <string name="no_accounts">(Нема активираних налога)</string>
     <string name="this_field_is_required">Ово поље је обавезно</string>
-    <string name="correct_message">Преправи поруку</string>
-    <string name="send_corrected_message">Пошаљи преправљену поруку</string>
+    <string name="correct_message">Исправи</string>
+    <string name="send_corrected_message">Пошаљи исправљену поруку</string>
     <string name="this_account_is_disabled">Искључио/ла си овај налог</string>
     <string name="security_error_invalid_file_access">Безбедносна грешка: неисправан приступ фајлу!</string>
     <string name="no_application_to_share_uri">Није пронађена апликација за дељење линкова</string>
@@ -1097,7 +1097,7 @@
     <string name="pref_up_long_summary">Када ради као UnifiedPush дистрибутер, трајна, поуздана и економична XMPP веза ће бити употребљена да “пробуди” другу UnifiedPush-компатибилну апликацију, попут Tusky, Ltt.rs, FluffyChat и других.</string>
     <string name="pref_privacy_summary">Индикатори куцања, Последњи пут виђен/а, Присутност</string>
     <string name="pref_connection_summary">Назив сервера и порт, Тор</string>
-    <string name="pref_connection_summary_w_cd">Назив сервера и порт, Тор, Проналажење канала</string>
+    <string name="pref_connection_summary_w_cd">Назив сервера и порт, Тор, P2P, Проналажење канала</string>
     <string name="pref_category_engagement_notifications">Обавештења о учествовању</string>
     <string name="pref_category_application">Апликација</string>
     <string name="pref_large_font_summary">Повећај величину слова у порукама</string>
@@ -1179,4 +1179,10 @@
     <string name="server_info_occupant_id">XEP-0421: Occupant identifiers</string>
     <string name="account_status_tls_error_protocol">Слаба безбедност транспорта (није TLS 1.3)</string>
     <string name="account_status_tls_error_untrusted">Неодобрен сертификат</string>
+    <string name="number_reactions_are_restricted">Достигнут лимит броја реакција.</string>
+    <string name="this_reaction_isnt_allowed">Ова реакција није дозвољена.</string>
+    <string name="enable_account_to_delete">Овај налог је искључен. Укључи га да га обришеш са сервера.</string>
+    <string name="peer_to_peer">P2P</string>
+    <string name="pref_use_relays">Увек користи релеј</string>
+    <string name="pref_use_relays_summary">Усмери све P2P везе (позиве и слање фајлова) кроз твој сервер како би избегао откривање своје IP адресе.</string>
 </resources>

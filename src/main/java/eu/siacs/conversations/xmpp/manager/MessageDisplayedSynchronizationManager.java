@@ -37,6 +37,10 @@ public class MessageDisplayedSynchronizationManager extends AbstractManager {
     }
 
     public void processMdsItem(final Map.Entry<String, Displayed> item) {
+        if (!Config.MESSAGE_DISPLAYED_SYNCHRONIZATION) {
+            Log.d(Config.LOGTAG, "processing MDS is disabled");
+            return;
+        }
         final var account = getAccount();
         final Jid jid = Jid.Invalid.getNullForInvalid(Jid.ofOrInvalid(item.getKey()));
         if (jid == null) {

@@ -1,0 +1,4 @@
+* Send delivery receipts by default and turn setting into "Read receipts"
+* Introduce setting to always use relays
+* Fix avatar caching issue
+* Fix DNS occasionally not resolving when Private DNS is enabled

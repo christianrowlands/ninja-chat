@@ -1,0 +1,4 @@
+* Enviar resgardos de entrega por defecto e cambiar o axuste a «Resgardo de lectura»
+* Novo axuste para usar sempre reemisores
+* Solución ao problema do avatar na memoria tobo
+* Solución do problema ocasional da resolución DNS cando o DNS Privado está activado

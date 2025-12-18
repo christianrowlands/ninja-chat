@@ -60,7 +60,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.core.view.inputmethod.InputConnectionCompat;
-import androidx.core.view.inputmethod.InputContentInfoCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -130,7 +129,6 @@ import eu.siacs.conversations.utils.TimeFrameUtils;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
-import eu.siacs.conversations.xmpp.chatstate.ChatState;
 import eu.siacs.conversations.xmpp.jingle.AbstractJingleConnection;
 import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleFileTransferConnection;
@@ -138,6 +136,7 @@ import eu.siacs.conversations.xmpp.jingle.Media;
 import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
 import eu.siacs.conversations.xmpp.jingle.RtpCapability;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
+import eu.siacs.conversations.xmpp.manager.ChatStateManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
 import eu.siacs.conversations.xmpp.manager.ModerationManager;
@@ -145,6 +144,8 @@ import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
 import im.conversations.android.xmpp.model.muc.Role;
 import im.conversations.android.xmpp.model.stanza.Presence;
+import im.conversations.android.xmpp.model.state.Composing;
+import im.conversations.android.xmpp.model.state.Paused;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -268,6 +269,74 @@ public class ConversationFragment extends XmppFragment
                                     });
                 }
             };
+
+    private final XmppConnectionService.OnMoreMessagesLoaded onMoreMessagesLoaded =
+            new XmppConnectionService.OnMoreMessagesLoaded() {
+                @Override
+                public void onMoreMessagesLoaded(final int c, final Conversation conversation) {
+                    if (ConversationFragment.this.conversation != conversation) {
+                        conversation.messagesLoaded.set(true);
+                        return;
+                    }
+                    runOnUiThreadQuiet(() -> onMoreMessagesLoaded(conversation));
+                }
+
+                private void onMoreMessagesLoaded(final Conversation conversation) {
+                    synchronized (messageList) {
+                        onMoreMessagesLoadedImpl(conversation);
+                    }
+                }
+
+                @Override
+                public void informUser(final int resId) {
+                    runOnUiThreadQuiet(() -> informUserImpl(resId));
+                }
+            };
+
+    private void runOnUiThreadQuiet(final Runnable runnable) {
+        try {
+            runOnUiThread(runnable);
+        } catch (final IllegalStateException e) {
+            Log.d(Config.LOGTAG, "skip execution on UI thread. activity is gone", e);
+        }
+    }
+
+    private void onMoreMessagesLoadedImpl(final Conversation conversation) {
+        final int oldPosition = binding.messagesView.getFirstVisiblePosition();
+        Message message = null;
+        int childPos;
+        for (childPos = 0; childPos + oldPosition < messageList.size(); ++childPos) {
+            message = messageList.get(oldPosition + childPos);
+            if (message.getType() != Message.TYPE_STATUS) {
+                break;
+            }
+        }
+        final String uuid = message != null ? message.getUuid() : null;
+        final View v = binding.messagesView.getChildAt(childPos);
+        final int pxOffset = (v == null) ? 0 : v.getTop();
+        this.conversation.populateWithMessages(this.messageList);
+        try {
+            updateStatusMessages();
+        } catch (final IllegalStateException e) {
+            Log.d(Config.LOGTAG, "could not update status messages");
+        }
+        messageListAdapter.notifyDataSetChanged();
+        int pos = Math.max(getIndexOf(uuid, messageList), 0);
+        binding.messagesView.setSelectionFromTop(pos, pxOffset);
+        if (messageLoaderToast != null) {
+            messageLoaderToast.cancel();
+        }
+        conversation.messagesLoaded.set(true);
+    }
+
+    private void informUserImpl(final int resId) {
+        if (messageLoaderToast != null) {
+            messageLoaderToast.cancel();
+        }
+        messageLoaderToast = Toast.makeText(requireContext(), resId, Toast.LENGTH_LONG);
+        messageLoaderToast.show();
+    }
+
     private final OnScrollListener mOnScrollListener =
             new OnScrollListener() {
 
@@ -289,7 +358,7 @@ public class ConversationFragment extends XmppFragment
                         if (firstVisibleItem < 5
                                 && conversation != null
                                 && conversation.messagesLoaded.compareAndSet(true, false)
-                                && messageList.size() > 0) {
+                                && !messageList.isEmpty()) {
                             long timestamp;
                             if (messageList.get(0).getType() == Message.TYPE_STATUS
                                     && messageList.size() >= 2) {
@@ -300,160 +369,40 @@ public class ConversationFragment extends XmppFragment
                             requireXmppActivity()
                                     .xmppConnectionService
                                     .loadMoreMessages(
-                                            conversation,
-                                            timestamp,
-                                            new XmppConnectionService.OnMoreMessagesLoaded() {
-                                                @Override
-                                                public void onMoreMessagesLoaded(
-                                                        final int c,
-                                                        final Conversation conversation) {
-                                                    if (ConversationFragment.this.conversation
-                                                            != conversation) {
-                                                        conversation.messagesLoaded.set(true);
-                                                        return;
-                                                    }
-                                                    runOnUiThread(
-                                                            () -> {
-                                                                synchronized (messageList) {
-                                                                    final int oldPosition =
-                                                                            binding.messagesView
-                                                                                    .getFirstVisiblePosition();
-                                                                    Message message = null;
-                                                                    int childPos;
-                                                                    for (childPos = 0;
-                                                                            childPos + oldPosition
-                                                                                    < messageList
-                                                                                            .size();
-                                                                            ++childPos) {
-                                                                        message =
-                                                                                messageList.get(
-                                                                                        oldPosition
-                                                                                                + childPos);
-                                                                        if (message.getType()
-                                                                                != Message
-                                                                                        .TYPE_STATUS) {
-                                                                            break;
-                                                                        }
-                                                                    }
-                                                                    final String uuid =
-                                                                            message != null
-                                                                                    ? message
-                                                                                            .getUuid()
-                                                                                    : null;
-                                                                    View v =
-                                                                            binding.messagesView
-                                                                                    .getChildAt(
-                                                                                            childPos);
-                                                                    final int pxOffset =
-                                                                            (v == null)
-                                                                                    ? 0
-                                                                                    : v.getTop();
-                                                                    ConversationFragment.this
-                                                                            .conversation
-                                                                            .populateWithMessages(
-                                                                                    ConversationFragment
-                                                                                            .this
-                                                                                            .messageList);
-                                                                    try {
-                                                                        updateStatusMessages();
-                                                                    } catch (
-                                                                            IllegalStateException
-                                                                                    e) {
-                                                                        Log.d(
-                                                                                Config.LOGTAG,
-                                                                                "caught illegal"
-                                                                                    + " state"
-                                                                                    + " exception"
-                                                                                    + " while"
-                                                                                    + " updating"
-                                                                                    + " status"
-                                                                                    + " messages");
-                                                                    }
-                                                                    messageListAdapter
-                                                                            .notifyDataSetChanged();
-                                                                    int pos =
-                                                                            Math.max(
-                                                                                    getIndexOf(
-                                                                                            uuid,
-                                                                                            messageList),
-                                                                                    0);
-                                                                    binding.messagesView
-                                                                            .setSelectionFromTop(
-                                                                                    pos, pxOffset);
-                                                                    if (messageLoaderToast
-                                                                            != null) {
-                                                                        messageLoaderToast.cancel();
-                                                                    }
-                                                                    conversation.messagesLoaded.set(
-                                                                            true);
-                                                                }
-                                                            });
-                                                }
-
-                                                @Override
-                                                public void informUser(final int resId) {
-
-                                                    runOnUiThread(
-                                                            () -> {
-                                                                if (messageLoaderToast != null) {
-                                                                    messageLoaderToast.cancel();
-                                                                }
-                                                                if (ConversationFragment.this
-                                                                                .conversation
-                                                                        != conversation) {
-                                                                    return;
-                                                                }
-                                                                messageLoaderToast =
-                                                                        Toast.makeText(
-                                                                                view.getContext(),
-                                                                                resId,
-                                                                                Toast.LENGTH_LONG);
-                                                                messageLoaderToast.show();
-                                                            });
-                                                }
-                                            });
+                                            conversation, timestamp, onMoreMessagesLoaded);
                         }
                     }
                 }
             };
     private final EditMessage.OnCommitContentListener mEditorContentListener =
-            new EditMessage.OnCommitContentListener() {
-                @Override
-                public boolean onCommitContent(
-                        InputContentInfoCompat inputContentInfo,
-                        int flags,
-                        Bundle opts,
-                        String[] contentMimeTypes) {
-                    // try to get permission to read the image, if applicable
-                    if ((flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION)
-                            != 0) {
-                        try {
-                            inputContentInfo.requestPermission();
-                        } catch (Exception e) {
-                            Log.e(
-                                    Config.LOGTAG,
-                                    "InputContentInfoCompat#requestPermission() failed.",
-                                    e);
-                            Toast.makeText(
-                                            requireContext(),
-                                            requireContext()
-                                                    .getString(
-                                                            R.string.no_permission_to_access_x,
-                                                            inputContentInfo.getDescription()),
-                                            Toast.LENGTH_LONG)
-                                    .show();
-                            return false;
-                        }
+            (inputContentInfo, flags, opts, contentMimeTypes) -> {
+                // try to get permission to read the image, if applicable
+                if ((flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
+                    try {
+                        inputContentInfo.requestPermission();
+                    } catch (Exception e) {
+                        Log.e(
+                                Config.LOGTAG,
+                                "InputContentInfoCompat#requestPermission() failed.",
+                                e);
+                        Toast.makeText(
+                                        requireContext(),
+                                        requireContext()
+                                                .getString(
+                                                        R.string.no_permission_to_access_x,
+                                                        inputContentInfo.getDescription()),
+                                        Toast.LENGTH_LONG)
+                                .show();
+                        return false;
                     }
-                    if (hasPermissions(
-                            REQUEST_ADD_EDITOR_CONTENT,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        attachEditorContentToConversation(inputContentInfo.getContentUri());
-                    } else {
-                        mPendingEditorContent = inputContentInfo.getContentUri();
-                    }
-                    return true;
                 }
+                if (hasPermissions(
+                        REQUEST_ADD_EDITOR_CONTENT, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    attachEditorContentToConversation(inputContentInfo.getContentUri());
+                } else {
+                    mPendingEditorContent = inputContentInfo.getContentUri();
+                }
+                return true;
             };
     private Message selectedMessage;
     private final OnClickListener mEnableAccountListener =
@@ -1429,19 +1378,24 @@ public class ConversationFragment extends XmppFragment
                         c.getMode() == Conversational.MODE_SINGLE
                                 || (c.getMucOptions().occupantId()
                                         && c.getMucOptions().participating());
-                addReaction.setVisible(
+                final var reactionBaseConditions =
                         m.getStatus() != Message.STATUS_SEND_FAILED
                                 && !m.isDeleted()
-                                && singleOrOccupantId);
+                                && singleOrOccupantId;
                 if (m.getStatus() != Message.STATUS_SEND_FAILED
                         && c.getMode() == Conversational.MODE_MULTI) {
                     final var mucOptions = c.getMucOptions();
+                    final var restrictions = mucOptions.getReactionsRestrictions();
+                    final var reactionsRemaining =
+                            restrictions.reactionsPerUserRemaining(m.getReactions());
                     moderateMessage.setVisible(
                             !mucOptions.isPrivateAndNonAnonymous()
                                     && mucOptions.moderation()
                                     && mucOptions.getSelf().ranks(Role.MODERATOR)
                                     && m.getServerMsgId() != null);
+                    addReaction.setVisible(reactionBaseConditions && reactionsRemaining);
                 } else {
+                    addReaction.setVisible(reactionBaseConditions);
                     moderateMessage.setVisible(false);
                 }
                 moderateMessage.setTitle(
@@ -2249,16 +2203,7 @@ public class ConversationFragment extends XmppFragment
                 .addReaction(
                         message,
                         reactions -> {
-                            if (requireXmppActivity()
-                                    .xmppConnectionService
-                                    .sendReactions(message, reactions)) {
-                                return;
-                            }
-                            Toast.makeText(
-                                            requireContext(),
-                                            R.string.could_not_add_reaction,
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            requireXmppActivity().sendReactions(message, reactions);
                         });
     }
 
@@ -2447,9 +2392,7 @@ public class ConversationFragment extends XmppFragment
     }
 
     public void privateMessageWith(final Jid counterpart) {
-        if (conversation.setOutgoingChatState(Config.DEFAULT_CHAT_STATE)) {
-            requireXmppActivity().xmppConnectionService.sendChatState(conversation);
-        }
+        ChatStateManager.send(conversation, Config.DEFAULT_CHAT_STATE);
         this.binding.textinput.setText("");
         this.conversation.setNextCounterpart(counterpart);
         updateChatMsgHint();
@@ -2460,14 +2403,18 @@ public class ConversationFragment extends XmppFragment
     private void correctMessage(final Message message) {
         this.conversation.setCorrectingMessage(message);
         final Editable editable = binding.textinput.getText();
-        this.conversation.setDraftMessage(editable.toString());
+        this.conversation.setDraftMessage(CharSequenceUtils.nullToEmpty(editable));
         this.binding.textinput.setText("");
         this.binding.textinput.append(message.getBody());
+        updateChatMsgHint();
     }
 
-    private void highlightInConference(String nick) {
-        final Editable editable = this.binding.textinput.getText();
-        String oldString = editable.toString().trim();
+    private void highlightInConference(final String nick) {
+        final var editable = this.binding.textinput.getText();
+        if (editable == null) {
+            return;
+        }
+        final var oldString = CharSequenceUtils.nullToEmpty(editable).trim();
         final int pos = this.binding.textinput.getSelectionStart();
         if (oldString.isEmpty() || pos == 0) {
             editable.insert(0, nick + ": ");
@@ -2590,11 +2537,8 @@ public class ConversationFragment extends XmppFragment
     }
 
     private void updateChatState(final Conversation conversation, final String msg) {
-        ChatState state = msg.length() == 0 ? Config.DEFAULT_CHAT_STATE : ChatState.PAUSED;
-        Account.State status = conversation.getAccount().getStatus();
-        if (status == Account.State.ONLINE && conversation.setOutgoingChatState(state)) {
-            requireXmppActivity().xmppConnectionService.sendChatState(conversation);
-        }
+        final var state = msg.isEmpty() ? Config.DEFAULT_CHAT_STATE : Paused.class;
+        ChatStateManager.send(conversation, state);
     }
 
     private void saveMessageDraftStopAudioPlayer() {
@@ -3126,9 +3070,6 @@ public class ConversationFragment extends XmppFragment
         this.binding.textSendButton.setIconTint(
                 ColorStateList.valueOf(
                         SendButtonTool.getSendButtonColor(this.binding.textSendButton, status)));
-        // TODO send button color
-        final Activity activity = getActivity();
-        if (activity != null) {}
     }
 
     protected void updateStatusMessages() {
@@ -3137,13 +3078,17 @@ public class ConversationFragment extends XmppFragment
             this.messageList.add(0, Message.createLoadMoreMessage(conversation));
         }
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
-            ChatState state = conversation.getIncomingChatState();
-            if (state == ChatState.COMPOSING) {
+            final var account = conversation.getAccount();
+            final var state =
+                    account.getXmppConnection()
+                            .getManager(ChatStateManager.class)
+                            .getIncoming(conversation.getAddress());
+            if (Objects.equals(state, Composing.class)) {
                 this.messageList.add(
                         Message.createStatusMessage(
                                 conversation,
                                 getString(R.string.contact_is_typing, conversation.getName())));
-            } else if (state == ChatState.PAUSED) {
+            } else if (Objects.equals(state, Paused.class)) {
                 this.messageList.add(
                         Message.createStatusMessage(
                                 conversation,
@@ -3175,13 +3120,7 @@ public class ConversationFragment extends XmppFragment
             final MucOptions mucOptions = conversation.getMucOptions();
             final List<MucOptions.User> allUsers = mucOptions.getUsers();
             final Set<ReadByMarker> addedMarkers = new HashSet<>();
-            ChatState state = ChatState.COMPOSING;
-            List<MucOptions.User> users =
-                    conversation.getMucOptions().getUsersWithChatState(state, 5);
-            if (users.isEmpty()) {
-                state = ChatState.PAUSED;
-                users = conversation.getMucOptions().getUsersWithChatState(state, 5);
-            }
+            final var usersChatState = mucOptions.getUsersWithChatState(5);
             if (mucOptions.isPrivateAndNonAnonymous()) {
                 for (int i = this.messageList.size() - 1; i >= 0; --i) {
                     final Set<ReadByMarker> markersForMessage =
@@ -3193,7 +3132,7 @@ public class ConversationFragment extends XmppFragment
                                     marker); // may be put outside this condition. set should do
                             // dedup anyway
                             MucOptions.User user = mucOptions.getUser(marker);
-                            if (user != null && !users.contains(user)) {
+                            if (user != null && !usersChatState.users().contains(user)) {
                                 shownMarkers.add(user);
                             }
                         }
@@ -3241,14 +3180,14 @@ public class ConversationFragment extends XmppFragment
                     }
                 }
             }
-            if (users.isEmpty()) {
+            if (usersChatState.users().isEmpty()) {
                 return;
             }
             Message statusMessage;
-            if (users.size() == 1) {
-                MucOptions.User user = users.get(0);
+            if (usersChatState.users().size() == 1) {
+                MucOptions.User user = Iterables.getOnlyElement(usersChatState.users());
                 int id =
-                        state == ChatState.COMPOSING
+                        Objects.equals(usersChatState.chatState(), Composing.class)
                                 ? R.string.contact_is_typing
                                 : R.string.contact_has_stopped_typing;
                 statusMessage =
@@ -3258,13 +3197,14 @@ public class ConversationFragment extends XmppFragment
                 statusMessage.setCounterpart(user.getFullJid());
             } else {
                 int id =
-                        state == ChatState.COMPOSING
+                        Objects.equals(usersChatState.chatState(), Composing.class)
                                 ? R.string.contacts_are_typing
                                 : R.string.contacts_have_stopped_typing;
                 statusMessage =
                         Message.createStatusMessage(
-                                conversation, getString(id, UIHelper.concatNames(users)));
-                statusMessage.setCounterparts(users);
+                                conversation,
+                                getString(id, UIHelper.concatNames(usersChatState.users())));
+                statusMessage.setCounterparts(usersChatState.users());
             }
             this.messageList.add(statusMessage);
         }
@@ -3515,11 +3455,7 @@ public class ConversationFragment extends XmppFragment
         if (service == null) {
             return;
         }
-        final Account.State status = conversation.getAccount().getStatus();
-        if (status == Account.State.ONLINE
-                && conversation.setOutgoingChatState(ChatState.COMPOSING)) {
-            service.sendChatState(conversation);
-        }
+        ChatStateManager.send(conversation, Composing.class);
         runOnUiThread(this::updateSendButton);
     }
 
@@ -3529,10 +3465,7 @@ public class ConversationFragment extends XmppFragment
         if (service == null) {
             return;
         }
-        final Account.State status = conversation.getAccount().getStatus();
-        if (status == Account.State.ONLINE && conversation.setOutgoingChatState(ChatState.PAUSED)) {
-            service.sendChatState(conversation);
-        }
+        ChatStateManager.send(conversation, Paused.class);
     }
 
     @Override
@@ -3541,11 +3474,7 @@ public class ConversationFragment extends XmppFragment
         if (service == null) {
             return;
         }
-        final Account.State status = conversation.getAccount().getStatus();
-        if (status == Account.State.ONLINE
-                && conversation.setOutgoingChatState(Config.DEFAULT_CHAT_STATE)) {
-            service.sendChatState(conversation);
-        }
+        ChatStateManager.send(conversation, Config.DEFAULT_CHAT_STATE);
         if (storeNextMessage()) {
             runOnUiThread(() -> requireConversationsActivity().onConversationsListItemUpdated());
         }

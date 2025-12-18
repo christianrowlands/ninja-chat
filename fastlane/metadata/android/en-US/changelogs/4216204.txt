@@ -1,0 +1,1 @@
+* Fix regression (crash on connection) introduced in previous version

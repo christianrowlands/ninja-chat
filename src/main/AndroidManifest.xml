@@ -157,6 +157,19 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:enabled="false"
+            android:name=".ui.UnifiedPushDistributor"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="link"
+                    android:scheme="unifiedpush" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".receiver.UnifiedPushDistributor"
             android:enabled="false"

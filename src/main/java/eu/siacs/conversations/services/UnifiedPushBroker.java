@@ -34,6 +34,7 @@ import im.conversations.android.xmpp.model.stanza.Iq;
 import im.conversations.android.xmpp.model.up.Push;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -264,19 +265,28 @@ public class UnifiedPushBroker {
 
     private void setUnifiedPushDistributorEnabled(final boolean enabled) {
         final PackageManager packageManager = service.getPackageManager();
-        final ComponentName componentName =
-                new ComponentName(service, UnifiedPushDistributor.class);
+        final var componentNames =
+                Arrays.asList(
+                        new ComponentName(
+                                service.getApplicationContext(),
+                                eu.siacs.conversations.ui.UnifiedPushDistributor.class),
+                        new ComponentName(
+                                service.getApplicationContext(), UnifiedPushDistributor.class));
         if (enabled) {
-            packageManager.setComponentEnabledSetting(
-                    componentName,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
+            for (final var componentName : componentNames) {
+                packageManager.setComponentEnabledSetting(
+                        componentName,
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP);
+            }
             Log.d(Config.LOGTAG, "UnifiedPushDistributor has been enabled");
         } else {
-            packageManager.setComponentEnabledSetting(
-                    componentName,
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
+            for (final var componentName : componentNames) {
+                packageManager.setComponentEnabledSetting(
+                        componentName,
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP);
+            }
             Log.d(Config.LOGTAG, "UnifiedPushDistributor has been disabled");
         }
     }

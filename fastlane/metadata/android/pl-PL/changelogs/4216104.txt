@@ -1,0 +1,4 @@
+* Wysyłanie potwierdzeń dostarczenia domyślnie i zmiana ustawienia na „Potwierdzenia przeczytania”
+* Dodanie ustawienia do bezwarunkowego używania przekaźników
+* Naprawienie problemu z cache’owaniem awatarów
+* Naprawienie okazjonalnego nierozwiązywania nazw gdy jest włączony prywatny DNS

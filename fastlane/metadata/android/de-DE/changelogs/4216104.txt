@@ -1,0 +1,4 @@
+* Standardmäßig Zustellungsbestätigungen senden und Einstellung auf „Lesebestätigungen“ umgestellt
+* Einstellung eingeführt, um immer Relays zu verwenden
+* Problem mit dem Caching von Profilbild behoben
+* Problem behoben, dass DNS gelegentlich nicht aufgelöst wurde, wenn privates DNS aktiviert war

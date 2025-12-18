@@ -83,7 +83,7 @@
     <string name="pref_led_summary">Piscar luz de notificação quando uma nova mensagem for recebida</string>
     <string name="pref_ringtone">Tom de toque</string>
     <string name="pref_advanced_options">Avançadas</string>
-    <string name="pref_confirm_messages">Confirmar mensagens</string>
+    <string name="pref_confirm_messages">Confirmações de leitura</string>
     <string name="pref_ui_options">Interface do Utilizador</string>
     <string name="accept">Aceitar</string>
     <string name="error">Ocorreu um erro</string>
@@ -183,7 +183,7 @@
     <string name="request_now">Solicitar agora</string>
     <string name="ignore">Ignorar</string>
     <string name="pref_security_settings">Segurança</string>
-    <string name="pref_allow_message_correction">Correção de mensagens</string>
+    <string name="pref_allow_message_correction">Edição de mensagens</string>
     <string name="pref_allow_message_correction_summary">Permitir que os seus contactos editem as suas mensagens depois de enviadas</string>
     <string name="pref_expert_options">Definições avançadas</string>
     <string name="pref_expert_options_summary">Por favor tenha cuidado com estas</string>
@@ -349,8 +349,8 @@
     <string name="selection_too_large">A área selecionada é demasiado grande</string>
     <string name="no_accounts">(Nenhuma conta ativada)</string>
     <string name="this_field_is_required">Este campo é obrigatório</string>
-    <string name="correct_message">Corrigir mensagem</string>
-    <string name="send_corrected_message">Enviar mensagem corrigida</string>
+    <string name="correct_message">Editar mensagem</string>
+    <string name="send_corrected_message">Enviar mensagem editada</string>
     <string name="this_account_is_disabled">Desativou esta conta</string>
     <string name="share_uri_with">Partilhar URI com…</string>
     <string name="create_account">Criar conta</string>
@@ -436,7 +436,7 @@
     <string name="pref_notification_grace_period">Período de espera</string>
     <string name="pref_notification_grace_period_summary">Por quanto tempo as notificações são silenciadas após detetar atividade num dos seus outros dispositivos.</string>
     <string name="pref_never_send_crash_summary">Ao mandar stack traces, ajuda o desenvolvimento</string>
-    <string name="pref_confirm_messages_summary">Permitir os contactos saberem quando recebeu e leu as mensagens deles</string>
+    <string name="pref_confirm_messages_summary">Quando ativo, os seus contactos saberão quando leu as mensagens deles.</string>
     <string name="pref_prevent_screenshots">Impedir Capturas de Ecrã</string>
     <string name="pref_prevent_screenshots_summary">Esconde conteúdos da aplicação no app switcher e bloqueia capturas de ecrã</string>
     <string name="error_security_exception">A aplicação que usou para partilhar o ficheiro não forneceu permissões suficientes.</string>
@@ -963,7 +963,7 @@
         <item quantity="other">%1$d chamadas perdidas de %2$d contactos</item>
     </plurals>
     <string name="gpx_track">Trilho GPX</string>
-    <string name="could_not_correct_message">Impossível corrigir mensagem</string>
+    <string name="could_not_correct_message">Impossível editar mensagem</string>
     <string name="help">Ajuda</string>
     <string name="reconnecting_video_call">Reconectando videochamada</string>
     <string name="disable_tor_to_make_call">Desative Tor para fazer chamadas</string>
@@ -1102,7 +1102,7 @@
     <string name="pref_category_operating_system">Sistema Operativo</string>
     <string name="pref_privacy_summary">Notificações de escrita, Última vez visto, Disponibilidade</string>
     <string name="pref_connection_summary">Nome do Host &amp; Porta, Tor</string>
-    <string name="pref_connection_summary_w_cd">Nome do Host &amp; Porta, Tor, Descoberta de Canais</string>
+    <string name="pref_connection_summary_w_cd">Nome do Host &amp; Porta, Tor, P2P, Descoberta de Canais</string>
     <string name="pref_category_engagement_notifications">Notificações de participação</string>
     <string name="pref_category_on_this_device">No dispositivo</string>
     <string name="pref_large_font">Fonte grande</string>
@@ -1149,4 +1149,10 @@
     <string name="require_tls_v1_3">Usar obrigatoriamente Transport Layer Security (TLS) Protocol Version 1.3 para todas as conexões</string>
     <string name="account_status_tls_error_protocol">Segurança de dados fraca (Sem TLS 1.3)</string>
     <string name="account_status_tls_error_untrusted">Certificado não confiado</string>
+    <string name="enable_account_to_delete">Esta conta está desativada. Ative-a para a apagar do servidor.</string>
+    <string name="number_reactions_are_restricted">Limite de reações alcançado.</string>
+    <string name="this_reaction_isnt_allowed">Reação não permitida.</string>
+    <string name="peer_to_peer">P2P</string>
+    <string name="pref_use_relays">Usar sempre ‘relay’s</string>
+    <string name="pref_use_relays_summary">Passa todas as conexões P2P (chamadas e transferência de ficheiros) pelo seu servidor para evitar revelar o seu endereço de IP.</string>
 </resources>

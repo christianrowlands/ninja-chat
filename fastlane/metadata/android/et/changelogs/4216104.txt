@@ -1,0 +1,4 @@
+* Lugemisteatiseid saadetakse nüüd vaikimisi ja seadistuse nimi on nüüdsest "Lugemisteatised"
+* Lisandus seadistus, mis võimaldab alati kasutada edastusservereid
+* Tunnuspiltide puhverdamise vea parandus
+* Veaparaandus, kus nimelahendus oma nimeserveri puhul alati ei toiminud

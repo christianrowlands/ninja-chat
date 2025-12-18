@@ -1,0 +1,4 @@
+* Enviar marcas de lectura por defecto y modificar configuración como "Marcas de lectura"
+* Agregar nueva configuración para usar siempre relés
+* Corregir incidencia con los avatares
+* Solucionar problema ocasional de DNS al tener activado Private DNS
