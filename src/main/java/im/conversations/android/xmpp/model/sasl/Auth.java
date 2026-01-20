@@ -3,10 +3,10 @@ package im.conversations.android.xmpp.model.sasl;
 import eu.siacs.conversations.crypto.sasl.SaslMechanism;
 import im.conversations.android.annotation.XmlElement;
 import im.conversations.android.xmpp.model.AuthenticationRequest;
-import im.conversations.android.xmpp.model.StreamElement;
+import im.conversations.android.xmpp.model.ByteContent;
 
 @XmlElement
-public class Auth extends AuthenticationRequest {
+public class Auth extends AuthenticationRequest implements ByteContent {
 
     public Auth() {
         super(Auth.class);

@@ -112,6 +112,8 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
             return R.drawable.ic_person_48dp;
         } else if (mime.equals("application/vnd.android.package-archive")) {
             return R.drawable.ic_adb_48dp;
+        } else if (mime.equals("application/vnd.apple.pkpass")) {
+            return R.drawable.ic_mobile_ticket_48dp;
         } else if (ARCHIVE_MIMES.contains(mime)) {
             return R.drawable.ic_archive_48dp;
         } else if (mime.equals("application/epub+zip")

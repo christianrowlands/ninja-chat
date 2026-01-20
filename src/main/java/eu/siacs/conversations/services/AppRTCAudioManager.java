@@ -18,22 +18,17 @@ import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-
 import com.google.common.collect.ImmutableSet;
-
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.utils.AppRTCUtils;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
-
-import org.webrtc.ThreadUtils;
-
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.webrtc.ThreadUtils;
 
 /** AppRTCAudioManager manages all audio related parts of the AppRTC demo. */
 public class AppRTCAudioManager {
@@ -123,17 +118,17 @@ public class AppRTCAudioManager {
                         final String typeOfChange =
                                 switch (focusChange) {
                                     case AudioManager.AUDIOFOCUS_GAIN -> "AUDIOFOCUS_GAIN";
-                                    case AudioManager
-                                            .AUDIOFOCUS_GAIN_TRANSIENT -> "AUDIOFOCUS_GAIN_TRANSIENT";
-                                    case AudioManager
-                                            .AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE -> "AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE";
-                                    case AudioManager
-                                            .AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK -> "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK";
+                                    case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT ->
+                                            "AUDIOFOCUS_GAIN_TRANSIENT";
+                                    case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE ->
+                                            "AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE";
+                                    case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK ->
+                                            "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK";
                                     case AudioManager.AUDIOFOCUS_LOSS -> "AUDIOFOCUS_LOSS";
-                                    case AudioManager
-                                            .AUDIOFOCUS_LOSS_TRANSIENT -> "AUDIOFOCUS_LOSS_TRANSIENT";
-                                    case AudioManager
-                                            .AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK";
+                                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ->
+                                            "AUDIOFOCUS_LOSS_TRANSIENT";
+                                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
+                                            "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK";
                                     default -> "AUDIOFOCUS_INVALID";
                                 };
                         Log.d(Config.LOGTAG, "onAudioFocusChange: " + typeOfChange);
@@ -464,7 +459,7 @@ public class AppRTCAudioManager {
 
     public void startRingBack() {
         this.ringBackFuture =
-                JingleConnectionManager.SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(
+                JingleManager.SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(
                         () -> {
                             final var toneGenerator =
                                     new ToneGenerator(

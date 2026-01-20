@@ -16,6 +16,11 @@ public final class Propose extends JingleMessage {
         super(Propose.class);
     }
 
+    public Propose(final String sessionId) {
+        this();
+        this.setSessionId(sessionId);
+    }
+
     public List<GenericDescription> getDescriptions() {
         final ImmutableList.Builder<GenericDescription> builder = new ImmutableList.Builder<>();
         // TODO create proper extension for description

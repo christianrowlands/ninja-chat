@@ -1,0 +1,1 @@
+* Arreglar regresión (cuelgue durante la conexión) introducida en la versión anterior

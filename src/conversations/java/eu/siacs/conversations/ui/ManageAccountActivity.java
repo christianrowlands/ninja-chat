@@ -121,7 +121,7 @@ public class ManageAccountActivity extends XmppActivity
         this.selectedAccount = accountList.get(acmi.position);
         if (this.selectedAccount.isEnabled()) {
             menu.findItem(R.id.mgmt_account_enable).setVisible(false);
-            menu.findItem(R.id.mgmt_account_announce_pgp).setVisible(Config.supportOpenPgp());
+            menu.findItem(R.id.mgmt_account_announce_pgp).setVisible(true);
         } else {
             menu.findItem(R.id.mgmt_account_disable).setVisible(false);
             menu.findItem(R.id.mgmt_account_announce_pgp).setVisible(false);

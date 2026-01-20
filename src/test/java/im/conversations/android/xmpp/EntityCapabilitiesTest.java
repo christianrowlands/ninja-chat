@@ -109,8 +109,36 @@ public class EntityCapabilitiesTest {
         Assert.assertEquals("pKcpiYvQvaDlM/R7CTxhk3Ov8zM=", var);
     }
 
-    @Test
-    public void entityCapsNoFormType() throws IOException {
+    @Test(expected = EntityCapabilities2.IllegalInfoQueryException.class)
+    public void entityCapsHasReported()
+            throws IOException, EntityCapabilities2.IllegalInfoQueryException {
+        final String xml =
+                """
+                <query xmlns='http://jabber.org/protocol/disco#info'>
+                    <identity xml:lang='en' category='client' name='Test' type='pc'/>
+                    <x xmlns='jabber:x:data' type='result'>
+                     <field var='FORM_TYPE' type='hidden'>
+                        <value>https://conversations.im/something/made-up</value>
+                      </field>
+                      <field var='a'>
+                        <value>b</value>
+                      </field>
+                      <reported>
+                        <field var='a'/>
+                      </reported>
+                    </x>
+                  </query>\
+                """;
+        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
+        assertThat(element, instanceOf(InfoQuery.class));
+        final InfoQuery info = (InfoQuery) element;
+        EntityCapabilities2.hash(info).encoded();
+    }
+
+    @Test(expected = EntityCapabilities2.IllegalInfoQueryException.class)
+    public void entityCapsNoFormType()
+            throws IOException, EntityCapabilities2.IllegalInfoQueryException {
+        // a form without form_type is illegal (I think)
         final String xml =
                 """
                 <query xmlns='http://jabber.org/protocol/disco#info'>
@@ -125,11 +153,23 @@ public class EntityCapabilitiesTest {
         final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
         assertThat(element, instanceOf(InfoQuery.class));
         final InfoQuery info = (InfoQuery) element;
-        final String var = EntityCapabilities.hash(info).encoded();
-        Assert.assertEquals("Dv7vvt+gvcNRjmLruGKBfqLTwPw=", var);
-        final String entityCaps2 = EntityCapabilities2.hash(info).encoded();
-        // TODO this needs to abort with an error because it has no form type
-        // TODO test this and make code that calls `EntityCapabilities2.hash()` deal with that
+        EntityCapabilities2.hash(info).encoded();
+    }
+
+    @Test(expected = EntityCapabilities2.IllegalInfoQueryException.class)
+    public void illegalElements()
+            throws IOException, EntityCapabilities2.IllegalInfoQueryException {
+        final String xml =
+                """
+                <query xmlns='http://jabber.org/protocol/disco#info'>
+                    <identity xml:lang='en' category='client' name='Test' type='pc'/>
+                    <test xmlns="https://conversations.im/invalid"/>
+                  </query>\
+                """;
+        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
+        assertThat(element, instanceOf(InfoQuery.class));
+        final InfoQuery info = (InfoQuery) element;
+        EntityCapabilities2.hash(info).encoded();
     }
 
     @Test
@@ -231,7 +271,7 @@ public class EntityCapabilitiesTest {
     }
 
     @Test
-    public void caps2() throws IOException {
+    public void caps2() throws IOException, EntityCapabilities2.IllegalInfoQueryException {
         final String xml =
                 """
                 <query xmlns="http://jabber.org/protocol/disco#info">
@@ -263,7 +303,7 @@ public class EntityCapabilitiesTest {
     }
 
     @Test
-    public void caps2complex() throws IOException {
+    public void caps2complex() throws IOException, EntityCapabilities2.IllegalInfoQueryException {
         final String xml =
                 """
                 <query xmlns="http://jabber.org/protocol/disco#info">

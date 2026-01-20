@@ -43,6 +43,10 @@ public class Error extends Extension {
         this.setAttribute("code", code);
     }
 
+    public void addText(final Text text) {
+        this.addExtension(text);
+    }
+
     public enum Type {
         MODIFY,
         CANCEL,

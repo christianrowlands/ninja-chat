@@ -19,7 +19,7 @@ public class PingManager extends AbstractManager {
     }
 
     public void ping() {
-        if (connection.getStreamFeatures().sm()) {
+        if (connection.getFeatures().sm()) {
             this.connection.sendRequestStanza();
         } else {
             this.connection.sendIqPacket(new Iq(Iq.Type.GET, new Ping()));

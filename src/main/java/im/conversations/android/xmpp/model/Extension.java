@@ -5,12 +5,14 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import eu.siacs.conversations.xml.Element;
 import im.conversations.android.xmpp.ExtensionFactory;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 public class Extension extends Element {
 
     private Extension(final ExtensionFactory.Id id) {
-        super(id.name, id.namespace);
+        super(id.name(), id.namespace());
     }
 
     public Extension(final Class<? extends Extension> clazz) {
@@ -73,5 +75,14 @@ public class Extension extends Element {
         for (final Extension extension : extensions) {
             addExtension(extension);
         }
+    }
+
+    public Extension setAttribute(final String name, final Instant value) {
+        if (value == null) {
+            this.attributes.remove(name);
+        } else {
+            this.attributes.put(name, DateTimeFormatter.ISO_INSTANT.format(value));
+        }
+        return this;
     }
 }

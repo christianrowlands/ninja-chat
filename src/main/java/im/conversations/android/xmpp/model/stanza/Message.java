@@ -21,7 +21,7 @@ public class Message extends Stanza {
         super(Message.class);
     }
 
-    public Message(Type type) {
+    public Message(final Type type) {
         this();
         this.setType(type);
     }

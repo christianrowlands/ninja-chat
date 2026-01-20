@@ -1,7 +1,6 @@
 package im.conversations.android.xmpp.model.sasl2;
 
 import eu.siacs.conversations.crypto.sasl.SaslMechanism;
-
 import im.conversations.android.annotation.XmlElement;
 import im.conversations.android.xmpp.model.AuthenticationRequest;
 
@@ -15,5 +14,9 @@ public class Authenticate extends AuthenticationRequest {
     @Override
     public void setMechanism(final SaslMechanism mechanism) {
         this.setAttribute("mechanism", mechanism.getMechanism());
+    }
+
+    public void setInitialResponse(final byte[] response) {
+        this.addExtension(new InitialResponse()).setContent(response);
     }
 }

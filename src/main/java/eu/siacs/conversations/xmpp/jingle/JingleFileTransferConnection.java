@@ -22,6 +22,9 @@ import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.services.AbstractConnectionManager;
+import eu.siacs.conversations.services.DebouncedInterfaceUpdater;
+import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
@@ -29,7 +32,6 @@ import eu.siacs.conversations.xmpp.jingle.stanzas.FileTransferDescription;
 import eu.siacs.conversations.xmpp.jingle.stanzas.GenericTransportInfo;
 import eu.siacs.conversations.xmpp.jingle.stanzas.IbbTransportInfo;
 import eu.siacs.conversations.xmpp.jingle.stanzas.IceUdpTransportInfo;
-import eu.siacs.conversations.xmpp.jingle.stanzas.Reason;
 import eu.siacs.conversations.xmpp.jingle.stanzas.SocksByteStreamsTransportInfo;
 import eu.siacs.conversations.xmpp.jingle.stanzas.WebRTCDataChannelTransportInfo;
 import eu.siacs.conversations.xmpp.jingle.transports.InbandBytestreamsTransport;
@@ -37,6 +39,7 @@ import eu.siacs.conversations.xmpp.jingle.transports.SocksByteStreamsTransport;
 import eu.siacs.conversations.xmpp.jingle.transports.Transport;
 import eu.siacs.conversations.xmpp.jingle.transports.WebRTCDataChannelTransport;
 import im.conversations.android.xmpp.model.jingle.Jingle;
+import im.conversations.android.xmpp.model.jingle.Reason;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import java.io.Closeable;
 import java.io.EOFException;
@@ -55,6 +58,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeoutException;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.io.CipherInputStream;
 import org.bouncycastle.crypto.io.CipherOutputStream;
@@ -80,9 +84,9 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
     private boolean acceptedAutomatically = false;
 
     public JingleFileTransferConnection(
-            final JingleConnectionManager jingleConnectionManager, final Message message) {
+            final XmppConnectionService service, final Message message) {
         super(
-                jingleConnectionManager,
+                service,
                 AbstractJingleConnection.Id.of(message),
                 message.getConversation().getAccount().getJid());
         Preconditions.checkArgument(
@@ -94,10 +98,8 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
     }
 
     public JingleFileTransferConnection(
-            final JingleConnectionManager jingleConnectionManager,
-            final Id id,
-            final Jid initiator) {
-        super(jingleConnectionManager, id, initiator);
+            final XmppConnectionService service, final Id id, final Jid initiator) {
+        super(service, id, initiator);
         final Conversation conversation =
                 this.xmppConnectionService.findOrCreateConversation(
                         id.account, id.with.asBareJid(), false, false);
@@ -109,7 +111,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
     }
 
     @Override
-    void deliverPacket(final Iq iq) {
+    public void deliverPacket(final Iq iq) {
         final var jingle = iq.getExtension(Jingle.class);
         switch (jingle.getAction()) {
             case SESSION_ACCEPT -> receiveSessionAccept(iq, jingle);
@@ -169,7 +171,22 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                         file.getName(),
                         message.getMimeType(),
                         Collections.emptyList());
-        final var transportInfoFuture = this.transport.asInitialTransportInfo();
+        final var transportInfoFutureRaw = this.transport.asInitialTransportInfo();
+        final var transportInfoFuture =
+                Futures.catchingAsync(
+                        transportInfoFutureRaw,
+                        WebRTCDataChannelTransport.InitiatorNoRelaysException.class,
+                        ex -> {
+                            Log.d(
+                                    Config.LOGTAG,
+                                    "fallback to last resort transport as initiator",
+                                    ex);
+                            final var transport = setupLastResortTransport();
+                            this.transport = transport;
+                            this.transport.setTransportCallback(this);
+                            return transport.asInitialTransportInfo();
+                        },
+                        MoreExecutors.directExecutor());
         Futures.addCallback(
                 transportInfoFuture,
                 new FutureCallback<>() {
@@ -217,22 +234,25 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                 }
             }
             iq.setTo(id.with);
-            xmppConnectionService.sendIqPacket(
-                    id.account,
-                    iq,
-                    (response) -> {
-                        if (response.getType() == Iq.Type.RESULT) {
+            final var future = id.account.getXmppConnection().sendIqPacket(iq);
+            Futures.addCallback(
+                    future,
+                    new FutureCallback<>() {
+                        @Override
+                        public void onSuccess(Iq result) {
                             xmppConnectionService.markMessage(message, Message.STATUS_OFFERED);
-                            return;
                         }
-                        if (response.getType() == Iq.Type.ERROR) {
-                            handleIqErrorResponse(response);
-                            return;
+
+                        @Override
+                        public void onFailure(@NonNull Throwable t) {
+                            if (t instanceof TimeoutException) {
+                                handleIqTimeoutResponse();
+                            } else {
+                                handleIqErrorResponse(t);
+                            }
                         }
-                        if (response.getType() == Iq.Type.TIMEOUT) {
-                            handleIqTimeoutResponse(response);
-                        }
-                    });
+                    },
+                    MoreExecutors.directExecutor());
             this.transport.readyToSentAdditionalCandidates();
         }
     }
@@ -273,7 +293,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                         "Transport in session accept did not match our session-initialize");
                 terminateTransport();
                 sendSessionTerminate(
-                        Reason.FAILED_APPLICATION,
+                        new Reason.FailedApplication(),
                         "Transport in session accept did not match our session-initialize");
             }
         } else {
@@ -374,10 +394,13 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             final var conversation = (Conversation) message.getConversation();
             conversation.add(message);
 
+            final var autoAcceptFileSize =
+                    new AppSettings(xmppConnectionService).getAutoAcceptFileSize();
             // make auto accept decision
             if (id.account.getRoster().getContact(id.with).showInContactList()
-                    && jingleConnectionManager.hasStoragePermission()
-                    && file.size <= this.jingleConnectionManager.getAutoAcceptFileSize()
+                    && Compatibility.hasStoragePermission(xmppConnectionService)
+                    && autoAcceptFileSize.isPresent()
+                    && file.size <= autoAcceptFileSize.get()
                     && xmppConnectionService.isDataSaverDisabled()) {
                 Log.d(Config.LOGTAG, "auto accepting file from " + id.with);
                 this.acceptedAutomatically = true;
@@ -388,7 +411,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                         "not auto accepting new file offer with size: "
                                 + file.size
                                 + " allowed size:"
-                                + this.jingleConnectionManager.getAutoAcceptFileSize());
+                                + autoAcceptFileSize);
                 message.markUnread();
                 this.xmppConnectionService.updateConversationUi();
                 this.xmppConnectionService.getNotificationService().push(message);
@@ -503,10 +526,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                     xmppConnection, id, isInitiator(), useTor, useRelays, streamId, candidates);
         } else if (!useTor && transportInfo instanceof WebRTCDataChannelTransportInfo) {
             return new WebRTCDataChannelTransport(
-                    xmppConnectionService.getApplicationContext(),
-                    xmppConnection,
-                    id.account,
-                    isInitiator());
+                    xmppConnectionService.getApplicationContext(), xmppConnection, isInitiator());
         } else {
             throw new IllegalArgumentException("Do not know how to create transport");
         }
@@ -519,15 +539,15 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         final boolean useRelays = appSettings.isUseRelays();
         if (!useTor && remoteHasFeature(Namespace.JINGLE_TRANSPORT_WEBRTC_DATA_CHANNEL)) {
             return new WebRTCDataChannelTransport(
-                    xmppConnectionService.getApplicationContext(),
-                    xmppConnection,
-                    id.account,
-                    isInitiator());
+                    xmppConnectionService.getApplicationContext(), xmppConnection, isInitiator());
         }
         // for connections we initialize we just don’t use S5B when 'use relays' is enabled
+        // for outgoing connections we would have to reject (and not try) every connection that is
+        // not our own proxy
+        // and if both parties do that it simply wont work
         // for incoming connections we might as well try but stick to our proxy candidate
         if (!useRelays && remoteHasFeature(Namespace.JINGLE_TRANSPORTS_S5B)) {
-            return new SocksByteStreamsTransport(xmppConnection, id, isInitiator(), useTor, true);
+            return new SocksByteStreamsTransport(xmppConnection, id, isInitiator(), useTor, false);
         }
         return setupLastResortTransport();
     }
@@ -570,15 +590,15 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
 
     private synchronized void receiveSessionTerminate(final Iq jinglePacket, final Jingle jingle) {
         respondOk(jinglePacket);
-        final Jingle.ReasonWrapper wrapper = jingle.getReason();
+        final var wrapper = jingle.getReason();
         final State previous = this.state;
         Log.d(
                 Config.LOGTAG,
                 id.account.getJid().asBareJid()
                         + ": received session terminate reason="
-                        + wrapper.reason
+                        + wrapper.reason()
                         + "("
-                        + Strings.nullToEmpty(wrapper.text)
+                        + Strings.nullToEmpty(wrapper.text())
                         + ") while in state "
                         + previous);
         if (TERMINATED.contains(previous)) {
@@ -591,10 +611,12 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         }
         if (isInitiator()) {
             this.message.setErrorMessage(
-                    Strings.isNullOrEmpty(wrapper.text) ? wrapper.reason.toString() : wrapper.text);
+                    Strings.isNullOrEmpty(wrapper.text())
+                            ? wrapper.reason().getClass().getSimpleName()
+                            : wrapper.text());
         }
         terminateTransport();
-        final State target = reasonToState(wrapper.reason);
+        final State target = reasonToState(wrapper.reason());
         transitionOrThrow(target);
         finish();
     }
@@ -641,7 +663,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                     "Transport in transport-accept did not match our transport-replace");
             terminateTransport();
             sendSessionTerminate(
-                    Reason.FAILED_APPLICATION,
+                    new Reason.FailedApplication(),
                     "Transport in transport-accept did not match our transport-replace");
         }
     }
@@ -723,7 +745,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             if (!socksBytestreamsTransport.setCandidateUsed(candidateUsed.cid)) {
                 terminateTransport();
                 sendSessionTerminate(
-                        Reason.FAILED_TRANSPORT,
+                        new Reason.FailedTransport(),
                         String.format(
                                 "Peer is not connected to our candidate %s", candidateUsed.cid));
             }
@@ -866,7 +888,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
     }
 
     @Override
-    void notifyRebound() {}
+    public void notifyRebound() {}
 
     @Override
     public void onTransportEstablished() {
@@ -920,7 +942,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             sendFileSessionInfoReceived();
             terminateTransport();
             messageReceivedSuccess();
-            sendSessionTerminate(Reason.SUCCESS, null);
+            sendSessionTerminate(new Reason.Success(), null);
         }
     }
 
@@ -960,7 +982,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         } else {
             terminateTransport();
             Log.d(Config.LOGTAG, "on file transmission failed", throwable);
-            sendSessionTerminate(Reason.CONNECTIVITY_ERROR, null);
+            sendSessionTerminate(new Reason.ConnectivityError(), null);
         }
     }
 
@@ -971,7 +993,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         }
         final var fileDescription = getLocalContentMap().requireOnlyFile();
         final File file = xmppConnectionService.getFileBackend().getFile(message);
-        final Runnable updateRunnable = () -> jingleConnectionManager.updateConversationUi(false);
+        final Runnable updateRunnable = new DebouncedInterfaceUpdater(xmppConnectionService);
         if (receiving) {
             return new FileReceiver(
                     file,
@@ -1020,7 +1042,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                 if (isTerminated()) {
                     return;
                 }
-                sendSessionTerminate(Reason.FAILED_APPLICATION, null);
+                sendSessionTerminate(new Reason.FailedApplication(), null);
             }
             return;
         }
@@ -1028,7 +1050,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         final var isTransportInBand = transport instanceof InbandBytestreamsTransport;
         if (isTransportInBand) {
             terminateTransport();
-            sendSessionTerminate(Reason.CONNECTIVITY_ERROR, "Failed to setup IBB transport");
+            sendSessionTerminate(new Reason.ConnectivityError(), "Failed to setup IBB transport");
             return;
         }
         // terminate the current transport
@@ -1256,9 +1278,9 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
 
     private boolean stopFileTransfer() {
         if (isInitiator()) {
-            return stopFileTransfer(Reason.CANCEL);
+            return stopFileTransfer(new Reason.Cancel());
         } else {
-            return stopFileTransfer(Reason.DECLINE);
+            return stopFileTransfer(new Reason.Decline());
         }
     }
 
@@ -1268,7 +1290,7 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             // we change state before terminating transport so we don't consume the following
             // IOException and turn it into a connectivity error
 
-            if (isInitiator() && reason == Reason.CANCEL) {
+            if (isInitiator() && reason instanceof Reason.Cancel) {
                 // message hooks have already run so we need to mark to persist the 'cancelled'
                 // status
                 xmppConnectionService.markMessage(

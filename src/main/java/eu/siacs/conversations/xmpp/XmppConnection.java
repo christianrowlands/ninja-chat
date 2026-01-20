@@ -66,7 +66,6 @@ import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xml.Tag;
 import eu.siacs.conversations.xml.TagWriter;
 import eu.siacs.conversations.xml.XmlReader;
-import eu.siacs.conversations.xmpp.bind.Bind2;
 import eu.siacs.conversations.xmpp.manager.AbstractManager;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.CarbonsManager;
@@ -77,8 +76,11 @@ import eu.siacs.conversations.xmpp.manager.PingManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
 import im.conversations.android.xmpp.Entity;
 import im.conversations.android.xmpp.IqErrorException;
+import im.conversations.android.xmpp.IqProcessingException;
+import im.conversations.android.xmpp.model.AuthenticationChallenge;
 import im.conversations.android.xmpp.model.AuthenticationFailure;
 import im.conversations.android.xmpp.model.AuthenticationRequest;
+import im.conversations.android.xmpp.model.AuthenticationResponse;
 import im.conversations.android.xmpp.model.AuthenticationStreamFeature;
 import im.conversations.android.xmpp.model.Extension;
 import im.conversations.android.xmpp.model.StreamElement;
@@ -88,6 +90,7 @@ import im.conversations.android.xmpp.model.cb.SaslChannelBinding;
 import im.conversations.android.xmpp.model.csi.Active;
 import im.conversations.android.xmpp.model.csi.Inactive;
 import im.conversations.android.xmpp.model.error.Condition;
+import im.conversations.android.xmpp.model.error.Text;
 import im.conversations.android.xmpp.model.fast.Fast;
 import im.conversations.android.xmpp.model.fast.RequestToken;
 import im.conversations.android.xmpp.model.sasl.Auth;
@@ -98,6 +101,7 @@ import im.conversations.android.xmpp.model.sasl.SaslError;
 import im.conversations.android.xmpp.model.sasl.Success;
 import im.conversations.android.xmpp.model.sasl2.Authenticate;
 import im.conversations.android.xmpp.model.sasl2.Authentication;
+import im.conversations.android.xmpp.model.sasl2.Challenge;
 import im.conversations.android.xmpp.model.sasl2.UserAgent;
 import im.conversations.android.xmpp.model.session.Session;
 import im.conversations.android.xmpp.model.sm.Ack;
@@ -695,8 +699,13 @@ public class XmppConnection implements Runnable {
                 // two step sasl2 - we don’t support this yet
                 throw new StateChangingException(
                         Account.State.INCOMPATIBLE_CLIENT, "received 'continue'");
-            } else if (nextTag.isStart("challenge")) {
-                final Element challenge = tagReader.readElement(nextTag);
+            } else if (nextTag.isStart("challenge", Namespace.SASL)) {
+                final var challenge =
+                        tagReader.readElement(
+                                nextTag, im.conversations.android.xmpp.model.sasl.Challenge.class);
+                processChallenge(challenge);
+            } else if (nextTag.isStart("challenge", Namespace.SASL_2)) {
+                final var challenge = tagReader.readElement(nextTag, Challenge.class);
                 processChallenge(challenge);
             } else if (!LoginInfo.isSuccess(this.loginInfo)) {
                 throw new StateChangingException(
@@ -723,7 +732,7 @@ public class XmppConnection implements Runnable {
                 final var enabled = tagReader.readElement(nextTag, Enabled.class);
                 processEnabled(enabled);
             } else if (nextTag.isStart("r", Namespace.STREAM_MANAGEMENT)) {
-                tagReader.readElement(nextTag);
+                tagReader.readElement(nextTag, Request.class);
                 if (Config.EXTENDED_SM_LOGGING) {
                     Log.d(
                             Config.LOGTAG,
@@ -788,15 +797,15 @@ public class XmppConnection implements Runnable {
         }
     }
 
-    private void processChallenge(final Element challenge) throws IOException {
+    private void processChallenge(final AuthenticationChallenge challenge) throws IOException {
         final SaslMechanism.Version version;
         try {
             version = SaslMechanism.Version.of(challenge);
         } catch (final IllegalArgumentException e) {
             throw new StateChangingException(
-                    Account.State.INCOMPATIBLE_SERVER, "login challange of unknown type");
+                    Account.State.INCOMPATIBLE_SERVER, "login challenge of unknown type");
         }
-        final StreamElement response;
+        final AuthenticationResponse response;
         if (version == SaslMechanism.Version.SASL) {
             response = new Response();
         } else if (version == SaslMechanism.Version.SASL_2) {
@@ -810,13 +819,22 @@ public class XmppConnection implements Runnable {
                     Account.State.INCOMPATIBLE_SERVER,
                     "server sent challenge even though login was not started or already complete");
         }
+        final byte[] challengeAsBytes;
         try {
-            response.setContent(
+            challengeAsBytes = challenge.asBytes();
+        } catch (final IllegalStateException e) {
+            // TODO send auth abort
+            Log.d(Config.LOGTAG, "invalid base64 in SASL challenge", e);
+            throw new StateChangingException(Account.State.UNAUTHORIZED);
+        }
+        try {
+            final var message =
                     currentLoginInfo.saslMechanism.getResponse(
-                            challenge.getContent(), sslSocketOrNull(socket)));
+                            challengeAsBytes, sslSocketOrNull(socket));
+            response.setContent(message);
         } catch (final SaslMechanism.AuthenticationException e) {
-            // TODO: Send auth abort tag.
-            Log.e(Config.LOGTAG, e.toString());
+            // TODO send auth abort
+            Log.e(Config.LOGTAG, "could not process SASL challenge", e);
             throw new StateChangingException(Account.State.UNAUTHORIZED);
         }
         tagWriter.writeElement(response);
@@ -834,12 +852,22 @@ public class XmppConnection implements Runnable {
                     "received login success even though login was not started or already complete");
         }
         final SaslMechanism.Version version;
-        final String challenge;
+        final byte[] challenge;
         if (element instanceof Success success) {
-            challenge = success.getContent();
+            try {
+                challenge = success.asBytes();
+            } catch (final IllegalStateException e) {
+                throw new StateChangingException(
+                        Account.State.INCOMPATIBLE_SERVER, "invalid base64 in SASL success");
+            }
             version = SaslMechanism.Version.SASL;
         } else if (element instanceof im.conversations.android.xmpp.model.sasl2.Success success) {
-            challenge = success.findChildContent("additional-data");
+            try {
+                challenge = success.getAdditionalData();
+            } catch (final IllegalStateException e) {
+                throw new StateChangingException(
+                        Account.State.INCOMPATIBLE_SERVER, "invalid base64 in SASL2 success");
+            }
             version = SaslMechanism.Version.SASL_2;
         } else {
             throw new StateChangingException(
@@ -939,7 +967,7 @@ public class XmppConnection implements Runnable {
                 tokenMechanism = null;
             }
             if (tokenMechanism != null && !Strings.isNullOrEmpty(token)) {
-                if (ChannelBinding.priority(tokenMechanism.channelBinding)
+                if (ChannelBinding.priority(tokenMechanism.channelBinding())
                         >= ChannelBindingMechanism.getPriority(currentSaslMechanism)) {
                     this.account.setFastToken(tokenMechanism, token);
                     Log.d(
@@ -1229,12 +1257,7 @@ public class XmppConnection implements Runnable {
                 mXmppConnectionService.updateConversationUi();
             }
         } else {
-            Log.d(
-                    Config.LOGTAG,
-                    account.getJid().asBareJid()
-                            + ": resumption failed ("
-                            + XmlHelper.print(failed.getChildren())
-                            + ")");
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": resumption failed");
         }
         resetStreamId();
         if (sendBindRequest) {
@@ -1660,43 +1683,56 @@ public class XmppConnection implements Runnable {
             scramMechanism.setDowngradeProtection(downgradeProtection);
         }
         final boolean quickStartAvailable;
-        final String firstMessage =
+        final byte[] firstMessage =
                 saslMechanism.getClientFirstMessage(sslSocketOrNull(this.socket));
         final boolean usingFast = SaslMechanism.hashedToken(saslMechanism);
         final AuthenticationRequest authenticate;
         final LoginInfo loginInfo;
         if (version == SaslMechanism.Version.SASL) {
-            authenticate = new Auth();
-            if (!Strings.isNullOrEmpty(firstMessage)) {
-                authenticate.setContent(firstMessage);
+            final var auth = new Auth();
+            if (firstMessage.length != 0) {
+                auth.setContent(firstMessage);
             }
             quickStartAvailable = false;
+            authenticate = auth;
             loginInfo = new LoginInfo(saslMechanism, version, Collections.emptyList());
         } else if (version == SaslMechanism.Version.SASL_2) {
             final Authentication authentication = (Authentication) authElement;
-            final var inline = authentication.getInline();
-            final boolean sm = inline != null && inline.hasExtension(StreamManagement.class);
             final HashedToken.Mechanism hashTokenRequest;
-            if (usingFast) {
-                hashTokenRequest = null;
-            } else if (inline != null) {
-                hashTokenRequest =
-                        HashedToken.Mechanism.best(
-                                inline.getFastMechanisms(), SSLSockets.version(this.socket));
-                // TODO warn or fail early if channel binding priority isn’t high enough compared to
-                // login mechanism
-                // ChannelBinding.priority(hashTokenRequest.channelBinding)
-                //                        <
-                // ChannelBindingMechanism.getPriority(saslMechanism)
+            final var inline = authentication.getInline();
+            final boolean inlineStreamManagement;
+            final Optional<Collection<String>> inlineBind;
+            if (inline != null) {
+                inlineStreamManagement = inline.hasExtension(StreamManagement.class);
+                final var bind2 = inline.getExtension(Bind.class);
+                if (bind2 != null) {
+                    inlineBind = Optional.of(bind2.getInlineFeatures());
+                } else {
+                    inlineBind = Optional.absent();
+                }
+                if (usingFast) {
+                    hashTokenRequest = null;
+                } else {
+                    hashTokenRequest =
+                            HashedToken.Mechanism.best(
+                                    inline.getFastMechanisms(), SSLSockets.version(this.socket));
+                    // TODO warn or fail early if channel binding priority isn’t high enough
+                    // compared to
+                    // login mechanism
+                    // ChannelBinding.priority(hashTokenRequest.channelBinding)
+                    //                        <
+                    // ChannelBindingMechanism.getPriority(saslMechanism)
+                }
             } else {
                 hashTokenRequest = null;
+                inlineStreamManagement = false;
+                inlineBind = Optional.absent();
             }
-            final Collection<String> bindFeatures = Bind2.features(inline);
             quickStartAvailable =
-                    sm
-                            && bindFeatures != null
-                            && bindFeatures.containsAll(Bind2.QUICKSTART_FEATURES);
-            if (bindFeatures != null) {
+                    inlineStreamManagement
+                            && inlineBind.isPresent()
+                            && inlineBind.get().containsAll(Bind.QUICKSTART_FEATURES);
+            if (inlineBind.isPresent()) {
                 try {
                     mXmppConnectionService.restoredFromDatabaseLatch.await();
                 } catch (final InterruptedException e) {
@@ -1708,11 +1744,16 @@ public class XmppConnection implements Runnable {
                     return;
                 }
             }
-            loginInfo = new LoginInfo(saslMechanism, version, bindFeatures);
+            loginInfo =
+                    new LoginInfo(saslMechanism, version, inlineBind.or(Collections.emptyList()));
             this.hashTokenRequest = hashTokenRequest;
             authenticate =
                     generateAuthenticationRequest(
-                            firstMessage, usingFast, hashTokenRequest, bindFeatures, sm);
+                            firstMessage,
+                            usingFast,
+                            hashTokenRequest,
+                            inlineBind.orNull(),
+                            inlineStreamManagement);
         } else {
             throw new AssertionError("Missing implementation for " + version);
         }
@@ -1807,20 +1848,20 @@ public class XmppConnection implements Runnable {
     }
 
     private AuthenticationRequest generateAuthenticationRequest(
-            final String firstMessage, final boolean usingFast) {
+            final byte[] firstMessage, final boolean usingFast) {
         return generateAuthenticationRequest(
-                firstMessage, usingFast, null, Bind2.QUICKSTART_FEATURES, true);
+                firstMessage, usingFast, null, Bind.QUICKSTART_FEATURES, true);
     }
 
     private AuthenticationRequest generateAuthenticationRequest(
-            final String firstMessage,
+            final byte[] firstMessage,
             final boolean usingFast,
             final HashedToken.Mechanism hashedTokenRequest,
-            final Collection<String> bind,
+            @org.jspecify.annotations.Nullable final Collection<String> bind,
             final boolean inlineStreamManagement) {
         final var authenticate = new Authenticate();
-        if (!Strings.isNullOrEmpty(firstMessage)) {
-            authenticate.addChild("initial-response").setContent(firstMessage);
+        if (firstMessage.length != 0) {
+            authenticate.setInitialResponse(firstMessage);
         }
         final var userAgent =
                 authenticate.addExtension(
@@ -1836,7 +1877,7 @@ public class XmppConnection implements Runnable {
         // (because we would rather just do a normal SM/resume)
         final boolean mayAttemptBind = streamId == null || inlineStreamManagement;
         if (bind != null && mayAttemptBind) {
-            authenticate.addChild(generateBindRequest(bind));
+            authenticate.addExtension(generateBindRequest(bind));
         }
         if (inlineStreamManagement && streamId != null) {
             final var streamId = this.streamId.id;
@@ -2380,7 +2421,7 @@ public class XmppConnection implements Runnable {
                     new LoginInfo(
                             quickStartMechanism,
                             SaslMechanism.Version.SASL_2,
-                            Bind2.QUICKSTART_FEATURES);
+                            Bind.QUICKSTART_FEATURES);
             final boolean usingFast = quickStartMechanism instanceof HashedToken;
             final AuthenticationRequest authenticate =
                     generateAuthenticationRequest(
@@ -2415,14 +2456,13 @@ public class XmppConnection implements Runnable {
     }
 
     private void sendStartStream(final boolean from, final boolean flush) throws IOException {
-        final Tag stream = Tag.start("stream:stream");
+        final Tag stream = Tag.start("stream:stream", Namespace.JABBER_CLIENT);
         stream.setAttribute("to", account.getServer());
         if (from) {
             stream.setAttribute("from", account.getJid().asBareJid().toString());
         }
         stream.setAttribute("version", "1.0");
         stream.setAttribute("xml:lang", LocalizedContent.STREAM_LANGUAGE);
-        stream.setAttribute("xmlns", Namespace.JABBER_CLIENT);
         stream.setAttribute("xmlns:stream", Namespace.STREAMS);
         tagWriter.writeTag(stream, flush);
     }
@@ -2487,13 +2527,34 @@ public class XmppConnection implements Runnable {
         this.sendPacket(response);
     }
 
+    public void sendErrorFor(final Iq request, final IqProcessingException exception) {
+        final var condition = exception.getCondition();
+        final var text = exception.getText();
+        if (Strings.isNullOrEmpty(text)) {
+            sendErrorFor(request, condition);
+        } else {
+            sendErrorFor(request, condition, new Text(text));
+        }
+    }
+
     public void sendErrorFor(
-            final Iq request,
+            final Stanza request,
             final Condition condition,
+            final im.conversations.android.xmpp.model.error.Error.Extension... extensions) {
+        sendErrorFor(request, condition, null, extensions);
+    }
+
+    public void sendErrorFor(
+            final Stanza request,
+            final Condition condition,
+            final Text text,
             final im.conversations.android.xmpp.model.error.Error.Extension... extensions) {
         final var from = request.getFrom();
         final var id = request.getId();
-        final var response = new Iq(Iq.Type.ERROR);
+        if (id == null) {
+            return;
+        }
+        final var response = errorResponse(request);
         response.setTo(from);
         response.setId(id);
         final var errorTypeCode = Condition.ERROR_CONDITION_MAPPING.get(condition.getClass());
@@ -2505,7 +2566,23 @@ public class XmppConnection implements Runnable {
         }
         error.setCondition(condition);
         error.addExtensions(extensions);
+        if (text != null) {
+            error.addText(text);
+        }
         this.sendPacket(response);
+    }
+
+    private static Stanza errorResponse(final Stanza request) {
+        return switch (request) {
+            case Iq ignored -> new Iq(Iq.Type.ERROR);
+            case im.conversations.android.xmpp.model.stanza.Message ignored ->
+                    new im.conversations.android.xmpp.model.stanza.Message(
+                            im.conversations.android.xmpp.model.stanza.Message.Type.ERROR);
+            case Presence ignored -> new Presence(Presence.Type.ERROR);
+            default ->
+                    throw new IllegalArgumentException(
+                            "Can not create error for " + request.getClass().getSimpleName());
+        };
     }
 
     public void sendMessagePacket(final im.conversations.android.xmpp.model.stanza.Message packet) {
@@ -2754,10 +2831,6 @@ public class XmppConnection implements Runnable {
         this.changeStateTerminal(Account.State.CONNECTION_TIMEOUT);
     }
 
-    public Features getStreamFeatures() {
-        return this.features;
-    }
-
     public boolean fromServer(final Stanza stanza) {
         final var account = this.account.getJid();
         final Jid from = stanza.getFrom();
@@ -2852,23 +2925,20 @@ public class XmppConnection implements Runnable {
             Preconditions.checkNotNull(saslVersion, "SASL version must not be null");
             this.saslMechanism = saslMechanism;
             this.saslVersion = saslVersion;
-            this.inlineBindFeatures =
-                    inlineBindFeatures == null
-                            ? Collections.emptyList()
-                            : ImmutableList.copyOf(inlineBindFeatures);
+            this.inlineBindFeatures = ImmutableList.copyOf(inlineBindFeatures);
         }
 
         public static SaslMechanism mechanism(final LoginInfo loginInfo) {
             return loginInfo == null ? null : loginInfo.saslMechanism;
         }
 
-        public void success(final String challenge, final SSLSocket sslSocket)
+        public void success(final byte[] challenge, final SSLSocket sslSocket)
                 throws SaslMechanism.AuthenticationException {
             if (Thread.currentThread().isInterrupted()) {
                 throw new SaslMechanism.AuthenticationException("Race condition during auth");
             }
             final var response = this.saslMechanism.getResponse(challenge, sslSocket);
-            if (!Strings.isNullOrEmpty(response)) {
+            if (response.length != 0) {
                 throw new SaslMechanism.AuthenticationException(
                         "processing success yielded another response");
             }
@@ -2987,12 +3057,14 @@ public class XmppConnection implements Runnable {
             return loginInfo == null ? null : loginInfo.saslMechanism.getMechanism();
         }
 
+        // TODO remove this once AxolotlManager is a proper manager (and calls manager methods)
         public boolean pepPublishOptions() {
             return hasDiscoFeature(account.getJid().asBareJid(), Namespace.PUB_SUB_PUBLISH_OPTIONS);
         }
 
         public boolean rosterVersioning() {
-            return connection.streamFeatures != null && connection.streamFeatures.hasChild("ver");
+            return connection.streamFeatures != null
+                    && connection.streamFeatures.rosterVersioning();
         }
 
         public HttpUrl getServiceOutageStatus() {
@@ -3007,10 +3079,6 @@ public class XmppConnection implements Runnable {
                 return null;
             }
             return HttpUrl.parse(address);
-        }
-
-        public boolean stanzaIds() {
-            return hasDiscoFeature(account.getJid().asBareJid(), Namespace.STANZA_IDS);
         }
     }
 }

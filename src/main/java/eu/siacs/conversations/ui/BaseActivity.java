@@ -3,7 +3,7 @@ package eu.siacs.conversations.ui;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import eu.siacs.conversations.Conversations;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.ui.util.SettingsUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -12,11 +12,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        final int desiredNightMode = Conversations.getDesiredNightMode(this);
+        final var appSettings = new AppSettings(this);
+        final int desiredNightMode = appSettings.getDesiredNightMode();
         if (setDesiredNightMode(desiredNightMode)) {
             return;
         }
-        final boolean isDynamicColors = Conversations.isDynamicColorsDesired(this);
+        final boolean isDynamicColors = appSettings.isDynamicColorsDesired();
         setDynamicColors(isDynamicColors);
     }
 

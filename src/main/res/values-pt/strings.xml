@@ -1155,4 +1155,7 @@
     <string name="peer_to_peer">P2P</string>
     <string name="pref_use_relays">Usar sempre ‘relay’s</string>
     <string name="pref_use_relays_summary">Passa todas as conexões P2P (chamadas e transferência de ficheiros) pelo seu servidor para evitar revelar o seu endereço de IP.</string>
+    <string name="mobile_ticket">Passe de Telemóvel</string>
+    <string name="emoji_reactions">Reações de emojis</string>
+    <string name="open_keyboard">Abrir teclado</string>
 </resources>

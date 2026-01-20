@@ -35,7 +35,7 @@ import im.conversations.android.xmpp.model.disco.items.ItemsQuery;
 import im.conversations.android.xmpp.model.error.Condition;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import im.conversations.android.xmpp.model.stanza.Presence;
-import im.conversations.android.xmpp.model.version.Version;
+import im.conversations.android.xmpp.model.version.Query;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -202,7 +202,13 @@ public class DiscoManager extends AbstractManager {
                     }
 
                     final var caps = EntityCapabilities.hash(infoQuery);
-                    final var caps2 = EntityCapabilities2.hash(infoQuery);
+                    final EntityCapabilities2.EntityCaps2Hash caps2;
+                    try {
+                        caps2 = EntityCapabilities2.hash(infoQuery);
+                    } catch (final EntityCapabilities2.IllegalInfoQueryException e) {
+                        Log.d(Config.LOGTAG, "skipping caching of caps hash", e);
+                        return infoQuery;
+                    }
                     if (hash instanceof EntityCapabilities.EntityCapsHash) {
                         checkMatch(
                                 (EntityCapabilities.EntityCapsHash) hash,
@@ -339,9 +345,7 @@ public class DiscoManager extends AbstractManager {
         if (appSettings.isAllowMessageCorrection()) {
             features.addAll(MESSAGE_CORRECTION_FEATURES);
         }
-        if (Config.supportOmemo()) {
-            features.add(AxolotlService.PEP_DEVICE_LIST_NOTIFY);
-        }
+        features.add(AxolotlService.PEP_DEVICE_LIST_NOTIFY);
         if (!appSettings.isUseTor() && !account.isOnion()) {
             features.addAll(PRIVACY_SENSITIVE);
             features.addAll(VOIP_NAMESPACES);
@@ -375,7 +379,7 @@ public class DiscoManager extends AbstractManager {
     }
 
     public void handleVersionRequest(final Iq request) {
-        final var version = new Version();
+        final var version = new Query();
         version.setSoftwareName(context.getString(R.string.app_name));
         version.setVersion(getIdentityVersion());
         if ("chromium".equals(android.os.Build.BRAND)) {

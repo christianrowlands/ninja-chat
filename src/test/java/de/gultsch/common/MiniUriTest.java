@@ -1,6 +1,7 @@
 package de.gultsch.common;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
+import java.util.Objects;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,7 +29,10 @@ public class MiniUriTest {
         Assert.assertEquals("https", miniUri.getScheme());
         Assert.assertEquals("example.com", miniUri.getAuthority());
         Assert.assertEquals("/test.cgi", miniUri.getPath());
-        Assert.assertEquals(ImmutableMultimap.of("foo", "bar").asMap(), miniUri.getParameter());
+        final var parameter = miniUri.getParameter();
+        Assert.assertEquals(1, parameter.size());
+        Assert.assertEquals(
+                "bar", Iterables.getOnlyElement(Objects.requireNonNull(parameter.get("foo"))));
     }
 
     @Test
@@ -45,7 +49,9 @@ public class MiniUriTest {
         Assert.assertEquals("xmpp", miniUri.getScheme());
         Assert.assertNull(miniUri.getAuthority());
         Assert.assertEquals("room@chat.example.com", miniUri.getPath());
-        Assert.assertEquals(ImmutableMultimap.of("join", "").asMap(), miniUri.getParameter());
+        final var parameter = miniUri.getParameter();
+        Assert.assertEquals(1, parameter.size());
+        Assert.assertTrue(parameter.containsKey("join"));
     }
 
     @Test
@@ -55,8 +61,10 @@ public class MiniUriTest {
         Assert.assertEquals("xmpp", miniUri.getScheme());
         Assert.assertNull(miniUri.getAuthority());
         Assert.assertEquals("romeo@montague.net", miniUri.getPath());
+        final var parameter = miniUri.getParameter();
+        Assert.assertTrue(parameter.containsKey("message"));
         Assert.assertEquals(
-                ImmutableMultimap.of("message", "", "body", "Here's a test message").asMap(),
-                miniUri.getParameter());
+                "Here's a test message",
+                Iterables.getOnlyElement(Objects.requireNonNull(parameter.get("body"))));
     }
 }

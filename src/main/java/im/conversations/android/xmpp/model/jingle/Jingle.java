@@ -1,22 +1,17 @@
 package im.conversations.android.xmpp.model.jingle;
 
 import androidx.annotation.NonNull;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.jingle.stanzas.Content;
 import eu.siacs.conversations.xmpp.jingle.stanzas.Group;
-import eu.siacs.conversations.xmpp.jingle.stanzas.Reason;
-
 import im.conversations.android.annotation.XmlElement;
 import im.conversations.android.xmpp.model.Extension;
-
 import java.util.Map;
 
 @XmlElement
@@ -40,28 +35,26 @@ public class Jingle extends Extension {
         return Action.of(this.getAttribute("action"));
     }
 
-    public ReasonWrapper getReason() {
-        final Element reasonElement = this.findChild("reason");
-        if (reasonElement == null) {
-            return new ReasonWrapper(Reason.UNKNOWN, null);
+    public ReasonText getReason() {
+        final var wrapper = this.getOnlyExtension(Reason.class);
+        if (wrapper == null) {
+            return null;
         }
-        String text = null;
-        Reason reason = Reason.UNKNOWN;
-        for (Element child : reasonElement.getChildren()) {
-            if ("text".equals(child.getName())) {
-                text = child.getContent();
-            } else {
-                reason = Reason.of(child.getName());
-            }
+        final var reason =
+                wrapper.getOnlyExtension(im.conversations.android.xmpp.model.jingle.Reason.class);
+        if (reason == null) {
+            return null;
         }
-        return new ReasonWrapper(reason, text);
+        final var text = this.getOnlyExtension(Text.class);
+        return new ReasonText(reason, text == null ? null : text.getContent());
     }
 
-    public void setReason(final Reason reason, final String text) {
-        final Element reasonElement = this.addChild("reason");
-        reasonElement.addChild(reason.toString());
-        if (!Strings.isNullOrEmpty(text)) {
-            reasonElement.addChild("text").setContent(text);
+    public void setReason(
+            final im.conversations.android.xmpp.model.jingle.Reason reason, final String text) {
+        final var wrapper = this.addExtension(new Reason());
+        wrapper.addExtension(reason);
+        if (text != null) {
+            wrapper.addExtension(new Text(text));
         }
     }
 
@@ -95,7 +88,6 @@ public class Jingle extends Extension {
     public void addJingleContent(final Content content) { // take content interface
         this.addChild(content);
     }
-
 
     public Map<String, Content> getJingleContents() {
         ImmutableMap.Builder<String, Content> builder = new ImmutableMap.Builder<>();
@@ -144,13 +136,26 @@ public class Jingle extends Extension {
         }
     }
 
-    public static class ReasonWrapper {
-        public final Reason reason;
-        public final String text;
+    @XmlElement
+    public static class Reason extends Extension {
 
-        public ReasonWrapper(Reason reason, String text) {
-            this.reason = reason;
-            this.text = text;
+        public Reason() {
+            super(Reason.class);
         }
     }
+
+    @XmlElement
+    public static class Text extends Extension {
+        public Text() {
+            super(Text.class);
+        }
+
+        public Text(final String text) {
+            this();
+            this.setContent(text);
+        }
+    }
+
+    public record ReasonText(
+            im.conversations.android.xmpp.model.jingle.Reason reason, String text) {}
 }

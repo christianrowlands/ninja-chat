@@ -249,7 +249,7 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                                     connection.setRequestMethod("POST");
                                     connection.setRequestProperty(
                                             "Authorization",
-                                            Plain.getMessage(account.getUsername(), pin));
+                                            Plain.getAuthorization(account.getUsername(), pin));
                                     setHeader(connection);
                                     final OutputStream os = connection.getOutputStream();
                                     final BufferedWriter writer =

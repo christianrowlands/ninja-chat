@@ -1,0 +1,1 @@
+* Behebung eines in der vorherigen Version aufgetretenen Regressionsfehlers (Absturz bei Verbindungsaufbau)

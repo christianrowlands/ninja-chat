@@ -1,0 +1,2 @@
+* Fix calls getting stuck at connecting when 'Use Relays' is enabled but server doesn't have any
+* Bandwidth optimizations

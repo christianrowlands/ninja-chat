@@ -36,6 +36,7 @@ import eu.siacs.conversations.xmpp.mam.MamReference;
 import im.conversations.android.xml.XmlElementReader;
 import im.conversations.android.xmpp.EntityCapabilities;
 import im.conversations.android.xmpp.EntityCapabilities2;
+import im.conversations.android.xmpp.StreamElementWriter;
 import im.conversations.android.xmpp.model.disco.info.InfoQuery;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -1581,13 +1582,17 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             EntityCapabilities.EntityCapsHash caps,
             EntityCapabilities2.EntityCaps2Hash caps2,
             InfoQuery infoQuery) {
-        final var contentValues = new ContentValues();
-        contentValues.put("caps", caps.encoded());
-        contentValues.put("caps2", caps2.encoded());
-        contentValues.put("disco_info", infoQuery.toString());
-        getWritableDatabase()
-                .insertWithOnConflict(
-                        "caps_cache", null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+        try {
+            final var contentValues = new ContentValues();
+            contentValues.put("caps", caps.encoded());
+            contentValues.put("caps2", caps2.encoded());
+            contentValues.put("disco_info", StreamElementWriter.asString(infoQuery));
+            getWritableDatabase()
+                    .insertWithOnConflict(
+                            "caps_cache", null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+        } catch (final IOException e) {
+            Log.w(Config.LOGTAG, "could not write caps to cache", e);
+        }
     }
 
     public InfoQuery getInfoQuery(final EntityCapabilities.Hash hash) {

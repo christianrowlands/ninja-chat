@@ -7,20 +7,29 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.MoreExecutors;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.xmpp.Jid;
-import eu.siacs.conversations.xmpp.jingle.stanzas.Reason;
 import eu.siacs.conversations.xmpp.manager.DiscoManager;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
+import im.conversations.android.xmpp.IqErrorException;
+import im.conversations.android.xmpp.model.error.Condition;
 import im.conversations.android.xmpp.model.jingle.Jingle;
+import im.conversations.android.xmpp.model.jingle.Reason;
+import im.conversations.android.xmpp.model.jingle.error.JingleCondition;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 public abstract class AbstractJingleConnection {
@@ -112,7 +121,6 @@ public abstract class AbstractJingleConnection {
         VALID_TRANSITIONS = transitionBuilder.build();
     }
 
-    final JingleConnectionManager jingleConnectionManager;
     protected final XmppConnectionService xmppConnectionService;
     protected final Id id;
     private final Jid initiator;
@@ -120,11 +128,8 @@ public abstract class AbstractJingleConnection {
     protected State state = State.NULL;
 
     AbstractJingleConnection(
-            final JingleConnectionManager jingleConnectionManager,
-            final Id id,
-            final Jid initiator) {
-        this.jingleConnectionManager = jingleConnectionManager;
-        this.xmppConnectionService = jingleConnectionManager.getXmppConnectionService();
+            final XmppConnectionService service, final Id id, final Jid initiator) {
+        this.xmppConnectionService = service;
         this.id = id;
         this.initiator = initiator;
     }
@@ -167,18 +172,18 @@ public abstract class AbstractJingleConnection {
         }
     }
 
-    protected void transitionOrThrow(final State target) {
+    public void transitionOrThrow(final State target) {
         if (!transition(target)) {
             throw new IllegalStateException(
                     String.format("Unable to transition from %s to %s", this.state, target));
         }
     }
 
-    boolean isTerminated() {
+    public boolean isTerminated() {
         return TERMINATED.contains(this.state);
     }
 
-    abstract void deliverPacket(Iq jinglePacket);
+    public abstract void deliverPacket(Iq jinglePacket);
 
     protected void receiveOutOfOrderAction(final Iq jinglePacket, final Jingle.Action action) {
         Log.d(
@@ -193,7 +198,7 @@ public abstract class AbstractJingleConnection {
                             "%s: got a reason to terminate with out-of-order. but already in state"
                                     + " %s",
                             id.account.getJid().asBareJid(), getState()));
-            respondWithOutOfOrder(jinglePacket);
+            this.sendErrorFor(jinglePacket, new JingleCondition.OutOfOrder());
         } else {
             terminateWithOutOfOrder(jinglePacket);
         }
@@ -205,13 +210,17 @@ public abstract class AbstractJingleConnection {
                 id.account.getJid().asBareJid() + ": terminating session with out-of-order");
         terminateTransport();
         transitionOrThrow(State.TERMINATED_APPLICATION_FAILURE);
-        respondWithOutOfOrder(jinglePacket);
+        this.sendErrorFor(jinglePacket, new JingleCondition.OutOfOrder());
         this.finish();
     }
 
     protected void finish() {
         if (isTerminated()) {
-            this.jingleConnectionManager.finishConnectionOrThrow(this);
+            this.id
+                    .account
+                    .getXmppConnection()
+                    .getManager(JingleManager.class)
+                    .finishConnectionOrThrow(this);
         } else {
             throw new AssertionError(String.format("Unable to call finish from %s", this.state));
         }
@@ -219,7 +228,7 @@ public abstract class AbstractJingleConnection {
 
     protected abstract void terminateTransport();
 
-    abstract void notifyRebound();
+    public abstract void notifyRebound();
 
     protected void sendSessionTerminate(
             final Reason reason, final String text, final Consumer<State> trigger) {
@@ -239,68 +248,68 @@ public abstract class AbstractJingleConnection {
 
     protected void send(final Iq jinglePacket) {
         jinglePacket.setTo(id.with);
-        xmppConnectionService.sendIqPacket(id.account, jinglePacket, this::handleIqResponse);
+        final var future = this.id.account.getXmppConnection().sendIqPacket(jinglePacket);
+        Futures.addCallback(
+                future,
+                new FutureCallback<>() {
+                    @Override
+                    public void onSuccess(Iq result) {}
+
+                    @Override
+                    public void onFailure(@NonNull Throwable t) {
+                        Log.d(Config.LOGTAG, "failure was a response to " + jinglePacket);
+                        if (t instanceof TimeoutException) {
+                            handleIqTimeoutResponse();
+                        } else {
+                            handleIqErrorResponse(t);
+                        }
+                    }
+                },
+                MoreExecutors.directExecutor());
     }
 
     protected void respondOk(final Iq jinglePacket) {
-        xmppConnectionService.sendIqPacket(
-                id.account, jinglePacket.generateResponse(Iq.Type.RESULT), null);
+        this.id.account.getXmppConnection().sendResultFor(jinglePacket);
     }
 
-    protected void respondWithTieBreak(final Iq jinglePacket) {
-        respondWithJingleError(jinglePacket, "tie-break", "conflict", "cancel");
+    protected void sendErrorFor(final Iq request, final JingleCondition jingleCondition) {
+        final var condition =
+                Condition.asInstance(JingleCondition.getErrorCondition(jingleCondition));
+        this.id.account.getXmppConnection().sendErrorFor(request, condition, jingleCondition);
     }
 
-    protected void respondWithOutOfOrder(final Iq jinglePacket) {
-        respondWithJingleError(jinglePacket, "out-of-order", "unexpected-request", "wait");
-    }
-
-    protected void respondWithItemNotFound(final Iq jinglePacket) {
-        respondWithJingleError(jinglePacket, null, "item-not-found", "cancel");
-    }
-
-    private void respondWithJingleError(
-            final Iq original, String jingleCondition, String condition, String conditionType) {
-        jingleConnectionManager.respondWithJingleError(
-                id.account, original, jingleCondition, condition, conditionType);
-    }
-
-    private synchronized void handleIqResponse(final Iq response) {
-        if (response.getType() == Iq.Type.ERROR) {
-            handleIqErrorResponse(response);
-            return;
-        }
-        if (response.getType() == Iq.Type.TIMEOUT) {
-            handleIqTimeoutResponse(response);
-        }
-    }
-
-    protected void handleIqErrorResponse(final Iq response) {
-        Preconditions.checkArgument(response.getType() == Iq.Type.ERROR);
-        final String errorCondition = response.getErrorCondition();
-        Log.d(
-                Config.LOGTAG,
-                id.account.getJid().asBareJid()
-                        + ": received IQ-error from "
-                        + response.getFrom()
-                        + " in RTP session. "
-                        + errorCondition);
+    protected void handleIqErrorResponse(final Throwable throwable) {
         if (isTerminated()) {
             Log.i(
                     Config.LOGTAG,
                     id.account.getJid().asBareJid()
-                            + ": ignoring error because session was already terminated");
+                            + ": ignoring error because session was already terminated",
+                    throwable);
             return;
         }
         this.terminateTransport();
         final State target;
-        if (Arrays.asList(
-                        "service-unavailable",
-                        "recipient-unavailable",
-                        "remote-server-not-found",
-                        "remote-server-timeout")
-                .contains(errorCondition)) {
-            target = State.TERMINATED_CONNECTIVITY_ERROR;
+        if (throwable instanceof IqErrorException iqErrorException) {
+            final var response = iqErrorException.getResponse();
+            final var condition = iqErrorException.getErrorCondition();
+            Log.d(
+                    Config.LOGTAG,
+                    id.account.getJid().asBareJid()
+                            + ": received IQ-error from "
+                            + response.getFrom()
+                            + " in jingle session. ",
+                    throwable);
+            if (condition != null
+                    && Arrays.asList(
+                                    Condition.ServiceUnavailable.class,
+                                    Condition.RecipientUnavailable.class,
+                                    Condition.RemoteServerNotFound.class,
+                                    Condition.RemoteServerTimeout.class)
+                            .contains(condition.getClass())) {
+                target = State.TERMINATED_CONNECTIVITY_ERROR;
+            } else {
+                target = State.TERMINATED_APPLICATION_FAILURE;
+            }
         } else {
             target = State.TERMINATED_APPLICATION_FAILURE;
         }
@@ -308,8 +317,7 @@ public abstract class AbstractJingleConnection {
         this.finish();
     }
 
-    protected void handleIqTimeoutResponse(final Iq response) {
-        Preconditions.checkArgument(response.getType() == Iq.Type.TIMEOUT);
+    protected void handleIqTimeoutResponse() {
         Log.d(
                 Config.LOGTAG,
                 id.account.getJid().asBareJid()
@@ -363,7 +371,7 @@ public abstract class AbstractJingleConnection {
         }
 
         public static Id of(final Account account, final Jid with) {
-            return new Id(account, with, JingleConnectionManager.nextRandomId());
+            return new Id(account, with, CryptoHelper.random(16));
         }
 
         public static Id of(final Message message) {
@@ -415,14 +423,17 @@ public abstract class AbstractJingleConnection {
         }
     }
 
-    protected static State reasonToState(Reason reason) {
+    protected static State reasonToState(final Reason reason) {
         return switch (reason) {
-            case SUCCESS -> State.TERMINATED_SUCCESS;
-            case DECLINE, BUSY -> State.TERMINATED_DECLINED_OR_BUSY;
-            case CANCEL, TIMEOUT -> State.TERMINATED_CANCEL_OR_TIMEOUT;
-            case SECURITY_ERROR -> State.TERMINATED_SECURITY_ERROR;
-            case FAILED_APPLICATION, UNSUPPORTED_TRANSPORTS, UNSUPPORTED_APPLICATIONS ->
-                    State.TERMINATED_APPLICATION_FAILURE;
+            case Reason.Success ignored -> State.TERMINATED_SUCCESS;
+            case Reason.Decline ignored -> State.TERMINATED_DECLINED_OR_BUSY;
+            case Reason.Busy ignored -> State.TERMINATED_DECLINED_OR_BUSY;
+            case Reason.Cancel ignored -> State.TERMINATED_CANCEL_OR_TIMEOUT;
+            case Reason.Timeout ignored -> State.TERMINATED_CANCEL_OR_TIMEOUT;
+            case Reason.SecurityError ignored -> State.TERMINATED_SECURITY_ERROR;
+            case Reason.FailedApplication ignored -> State.TERMINATED_APPLICATION_FAILURE;
+            case Reason.UnsupportedTransports ignored -> State.TERMINATED_APPLICATION_FAILURE;
+            case Reason.UnsupportedApplications ignored -> State.TERMINATED_APPLICATION_FAILURE;
             default -> State.TERMINATED_CONNECTIVITY_ERROR;
         };
     }

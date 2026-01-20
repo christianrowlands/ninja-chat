@@ -117,7 +117,7 @@ import eu.siacs.conversations.ui.util.ShareUtil;
 import eu.siacs.conversations.ui.util.ViewUtil;
 import eu.siacs.conversations.ui.widget.EditMessage;
 import eu.siacs.conversations.utils.AccountUtils;
-import eu.siacs.conversations.utils.CharSequenceUtils;
+import eu.siacs.conversations.utils.CharSequences;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.GeoHelper;
 import eu.siacs.conversations.utils.MessageUtils;
@@ -130,7 +130,6 @@ import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.jingle.AbstractJingleConnection;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleFileTransferConnection;
 import eu.siacs.conversations.xmpp.jingle.Media;
 import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
@@ -138,6 +137,7 @@ import eu.siacs.conversations.xmpp.jingle.RtpCapability;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.ChatStateManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
 import eu.siacs.conversations.xmpp.manager.ModerationManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
@@ -583,12 +583,13 @@ public class ConversationFragment extends XmppFragment
                         menuCall.setVisible(false);
                         menuOngoingCall.setVisible(false);
                     } else {
+                        final var manager =
+                                c.getAccount().getXmppConnection().getManager(JingleManager.class);
                         final XmppConnectionService service = getXmppConnectionService();
                         final Optional<OngoingRtpSession> ongoingRtpSession =
                                 service == null
                                         ? Optional.absent()
-                                        : service.getJingleConnectionManager()
-                                                .getOngoingRtpConnection(c.getContact());
+                                        : manager.getOngoingRtpConnection(c.getContact());
                         if (ongoingRtpSession.isPresent()) {
                             menuOngoingCall.setVisible(true);
                             menuCall.setVisible(false);
@@ -1594,23 +1595,21 @@ public class ConversationFragment extends XmppFragment
     }
 
     private void returnToOngoingCall() {
+        final var account = conversation.getAccount();
+        final var manager = account.getXmppConnection().getManager(JingleManager.class);
         final Optional<OngoingRtpSession> ongoingRtpSession =
-                requireXmppActivity()
-                        .xmppConnectionService
-                        .getJingleConnectionManager()
-                        .getOngoingRtpConnection(conversation.getContact());
+                manager.getOngoingRtpConnection(conversation.getContact());
         if (ongoingRtpSession.isPresent()) {
             final OngoingRtpSession id = ongoingRtpSession.get();
             final Intent intent = new Intent(getActivity(), RtpSessionActivity.class);
             intent.setAction(Intent.ACTION_VIEW);
             intent.putExtra(
-                    RtpSessionActivity.EXTRA_ACCOUNT,
-                    id.getAccount().getJid().asBareJid().toString());
+                    RtpSessionActivity.EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
             intent.putExtra(RtpSessionActivity.EXTRA_WITH, id.getWith().toString());
             if (id instanceof AbstractJingleConnection) {
                 intent.putExtra(RtpSessionActivity.EXTRA_SESSION_ID, id.getSessionId());
                 startActivity(intent);
-            } else if (id instanceof JingleConnectionManager.RtpSessionProposal proposal) {
+            } else if (id instanceof JingleManager.RtpSessionProposal proposal) {
                 if (Media.audioOnly(proposal.media)) {
                     intent.putExtra(
                             RtpSessionActivity.EXTRA_LAST_ACTION,
@@ -1677,7 +1676,7 @@ public class ConversationFragment extends XmppFragment
     }
 
     private void triggerRtpSession(final String action) {
-        if (requireXmppActivity().xmppConnectionService.getJingleConnectionManager().isBusy()) {
+        if (JingleManager.isBusy(requireXmppActivity().xmppConnectionService.getAccounts())) {
             Toast.makeText(getActivity(), R.string.only_one_call_at_a_time, Toast.LENGTH_LONG)
                     .show();
             return;
@@ -2403,7 +2402,7 @@ public class ConversationFragment extends XmppFragment
     private void correctMessage(final Message message) {
         this.conversation.setCorrectingMessage(message);
         final Editable editable = binding.textinput.getText();
-        this.conversation.setDraftMessage(CharSequenceUtils.nullToEmpty(editable));
+        this.conversation.setDraftMessage(CharSequences.nullToEmpty(editable));
         this.binding.textinput.setText("");
         this.binding.textinput.append(message.getBody());
         updateChatMsgHint();
@@ -2414,7 +2413,7 @@ public class ConversationFragment extends XmppFragment
         if (editable == null) {
             return;
         }
-        final var oldString = CharSequenceUtils.nullToEmpty(editable).trim();
+        final var oldString = CharSequences.nullToEmpty(editable).trim();
         final int pos = this.binding.textinput.getSelectionStart();
         if (oldString.isEmpty() || pos == 0) {
             editable.insert(0, nick + ": ");
@@ -3043,7 +3042,7 @@ public class ConversationFragment extends XmppFragment
         final Conversation c = this.conversation;
         final var connection = c.getAccount().getXmppConnection();
         final Presence.Availability status;
-        final String text = CharSequenceUtils.nullToEmpty(this.binding.textinput.getText());
+        final String text = CharSequences.nullToEmpty(this.binding.textinput.getText());
         final SendButtonAction action;
         if (hasAttachments) {
             action = SendButtonAction.TEXT;

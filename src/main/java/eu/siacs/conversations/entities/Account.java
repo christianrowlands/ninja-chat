@@ -24,13 +24,10 @@ import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.jingle.RtpCapability;
-import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
 import eu.siacs.conversations.xmpp.manager.RosterManager;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -404,10 +401,10 @@ public class Account extends AbstractEntity implements AvatarService.Avatar {
         if (fastMechanism == null || Strings.isNullOrEmpty(token)) {
             return null;
         }
-        if (fastMechanism.hashFunction.equals("SHA-256")) {
-            return new HashedTokenSha256(this, fastMechanism.channelBinding);
-        } else if (fastMechanism.hashFunction.equals("SHA-512")) {
-            return new HashedTokenSha512(this, fastMechanism.channelBinding);
+        if (fastMechanism.hashFunction().equals("SHA-256")) {
+            return new HashedTokenSha256(this, fastMechanism.channelBinding());
+        } else if (fastMechanism.hashFunction().equals("SHA-512")) {
+            return new HashedTokenSha512(this, fastMechanism.channelBinding());
         } else {
             return null;
         }
@@ -670,27 +667,6 @@ public class Account extends AbstractEntity implements AvatarService.Avatar {
             }
         }
         return fingerprints;
-    }
-
-    public boolean isBlocked(final ListItem contact) {
-        final Jid jid = contact.getAddress();
-        final var blocklist = getBlocklist();
-        return jid != null
-                && (blocklist.contains(jid.asBareJid()) || blocklist.contains(jid.getDomain()));
-    }
-
-    public boolean isBlocked(final Jid jid) {
-        final var blocklist = getBlocklist();
-        return jid != null && blocklist.contains(jid.asBareJid());
-    }
-
-    // TODO get rid of this method in favor of calling manager directly
-    public Set<Jid> getBlocklist() {
-        final var connection = this.xmppConnection;
-        if (connection == null) {
-            return Collections.emptySet();
-        }
-        return connection.getManager(BlockingManager.class).getBlocklist();
     }
 
     public boolean isOnlineAndConnected() {

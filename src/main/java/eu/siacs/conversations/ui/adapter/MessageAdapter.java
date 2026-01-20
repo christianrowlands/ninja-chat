@@ -567,7 +567,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 }
             }
         }
-        Matcher matcher = Emoticons.getEmojiPattern(body).matcher(body);
+        final var matcher = Emoticons.getEmojiPattern(body).matcher(body);
         while (matcher.find()) {
             if (matcher.start() < matcher.end()) {
                 body.setSpan(

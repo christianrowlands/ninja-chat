@@ -9,4 +9,8 @@ public class Data extends InBandByteStream implements ByteContent {
     public Data() {
         super(Data.class);
     }
+
+    public void setSequence(int sequence) {
+        this.setAttribute("seq", sequence);
+    }
 }

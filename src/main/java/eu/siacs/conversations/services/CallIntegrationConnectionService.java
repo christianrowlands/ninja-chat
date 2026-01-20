@@ -28,20 +28,17 @@ import com.google.common.util.concurrent.SettableFuture;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.ui.RtpSessionActivity;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.jingle.AbstractJingleConnection;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
 import eu.siacs.conversations.xmpp.jingle.Media;
 import eu.siacs.conversations.xmpp.jingle.RtpEndUserState;
-import eu.siacs.conversations.xmpp.jingle.stanzas.Reason;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -123,11 +120,11 @@ public class CallIntegrationConnectionService extends ConnectionService {
                 // actually attempted
                 // sendJingleFinishMessage(service, contact, Reason.CONNECTIVITY_ERROR);
             } else {
-                final JingleConnectionManager.RtpSessionProposal proposal;
+                final var jingleManager =
+                        account.getXmppConnection().getManager(JingleManager.class);
+                final JingleManager.RtpSessionProposal proposal;
                 try {
-                    proposal =
-                            service.getJingleConnectionManager()
-                                    .proposeJingleRtpSession(account, with, media);
+                    proposal = jingleManager.proposeJingleRtpSession(with, media);
                 } catch (final IllegalStateException e) {
                     return Connection.createFailedConnection(
                             new DisconnectCause(
@@ -157,20 +154,15 @@ public class CallIntegrationConnectionService extends ConnectionService {
                         RtpSessionActivity.ACTION_MAKE_VIDEO_CALL);
             }
         } else {
+            final var jingleManager = account.getXmppConnection().getManager(JingleManager.class);
             final JingleRtpConnection jingleRtpConnection =
-                    service.getJingleConnectionManager().initializeRtpSession(account, with, media);
+                    jingleManager.initializeRtpSession(with, media);
             final String sessionId = jingleRtpConnection.getId().sessionId;
             intent.putExtra(RtpSessionActivity.EXTRA_SESSION_ID, sessionId);
             callIntegration = jingleRtpConnection.getCallIntegration();
         }
         service.startActivity(intent);
         return callIntegration;
-    }
-
-    private static void sendJingleFinishMessage(
-            final XmppConnectionService service, final Contact contact, final Reason reason) {
-        service.getJingleConnectionManager()
-                .sendJingleMessageFinish(contact, UUID.randomUUID().toString(), reason);
     }
 
     @Override
@@ -226,8 +218,8 @@ public class CallIntegrationConnectionService extends ConnectionService {
         }
         final var jid = Jid.of(uri.getSchemeSpecificPart());
         final Account account = service.findAccountByUuid(phoneAccountHandle.getId());
-        final var weakReference =
-                service.getJingleConnectionManager().findJingleRtpConnection(account, jid, sid);
+        final var jingleManager = account.getXmppConnection().getManager(JingleManager.class);
+        final var weakReference = jingleManager.findJingleRtpConnection(jid, sid);
         if (weakReference == null) {
             Log.d(Config.LOGTAG, "no connection found for " + jid + " and sid=" + sid);
             return Connection.createFailedConnection(

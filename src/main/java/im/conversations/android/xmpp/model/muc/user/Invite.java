@@ -14,4 +14,8 @@ public class Invite extends Extension {
     public void setTo(final Jid to) {
         this.setAttribute("to", to);
     }
+
+    public Jid getFrom() {
+        return this.getAttributeAsJid("from");
+    }
 }

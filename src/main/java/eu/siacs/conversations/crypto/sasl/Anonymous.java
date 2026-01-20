@@ -1,7 +1,6 @@
 package eu.siacs.conversations.crypto.sasl;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import eu.siacs.conversations.entities.Account;
 import javax.net.ssl.SSLSocket;
 
@@ -24,20 +23,20 @@ public class Anonymous extends SaslMechanism {
     }
 
     @Override
-    public String getClientFirstMessage(final SSLSocket sslSocket) {
+    public byte[] getClientFirstMessage(final SSLSocket sslSocket) {
         Preconditions.checkState(
                 this.state == State.INITIAL, "Calling getClientFirstMessage from invalid state");
         this.state = State.AUTH_TEXT_SENT;
-        return "";
+        return new byte[0];
     }
 
     @Override
-    public String getResponse(final String challenge, final SSLSocket sslSocket)
+    public byte[] getResponse(final byte[] challenge, final SSLSocket sslSocket)
             throws AuthenticationException {
         checkState(State.AUTH_TEXT_SENT);
-        if (Strings.isNullOrEmpty(challenge)) {
+        if (challenge.length == 0) {
             this.state = State.VALID_SERVER_RESPONSE;
-            return null;
+            return new byte[0];
         }
         throw new AuthenticationException("Unexpected server response");
     }

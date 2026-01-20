@@ -34,7 +34,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharSequenceUtils {
+public class CharSequences {
 
     private static int getStartIndex(CharSequence input) {
         int length = input.length();
@@ -86,5 +86,9 @@ public class CharSequenceUtils {
 
     public static String nullToEmpty(@Nullable final CharSequence charSequence) {
         return charSequence == null ? "" : charSequence.toString();
+    }
+
+    public static boolean isEmpty(final CharSequence charSequence) {
+        return charSequence == null || charSequence.length() == 0;
     }
 }

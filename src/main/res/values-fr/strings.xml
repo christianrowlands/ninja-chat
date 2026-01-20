@@ -121,8 +121,8 @@
     <string name="pref_notification_grace_period_summary">La durée pendant laquelle les notifications sont désactivées après la détection d\'une activité sur l\'un de vos autres appareils.</string>
     <string name="pref_advanced_options">Avancé</string>
     <string name="pref_never_send_crash_summary">En envoyant des rapports de crash vous aidez le développement</string>
-    <string name="pref_confirm_messages">Confirmation de lecture</string>
-    <string name="pref_confirm_messages_summary">Informer vos contacts quand vous avez reçu et lu leurs messages</string>
+    <string name="pref_confirm_messages">Accusé de lecture</string>
+    <string name="pref_confirm_messages_summary">Quand activé, vos contacts verront quand vous avez lu leurs messages.</string>
     <string name="pref_prevent_screenshots">Interdire les captures d’écran</string>
     <string name="pref_ui_options">Interface</string>
     <string name="openpgp_error">OpenKeychain a signalé une erreur.</string>
@@ -269,7 +269,7 @@
     <string name="ignore">Ignorer</string>
     <string name="without_mutual_presence_updates"><b>Attention :</b> peut poser problème si l\'un des deux correspondants n\'a pas activé les mises à jour de disponibilité.\n\n<small>Vérifiez dans « Détails du contact » que vous y avez bien souscrit.</small></string>
     <string name="pref_security_settings">Sécurité</string>
-    <string name="pref_allow_message_correction">Correction des messages</string>
+    <string name="pref_allow_message_correction">Édition des messages</string>
     <string name="pref_allow_message_correction_summary">Permet à vos contacts d\'éditer leurs messages rétroactivement</string>
     <string name="pref_expert_options">Paramètres avancés</string>
     <string name="pref_expert_options_summary">À utiliser avec précaution</string>
@@ -514,8 +514,8 @@
     <string name="selection_too_large">La zone sélectionnée est trop grande</string>
     <string name="no_accounts">(Aucun compte activé)</string>
     <string name="this_field_is_required">Ce champ est requis</string>
-    <string name="correct_message">Corriger le message</string>
-    <string name="send_corrected_message">Envoyer le message corrigé</string>
+    <string name="correct_message">Éditer</string>
+    <string name="send_corrected_message">Envoyer le message édité</string>
     <string name="no_keys_just_confirm">Vous avez déjà fait confiance à l\'empreinte de cette personne. En sélectionnant « Terminé », vous confirmez simplement que %s fait partie de ce groupe.</string>
     <string name="this_account_is_disabled">Vous avez désactivé ce compte</string>
     <string name="security_error_invalid_file_access">Erreur de sécurité : accès invalide au fichier !</string>
@@ -915,7 +915,7 @@
     <string name="add_to_favorites">Épingler en haut de la liste</string>
     <string name="remove_from_favorites">Détacher du haut de la liste</string>
     <string name="gpx_track">Trace GPX</string>
-    <string name="could_not_correct_message">Impossible de corriger le message</string>
+    <string name="could_not_correct_message">Impossible d\'éditer le message</string>
     <string name="search_all_conversations">Toutes les conversations</string>
     <string name="search_this_conversation">Cette conversation</string>
     <string name="your_avatar">Votre image de profil</string>
@@ -1074,7 +1074,7 @@
     <string name="pref_category_server_connection">Connection au serveur</string>
     <string name="pref_privacy_summary">Notifications d\'écriture, dernière connexion, disponibilité</string>
     <string name="pref_connection_summary">Nom d\'hôte et port, Tor</string>
-    <string name="pref_connection_summary_w_cd">Nom d\'hôte et port, Tor et découverte des salons</string>
+    <string name="pref_connection_summary_w_cd">Nom d\'hôte et port, Tor, P2P et découverte des salons</string>
     <string name="pref_category_application">Application</string>
     <string name="pref_category_interaction">Interaction</string>
     <string name="pref_category_on_this_device">Sur l\'appareil</string>
@@ -1164,4 +1164,13 @@
     <string name="no_contacts_permission">%1$s nécessite l\'accès à vos contacts</string>
     <string name="server_info_moderated_message_retraction">XEP-0425 : Rétractation de Message Modéré</string>
     <string name="server_info_occupant_id">XEP-0421 : Identifiants des occupant·es</string>
+    <string name="account_status_tls_error_protocol">Sécurité du transport faible (Pas de TLS 1.3)</string>
+    <string name="account_status_tls_error_untrusted">Certificat sans confiance</string>
+    <string name="enable_account_to_delete">Ce compte est désactivé. Activez-le pour le supprimer du serveur.</string>
+    <string name="number_reactions_are_restricted">Limite de réactions atteinte.</string>
+    <string name="this_reaction_isnt_allowed">Cette réaction n\'est pas autorisée.</string>
+    <string name="peer_to_peer">Pair-à-pair</string>
+    <string name="pref_use_relays">Tojours utiliser les relais</string>
+    <string name="pref_use_relays_summary">Relaye toutes les connections P2P (appels et transferts de fichiers) via votre serveur pour éviter de révéler votre adresse IP.</string>
+    <string name="mobile_ticket">Ticket mobile</string>
 </resources>

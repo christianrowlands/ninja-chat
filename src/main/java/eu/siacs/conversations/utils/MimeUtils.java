@@ -93,6 +93,7 @@ public final class MimeUtils {
         add("application/vnd.amazon.mobi8-ebook", "azw");
         add("application/vnd.amazon.mobi8-ebook", "kfx");
         add("application/vnd.android.package-archive", "apk");
+        add("application/vnd.apple.pkpass", "pkpass");
         add("application/vnd.cinderella", "cdy");
         add(ExportBackupWorker.MIME_TYPE, "ceb");
         add("application/vnd.ms-pki.stl", "stl");

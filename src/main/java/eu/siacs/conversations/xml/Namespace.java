@@ -33,6 +33,7 @@ public final class Namespace {
     public static final String EXTERNAL_SERVICE_DISCOVERY = "urn:xmpp:extdisco:2";
     public static final String BLOCKING = "urn:xmpp:blocking";
     public static final String ROSTER = "jabber:iq:roster";
+    public static final String ROSTER_VERSIONING = "urn:xmpp:features:rosterver";
     public static final String REGISTER = "jabber:iq:register";
     public static final String REGISTER_STREAM_FEATURE = "http://jabber.org/features/iq-register";
     public static final String BYTE_STREAMS = "http://jabber.org/protocol/bytestreams";
@@ -126,4 +127,5 @@ public final class Namespace {
     public static final String ENTITY_CAPABILITIES_2 = "urn:xmpp:caps";
     public static final String PRIVATE_XML_STORAGE = "jabber:iq:private";
     public static final String SERVICE_OUTAGE_STATUS = "urn:xmpp:sos:0";
+    public static final String FALLBACK_INDICATION = "urn:xmpp:fallback:0";
 }

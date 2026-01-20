@@ -8,4 +8,9 @@ public final class Retract extends JingleMessage {
     public Retract() {
         super(Retract.class);
     }
+
+    public Retract(final String sessionId) {
+        this();
+        this.setSessionId(sessionId);
+    }
 }

@@ -7,7 +7,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
-import com.google.common.io.BaseEncoding;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.utils.CryptoHelper;
@@ -36,15 +35,15 @@ public class DigestMd5 extends SaslMechanism {
     }
 
     @Override
-    public String getClientFirstMessage(final SSLSocket sslSocket) {
+    public byte[] getClientFirstMessage(final SSLSocket sslSocket) {
         Preconditions.checkState(
                 this.state == State.INITIAL, "Calling getClientFirstMessage from invalid state");
         this.state = State.AUTH_TEXT_SENT;
-        return "";
+        return new byte[0];
     }
 
     @Override
-    public String getResponse(final String challenge, final SSLSocket socket)
+    public byte[] getResponse(final byte[] challenge, final SSLSocket socket)
             throws AuthenticationException {
         return switch (state) {
             case AUTH_TEXT_SENT -> processChallenge(challenge, socket);
@@ -58,16 +57,15 @@ public class DigestMd5 extends SaslMechanism {
     // technically this is allowed as per https://datatracker.ietf.org/doc/html/rfc2222#section-5.2
     // although it says to do that only if the profile of the protocol does not allow data to be put
     // into success. which xmpp does allow. obviously
-    private String validateUnnecessarySuccessMessage(final String challenge)
+    private byte[] validateUnnecessarySuccessMessage(final byte[] challenge)
             throws AuthenticationException {
-        if (Strings.isNullOrEmpty(challenge)) {
-            return "";
+        if (challenge.length == 0) {
+            return new byte[0];
         }
         throw new AuthenticationException("Success message must be empty");
     }
 
-    private String validateServerResponse(final String challenge) throws AuthenticationException {
-        Log.d(Config.LOGTAG, "DigestMd5.validateServerResponse(" + challenge + ")");
+    private byte[] validateServerResponse(final byte[] challenge) throws AuthenticationException {
         final var attributes = messageToAttributes(challenge);
         Log.d(Config.LOGTAG, "attributes: " + attributes);
         final var rspauth = attributes.get("rspauth");
@@ -79,10 +77,10 @@ public class DigestMd5 extends SaslMechanism {
             throw new AuthenticationException("RSPAuth mismatch");
         }
         this.state = State.VALID_SERVER_RESPONSE;
-        return "";
+        return new byte[0];
     }
 
-    private String processChallenge(final String challenge, final SSLSocket socket)
+    private byte[] processChallenge(final byte[] challenge, final SSLSocket socket)
             throws AuthenticationException {
         Log.d(Config.LOGTAG, "DigestMd5.processChallenge()");
         this.state = State.RESPONSE_SENT;
@@ -144,17 +142,11 @@ public class DigestMd5 extends SaslMechanism {
                         + "\",response="
                         + response
                         + ",charset=utf-8";
-        return BaseEncoding.base64().encode(saslString.getBytes());
+        return saslString.getBytes();
     }
 
-    private static Map<String, String> messageToAttributes(final String message)
+    private static Map<String, String> messageToAttributes(final byte[] asBytes)
             throws AuthenticationException {
-        byte[] asBytes;
-        try {
-            asBytes = BaseEncoding.base64().decode(message);
-        } catch (final IllegalArgumentException e) {
-            throw new AuthenticationException("Unable to decode server challenge", e);
-        }
         try {
             return splitToAttributes(new String(asBytes));
         } catch (final IllegalArgumentException e) {

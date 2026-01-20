@@ -1,0 +1,2 @@
+* Naprawienie rozmów utykających na nawiązywaniu połączenia gdy używanie przekaźników jest włączone, a serwer żadnych nie posiada
+* Optymalizacje przepustowości

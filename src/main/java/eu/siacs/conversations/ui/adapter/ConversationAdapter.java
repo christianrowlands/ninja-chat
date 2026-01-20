@@ -26,6 +26,7 @@ import eu.siacs.conversations.utils.IrregularUnicodeDetector;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.util.List;
 
 public class ConversationAdapter
@@ -204,10 +205,9 @@ public class ConversationAdapter
         if (conversation.getMode() == Conversational.MODE_MULTI) {
             ongoingCall = Optional.absent();
         } else {
-            ongoingCall =
-                    activity.xmppConnectionService
-                            .getJingleConnectionManager()
-                            .getOngoingRtpConnection(conversation.getContact());
+            final var manager =
+                    conversation.getAccount().getXmppConnection().getManager(JingleManager.class);
+            ongoingCall = manager.getOngoingRtpConnection(conversation.getContact());
         }
 
         if (ongoingCall.isPresent()) {

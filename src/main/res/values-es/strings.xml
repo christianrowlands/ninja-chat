@@ -1162,4 +1162,5 @@
     <string name="peer_to_peer">P2P</string>
     <string name="pref_use_relays">Utilizar siempre relés</string>
     <string name="pref_use_relays_summary">Retransmite todas las conexiones P2P (llamadas y transferencias de archivos) a través de tu servidor para evitar revelar tu dirección IP.</string>
+    <string name="mobile_ticket">Pase digital</string>
 </resources>

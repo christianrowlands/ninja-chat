@@ -8,6 +8,7 @@ import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.http.ServiceOutageStatus;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.XmppConnection;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -88,7 +89,7 @@ public class AccountStateProcessor extends XmppConnection.Delegate
             if (connection != null && account.getStatus().isAttemptReconnect()) {
                 final boolean aggressive =
                         account.getStatus() == Account.State.SEE_OTHER_HOST
-                                || this.service.hasJingleRtpConnection(account);
+                                || getManager(JingleManager.class).hasJingleRtpConnection();
                 final int next = connection.getTimeToNextAttempt(aggressive);
                 final boolean lowPingTimeoutMode = this.service.isInLowPingTimeoutMode(account);
                 if (next <= 0) {

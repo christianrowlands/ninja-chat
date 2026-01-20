@@ -2,18 +2,12 @@ package eu.siacs.conversations.services;
 
 import static eu.siacs.conversations.entities.Transferable.VALID_CRYPTO_EXTENSIONS;
 
-import android.os.PowerManager;
-import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.DownloadableFile;
-import eu.siacs.conversations.utils.Compatibility;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.atomic.AtomicLong;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
@@ -28,8 +22,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 
 public class AbstractConnectionManager {
 
-    private static final int UI_REFRESH_THRESHOLD = 250;
-    private static final AtomicLong LAST_UI_UPDATE_CALL = new AtomicLong(0);
     protected XmppConnectionService mXmppConnectionService;
 
     public AbstractConnectionManager(XmppConnectionService service) {
@@ -86,34 +78,6 @@ public class AbstractConnectionManager {
 
     public XmppConnectionService getXmppConnectionService() {
         return this.mXmppConnectionService;
-    }
-
-    public long getAutoAcceptFileSize() {
-        final long autoAcceptFileSize =
-                this.mXmppConnectionService.getLongPreference(
-                        "auto_accept_file_size", R.integer.auto_accept_filesize);
-        return autoAcceptFileSize <= 0 ? -1 : autoAcceptFileSize;
-    }
-
-    public boolean hasStoragePermission() {
-        return Compatibility.hasStoragePermission(mXmppConnectionService);
-    }
-
-    public void updateConversationUi(boolean force) {
-        synchronized (LAST_UI_UPDATE_CALL) {
-            if (force
-                    || SystemClock.elapsedRealtime() - LAST_UI_UPDATE_CALL.get()
-                            >= UI_REFRESH_THRESHOLD) {
-                LAST_UI_UPDATE_CALL.set(SystemClock.elapsedRealtime());
-                mXmppConnectionService.updateConversationUi();
-            }
-        }
-    }
-
-    public PowerManager.WakeLock createWakeLock(final String name) {
-        final PowerManager powerManager =
-                ContextCompat.getSystemService(mXmppConnectionService, PowerManager.class);
-        return powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, name);
     }
 
     public static class Extension {

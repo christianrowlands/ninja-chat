@@ -3,6 +3,7 @@ package im.conversations.android.xmpp;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
@@ -12,6 +13,8 @@ import eu.siacs.conversations.xml.Namespace;
 import im.conversations.android.xmpp.model.Hash;
 import im.conversations.android.xmpp.model.data.Data;
 import im.conversations.android.xmpp.model.data.Field;
+import im.conversations.android.xmpp.model.data.Item;
+import im.conversations.android.xmpp.model.data.Reported;
 import im.conversations.android.xmpp.model.data.Value;
 import im.conversations.android.xmpp.model.disco.info.Feature;
 import im.conversations.android.xmpp.model.disco.info.Identity;
@@ -19,8 +22,15 @@ import im.conversations.android.xmpp.model.disco.info.InfoQuery;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 public class EntityCapabilities2 {
+
+    private static final Set<ExtensionFactory.Id> ALLOW_LIST_EXTENSIONS =
+            ImmutableSet.of(
+                    ExtensionFactory.id(Identity.class),
+                    ExtensionFactory.id(Feature.class),
+                    ExtensionFactory.id(Data.class));
 
     private static final char UNIT_SEPARATOR = 0x1f;
     private static final char RECORD_SEPARATOR = 0x1e;
@@ -29,11 +39,12 @@ public class EntityCapabilities2 {
 
     private static final char FILE_SEPARATOR = 0x1c;
 
-    public static EntityCaps2Hash hash(final InfoQuery info) {
+    public static EntityCaps2Hash hash(final InfoQuery info) throws IllegalInfoQueryException {
         return hash(Hash.Algorithm.SHA_256, info);
     }
 
-    public static EntityCaps2Hash hash(final Hash.Algorithm algorithm, final InfoQuery info) {
+    public static EntityCaps2Hash hash(final Hash.Algorithm algorithm, final InfoQuery info)
+            throws IllegalInfoQueryException {
         final String result = algorithm(info);
         final var hashFunction = toHashFunction(algorithm);
         return new EntityCaps2Hash(
@@ -57,7 +68,8 @@ public class EntityCapabilities2 {
                                 b -> String.format("%02x", b)));
     }
 
-    private static String algorithm(final InfoQuery infoQuery) {
+    private static String algorithm(final InfoQuery infoQuery) throws IllegalInfoQueryException {
+        checkElementsAllowList(infoQuery);
         return features(infoQuery.getFeatures())
                 + identities(infoQuery.getIdentities())
                 + extensions(infoQuery.getExtensions(Data.class));
@@ -133,7 +145,19 @@ public class EntityCapabilities2 {
         return fields(data.getExtensions(Field.class));
     }
 
-    private static String extensions(final Collection<Data> extensions) {
+    private static String extensions(final Collection<Data> extensions)
+            throws IllegalInfoQueryException {
+        for (final var data : extensions) {
+            if (Strings.isNullOrEmpty(data.getFormType())) {
+                throw new IllegalInfoQueryException("A data extension is missing a form_type");
+            }
+            if (data.hasExtension(Item.class)) {
+                throw new IllegalInfoQueryException("data form extension contains item");
+            }
+            if (data.hasExtension(Reported.class)) {
+                throw new IllegalInfoQueryException("data form extension contains reported");
+            }
+        }
         return Joiner.on("")
                         .join(
                                 Ordering.natural()
@@ -142,6 +166,15 @@ public class EntityCapabilities2 {
                                                         extensions,
                                                         EntityCapabilities2::extension)))
                 + FILE_SEPARATOR;
+    }
+
+    private static void checkElementsAllowList(final InfoQuery infoQuery)
+            throws IllegalInfoQueryException {
+        final var ids = ImmutableSet.copyOf(infoQuery.getExtensionIds());
+        if (ALLOW_LIST_EXTENSIONS.containsAll(ids)) {
+            return;
+        }
+        throw new IllegalInfoQueryException("InfoQuery contains invalid elements");
     }
 
     public static class EntityCaps2Hash extends EntityCapabilities.Hash {
@@ -175,6 +208,12 @@ public class EntityCapabilities2 {
         @Override
         public int hashCode() {
             return Objects.hash(super.hashCode(), algorithm);
+        }
+    }
+
+    public static class IllegalInfoQueryException extends Exception {
+        private IllegalInfoQueryException(final String message) {
+            super(message);
         }
     }
 }

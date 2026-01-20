@@ -18,7 +18,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.entities.Account;
@@ -296,7 +295,7 @@ public class UIHelper {
         final var styledBody = new SpannableStringBuilder(body);
         StylingHelper.format(styledBody, 0, styledBody.length() - 1, textColor);
         final var builder = new SpannableStringBuilder();
-        for (final var l : CharSequenceUtils.split(styledBody, '\n')) {
+        for (final var l : CharSequences.split(styledBody, '\n')) {
             if (l.length() == 0) {
                 continue;
             }
@@ -306,7 +305,7 @@ public class UIHelper {
             if (QuoteHelper.isPositionQuoteCharacter(l, 0)) {
                 continue;
             }
-            final var trimmed = CharSequenceUtils.trim(l);
+            final var trimmed = CharSequences.trim(l);
             if (trimmed.length() == 0) {
                 continue;
             }
@@ -471,6 +470,8 @@ public class UIHelper {
             return context.getString(R.string.gpx_track);
         } else if (mime.equals("text/plain")) {
             return context.getString(R.string.plain_text_document);
+        } else if (mime.equals("application/vnd.apple.pkpass")) {
+            return context.getString(R.string.mobile_ticket);
         } else {
             return mime;
         }
@@ -510,13 +511,7 @@ public class UIHelper {
 
     public static String getMessageHint(final Context context, final Conversation conversation) {
         return switch (conversation.getNextEncryption()) {
-            case Message.ENCRYPTION_NONE -> {
-                if (Config.multipleEncryptionChoices()) {
-                    yield context.getString(R.string.send_unencrypted_message);
-                } else {
-                    yield context.getString(R.string.send_message_to_x, conversation.getName());
-                }
-            }
+            case Message.ENCRYPTION_NONE -> context.getString(R.string.send_unencrypted_message);
             case Message.ENCRYPTION_AXOLOTL -> {
                 final AxolotlService axolotlService = conversation.getAccount().getAxolotlService();
                 if (axolotlService != null && axolotlService.trustedSessionVerified(conversation)) {

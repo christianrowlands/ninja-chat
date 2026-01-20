@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -15,7 +16,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.jingle.WebRTCWrapper;
 import eu.siacs.conversations.xmpp.jingle.stanzas.IceUdpTransportInfo;
@@ -72,9 +72,9 @@ public class WebRTCDataChannelTransport implements Transport {
     private final Queue<PeerConnection.PeerConnectionState> stateHistory = new LinkedList<>();
 
     private final XmppConnection xmppConnection;
-    private final Account account;
     private PeerConnectionFactory peerConnectionFactory;
     private ListenableFuture<PeerConnection> peerConnectionFuture;
+    private boolean requiresArtificialFail = false;
 
     private ListenableFuture<SessionDescription> localDescriptionFuture;
 
@@ -87,6 +87,16 @@ public class WebRTCDataChannelTransport implements Transport {
                 @Override
                 public void onSignalingChange(PeerConnection.SignalingState signalingState) {
                     Log.d(Config.LOGTAG, "onSignalChange(" + signalingState + ")");
+                    // if we limit ice transports types to RELAYS and do not actually provide any
+                    // WebRTC will never go into CONNECTING state and thus never into FAILED state.
+                    // To work around that issue we trigger an artificial application layer FAILED
+                    // once both descriptions (remote and local) have been set
+                    if (requiresArtificialFail
+                            && signalingState == PeerConnection.SignalingState.STABLE
+                            && stateHistory.isEmpty()) {
+                        Log.d(Config.LOGTAG, "triggering artificial fail");
+                        this.onConnectionChange(PeerConnection.PeerConnectionState.FAILED);
+                    }
                 }
 
                 @Override
@@ -128,6 +138,7 @@ public class WebRTCDataChannelTransport implements Transport {
 
                 @Override
                 public void onIceCandidate(final IceCandidate iceCandidate) {
+                    requiresArtificialFail = false;
                     if (readyToSentIceCandidates.get()) {
                         WebRTCDataChannelTransport.this.onIceCandidate(
                                 iceCandidate.sdpMid, iceCandidate.sdp);
@@ -202,23 +213,17 @@ public class WebRTCDataChannelTransport implements Transport {
     }
 
     public WebRTCDataChannelTransport(
-            final Context context,
-            final XmppConnection xmppConnection,
-            final Account account,
-            final boolean initiator) {
+            final Context context, final XmppConnection xmppConnection, final boolean initiator) {
         PeerConnectionFactory.initialize(
                 PeerConnectionFactory.InitializationOptions.builder(context)
                         .setFieldTrials("WebRTC-BindUsingInterfaceName/Enabled/")
                         .createInitializationOptions());
         this.peerConnectionFactory = PeerConnectionFactory.builder().createPeerConnectionFactory();
         this.xmppConnection = xmppConnection;
-        this.account = account;
-        final var appSettings = new AppSettings(context);
         this.peerConnectionFuture =
                 Futures.transform(
                         getIceServers(),
-                        iceServers ->
-                                createPeerConnection(iceServers, true, appSettings.isUseRelays()),
+                        iceServers -> createPeerConnectionOrThrow(context, iceServers, initiator),
                         MoreExecutors.directExecutor());
         if (initiator) {
             this.localDescriptionFuture = setLocalDescription();
@@ -226,9 +231,6 @@ public class WebRTCDataChannelTransport implements Transport {
     }
 
     private ListenableFuture<Collection<PeerConnection.IceServer>> getIceServers() {
-        if (Config.DISABLE_PROXY_LOOKUP) {
-            return Futures.immediateFuture(Collections.emptySet());
-        }
         return Futures.catching(
                 xmppConnection.getManager(ExternalServiceDiscoveryManager.class).getIceServers(),
                 Exception.class,
@@ -237,6 +239,21 @@ public class WebRTCDataChannelTransport implements Transport {
                     return Collections.emptySet();
                 },
                 MoreExecutors.directExecutor());
+    }
+
+    private PeerConnection createPeerConnectionOrThrow(
+            final Context context,
+            final Collection<PeerConnection.IceServer> iceServers,
+            final boolean initiator) {
+        final var appSettings = new AppSettings(context);
+        final var isUseRelays = appSettings.isUseRelays();
+        if (isUseRelays && initiator) {
+            if (iceServers == null
+                    || !Iterables.any(iceServers, i -> i != null && WebRTCWrapper.isTurnRelay(i))) {
+                throw new InitiatorNoRelaysException("Initiator had no TURN relays");
+            }
+        }
+        return createPeerConnection(iceServers, true, isUseRelays);
     }
 
     private PeerConnection createPeerConnection(
@@ -251,6 +268,9 @@ public class WebRTCDataChannelTransport implements Transport {
         if (peerConnection == null) {
             throw new IllegalStateException("Unable to create PeerConnection");
         }
+        final var relaysAvailable =
+                Iterables.any(iceServers, i -> i != null && WebRTCWrapper.isTurnRelay(i));
+        this.requiresArtificialFail = useRelays && !relaysAvailable;
         final var dataChannelInit = new DataChannel.Init();
         dataChannelInit.protocol = "xmpp-jingle";
         final var dataChannel = peerConnection.createDataChannel("test", dataChannelInit);
@@ -527,6 +547,13 @@ public class WebRTCDataChannelTransport implements Transport {
                     return future;
                 },
                 MoreExecutors.directExecutor());
+    }
+
+    public static class InitiatorNoRelaysException extends IllegalStateException {
+
+        private InitiatorNoRelaysException(final String message) {
+            super(message);
+        }
     }
 
     private static class DataChannelWriter implements Runnable {

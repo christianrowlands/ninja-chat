@@ -41,9 +41,9 @@ public abstract class SaslMechanism {
 
     public abstract String getMechanism();
 
-    public abstract String getClientFirstMessage(final SSLSocket sslSocket);
+    public abstract byte[] getClientFirstMessage(final SSLSocket sslSocket);
 
-    public abstract String getResponse(final String challenge, final SSLSocket sslSocket)
+    public abstract byte[] getResponse(final byte[] challenge, final SSLSocket sslSocket)
             throws AuthenticationException;
 
     public enum State {

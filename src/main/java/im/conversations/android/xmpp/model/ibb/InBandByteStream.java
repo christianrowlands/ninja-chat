@@ -11,4 +11,8 @@ public abstract class InBandByteStream extends Extension {
     public String getSid() {
         return this.getAttribute("sid");
     }
+
+    public void setSid(final String sid) {
+        this.setAttribute("sid", sid);
+    }
 }

@@ -14,6 +14,7 @@ import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.DiscoManager;
 import eu.siacs.conversations.xmpp.manager.EntityTimeManager;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import eu.siacs.conversations.xmpp.manager.PingManager;
 import eu.siacs.conversations.xmpp.manager.RosterManager;
@@ -25,11 +26,9 @@ import im.conversations.android.xmpp.model.error.Condition;
 import im.conversations.android.xmpp.model.ibb.InBandByteStream;
 import im.conversations.android.xmpp.model.jingle.Jingle;
 import im.conversations.android.xmpp.model.ping.Ping;
-import im.conversations.android.xmpp.model.roster.Query;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import im.conversations.android.xmpp.model.time.Time;
 import im.conversations.android.xmpp.model.up.Push;
-import im.conversations.android.xmpp.model.version.Version;
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -325,18 +324,16 @@ public class IqParser extends AbstractParser implements Consumer<Iq> {
             this.connection.sendErrorFor(packet, new Condition.ServiceUnavailable());
             return;
         }
-        final var jingleConnectionManager =
-                this.mXmppConnectionService.getJingleConnectionManager();
         if (packet.hasExtension(Jingle.class)) {
-            jingleConnectionManager.deliverPacket(getAccount(), packet);
-        } else if (packet.hasExtension(Query.class)) {
+            this.getManager(JingleManager.class).process(packet);
+        } else if (packet.hasExtension(im.conversations.android.xmpp.model.roster.Query.class)) {
             this.getManager(RosterManager.class).push(packet);
         } else if (packet.hasExtension(Block.class)) {
             this.getManager(BlockingManager.class).pushBlock(packet);
         } else if (packet.hasExtension(Unblock.class)) {
             this.getManager(BlockingManager.class).pushUnblock(packet);
         } else if (packet.hasExtension(InBandByteStream.class)) {
-            jingleConnectionManager.deliverIbbPacket(getAccount(), packet);
+            this.getManager(JingleManager.class).deliverIbbPacket(packet);
         } else if (packet.hasExtension(Push.class)) {
             this.getManager(UnifiedPushManager.class).push(packet);
         } else {
@@ -357,7 +354,7 @@ public class IqParser extends AbstractParser implements Consumer<Iq> {
             this.connection.sendErrorFor(packet, new Condition.ServiceUnavailable());
         } else if (packet.hasExtension(InfoQuery.class)) {
             this.getManager(DiscoManager.class).handleInfoQuery(packet);
-        } else if (packet.hasExtension(Version.class)) {
+        } else if (packet.hasExtension(im.conversations.android.xmpp.model.version.Query.class)) {
             this.getManager(DiscoManager.class).handleVersionRequest(packet);
         } else if (packet.hasExtension(Time.class)) {
             this.getManager(EntityTimeManager.class).request(packet);

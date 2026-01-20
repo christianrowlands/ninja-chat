@@ -6,9 +6,11 @@ import eu.siacs.conversations.Config;
 import im.conversations.android.xmpp.ExtensionFactory;
 import im.conversations.android.xmpp.model.StreamElement;
 import java.io.Closeable;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import org.jspecify.annotations.NonNull;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -25,7 +27,7 @@ public class XmlReader implements Closeable {
         }
     }
 
-    public void setInputStream(InputStream inputStream) throws IOException {
+    public void setInputStream(final InputStream inputStream) throws IOException {
         if (inputStream == null) {
             throw new IOException();
         }
@@ -53,12 +55,11 @@ public class XmlReader implements Closeable {
         this.is = null;
     }
 
-    public Tag readTag() throws IOException {
+    public @NonNull Tag readTag() throws IOException {
         try {
             while (this.is != null && parser.next() != XmlPullParser.END_DOCUMENT) {
                 if (parser.getEventType() == XmlPullParser.START_TAG) {
-                    Tag tag = Tag.start(parser.getName());
-                    final String xmlns = parser.getNamespace();
+                    Tag tag = Tag.start(parser.getName(), parser.getNamespace());
                     for (int i = 0; i < parser.getAttributeCount(); ++i) {
                         // TODO we would also look at parser.getAttributeNamespace()
                         final String prefix = parser.getAttributePrefix(i);
@@ -70,9 +71,6 @@ public class XmlReader implements Closeable {
                         }
                         tag.setAttribute(name, parser.getAttributeValue(i));
                     }
-                    if (xmlns != null) {
-                        tag.setAttribute("xmlns", xmlns);
-                    }
                     return tag;
                 } else if (parser.getEventType() == XmlPullParser.END_TAG) {
                     return Tag.end(parser.getName());
@@ -81,7 +79,9 @@ public class XmlReader implements Closeable {
                 }
             }
 
-        } catch (Throwable throwable) {
+        } catch (final IOException e) {
+            throw e;
+        } catch (final Throwable throwable) {
             throw new IOException(
                     "xml parser mishandled "
                             + throwable.getClass().getSimpleName()
@@ -90,7 +90,7 @@ public class XmlReader implements Closeable {
                             + ")",
                     throwable);
         }
-        return null;
+        throw new EOFException();
     }
 
     public <T extends StreamElement> T readElement(final Tag current, final Class<T> clazz)
@@ -104,8 +104,7 @@ public class XmlReader implements Closeable {
     }
 
     public Element readElement(final Tag currentTag) throws IOException {
-        final var attributes = currentTag.getAttributes();
-        final var namespace = attributes.get("xmlns");
+        final var namespace = currentTag.getNamespace();
         final var name = currentTag.getName();
         final Element element = ExtensionFactory.create(name, namespace);
         element.setAttributes(currentTag.getAttributes());

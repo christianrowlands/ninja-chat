@@ -1149,4 +1149,7 @@
     <string name="peer_to_peer">Peer-to-Peer</string>
     <string name="pref_use_relays_summary">Alle P2P-Verbindungen (Anrufe und Dateiübertragungen) über deinen Server weiterleiten, um zu vermeiden, dass deine IP-Adresse preisgegeben wird.</string>
     <string name="pref_use_relays">Immer Relays verwenden</string>
+    <string name="mobile_ticket">Mobiles Ticket</string>
+    <string name="emoji_reactions">Emoji-Reaktionen</string>
+    <string name="open_keyboard">Tastatur öffnen</string>
 </resources>

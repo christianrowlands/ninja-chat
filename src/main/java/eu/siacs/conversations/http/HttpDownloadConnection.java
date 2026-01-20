@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Longs;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.DownloadableFile;
@@ -14,7 +15,9 @@ import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.AbstractConnectionManager;
+import eu.siacs.conversations.services.DebouncedInterfaceUpdater;
 import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.FileWriterException;
 import eu.siacs.conversations.utils.MimeUtils;
@@ -41,6 +44,7 @@ public class HttpDownloadConnection implements Transferable {
     private final Message message;
     private final HttpConnectionManager mHttpConnectionManager;
     private final XmppConnectionService mXmppConnectionService;
+    private final DebouncedInterfaceUpdater debouncedInterfaceUpdater;
     private HttpUrl mUrl;
     private DownloadableFile file;
     private int mStatus = Transferable.STATUS_UNKNOWN;
@@ -52,6 +56,7 @@ public class HttpDownloadConnection implements Transferable {
         this.message = message;
         this.mHttpConnectionManager = manager;
         this.mXmppConnectionService = manager.getXmppConnectionService();
+        this.debouncedInterfaceUpdater = new DebouncedInterfaceUpdater(this.mXmppConnectionService);
     }
 
     @Override
@@ -162,7 +167,7 @@ public class HttpDownloadConnection implements Transferable {
         if (message.isFileOrImage()) {
             message.setDeleted(true);
         }
-        mHttpConnectionManager.updateConversationUi(true);
+        this.mXmppConnectionService.updateConversationUi();
     }
 
     private void decryptFile() throws IOException {
@@ -204,7 +209,7 @@ public class HttpDownloadConnection implements Transferable {
                             .getPgpDecryptionService()
                             .decrypt(message, notify);
         }
-        mHttpConnectionManager.updateConversationUi(true);
+        this.mXmppConnectionService.updateConversationUi();
         final boolean notifyAfterScan = notify;
         final DownloadableFile file =
                 mXmppConnectionService.getFileBackend().getFile(message, true);
@@ -227,7 +232,7 @@ public class HttpDownloadConnection implements Transferable {
 
     private void changeStatus(final int status) {
         this.mStatus = status;
-        mHttpConnectionManager.updateConversationUi(true);
+        this.mXmppConnectionService.updateConversationUi();
     }
 
     private void showToastForException(final Exception e) {
@@ -255,7 +260,7 @@ public class HttpDownloadConnection implements Transferable {
 
     private void updateProgress(long i) {
         this.mProgress = (int) i;
-        mHttpConnectionManager.updateConversationUi(false);
+        this.debouncedInterfaceUpdater.run();
     }
 
     @Override
@@ -322,8 +327,11 @@ public class HttpDownloadConnection implements Transferable {
             mXmppConnectionService.databaseBackend.updateMessage(message, true);
             file.setExpectedSize(size);
             message.resetFileParams();
-            if (mHttpConnectionManager.hasStoragePermission()
-                    && size <= mHttpConnectionManager.getAutoAcceptFileSize()
+            final var autoAcceptFileSize =
+                    new AppSettings(mXmppConnectionService).getAutoAcceptFileSize();
+            if (Compatibility.hasStoragePermission(mXmppConnectionService)
+                    && autoAcceptFileSize.isPresent()
+                    && size <= autoAcceptFileSize.get()
                     && mXmppConnectionService.isDataSaverDisabled()) {
                 HttpDownloadConnection.this.acceptedAutomatically = true;
                 download(interactive);

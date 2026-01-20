@@ -752,9 +752,6 @@ public class Conversation extends AbstractEntity
     }
 
     public int getNextEncryption() {
-        if (!Config.supportOmemo() && !Config.supportOpenPgp()) {
-            return Message.ENCRYPTION_NONE;
-        }
         if (OmemoSetting.isAlways()) {
             return suitableForOmemoByDefault(this)
                     ? Message.ENCRYPTION_AXOLOTL

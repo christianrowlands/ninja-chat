@@ -55,7 +55,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SocksByteStreamsTransport implements Transport {
@@ -152,9 +151,11 @@ public class SocksByteStreamsTransport implements Transport {
         if (useRelays) {
             future =
                     Futures.immediateFailedFuture(
-                            new IllegalStateException(
+                            new CandidateErrorException(
                                     "Connecting to their candidates is disabled by setting"));
+
         } else {
+
             final var connectionFinder =
                     new ConnectionFinder(
                             theirCandidates, theirDestination, selectedByThemCandidate, useTor);
@@ -261,32 +262,20 @@ public class SocksByteStreamsTransport implements Transport {
 
     private ListenableFuture<String> activateProxy(final Candidate candidate) {
         Log.d(Config.LOGTAG, "trying to activate our proxy " + candidate);
-        final SettableFuture<String> iqFuture = SettableFuture.create();
         final Iq proxyActivation = new Iq(Iq.Type.SET);
         proxyActivation.setTo(candidate.jid);
         final var query = proxyActivation.addExtension(new Query());
         query.setSid(this.streamId);
         query.addExtension(new Activate(id.with));
-        xmppConnection.sendIqPacket(
-                proxyActivation,
-                (response) -> {
-                    if (response.getType() == Iq.Type.RESULT) {
-                        Log.d(Config.LOGTAG, "our proxy has been activated");
-                        transportCallback.onProxyActivated(this.streamId, candidate);
-                        iqFuture.set(candidate.cid);
-                    } else if (response.getType() == Iq.Type.TIMEOUT) {
-                        iqFuture.setException(new TimeoutException());
-                    } else {
-                        final var account = id.account;
-                        Log.d(
-                                Config.LOGTAG,
-                                account.getJid().asBareJid()
-                                        + ": failed to activate proxy on "
-                                        + candidate.jid);
-                        iqFuture.setException(new IllegalStateException("Proxy activation failed"));
-                    }
-                });
-        return iqFuture;
+        final var future = xmppConnection.sendIqPacket(proxyActivation);
+        return Futures.transform(
+                future,
+                result -> {
+                    Log.d(Config.LOGTAG, "our proxy has been activated");
+                    transportCallback.onProxyActivated(this.streamId, candidate);
+                    return candidate.cid;
+                },
+                MoreExecutors.directExecutor());
     }
 
     private ListenableFuture<Connection> getOurProxyConnection(final String ourDestination) {

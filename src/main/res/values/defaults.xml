@@ -20,6 +20,7 @@
     <bool name="show_avatars">true</bool>
     <string name="quick_action">recent</string>
     <bool name="show_dynamic_tags">false</bool>
+    <bool name="dynamic_colors">false</bool>
     <bool name="btbv">true</bool>
     <integer name="automatic_message_deletion">0</integer>
     <bool name="trust_system_ca_store">true</bool>

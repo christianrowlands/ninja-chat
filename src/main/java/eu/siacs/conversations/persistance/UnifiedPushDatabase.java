@@ -6,10 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import eu.siacs.conversations.Config;
@@ -242,46 +239,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
         return rows >= 1;
     }
 
-    public static class ApplicationEndpoint {
-        public final String application;
-        public final String endpoint;
+    public record ApplicationEndpoint(String application, String endpoint) {}
 
-        public ApplicationEndpoint(String application, String endpoint) {
-            this.application = application;
-            this.endpoint = endpoint;
-        }
-    }
-
-    public static class PushTarget {
-        public final String application;
-        public final String instance;
-
-        public PushTarget(final String application, final String instance) {
-            this.application = application;
-            this.instance = instance;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper(this)
-                    .add("application", application)
-                    .add("instance", instance)
-                    .toString();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PushTarget that = (PushTarget) o;
-            return Objects.equal(application, that.application)
-                    && Objects.equal(instance, that.instance);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(application, instance);
-        }
-    }
+    public record PushTarget(String application, String instance) {}
 }

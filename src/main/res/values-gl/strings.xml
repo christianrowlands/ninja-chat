@@ -1037,7 +1037,7 @@
     <string name="pref_category_on_this_device">No dispositivo</string>
     <string name="pref_send_crash_reports">Informar sobre fallos</string>
     <string name="pref_summary_security">Cifraxe E2E, Confianza cega antes da Verificación, Detección MITM</string>
-    <string name="unified_push_summary">Repetidor de notificacións para terceiras apps compatibles con UnifiedPush</string>
+    <string name="unified_push_summary">Relé de notificacións para terceiras apps compatibles con UnifiedPush</string>
     <string name="pref_up_long_summary">Ao actuar como un Distribuidor UnifiedPush vaise usar a conexión eficiente, fiable e persistente de XMPP para notificar a outras apps compatibles como Tusky, Ltt.rs, FluffyChat e outras.</string>
     <string name="pref_attachments_summary">Tamaño do ficheiro, Compresión de imaxes, Calidade do vídeo</string>
     <string name="pref_category_sending">Ao enviar</string>
@@ -1150,4 +1150,5 @@
     <string name="peer_to_peer">entre-pares</string>
     <string name="pref_use_relays">Usar sempre relés</string>
     <string name="pref_use_relays_summary">Pasar todas as conexións P2P (chamadas e transferencia de ficheiros) polo teu servidor para evitar revelar o teu enderezo IP.</string>
+    <string name="mobile_ticket">Resgardo do móbil</string>
 </resources>

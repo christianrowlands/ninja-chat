@@ -538,7 +538,7 @@ public class ContactDetailsActivity extends OmemoActivity
         boolean hasKeys = false;
         final LayoutInflater inflater = getLayoutInflater();
         final AxolotlService axolotlService = contact.getAccount().getAxolotlService();
-        if (Config.supportOmemo() && axolotlService != null) {
+        if (axolotlService != null) {
             final Collection<XmppAxolotlSession> sessions =
                     axolotlService.findSessionsForContact(contact);
             boolean anyActive = false;
@@ -590,7 +590,7 @@ public class ContactDetailsActivity extends OmemoActivity
         if (hasKeys) {
             binding.scanButton.setOnClickListener((v) -> ScanActivity.scan(this));
         }
-        if (Config.supportOpenPgp() && contact.getPgpKeyId() != 0) {
+        if (contact.getPgpKeyId() != 0) {
             hasKeys = true;
             View view =
                     inflater.inflate(

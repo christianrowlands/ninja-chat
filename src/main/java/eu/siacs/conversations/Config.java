@@ -8,32 +8,6 @@ import im.conversations.android.xmpp.model.state.ChatStateNotification;
 import java.util.Locale;
 
 public final class Config {
-    private static final int UNENCRYPTED = 1;
-    private static final int OPENPGP = 2;
-    private static final int OMEMO = 8;
-
-    private static final int ENCRYPTION_MASK = UNENCRYPTED | OPENPGP | OMEMO;
-
-    public static boolean supportUnencrypted() {
-        return (ENCRYPTION_MASK & UNENCRYPTED) != 0;
-    }
-
-    public static boolean supportOpenPgp() {
-        return (ENCRYPTION_MASK & OPENPGP) != 0;
-    }
-
-    public static boolean supportOmemo() {
-        return (ENCRYPTION_MASK & OMEMO) != 0;
-    }
-
-    public static boolean omemoOnly() {
-        return !multipleEncryptionChoices() && supportOmemo();
-    }
-
-    public static boolean multipleEncryptionChoices() {
-        return (ENCRYPTION_MASK & (ENCRYPTION_MASK - 1)) != 0;
-    }
-
     public static final String LOGTAG = BuildConfig.APP_NAME.toLowerCase(Locale.US);
 
     public static final boolean QUICK_LOG = false;

@@ -12,4 +12,8 @@ public abstract sealed class JingleMessage extends Extension
     public String getSessionId() {
         return this.getAttribute("id");
     }
+
+    public void setSessionId(final String id) {
+        this.setAttribute("id", id);
+    }
 }

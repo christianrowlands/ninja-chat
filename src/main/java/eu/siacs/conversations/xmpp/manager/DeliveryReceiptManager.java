@@ -4,7 +4,6 @@ import eu.siacs.conversations.entities.ReceiptRequest;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
 import im.conversations.android.xmpp.model.hints.Store;
 import im.conversations.android.xmpp.model.receipts.Received;
@@ -40,13 +39,9 @@ public class DeliveryReceiptManager extends AbstractManager {
         if (id.startsWith(JingleRtpConnection.JINGLE_MESSAGE_PROPOSE_ID_PREFIX)) {
             final String sessionId =
                     id.substring(JingleRtpConnection.JINGLE_MESSAGE_PROPOSE_ID_PREFIX.length());
-            this.service
-                    .getJingleConnectionManager()
+            getManager(JingleManager.class)
                     .updateProposedSessionDiscovered(
-                            account,
-                            from,
-                            sessionId,
-                            JingleConnectionManager.DeviceDiscoveryState.DISCOVERED);
+                            from, sessionId, JingleManager.DeviceDiscoveryState.DISCOVERED);
         } else {
             this.service.markMessage(
                     account,

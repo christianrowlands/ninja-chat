@@ -39,7 +39,6 @@ public class RosterManager extends AbstractManager implements Roster {
     public RosterManager(final XmppConnectionService service, final XmppConnection connection) {
         super(service, connection);
         this.version = getAccount().getRosterVersion();
-        ;
         this.service = service;
     }
 

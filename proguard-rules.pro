@@ -14,6 +14,10 @@
 -keep class org.openintents.openpgp.*
 -keep class org.webrtc.** { *; }
 
+-keep class net.fellbaum.jemoji.** { *; }
+-keeppackagenames net.fellbaum.jemoji.**
+-keepdirectories jemoji
+
 -dontwarn javax.mail.internet.MimeMessage
 -dontwarn javax.mail.internet.MimeBodyPart
 -dontwarn javax.mail.internet.SharedInputStream

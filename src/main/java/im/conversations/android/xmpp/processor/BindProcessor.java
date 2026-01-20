@@ -13,6 +13,7 @@ import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.manager.BookmarkManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
 import eu.siacs.conversations.xmpp.manager.MessageDisplayedSynchronizationManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
@@ -65,7 +66,7 @@ public class BindProcessor extends XmppConnection.Delegate implements Runnable {
 
         getManager(PresenceManager.class).clear();
         getManager(MultiUserChatManager.class).clearInProgress();
-        service.getJingleConnectionManager().notifyRebound(account);
+        getManager(JingleManager.class).notifyRebound();
         service.getQuickConversationsService().considerSyncBackground(false);
 
         getManager(RosterManager.class).request();

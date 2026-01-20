@@ -8,4 +8,9 @@ public final class Reject extends JingleMessage {
     public Reject() {
         super(Reject.class);
     }
+
+    public Reject(final String sessionId) {
+        this();
+        this.setSessionId(sessionId);
+    }
 }

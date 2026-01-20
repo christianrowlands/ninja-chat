@@ -6,6 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import eu.siacs.conversations.xml.Element;
 import im.conversations.android.xml.XmlElementReader;
 import im.conversations.android.xmpp.model.delay.Delay;
+import im.conversations.android.xmpp.model.stanza.Message;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -45,6 +47,21 @@ public class DateAndTimeProfilesTest {
         assertThat(element, instanceOf(Delay.class));
         final var delay = (Delay) element;
         Assert.assertEquals(Instant.ofEpochMilli(1031701267123L), delay.getStamp());
+    }
+
+    @Test
+    public void serialize() throws IOException {
+        final var message = new Message();
+        message.addExtension(new Delay(Instant.ofEpochMilli(1031701267123L)));
+        final var byteArrayOutputStream = new ByteArrayOutputStream();
+        final var streamElementWriter = new StreamElementWriter(byteArrayOutputStream);
+        streamElementWriter.write(message);
+        streamElementWriter.flush();
+        Assert.assertEquals(
+                """
+                <message><delay xmlns="urn:xmpp:delay" stamp="2002-09-10T23:41:07.123Z"/></message>\
+                """,
+                byteArrayOutputStream.toString());
     }
 
     @Test

@@ -23,17 +23,13 @@ import com.google.common.util.concurrent.MoreExecutors;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.parser.AbstractParser;
 import eu.siacs.conversations.persistance.UnifiedPushDatabase;
 import eu.siacs.conversations.receiver.UnifiedPushDistributor;
-import eu.siacs.conversations.xml.Element;
-import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
-import im.conversations.android.xmpp.model.stanza.Iq;
+import eu.siacs.conversations.xmpp.manager.UnifiedPushManager;
 import im.conversations.android.xmpp.model.up.Push;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -124,6 +120,7 @@ public class UnifiedPushBroker {
     private void renewUnifiedEndpoint(
             final Transport transport, final PushTargetMessenger pushTargetMessenger) {
         final Account account = transport.account;
+        final var upManager = account.getXmppConnection().getManager(UnifiedPushManager.class);
         final UnifiedPushDatabase unifiedPushDatabase = UnifiedPushDatabase.getInstance(service);
         final List<UnifiedPushDatabase.PushTarget> renewals =
                 unifiedPushDatabase.getRenewals(account.getUuid(), transport.transport.toString());
@@ -143,54 +140,27 @@ public class UnifiedPushBroker {
                     String.format(
                             "%s: try to renew UnifiedPush %s",
                             account.getJid(), renewal.toString()));
-            final String hashedApplication =
-                    UnifiedPushDistributor.hash(account.getUuid(), renewal.application);
-            final String hashedInstance =
-                    UnifiedPushDistributor.hash(account.getUuid(), renewal.instance);
-            final Iq registration = new Iq(Iq.Type.SET);
-            registration.setTo(transport.transport);
-            final Element register = registration.addChild("register", Namespace.UNIFIED_PUSH);
-            register.setAttribute("application", hashedApplication);
-            register.setAttribute("instance", hashedInstance);
             final Messenger messenger;
             if (pushTargetMessenger != null && renewal.equals(pushTargetMessenger.pushTarget)) {
                 messenger = pushTargetMessenger.messenger;
             } else {
                 messenger = null;
             }
-            this.service.sendIqPacket(
-                    account,
-                    registration,
-                    (response) -> processRegistration(transport, renewal, messenger, response));
-        }
-    }
+            final var future = upManager.register(transport.transport, renewal);
+            Futures.addCallback(
+                    future,
+                    new FutureCallback<>() {
+                        @Override
+                        public void onSuccess(UnifiedPushManager.Registration result) {
+                            renewUnifiedPushEndpoint(transport, renewal, messenger, result);
+                        }
 
-    private void processRegistration(
-            final Transport transport,
-            final UnifiedPushDatabase.PushTarget renewal,
-            final Messenger messenger,
-            final Iq response) {
-        if (response.getType() == Iq.Type.RESULT) {
-            final Element registered = response.findChild("registered", Namespace.UNIFIED_PUSH);
-            if (registered == null) {
-                return;
-            }
-            final String endpoint = registered.getAttribute("endpoint");
-            if (Strings.isNullOrEmpty(endpoint)) {
-                Log.w(Config.LOGTAG, "endpoint was null in up registration");
-                return;
-            }
-            // TODO replace with Instant.parse (in model)
-            final long expiration;
-            try {
-                expiration = AbstractParser.getTimestamp(registered.getAttribute("expiration"));
-            } catch (final IllegalArgumentException | ParseException e) {
-                Log.d(Config.LOGTAG, "could not parse expiration", e);
-                return;
-            }
-            renewUnifiedPushEndpoint(transport, renewal, messenger, endpoint, expiration);
-        } else {
-            Log.d(Config.LOGTAG, "could not register UP endpoint " + response.getErrorCondition());
+                        @Override
+                        public void onFailure(@NonNull Throwable t) {
+                            Log.d(Config.LOGTAG, "could not register UP endpoint", t);
+                        }
+                    },
+                    MoreExecutors.directExecutor());
         }
     }
 
@@ -198,37 +168,32 @@ public class UnifiedPushBroker {
             final Transport transport,
             final UnifiedPushDatabase.PushTarget renewal,
             final Messenger messenger,
-            final String endpoint,
-            final long expiration) {
-        Log.d(Config.LOGTAG, "registered endpoint " + endpoint + " expiration=" + expiration);
+            final UnifiedPushManager.Registration registration) {
+        final var endpoint = registration.endpoint().toString();
+        final var expiration = registration.expiration().toEpochMilli();
+        Log.d(
+                Config.LOGTAG,
+                "registered endpoint " + endpoint + " expiration=" + registration.expiration());
         final UnifiedPushDatabase unifiedPushDatabase = UnifiedPushDatabase.getInstance(service);
         final boolean modified =
                 unifiedPushDatabase.updateEndpoint(
-                        renewal.instance,
+                        renewal.instance(),
                         transport.account.getUuid(),
                         transport.transport.toString(),
                         endpoint,
                         expiration);
         if (modified) {
-            Log.d(
-                    Config.LOGTAG,
-                    "endpoint for "
-                            + renewal.application
-                            + "/"
-                            + renewal.instance
-                            + " was updated to "
-                            + endpoint);
             UnifiedPushDistributor.quickLog(
                     service,
                     "endpoint for "
-                            + renewal.application
+                            + renewal.application()
                             + "/"
-                            + renewal.instance
+                            + renewal.instance()
                             + " was updated to "
                             + endpoint);
             final UnifiedPushDatabase.ApplicationEndpoint applicationEndpoint =
-                    new UnifiedPushDatabase.ApplicationEndpoint(renewal.application, endpoint);
-            sendEndpoint(messenger, renewal.instance, applicationEndpoint);
+                    new UnifiedPushDatabase.ApplicationEndpoint(renewal.application(), endpoint);
+            sendEndpoint(messenger, renewal.instance(), applicationEndpoint);
         }
     }
 
@@ -240,7 +205,7 @@ public class UnifiedPushBroker {
             Log.d(
                     Config.LOGTAG,
                     "using messenger instead of broadcast to communicate endpoint to "
-                            + applicationEndpoint.application);
+                            + applicationEndpoint.application());
             final Message message = new Message();
             message.obj = endpointIntent(instance, applicationEndpoint);
             try {
@@ -358,7 +323,7 @@ public class UnifiedPushBroker {
                             + ": broadcasting a "
                             + payload.length
                             + " bytes push message to "
-                            + target.application);
+                            + target.application());
             broadcastPushMessage(target, payload);
             return true;
         } else {
@@ -410,15 +375,16 @@ public class UnifiedPushBroker {
         return Iterables.tryFind(
                 pushTargets,
                 pt ->
-                        UnifiedPushDistributor.hash(uuid, pt.application).equals(application)
-                                && UnifiedPushDistributor.hash(uuid, pt.instance).equals(instance));
+                        UnifiedPushDistributor.hash(uuid, pt.application()).equals(application)
+                                && UnifiedPushDistributor.hash(uuid, pt.instance())
+                                        .equals(instance));
     }
 
     private void broadcastPushMessage(
             final UnifiedPushDatabase.PushTarget target, final byte[] payload) {
         final Intent updateIntent = new Intent(UnifiedPushDistributor.ACTION_MESSAGE);
-        updateIntent.setPackage(target.application);
-        updateIntent.putExtra("token", target.instance);
+        updateIntent.setPackage(target.application());
+        updateIntent.putExtra("token", target.instance());
         updateIntent.putExtra("bytesMessage", payload);
         updateIntent.putExtra("message", new String(payload, StandardCharsets.UTF_8));
         final var distributorVerificationIntent = new Intent();
@@ -432,7 +398,7 @@ public class UnifiedPushBroker {
 
     private void broadcastEndpoint(
             final String instance, final UnifiedPushDatabase.ApplicationEndpoint endpoint) {
-        Log.d(Config.LOGTAG, "broadcasting endpoint to " + endpoint.application);
+        Log.d(Config.LOGTAG, "broadcasting endpoint to " + endpoint.application());
         final Intent updateIntent = endpointIntent(instance, endpoint);
         service.sendBroadcast(updateIntent);
     }
@@ -440,9 +406,9 @@ public class UnifiedPushBroker {
     private Intent endpointIntent(
             final String instance, final UnifiedPushDatabase.ApplicationEndpoint endpoint) {
         final Intent intent = new Intent(UnifiedPushDistributor.ACTION_NEW_ENDPOINT);
-        intent.setPackage(endpoint.application);
+        intent.setPackage(endpoint.application());
         intent.putExtra("token", instance);
-        intent.putExtra("endpoint", endpoint.endpoint);
+        intent.putExtra("endpoint", endpoint.endpoint());
         final var distributorVerificationIntent = new Intent();
         distributorVerificationIntent.setPackage(service.getPackageName());
         final var pendingIntent =
@@ -454,8 +420,8 @@ public class UnifiedPushBroker {
 
     private Intent unregisteredIntent(final UnifiedPushDatabase.PushTarget pushTarget) {
         final Intent intent = new Intent(UnifiedPushDistributor.ACTION_UNREGISTERED);
-        intent.setPackage(pushTarget.application);
-        intent.putExtra("token", pushTarget.instance);
+        intent.setPackage(pushTarget.application());
+        intent.putExtra("token", pushTarget.instance());
         final var distributorVerificationIntent = new Intent();
         distributorVerificationIntent.setPackage(service.getPackageName());
         final var pendingIntent =

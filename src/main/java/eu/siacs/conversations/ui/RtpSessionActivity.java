@@ -55,12 +55,12 @@ import eu.siacs.conversations.utils.TimeFrameUtils;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.jingle.AbstractJingleConnection;
 import eu.siacs.conversations.xmpp.jingle.ContentAddition;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
 import eu.siacs.conversations.xmpp.jingle.Media;
 import eu.siacs.conversations.xmpp.jingle.OngoingRtpSession;
 import eu.siacs.conversations.xmpp.jingle.RtpCapability;
 import eu.siacs.conversations.xmpp.jingle.RtpEndUserState;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Collections;
@@ -302,9 +302,8 @@ public class RtpSessionActivity extends XmppActivity
             final Set<Media> media = actionToMedia(lastAction == null ? action : lastAction);
             resetIntent(account, with, RtpEndUserState.RETRACTED, media);
         }
-        xmppConnectionService
-                .getJingleConnectionManager()
-                .retractSessionProposal(account, with.asBareJid());
+        final var jingleManager = account.getXmppConnection().getManager(JingleManager.class);
+        jingleManager.retractSessionProposal(with.asBareJid());
     }
 
     private void rejectCall(View view) {
@@ -515,10 +514,9 @@ public class RtpSessionActivity extends XmppActivity
             }
         } else if (Intent.ACTION_VIEW.equals(action)) {
             final String proposedSessionId = intent.getStringExtra(EXTRA_PROPOSED_SESSION_ID);
-            final JingleConnectionManager.TerminatedRtpSession terminatedRtpSession =
-                    xmppConnectionService
-                            .getJingleConnectionManager()
-                            .getTerminalSessionState(with, proposedSessionId);
+            final var jingleManager = account.getXmppConnection().getManager(JingleManager.class);
+            final JingleManager.TerminatedRtpSession terminatedRtpSession =
+                    jingleManager.getTerminalSessionState(with, proposedSessionId);
             if (terminatedRtpSession != null) {
                 // termination (due to message error or 'busy' was faster than opening the activity
                 initializeWithTerminatedSessionState(account, with, terminatedRtpSession);
@@ -538,9 +536,7 @@ public class RtpSessionActivity extends XmppActivity
                 invalidateOptionsMenu();
             }
             setWith(state, contact);
-            if (xmppConnectionService
-                    .getJingleConnectionManager()
-                    .fireJingleRtpConnectionStateUpdates()) {
+            if (jingleManager.fireJingleRtpConnectionStateUpdates()) {
                 return;
             }
             if (END_CARD.contains(state)) {
@@ -548,9 +544,7 @@ public class RtpSessionActivity extends XmppActivity
             }
             final String lastAction = intent.getStringExtra(EXTRA_LAST_ACTION);
             final Set<Media> media = actionToMedia(lastAction);
-            if (xmppConnectionService
-                    .getJingleConnectionManager()
-                    .hasMatchingProposal(account, with)) {
+            if (jingleManager.hasMatchingProposal(with)) {
                 putScreenInCallMode(media);
                 return;
             }
@@ -759,15 +753,12 @@ public class RtpSessionActivity extends XmppActivity
 
     private boolean initializeActivityWithRunningRtpSession(
             final Account account, Jid with, String sessionId) {
+        final var jingleManager = account.getXmppConnection().getManager(JingleManager.class);
         final WeakReference<JingleRtpConnection> reference =
-                xmppConnectionService
-                        .getJingleConnectionManager()
-                        .findJingleRtpConnection(account, with, sessionId);
+                jingleManager.findJingleRtpConnection(with, sessionId);
         if (reference == null || reference.get() == null) {
-            final JingleConnectionManager.TerminatedRtpSession terminatedRtpSession =
-                    xmppConnectionService
-                            .getJingleConnectionManager()
-                            .getTerminalSessionState(with, sessionId);
+            final JingleManager.TerminatedRtpSession terminatedRtpSession =
+                    jingleManager.getTerminalSessionState(with, sessionId);
             if (terminatedRtpSession == null) {
                 throw new IllegalStateException(
                         "failed to initialize activity with running rtp session. session not"
@@ -805,14 +796,14 @@ public class RtpSessionActivity extends XmppActivity
     private void initializeWithTerminatedSessionState(
             final Account account,
             final Jid with,
-            final JingleConnectionManager.TerminatedRtpSession terminatedRtpSession) {
+            final JingleManager.TerminatedRtpSession terminatedRtpSession) {
         Log.d(Config.LOGTAG, "initializeWithTerminatedSessionState()");
-        if (terminatedRtpSession.state == RtpEndUserState.ENDED) {
+        if (terminatedRtpSession.state() == RtpEndUserState.ENDED) {
             finish();
             return;
         }
-        final RtpEndUserState state = terminatedRtpSession.state;
-        resetIntent(account, with, terminatedRtpSession.state, terminatedRtpSession.media);
+        final RtpEndUserState state = terminatedRtpSession.state();
+        resetIntent(account, with, terminatedRtpSession.state(), terminatedRtpSession.media());
         updateButtonConfiguration(state);
         updateStateDisplay(state);
         updateIncomingCallScreen(state);
@@ -1488,10 +1479,8 @@ public class RtpSessionActivity extends XmppActivity
         if (withExtra == null) {
             throw new IllegalStateException("Current intent has no EXTRA_WITH");
         }
-        final var matching =
-                xmppConnectionService
-                        .getJingleConnectionManager()
-                        .matchingProposal(account, Jid.of(withExtra));
+        final var jingleManager = account.getXmppConnection().getManager(JingleManager.class);
+        final var matching = jingleManager.matchingProposal(Jid.of(withExtra));
         if (matching.isPresent()) {
             return matching.get();
         }

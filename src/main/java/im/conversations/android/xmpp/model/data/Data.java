@@ -6,8 +6,10 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.xmpp.Jid;
 import im.conversations.android.annotation.XmlElement;
 import im.conversations.android.xmpp.model.Extension;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
@@ -85,9 +87,14 @@ public class Data extends Extension {
                         CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, e.toString()));
             } else if (value instanceof Integer i) {
                 valueExtension.setContent(String.valueOf(i));
+            } else if (value instanceof Jid jid) {
+                valueExtension.setContent(jid.toString());
             } else if (value instanceof Boolean b) {
-                valueExtension.setContent(Boolean.TRUE.equals(b) ? "1" : "0");
+                valueExtension.setContent(b ? "1" : "0");
+            } else if (value instanceof Instant i) {
+                valueExtension.setContent(i.toString());
             } else {
+                System.out.println(value);
                 throw new IllegalArgumentException(
                         String.format(
                                 "%s is not a supported field value",

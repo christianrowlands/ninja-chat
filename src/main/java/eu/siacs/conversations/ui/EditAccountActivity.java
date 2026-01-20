@@ -1331,7 +1331,7 @@ public class EditAccountActivity extends OmemoActivity
             }
 
             final long pgpKeyId = this.mAccount.getPgpId();
-            if (pgpKeyId != 0 && Config.supportOpenPgp()) {
+            if (pgpKeyId != 0) {
                 OnClickListener openPgp = view -> launchOpenKeyChain(pgpKeyId);
                 OnClickListener delete = view -> showDeletePgpDialog();
                 this.binding.pgpFingerprintBox.setVisibility(View.VISIBLE);
@@ -1350,7 +1350,7 @@ public class EditAccountActivity extends OmemoActivity
             }
             final String ownAxolotlFingerprint =
                     this.mAccount.getAxolotlService().getOwnFingerprint();
-            if (ownAxolotlFingerprint != null && Config.supportOmemo()) {
+            if (ownAxolotlFingerprint != null) {
                 this.binding.axolotlFingerprintBox.setVisibility(View.VISIBLE);
                 this.binding.axolotlFingerprintBox.setOnCreateContextMenuListener(
                         (menu, v, menuInfo) -> {
@@ -1395,8 +1395,7 @@ public class EditAccountActivity extends OmemoActivity
                     showUnverifiedWarning = true;
                 }
             }
-            if (hasKeys
-                    && Config.supportOmemo()) { // TODO: either the button should be visible if we
+            if (hasKeys) { // TODO: either the button should be visible if we
                 // print an active device or the device list should
                 // be fed with reactivated devices
                 this.binding.otherDeviceKeysCard.setVisibility(View.VISIBLE);

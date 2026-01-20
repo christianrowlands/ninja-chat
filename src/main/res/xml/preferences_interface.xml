@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/appearance">
         <SwitchPreferenceCompat
+            android:defaultValue="@bool/dynamic_colors"
             android:icon="@drawable/ic_palette_24dp"
             android:key="dynamic_colors"
             android:summary="@string/pref_dynamic_colors_summary"

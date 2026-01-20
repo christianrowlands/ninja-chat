@@ -123,6 +123,14 @@ public class BlockingManager extends AbstractManager {
         }
     }
 
+    public boolean isBlocked(final Jid address) {
+        synchronized (this.blocklist) {
+            return this.blocklist.contains(address)
+                    || this.blocklist.contains(address.asBareJid())
+                    || this.blocklist.contains(address.getDomain());
+        }
+    }
+
     private void setBlocklist(final Collection<Jid> addresses) {
         synchronized (this.blocklist) {
             this.blocklist.clear();

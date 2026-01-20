@@ -12,7 +12,16 @@ public class Delay extends Extension {
         super(Delay.class);
     }
 
+    public Delay(final Instant instant) {
+        this();
+        this.setStamp(instant);
+    }
+
     public Instant getStamp() {
         return this.getAttributeAsInstant("stamp");
+    }
+
+    public void setStamp(final Instant instant) {
+        this.setAttribute("stamp", instant);
     }
 }

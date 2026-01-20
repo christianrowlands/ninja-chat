@@ -38,7 +38,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -54,7 +53,6 @@ import androidx.databinding.DataBindingUtil;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -64,14 +62,12 @@ import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
-import eu.siacs.conversations.databinding.DialogAddReactionBinding;
 import eu.siacs.conversations.databinding.DialogQuickeditBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
-import eu.siacs.conversations.entities.Reaction;
 import eu.siacs.conversations.services.AvatarService;
 import eu.siacs.conversations.services.BarcodeProvider;
 import eu.siacs.conversations.services.NotificationService;
@@ -81,13 +77,13 @@ import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PresenceSelector;
 import eu.siacs.conversations.ui.util.SettingsUtils;
 import eu.siacs.conversations.ui.util.SoftKeyboardUtils;
+import eu.siacs.conversations.ui.widget.AddReactionDialog;
 import eu.siacs.conversations.utils.AccountUtils;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.SignupUtils;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
-import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
 import eu.siacs.conversations.xmpp.manager.ReactionManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
@@ -382,71 +378,8 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     public void addReaction(final Message message, Consumer<Collection<String>> callback) {
-        final var account = message.getConversation().getAccount();
-        final var conversation = message.getConversation();
-        final Restrictions restrictions;
-        if (conversation.getMode() == Conversational.MODE_SINGLE) {
-            restrictions = null;
-        } else {
-            final var mucOptions =
-                    account.getXmppConnection()
-                            .getManager(MultiUserChatManager.class)
-                            .getState(conversation.getAddress().asBareJid());
-            restrictions = mucOptions == null ? null : mucOptions.getReactionsRestrictions();
-        }
-        final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        final var layoutInflater = this.getLayoutInflater();
-        final DialogAddReactionBinding viewBinding =
-                DataBindingUtil.inflate(layoutInflater, R.layout.dialog_add_reaction, null, false);
-        builder.setView(viewBinding.getRoot());
-        final var dialog = builder.create();
-        final boolean emojiChoiceRestricted =
-                restrictions != null
-                        && restrictions.allowList() != null
-                        && !restrictions.allowList().isEmpty()
-                        && restrictions.allowList().size() <= 6;
-        final Collection<String> shortcutEmojis;
-        if (emojiChoiceRestricted) {
-            shortcutEmojis = restrictions.allowList();
-        } else {
-            shortcutEmojis = Reaction.SUGGESTIONS;
-        }
-        for (final String emoji : shortcutEmojis) {
-            final Button button =
-                    (Button)
-                            layoutInflater.inflate(
-                                    R.layout.item_emoji_button, viewBinding.emojis, false);
-            viewBinding.emojis.addView(button);
-            button.setText(emoji);
-            button.setOnClickListener(
-                    v -> {
-                        final var aggregated = message.getAggregatedReactions();
-                        if (aggregated.ourReactions.contains(emoji)) {
-                            callback.accept(aggregated.ourReactions);
-                        } else {
-                            final ImmutableSet.Builder<String> reactionBuilder =
-                                    new ImmutableSet.Builder<>();
-                            reactionBuilder.addAll(aggregated.ourReactions);
-                            reactionBuilder.add(emoji);
-                            callback.accept(reactionBuilder.build());
-                        }
-                        dialog.dismiss();
-                    });
-        }
-        if (emojiChoiceRestricted) {
-            viewBinding.more.setVisibility(View.GONE);
-        } else {
-            viewBinding.more.setVisibility(View.VISIBLE);
-            viewBinding.more.setOnClickListener(
-                    v -> {
-                        dialog.dismiss();
-                        final var intent = new Intent(this, AddReactionActivity.class);
-                        intent.putExtra("conversation", message.getConversation().getUuid());
-                        intent.putExtra("message", message.getUuid());
-                        startActivity(intent);
-                    });
-        }
-        dialog.show();
+        final var addReactionDialog = new AddReactionDialog(message, callback);
+        addReactionDialog.create(this).show();
     }
 
     protected void deleteAccount(final Account account) {

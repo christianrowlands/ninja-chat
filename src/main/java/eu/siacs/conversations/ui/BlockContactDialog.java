@@ -48,6 +48,9 @@ public final class BlockContactDialog {
         }
         builder.setView(binding.getRoot());
 
+        final var account = blockable.getAccount();
+        final var manager = account.getXmppConnection().getManager(BlockingManager.class);
+
         final String value;
         @StringRes int res;
         if (blockable.getAddress().isFullJid()) {
@@ -58,7 +61,7 @@ public final class BlockContactDialog {
             value = blockable.getAddress().toString();
             res = isBlocked ? R.string.unblock_contact_text : R.string.block_contact_text;
         } else if (blockable.getAddress().getLocal() == null
-                || blockable.getAccount().isBlocked(blockable.getAddress().getDomain())) {
+                || manager.isBlocked(blockable.getAddress().getDomain())) {
             builder.setTitle(
                     isBlocked ? R.string.action_unblock_domain : R.string.action_block_domain);
             value = blockable.getAddress().getDomain().toString();

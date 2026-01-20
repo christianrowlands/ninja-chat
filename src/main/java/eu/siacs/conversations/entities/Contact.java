@@ -19,6 +19,7 @@ import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.jingle.RtpCapability;
+import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.DiscoManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
 import im.conversations.android.xmpp.model.disco.info.InfoQuery;
@@ -441,12 +442,15 @@ public class Contact implements ListItem, Blockable, MucOptions.IdentifiableUser
 
     @Override
     public boolean isBlocked() {
-        return getAccount().isBlocked(this);
+        final var blockingManager = account.getXmppConnection().getManager(BlockingManager.class);
+        return blockingManager.isBlocked(this.jid);
     }
 
     @Override
     public boolean isDomainBlocked() {
-        return getAccount().isBlocked(this.getAddress().getDomain());
+        final var jid = this.jid;
+        final var blockingManager = account.getXmppConnection().getManager(BlockingManager.class);
+        return jid != null && blockingManager.isBlocked(jid.getDomain());
     }
 
     @Override

@@ -33,10 +33,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
-
-import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OmemoSetting;
 import eu.siacs.conversations.entities.Conversation;
@@ -45,85 +42,90 @@ import eu.siacs.conversations.entities.Message;
 
 public class ConversationMenuConfigurator {
 
-	private static boolean microphoneAvailable = false;
+    private static boolean microphoneAvailable = false;
 
-	public static void reloadFeatures(Context context) {
-		microphoneAvailable = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
-	}
+    public static void reloadFeatures(Context context) {
+        microphoneAvailable =
+                context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+    }
 
-	public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
-		final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
+    public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
+        final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 
-		final boolean visible;
-		if (conversation.getMode() == Conversation.MODE_MULTI) {
-			visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
-		} else {
-			visible = true;
-		}
-		menuAttach.setVisible(visible);
-		if (!visible) {
-			return;
-		}
-		menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
-	}
+        final boolean visible;
+        if (conversation.getMode() == Conversation.MODE_MULTI) {
+            visible =
+                    conversation.getAccount().httpUploadAvailable()
+                            && conversation.getMucOptions().participating();
+        } else {
+            visible = true;
+        }
+        menuAttach.setVisible(visible);
+        if (!visible) {
+            return;
+        }
+        menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
+    }
 
-	public static void configureEncryptionMenu(@NonNull Conversation conversation, Menu menu) {
-		final MenuItem menuSecure = menu.findItem(R.id.action_security);
+    public static void configureEncryptionMenu(@NonNull Conversation conversation, Menu menu) {
+        final MenuItem menuSecure = menu.findItem(R.id.action_security);
 
-		final boolean participating = conversation.getMode() == Conversational.MODE_SINGLE || conversation.getMucOptions().participating();
+        final boolean participating =
+                conversation.getMode() == Conversational.MODE_SINGLE
+                        || conversation.getMucOptions().participating();
 
-		if (!participating) {
-			menuSecure.setVisible(false);
-			return;
-		}
+        if (!participating) {
+            menuSecure.setVisible(false);
+            return;
+        }
 
-		final MenuItem none = menu.findItem(R.id.encryption_choice_none);
-		final MenuItem pgp = menu.findItem(R.id.encryption_choice_pgp);
-		final MenuItem axolotl = menu.findItem(R.id.encryption_choice_axolotl);
+        final MenuItem none = menu.findItem(R.id.encryption_choice_none);
+        final MenuItem pgp = menu.findItem(R.id.encryption_choice_pgp);
+        final MenuItem axolotl = menu.findItem(R.id.encryption_choice_axolotl);
 
-		final int next = conversation.getNextEncryption();
+        final int next = conversation.getNextEncryption();
 
-		boolean visible;
-		if (OmemoSetting.isAlways()) {
-			visible = false;
-		} else if (conversation.getMode() == Conversation.MODE_MULTI) {
-			if (next == Message.ENCRYPTION_NONE && !conversation.isPrivateAndNonAnonymous() && !conversation.getBooleanAttribute(Conversation.ATTRIBUTE_FORMERLY_PRIVATE_NON_ANONYMOUS, false)) {
-				visible = false;
-			} else {
-				visible = (Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices();
-			}
-		} else {
-			visible = Config.multipleEncryptionChoices();
-		}
+        boolean visible;
+        if (OmemoSetting.isAlways()) {
+            visible = false;
+        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+            visible =
+                    next != Message.ENCRYPTION_NONE
+                            || conversation.isPrivateAndNonAnonymous()
+                            || conversation.getBooleanAttribute(
+                                    Conversation.ATTRIBUTE_FORMERLY_PRIVATE_NON_ANONYMOUS, false);
+        } else {
+            visible = true;
+        }
 
-		menuSecure.setVisible(visible);
+        menuSecure.setVisible(visible);
 
-		if (!visible) {
-			return;
-		}
+        if (!visible) {
+            return;
+        }
 
-		if (next == Message.ENCRYPTION_NONE) {
-			menuSecure.setIcon(R.drawable.ic_lock_open_outline_24dp);
-		} else {
-			menuSecure.setIcon(R.drawable.ic_lock_24dp);
-		}
+        if (next == Message.ENCRYPTION_NONE) {
+            menuSecure.setIcon(R.drawable.ic_lock_open_outline_24dp);
+        } else {
+            menuSecure.setIcon(R.drawable.ic_lock_24dp);
+        }
 
-		pgp.setVisible(Config.supportOpenPgp());
-		none.setVisible(Config.supportUnencrypted() || conversation.getMode() == Conversation.MODE_MULTI);
-		axolotl.setVisible(Config.supportOmemo());
-		switch (next) {
-			case Message.ENCRYPTION_PGP:
-				menuSecure.setTitle(R.string.encrypted_with_openpgp);
-				pgp.setChecked(true);
-				break;
-			case Message.ENCRYPTION_AXOLOTL:
-				menuSecure.setTitle(R.string.encrypted_with_omemo);
-				axolotl.setChecked(true);
-				break;
-			default:
-				menuSecure.setTitle(R.string.not_encrypted);
-				none.setChecked(true);
-				break;
-		}
-	}
+        pgp.setVisible(true);
+        none.setVisible(true);
+        axolotl.setVisible(true);
+        switch (next) {
+            case Message.ENCRYPTION_PGP:
+                menuSecure.setTitle(R.string.encrypted_with_openpgp);
+                pgp.setChecked(true);
+                break;
+            case Message.ENCRYPTION_AXOLOTL:
+                menuSecure.setTitle(R.string.encrypted_with_omemo);
+                axolotl.setChecked(true);
+                break;
+            default:
+                menuSecure.setTitle(R.string.not_encrypted);
+                none.setChecked(true);
+                break;
+        }
+    }
 }

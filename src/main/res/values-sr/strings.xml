@@ -1185,4 +1185,5 @@
     <string name="peer_to_peer">P2P</string>
     <string name="pref_use_relays">Увек користи релеј</string>
     <string name="pref_use_relays_summary">Усмери све P2P везе (позиве и слање фајлова) кроз твој сервер како би избегао откривање своје IP адресе.</string>
+    <string name="mobile_ticket">Мобилни тикет</string>
 </resources>

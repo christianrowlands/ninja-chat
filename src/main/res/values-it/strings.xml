@@ -1165,4 +1165,5 @@
     <string name="peer_to_peer">Peer-to-peer</string>
     <string name="pref_use_relays">Usa sempre i relay</string>
     <string name="pref_use_relays_summary">Trasmetti tutte le connessioni P2P (chiamate e trasferimenti di file) attraverso il tuo server per evitare di svelare il tuo indirizzo IP.</string>
+    <string name="mobile_ticket">Ticket mobile</string>
 </resources>

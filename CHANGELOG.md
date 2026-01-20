@@ -1,5 +1,10 @@
 # Changelog
 
+### Version 2.19.8
+
+* Fix calls getting stuck at connecting when 'Use Relays' is enabled but server doesn't have any
+* Bandwidth optimizations
+
 ### Version 2.19.7
 
 * Fix regression (crash on connection) introduced in previous version

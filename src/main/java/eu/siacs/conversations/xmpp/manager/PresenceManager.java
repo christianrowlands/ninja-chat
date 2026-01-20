@@ -280,7 +280,13 @@ public class PresenceManager extends AbstractManager {
         final var serviceDiscoveryFeatures = getManager(DiscoManager.class).getServiceDescription();
         final var infoQuery = serviceDiscoveryFeatures.asInfoQuery();
         final var capsHash = EntityCapabilities.hash(infoQuery);
-        final var caps2Hash = EntityCapabilities2.hash(infoQuery);
+        final EntityCapabilities2.EntityCaps2Hash caps2Hash;
+        try {
+            caps2Hash = EntityCapabilities2.hash(infoQuery);
+        } catch (final EntityCapabilities2.IllegalInfoQueryException e) {
+            Log.e(Config.LOGTAG, "could not compute caps2 hash of outgoing info query");
+            return;
+        }
         serviceDescriptions.put(capsHash, serviceDiscoveryFeatures);
         serviceDescriptions.put(caps2Hash, serviceDiscoveryFeatures);
         final var capabilities = new Capabilities();

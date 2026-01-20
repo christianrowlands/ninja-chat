@@ -11,6 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="4dp"
+            android:breakStrategy="simple"
             android:longClickable="false"
             android:textAppearance="?textAppearanceBodyMedium" />
 
@@ -51,13 +52,13 @@
             tools:visibility="visible">
 
             <com.google.android.material.button.MaterialButton
-                style="?attr/materialIconButtonOutlinedStyle"
                 android:id="@+id/play_pause"
+                style="?attr/materialIconButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                app:iconSize="26dp"
-                app:icon="@drawable/ic_play_arrow_24dp" />
+                app:icon="@drawable/ic_play_arrow_24dp"
+                app:iconSize="26dp" />
 
             <TextView
                 android:id="@+id/runtime"

@@ -5,8 +5,8 @@ import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.JingleRtpConnection;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.util.function.BiFunction;
 
 public class MessageAcknowledgedProcessor extends XmppConnection.Delegate
@@ -25,13 +25,11 @@ public class MessageAcknowledgedProcessor extends XmppConnection.Delegate
         if (id.startsWith(JingleRtpConnection.JINGLE_MESSAGE_PROPOSE_ID_PREFIX)) {
             final String sessionId =
                     id.substring(JingleRtpConnection.JINGLE_MESSAGE_PROPOSE_ID_PREFIX.length());
-            this.service
-                    .getJingleConnectionManager()
+            getManager(JingleManager.class)
                     .updateProposedSessionDiscovered(
-                            getAccount(),
                             to,
                             sessionId,
-                            JingleConnectionManager.DeviceDiscoveryState.SEARCHING_ACKNOWLEDGED);
+                            JingleManager.DeviceDiscoveryState.SEARCHING_ACKNOWLEDGED);
         }
 
         final Jid bare = to.asBareJid();

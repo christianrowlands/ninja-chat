@@ -1,0 +1,1 @@
+* Naprawienie regresji (awarii podczas podłączania) wprowadzonej w poprzedniej wersji

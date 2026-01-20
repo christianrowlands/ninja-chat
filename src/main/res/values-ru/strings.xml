@@ -1199,4 +1199,6 @@
     <string name="pref_use_relays_summary">Перенаправлять все прямые (P2P) соединения (звонки и передачу файлов) через свой сервер, чтобы избежать раскрытия вашего IP-адреса</string>
     <string name="peer_to_peer">Прямые соединения</string>
     <string name="pref_use_relays">Ретранслировать</string>
+    <string name="emoji_reactions">Реакции эмодзи</string>
+    <string name="open_keyboard">Открыть клавиатуру</string>
 </resources>

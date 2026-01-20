@@ -15,6 +15,7 @@ import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.services.AbstractConnectionManager;
+import eu.siacs.conversations.services.DebouncedInterfaceUpdater;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
@@ -37,6 +38,7 @@ public class HttpUploadConnection
 
     private final HttpConnectionManager mHttpConnectionManager;
     private final XmppConnectionService mXmppConnectionService;
+    private final DebouncedInterfaceUpdater debouncedInterfaceUpdater;
     private boolean delayed = false;
     private DownloadableFile file;
     private final Message message;
@@ -52,6 +54,7 @@ public class HttpUploadConnection
         this.message = message;
         this.mHttpConnectionManager = httpConnectionManager;
         this.mXmppConnectionService = httpConnectionManager.getXmppConnectionService();
+        this.debouncedInterfaceUpdater = new DebouncedInterfaceUpdater(this.mXmppConnectionService);
     }
 
     @Override
@@ -165,6 +168,7 @@ public class HttpUploadConnection
         final OkHttpClient client =
                 mHttpConnectionManager.buildHttpClient(
                         slot.put, message.getConversation().getAccount(), 0, true);
+        // TODO progress Listener can be replaced with a callable
         final RequestBody requestBody = AbstractConnectionManager.requestBody(file, this);
         final Request request =
                 new Request.Builder().url(slot.put).put(requestBody).headers(slot.headers).build();
@@ -220,6 +224,6 @@ public class HttpUploadConnection
     @Override
     public void onProgress(final long progress) {
         this.transmitted = progress;
-        mHttpConnectionManager.updateConversationUi(false);
+        this.debouncedInterfaceUpdater.run();
     }
 }

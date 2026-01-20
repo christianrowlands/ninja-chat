@@ -8,4 +8,9 @@ public final class Finish extends JingleMessage {
     public Finish() {
         super(Finish.class);
     }
+
+    public Finish(final String sessionId) {
+        this();
+        this.setSessionId(sessionId);
+    }
 }

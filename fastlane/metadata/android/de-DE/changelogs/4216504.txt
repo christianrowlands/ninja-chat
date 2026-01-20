@@ -1,0 +1,2 @@
+* Behebt das Problem, dass Anrufe beim Verbinden hängen bleiben, wenn „Relais verwenden“ aktiviert ist, der Server jedoch keine Relais hat
+* Bandbreitenoptimierungen

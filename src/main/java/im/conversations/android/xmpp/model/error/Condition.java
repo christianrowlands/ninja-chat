@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import eu.siacs.conversations.xml.Namespace;
 import im.conversations.android.annotation.XmlElement;
 import im.conversations.android.xmpp.model.Extension;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public abstract sealed class Condition extends Extension {
@@ -211,6 +212,17 @@ public abstract sealed class Condition extends Extension {
 
         public UnexpectedRequest() {
             super(UnexpectedRequest.class);
+        }
+    }
+
+    public static Condition asInstance(final Class<? extends Condition> clazz) {
+        try {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (final InvocationTargetException
+                | NoSuchMethodException
+                | IllegalAccessException
+                | InstantiationException e) {
+            throw new IllegalStateException("condition does not have default constructor", e);
         }
     }
 

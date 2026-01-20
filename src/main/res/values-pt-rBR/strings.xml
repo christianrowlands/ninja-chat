@@ -1155,4 +1155,5 @@
     <string name="peer_to_peer">Conexão direta</string>
     <string name="pref_use_relays">Sempre usar relês</string>
     <string name="pref_use_relays_summary">Passar todas as conexões \"diretas\" (chamadas e transferências de arquivo) pelo seu servidor para evitar revelar seu endereço de IP.</string>
+    <string name="mobile_ticket">Ingresso móvel</string>
 </resources>

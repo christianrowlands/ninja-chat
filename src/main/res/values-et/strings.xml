@@ -1170,4 +1170,7 @@
     <string name="peer_to_peer">Võrdõigusvõrk (P2P)</string>
     <string name="pref_use_relays">Kasuta alati edastusservereid</string>
     <string name="pref_use_relays_summary">Vältimaks sinu IP-aadressi avaldamist kasuta võrdõigusvõrgu ühenduste (kõned ja failiedastus) puhul oma serverit vaheapealse edastusserverina.</string>
+    <string name="mobile_ticket">Nutipääsmik</string>
+    <string name="open_keyboard">Ava klahvistik</string>
+    <string name="emoji_reactions">Emojiga reageerimine</string>
 </resources>

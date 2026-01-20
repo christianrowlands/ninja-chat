@@ -134,16 +134,15 @@ public abstract class ScramMechanism extends SaslMechanism {
     }
 
     @Override
-    public String getClientFirstMessage(final SSLSocket sslSocket) {
+    public byte[] getClientFirstMessage(final SSLSocket sslSocket) {
         Preconditions.checkState(
                 this.state == State.INITIAL, "Calling getClientFirstMessage from invalid state");
         this.state = State.AUTH_TEXT_SENT;
-        final byte[] message = (gs2Header + clientFirstMessageBare).getBytes();
-        return BaseEncoding.base64().encode(message);
+        return (gs2Header + clientFirstMessageBare).getBytes();
     }
 
     @Override
-    public String getResponse(final String challenge, final SSLSocket socket)
+    public byte[] getResponse(final byte[] challenge, final SSLSocket socket)
             throws AuthenticationException {
         return switch (state) {
             case AUTH_TEXT_SENT -> processServerFirstMessage(challenge, socket);
@@ -152,20 +151,14 @@ public abstract class ScramMechanism extends SaslMechanism {
         };
     }
 
-    private String processServerFirstMessage(final String challenge, final SSLSocket socket)
+    private byte[] processServerFirstMessage(final byte[] challenge, final SSLSocket socket)
             throws AuthenticationException {
-        if (Strings.isNullOrEmpty(challenge)) {
+        if (challenge.length == 0) {
             throw new AuthenticationException("challenge can not be null");
-        }
-        byte[] serverFirstMessage;
-        try {
-            serverFirstMessage = BaseEncoding.base64().decode(challenge);
-        } catch (final IllegalArgumentException e) {
-            throw new AuthenticationException("Unable to decode server challenge", e);
         }
         final Map<String, String> attributes;
         try {
-            attributes = splitToAttributes(new String(serverFirstMessage));
+            attributes = splitToAttributes(new String(challenge));
         } catch (final IllegalArgumentException e) {
             throw new AuthenticationException("Duplicate attributes");
         }
@@ -231,7 +224,7 @@ public abstract class ScramMechanism extends SaslMechanism {
                 Joiner.on(',')
                         .join(
                                 clientFirstMessageBare,
-                                new String(serverFirstMessage),
+                                new String(challenge),
                                 clientFinalMessageWithoutProof);
 
         final KeyPair keys;
@@ -266,7 +259,7 @@ public abstract class ScramMechanism extends SaslMechanism {
                         "%s,p=%s",
                         clientFinalMessageWithoutProof, BaseEncoding.base64().encode(clientProof));
         this.state = State.RESPONSE_SENT;
-        return BaseEncoding.base64().encode(clientFinalMessage.getBytes());
+        return clientFinalMessage.getBytes();
     }
 
     private Map<String, String> splitToAttributes(final String message) {
@@ -280,19 +273,14 @@ public abstract class ScramMechanism extends SaslMechanism {
         return builder.buildOrThrow();
     }
 
-    private String processServerFinalMessage(final String challenge)
+    private byte[] processServerFinalMessage(final byte[] challenge)
             throws AuthenticationException {
-        final String serverFinalMessage;
-        try {
-            serverFinalMessage = new String(BaseEncoding.base64().decode(challenge));
-        } catch (final IllegalArgumentException e) {
-            throw new AuthenticationException("Invalid base64 in server final message", e);
-        }
+        final String serverFinalMessage = new String(challenge);
         final var clientCalculatedServerFinalMessage =
                 String.format("v=%s", BaseEncoding.base64().encode(serverSignature));
         if (clientCalculatedServerFinalMessage.equals(serverFinalMessage)) {
             this.state = State.VALID_SERVER_RESPONSE;
-            return "";
+            return new byte[0];
         }
         throw new AuthenticationException(
                 "Server final message does not match calculated final message");

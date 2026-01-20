@@ -1,0 +1,1 @@
+* Eelmise versiooniga tekkinud regressiooni parandus (kokkujooksmine ühenduse loomisel)

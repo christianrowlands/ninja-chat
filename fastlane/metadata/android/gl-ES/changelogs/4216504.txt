@@ -1,0 +1,2 @@
+* Arranxo do problema coas chamadas que non conectan cando se marca 'Usar Relés' pero o servidor non dispón de ningún
+* Optimizacións do ancho de banda

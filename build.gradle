@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.1'
+        classpath 'com.android.tools.build:gradle:8.13.2'
         classpath "com.diffplug.spotless:spotless-plugin-gradle:8.1.0"
         classpath 'com.google.gms:google-services:4.4.2'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
@@ -53,8 +53,8 @@ configurations.configureEach {
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
-    annotationProcessor 'org.immutables:value:2.11.7'
-    implementation 'org.immutables:value-annotations:2.11.7'
+    annotationProcessor 'org.immutables:value:2.12.0'
+    implementation 'org.immutables:value-annotations:2.12.0'
     annotationProcessor project(':libs:annotation-processor')
     implementation project(':libs:annotation')
     implementation 'androidx.appcompat:appcompat:1.7.1'
@@ -64,11 +64,11 @@ dependencies {
     implementation 'androidx.emoji2:emoji2:1.6.0'
     freeImplementation 'androidx.emoji2:emoji2-bundled:1.6.0'
     implementation 'androidx.emoji2:emoji2-emojipicker:1.6.0'
-    implementation 'androidx.exifinterface:exifinterface:1.4.1'
+    implementation 'androidx.exifinterface:exifinterface:1.4.2'
     implementation 'androidx.heifwriter:heifwriter:1.1.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.sharetarget:sharetarget:1.2.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
     implementation 'androidx.viewpager:viewpager:1.1.0'
     implementation 'androidx.work:work-runtime:2.11.0'
     implementation 'com.github.open-keychain.open-keychain:openpgp-api:v5.7.1'
@@ -85,6 +85,7 @@ dependencies {
     implementation 'io.deepmedia.community:transcoder-android:0.11.2'
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
+    implementation 'net.fellbaum:jemoji:1.7.5'
     implementation 'org.bouncycastle:bcmail-jdk18on:1.83'
     implementation 'org.conscrypt:conscrypt-android:2.5.3'
     implementation 'org.hsluv:hsluv:1.0'
@@ -127,8 +128,8 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 36
-        versionCode 42163
-        versionName "2.19.7"
+        versionCode 42165
+        versionName "2.19.8"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId

@@ -18,6 +18,8 @@ import eu.siacs.conversations.xmpp.manager.EasyOnboardingManager;
 import eu.siacs.conversations.xmpp.manager.EntityTimeManager;
 import eu.siacs.conversations.xmpp.manager.ExternalServiceDiscoveryManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
+import eu.siacs.conversations.xmpp.manager.JingleMessageManager;
 import eu.siacs.conversations.xmpp.manager.LegacyBookmarkManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
 import eu.siacs.conversations.xmpp.manager.MessageDisplayedSynchronizationManager;
@@ -35,6 +37,7 @@ import eu.siacs.conversations.xmpp.manager.PushNotificationManager;
 import eu.siacs.conversations.xmpp.manager.ReactionManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
 import eu.siacs.conversations.xmpp.manager.RosterManager;
+import eu.siacs.conversations.xmpp.manager.StanzaIdManager;
 import eu.siacs.conversations.xmpp.manager.StreamHostManager;
 import eu.siacs.conversations.xmpp.manager.UnifiedPushManager;
 import eu.siacs.conversations.xmpp.manager.VCardManager;
@@ -64,6 +67,8 @@ public class Managers {
                         ExternalServiceDiscoveryManager.class,
                         new ExternalServiceDiscoveryManager(context, connection))
                 .put(HttpUploadManager.class, new HttpUploadManager(context, connection))
+                .put(JingleManager.class, new JingleManager(context, connection))
+                .put(JingleMessageManager.class, new JingleMessageManager(context, connection))
                 .put(LegacyBookmarkManager.class, new LegacyBookmarkManager(context, connection))
                 .put(MessageArchiveManager.class, new MessageArchiveManager(context, connection))
                 .put(
@@ -85,6 +90,7 @@ public class Managers {
                 .put(ReactionManager.class, new ReactionManager(context, connection))
                 .put(RegistrationManager.class, new RegistrationManager(context, connection))
                 .put(RosterManager.class, new RosterManager(context, connection))
+                .put(StanzaIdManager.class, new StanzaIdManager(context, connection))
                 .put(StreamHostManager.class, new StreamHostManager(context, connection))
                 .put(UnifiedPushManager.class, new UnifiedPushManager(context, connection))
                 .put(VCardManager.class, new VCardManager(context, connection))

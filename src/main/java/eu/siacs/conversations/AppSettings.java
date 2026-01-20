@@ -7,6 +7,7 @@ import android.os.Environment;
 import androidx.annotation.BoolRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -229,6 +230,27 @@ public class AppSettings {
     public boolean isKeepForegroundService() {
         return Compatibility.twentySix()
                 || getBooleanPreference(KEEP_FOREGROUND_SERVICE, R.bool.enable_foreground_service);
+    }
+
+    public boolean isDynamicColorsDesired() {
+        return getBooleanPreference(AppSettings.DYNAMIC_COLORS, R.bool.dynamic_colors);
+    }
+
+    public int getDesiredNightMode() {
+        final SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        final var theme = sharedPreferences.getString(THEME, context.getString(R.string.theme));
+        return getDesiredNightMode(theme);
+    }
+
+    public static int getDesiredNightMode(final String theme) {
+        if ("automatic".equals(theme)) {
+            return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        } else if ("light".equals(theme)) {
+            return AppCompatDelegate.MODE_NIGHT_NO;
+        } else {
+            return AppCompatDelegate.MODE_NIGHT_YES;
+        }
     }
 
     private boolean getBooleanPreference(@NonNull final String name, @BoolRes final int res) {

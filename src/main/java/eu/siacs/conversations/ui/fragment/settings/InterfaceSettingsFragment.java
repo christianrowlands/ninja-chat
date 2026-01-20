@@ -1,14 +1,10 @@
 package eu.siacs.conversations.ui.fragment.settings;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.material.color.DynamicColors;
-
 import eu.siacs.conversations.AppSettings;
-import eu.siacs.conversations.Conversations;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.ui.activity.SettingsActivity;
 import eu.siacs.conversations.ui.util.SettingsUtils;
@@ -27,7 +23,7 @@ public class InterfaceSettingsFragment extends XmppPreferenceFragment {
         themePreference.setOnPreferenceChangeListener(
                 (preference, newValue) -> {
                     if (newValue instanceof final String theme) {
-                        final int desiredNightMode = Conversations.getDesiredNightMode(theme);
+                        final int desiredNightMode = AppSettings.getDesiredNightMode(theme);
                         requireSettingsActivity().setDesiredNightMode(desiredNightMode);
                     }
                     return true;

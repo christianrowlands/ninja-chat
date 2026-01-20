@@ -397,8 +397,8 @@
     <string name="selection_too_large">Zona e përzgjedhur është shumë e madhe</string>
     <string name="no_accounts">(Pa llogari të aktivizuara)</string>
     <string name="this_field_is_required">Kjo fushë është e domosdoshme</string>
-    <string name="correct_message">Ndreqe mesazhin</string>
-    <string name="send_corrected_message">Dërgo mesazhin e saktësuar</string>
+    <string name="correct_message">Përpunojeni</string>
+    <string name="send_corrected_message">Dërgo mesazhin e përpunuar</string>
     <string name="this_account_is_disabled">E keni çaktivizuar këtë llogari</string>
     <string name="security_error_invalid_file_access">Gabim sigurie: Hyrje e pavlefshme te kartelë!</string>
     <string name="no_application_to_share_uri">S’u gjet aplikacion për të dhënë URI</string>
@@ -715,7 +715,7 @@
     <string name="add_to_favorites">Fiksoje në krye</string>
     <string name="remove_from_favorites">Shfiksoje prej kreut</string>
     <string name="gpx_track">Gjurmë GPX</string>
-    <string name="could_not_correct_message">S’u ndreq dot mesazhi</string>
+    <string name="could_not_correct_message">S’u përpunua dot mesazhi</string>
     <string name="search_all_conversations">Krejt fjalosjet</string>
     <string name="search_this_conversation">Këtë fjalosje</string>
     <string name="your_avatar">Avatari juaj</string>
@@ -1156,4 +1156,9 @@
     <string name="number_reactions_are_restricted">U mbërrit në kufij reagimesh.</string>
     <string name="this_reaction_isnt_allowed">Ky reagim s’lejohet.</string>
     <string name="enable_account_to_delete">Kjo llogari është çaktivizuar. Që ta fshihni nga shërbyesi, aktivizojeni.</string>
+    <string name="mobile_ticket">Çështje për celular</string>
+    <string name="emoji_reactions">Reagime me emoxhi</string>
+    <string name="open_keyboard">Hap tastierën</string>
+    <string name="pref_use_relays">Përdor rele përherë</string>
+    <string name="pref_use_relays_summary">Kalojini krejt lidhjet P2P (thirrje dhe shpërngulje kartelash) përmes shërbyesit tuaj, për të shmangur lënien zbuluar të adresës tuaj IP.</string>
 </resources>

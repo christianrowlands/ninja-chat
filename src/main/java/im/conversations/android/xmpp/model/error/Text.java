@@ -10,4 +10,9 @@ public class Text extends Extension {
     public Text() {
         super(Text.class);
     }
+
+    public Text(final String text) {
+        this();
+        this.setContent(text);
+    }
 }

@@ -1170,4 +1170,7 @@
     <string name="peer_to_peer">Peer-to-peer (P2P)</string>
     <string name="pref_use_relays">Folosește mereu relee</string>
     <string name="pref_use_relays_summary">Transmiteți toate conexiunile P2P (apeluri și transferuri de fișiere) prin intermediul serverului dvs. pentru a evita dezvăluirea adresei IP.</string>
+    <string name="mobile_ticket">Bilet mobil</string>
+    <string name="emoji_reactions">Reacții cu emoticoane</string>
+    <string name="open_keyboard">Deschide tastatura</string>
 </resources>

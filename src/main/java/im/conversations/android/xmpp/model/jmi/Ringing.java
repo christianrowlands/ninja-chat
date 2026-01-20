@@ -8,4 +8,9 @@ public final class Ringing extends JingleMessage {
     public Ringing() {
         super(Ringing.class);
     }
+
+    public Ringing(final String sessionId) {
+        this();
+        this.setSessionId(sessionId);
+    }
 }

@@ -21,8 +21,8 @@ import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.ui.util.MainThreadExecutor;
 import eu.siacs.conversations.xmpp.Jid;
-import eu.siacs.conversations.xmpp.jingle.JingleConnectionManager;
 import eu.siacs.conversations.xmpp.jingle.Media;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -421,7 +421,7 @@ public class CallIntegration extends Connection {
 
     private void destroyWithDelay(final DisconnectCause disconnectCause, final int delay) {
         if (this.delayedDestructionInitiated.compareAndSet(false, true)) {
-            JingleConnectionManager.SCHEDULED_EXECUTOR_SERVICE.schedule(
+            JingleManager.SCHEDULED_EXECUTOR_SERVICE.schedule(
                     () -> {
                         this.setDisconnected(disconnectCause);
                         this.destroyCallIntegration();

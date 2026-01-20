@@ -222,7 +222,7 @@ public class HttpUploadManager extends AbstractManager {
             if (id == null) {
                 throw new IllegalStateException("Purpose has not been annotated as @XmlElement");
             }
-            final var feature = String.format("%s#%s", id.namespace, id.name);
+            final var feature = String.format("%s#%s", id.namespace(), id.name());
             return getInfoQuery().hasFeature(feature);
         }
 

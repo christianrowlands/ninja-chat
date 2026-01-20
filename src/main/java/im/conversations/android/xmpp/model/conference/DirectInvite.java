@@ -18,4 +18,12 @@ public class DirectInvite extends Extension {
     public void setPassword(final String password) {
         this.setAttribute("password", password);
     }
+
+    public Jid getJid() {
+        return this.getAttributeAsJid("jid");
+    }
+
+    public String getPassword() {
+        return this.getAttribute("password");
+    }
 }

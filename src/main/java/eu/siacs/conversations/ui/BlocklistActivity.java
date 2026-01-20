@@ -13,6 +13,7 @@ import eu.siacs.conversations.entities.RawBlockable;
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
+import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import java.util.Collections;
 
 public class BlocklistActivity extends AbstractSearchableListItemActivity
@@ -55,7 +56,8 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity
         getListItems().clear();
         if (account != null) {
             // TODO create getBlocklistAsListItems
-            for (final Jid jid : account.getBlocklist()) {
+            for (final Jid jid :
+                    account.getXmppConnection().getManager(BlockingManager.class).getBlocklist()) {
                 ListItem item;
                 if (jid.isFullJid()) {
                     item = new RawBlockable(account, jid);

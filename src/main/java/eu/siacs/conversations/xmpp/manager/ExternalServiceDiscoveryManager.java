@@ -4,11 +4,13 @@ import android.content.Context;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import im.conversations.android.xmpp.model.disco.external.Services;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import java.util.Collection;
+import java.util.Collections;
 import org.webrtc.PeerConnection;
 
 public class ExternalServiceDiscoveryManager extends AbstractManager {
@@ -18,6 +20,9 @@ public class ExternalServiceDiscoveryManager extends AbstractManager {
     }
 
     public ListenableFuture<Collection<PeerConnection.IceServer>> getIceServers() {
+        if (Config.DISABLE_PROXY_LOOKUP) {
+            return Futures.immediateFuture(Collections.emptySet());
+        }
         if (hasFeature()) {
             return Futures.transform(
                     getServices(), Services::getIceServers, MoreExecutors.directExecutor());

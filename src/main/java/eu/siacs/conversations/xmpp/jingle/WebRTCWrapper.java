@@ -9,12 +9,14 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.xmpp.manager.JingleManager;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -75,7 +77,9 @@ public class WebRTCWrapper {
 
     private final EventCallback eventCallback;
     private final AtomicBoolean readyToReceivedIceCandidates = new AtomicBoolean(false);
+    private final Queue<PeerConnection.PeerConnectionState> stateHistory = new LinkedList<>();
     private final Queue<IceCandidate> iceCandidates = new LinkedList<>();
+    private boolean requiresArtificialFail = false;
     private TrackWrapper<AudioTrack> localAudioTrack = null;
     private TrackWrapper<VideoTrack> localVideoTrack = null;
     private VideoTrack remoteVideoTrack = null;
@@ -84,16 +88,29 @@ public class WebRTCWrapper {
     private final PeerConnection.Observer peerConnectionObserver =
             new PeerConnection.Observer() {
                 @Override
-                public void onSignalingChange(PeerConnection.SignalingState signalingState) {
-                    Log.d(EXTENDED_LOGGING_TAG, "onSignalingChange(" + signalingState + ")");
+                public void onSignalingChange(final PeerConnection.SignalingState signalingState) {
                     // this is called after removeTrack or addTrack
                     // and should then trigger a content-add or content-remove or something
                     // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/removeTrack
+                    Log.d(EXTENDED_LOGGING_TAG, "onSignalingChange(" + signalingState + ")");
+
+                    // if we limit ice transports types to RELAYS and do not actually provide any
+                    // WebRTC will never go into CONNECTING state and thus never into FAILED state.
+                    // To work around that issue we trigger an artificial application layer FAILED
+                    // once both descriptions (remote and local) have been set
+                    if (requiresArtificialFail
+                            && signalingState == PeerConnection.SignalingState.STABLE
+                            && stateHistory.isEmpty()) {
+                        Log.d(EXTENDED_LOGGING_TAG, "triggering artificial fail");
+                        this.onConnectionChange(PeerConnection.PeerConnectionState.FAILED);
+                    }
                 }
 
                 @Override
-                public void onConnectionChange(final PeerConnection.PeerConnectionState newState) {
-                    eventCallback.onConnectionChange(newState);
+                public void onConnectionChange(final PeerConnection.PeerConnectionState state) {
+                    stateHistory.add(state);
+                    Log.d(Config.LOGTAG, "onConnectionChange(" + state + ")");
+                    eventCallback.onConnectionChange(state);
                 }
 
                 @Override
@@ -123,7 +140,8 @@ public class WebRTCWrapper {
                 }
 
                 @Override
-                public void onIceCandidate(IceCandidate iceCandidate) {
+                public void onIceCandidate(final IceCandidate iceCandidate) {
+                    requiresArtificialFail = false;
                     if (readyToReceivedIceCandidates.get()) {
                         eventCallback.onIceCandidate(iceCandidate);
                     } else {
@@ -234,7 +252,7 @@ public class WebRTCWrapper {
             final Set<Media> media,
             final Collection<PeerConnection.IceServer> iceServers,
             final boolean trickle,
-            final boolean useRelay)
+            final boolean useRelays)
             throws InitializationException {
         Preconditions.checkState(this.eglBase != null);
         Preconditions.checkNotNull(media);
@@ -247,6 +265,8 @@ public class WebRTCWrapper {
                 String.format(
                         "setUseHardwareAcousticEchoCanceler(%s) model=%s",
                         setUseHardwareAcousticEchoCanceler, Build.MODEL));
+        final var relaysAvailable = Iterables.any(iceServers, i -> i != null && isTurnRelay(i));
+        this.requiresArtificialFail = useRelays && !relaysAvailable;
         this.peerConnectionFactory =
                 PeerConnectionFactory.builder()
                         .setVideoDecoderFactory(
@@ -262,7 +282,7 @@ public class WebRTCWrapper {
                         .createPeerConnectionFactory();
 
         final PeerConnection.RTCConfiguration rtcConfig =
-                buildConfiguration(iceServers, trickle, useRelay);
+                buildConfiguration(iceServers, trickle, useRelays);
         final PeerConnection peerConnection =
                 requirePeerConnectionFactory()
                         .createPeerConnection(rtcConfig, peerConnectionObserver);
@@ -380,6 +400,9 @@ public class WebRTCWrapper {
             final Collection<PeerConnection.IceServer> iceServers,
             final boolean trickle,
             final boolean useRelay) {
+        if (iceServers.isEmpty() && useRelay) {
+            Log.w(EXTENDED_LOGGING_TAG, "no ice servers and 'useRelay' are a dangerous combo");
+        }
         final PeerConnection.RTCConfiguration rtcConfig =
                 new PeerConnection.RTCConfiguration(ImmutableList.copyOf(iceServers));
         rtcConfig.tcpCandidatePolicy =
@@ -610,7 +633,7 @@ public class WebRTCWrapper {
                         iceGatheringComplete,
                         2,
                         TimeUnit.SECONDS,
-                        JingleConnectionManager.SCHEDULED_EXECUTOR_SERVICE),
+                        JingleManager.SCHEDULED_EXECUTOR_SERVICE),
                 TimeoutException.class,
                 ex -> {
                     Log.d(
@@ -639,6 +662,12 @@ public class WebRTCWrapper {
                         eu.siacs.conversations.xmpp.jingle.SessionDescription.LINE_DIVIDER)) {
             Log.d(EXTENDED_LOGGING_TAG, line);
         }
+    }
+
+    public static boolean isTurnRelay(final PeerConnection.IceServer iceServer) {
+        return Iterables.any(
+                iceServer.urls,
+                u -> u != null && u.length() > 4 && u.substring(0, 4).equalsIgnoreCase("turn"));
     }
 
     synchronized ListenableFuture<Void> setRemoteDescription(

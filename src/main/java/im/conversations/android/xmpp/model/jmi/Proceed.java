@@ -1,7 +1,5 @@
 package im.conversations.android.xmpp.model.jmi;
 
-import com.google.common.primitives.Ints;
-import eu.siacs.conversations.xml.Element;
 import im.conversations.android.annotation.XmlElement;
 
 @XmlElement
@@ -11,13 +9,16 @@ public final class Proceed extends JingleMessage {
         super(Proceed.class);
     }
 
+    public Proceed(final String sessionId) {
+        this();
+        this.setSessionId(sessionId);
+    }
+
     public Integer getDeviceId() {
-        // TODO use proper namespace and create extension
-        final Element device = this.findChild("device");
-        final String id = device == null ? null : device.getAttribute("id");
-        if (id == null) {
+        final var device = this.getOnlyExtension(Device.class);
+        if (device == null) {
             return null;
         }
-        return Ints.tryParse(id);
+        return device.getId();
     }
 }

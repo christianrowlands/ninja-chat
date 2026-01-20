@@ -1,0 +1,4 @@
+* Envío por defecto de comprobantes de entrega e cambio do axuste a «Resgardos de lectura»
+* Novo axuste para usar sempre relés
+* Arranxo do problema coa memoria tobo para avatares
+* Arranxo do problema coa resolución DNS cando se activa DNS Privado

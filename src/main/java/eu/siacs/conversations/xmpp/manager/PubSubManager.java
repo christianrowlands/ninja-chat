@@ -74,7 +74,7 @@ public class PubSubManager extends AbstractManager {
                     new IllegalArgumentException(
                             String.format("%s is not a registered extension", clazz.getName())));
         }
-        return fetchItems(address, id.namespace, clazz);
+        return fetchItems(address, id.namespace(), clazz);
     }
 
     public <T extends Extension> ListenableFuture<Map<String, T>> fetchItems(
@@ -108,7 +108,7 @@ public class PubSubManager extends AbstractManager {
                     new IllegalArgumentException(
                             String.format("%s is not a registered extension", clazz.getName())));
         }
-        return fetchItem(address, id.namespace, itemId, clazz);
+        return fetchItem(address, id.namespace(), itemId, clazz);
     }
 
     public <T extends Extension> ListenableFuture<T> fetchItem(
@@ -144,7 +144,7 @@ public class PubSubManager extends AbstractManager {
                     new IllegalArgumentException(
                             String.format("%s is not a registered extension", clazz.getName())));
         }
-        return fetchMostRecentItem(address, id.namespace, clazz);
+        return fetchMostRecentItem(address, id.namespace(), clazz);
     }
 
     public <T extends Extension> ListenableFuture<T> fetchMostRecentItem(
@@ -233,7 +233,7 @@ public class PubSubManager extends AbstractManager {
     public ListenableFuture<Void> publishSingleton(
             Jid address, Extension item, final NodeConfiguration nodeConfiguration) {
         final var id = ExtensionFactory.id(item.getClass());
-        return publish(address, item, SINGLETON_ITEM_ID, id.namespace, nodeConfiguration);
+        return publish(address, item, SINGLETON_ITEM_ID, id.namespace(), nodeConfiguration);
     }
 
     public ListenableFuture<Void> publishSingleton(
@@ -250,7 +250,7 @@ public class PubSubManager extends AbstractManager {
             final String itemId,
             final NodeConfiguration nodeConfiguration) {
         final var id = ExtensionFactory.id(item.getClass());
-        return publish(address, item, itemId, id.namespace, nodeConfiguration);
+        return publish(address, item, itemId, id.namespace(), nodeConfiguration);
     }
 
     public ListenableFuture<Void> publish(

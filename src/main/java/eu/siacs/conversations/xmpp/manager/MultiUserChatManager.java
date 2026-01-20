@@ -17,6 +17,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import de.gultsch.common.FutureMerger;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Conversation;
@@ -627,19 +628,62 @@ public class MultiUserChatManager extends AbstractManager {
         options.onRenameListener = null;
     }
 
-    public void handleStatusMessage(final Message message) {
+    public boolean handleDirectInvite(final Message message) {
+        final var from = Jid.Invalid.getNullForInvalid(message.getFrom());
+        final var directInvite = message.getExtension(DirectInvite.class);
+        if (from == null || directInvite == null) {
+            return false;
+        }
+        if (isMuc(message)) {
+            Log.d(Config.LOGTAG, "ignore direct invite from MUC " + from);
+            return false;
+        }
+        final var jid = Jid.Invalid.getNullForInvalid(directInvite.getJid());
+        final var password = directInvite.getPassword();
+        if (jid != null) {
+            handleInvite(new Invite(jid, from, password));
+        }
+        return true;
+    }
+
+    public boolean handleMediatedInvite(final Message message) {
+        // mediated invites are only valid from the bare jid of the room and type normal
         final var from = Jid.Invalid.getNullForInvalid(message.getFrom());
         final var mucUser = message.getExtension(MucUser.class);
         if (from == null || from.isFullJid() || mucUser == null) {
-            return;
+            return false;
         }
 
-        // TODO just get state?!
+        final var invite =
+                mucUser.getExtension(im.conversations.android.xmpp.model.muc.user.Invite.class);
 
-        final var conversation = this.service.find(getAccount(), from);
-        if (conversation == null || conversation.getMode() != Conversation.MODE_MULTI) {
-            return;
+        if (invite == null || message.getType() != Message.Type.NORMAL) {
+            return false;
         }
+
+        final var by = Jid.Invalid.getNullForInvalid(invite.getFrom());
+        if (by == null) {
+            return false;
+        }
+        final var pw =
+                mucUser.getExtension(im.conversations.android.xmpp.model.muc.user.Password.class);
+        final var password = pw == null ? null : pw.getContent();
+        this.handleInvite(new Invite(from, by, password));
+        return true;
+    }
+
+    public boolean handleStatusMessage(final Message message) {
+        final var from = Jid.Invalid.getNullForInvalid(message.getFrom());
+        final var mucUser = message.getExtension(MucUser.class);
+        if (from == null || from.isFullJid() || mucUser == null) {
+            return false;
+        }
+
+        final var state = getState(from);
+        if (state == null) {
+            return false;
+        }
+        final var conversation = state.getConversation();
         final var status = mucUser.getStatus();
         final var configurationChange =
                 Iterables.any(status, s -> (s >= 170 && s <= 174) || (s >= 102 && s <= 104));
@@ -655,10 +699,61 @@ public class MultiUserChatManager extends AbstractManager {
         }
         final var item = mucUser.getItem();
         if (item == null) {
-            return;
+            return true;
         }
         final var user = itemToUser(conversation, item);
         this.handleAffiliationChange(conversation, user);
+        return true;
+    }
+
+    private void handleInvite(final Invite invite) {
+        Log.d(Config.LOGTAG, "received " + invite);
+
+        final var account = getAccount();
+        if (getManager(BlockingManager.class).isBlocked(invite.by)) {
+            Log.d(
+                    Config.LOGTAG,
+                    account.getJid().asBareJid()
+                            + ": ignore invite from "
+                            + invite.by
+                            + " because contact is blocked");
+            return;
+        }
+
+        final var contact =
+                getManager(RosterManager.class).getContactFromContactList(invite.by.asBareJid());
+
+        final AppSettings appSettings = new AppSettings(context);
+        if ((contact != null && contact.showInContactList())
+                || appSettings.isAcceptInvitesFromStrangers()) {
+            final Conversation conversation =
+                    this.service.findOrCreateConversation(account, invite.to, true, false);
+            if (conversation.getMucOptions().online()) {
+                Log.d(
+                        Config.LOGTAG,
+                        account.getJid().asBareJid()
+                                + ": received invite to "
+                                + invite.to
+                                + " but muc is considered to be online");
+                getManager(MultiUserChatManager.class).pingAndRejoin(conversation);
+            } else {
+                conversation.getMucOptions().setPassword(invite.password);
+                this.service.databaseBackend.updateConversation(conversation);
+                if (contact != null && contact.showInContactList()) {
+                    getManager(MultiUserChatManager.class).joinFollowingInvite(conversation);
+                } else {
+                    getManager(MultiUserChatManager.class).join(conversation);
+                }
+                this.service.updateConversationUi();
+            }
+        } else {
+            Log.d(
+                    Config.LOGTAG,
+                    account.getJid().asBareJid()
+                            + ": ignoring invite from "
+                            + invite.by
+                            + " because we are not accepting invites from strangers");
+        }
     }
 
     private void handleAffiliationChange(
@@ -750,18 +845,11 @@ public class MultiUserChatManager extends AbstractManager {
             final Conversation conversation,
             final InfoQuery rawinfoQuery,
             final MucConfigSummary previousMucConfig) {
-        Log.d(Config.LOGTAG, "disco info form: " + rawinfoQuery);
         final var infoQuery = clean(rawinfoQuery);
-        final var caps = EntityCapabilities.hash(infoQuery);
-        final var caps2 = EntityCapabilities2.hash(infoQuery);
         final var account = conversation.getAccount();
         final var address = conversation.getAddress().asBareJid();
-        getDatabase().insertCapsCache(caps, caps2, infoQuery);
         final MucOptions mucOptions = getOrCreateState(conversation);
-        if (mucOptions.setCaps2Hash(caps2.encoded())) {
-            Log.d(Config.LOGTAG, "caps hash has changed. persisting");
-            getDatabase().updateConversation(conversation);
-        }
+        persistInfoQuery(mucOptions, infoQuery);
         final var avatarHash =
                 infoQuery.getServiceDiscoveryExtension(
                         Namespace.MUC_ROOM_INFO, "muc#roominfo_avatarhash");
@@ -807,6 +895,21 @@ public class MultiUserChatManager extends AbstractManager {
         Log.d(Config.LOGTAG, "emoji restrictions: " + mucOptions.getReactionsRestrictions());
 
         return null;
+    }
+
+    private void persistInfoQuery(final MucOptions mucOptions, final InfoQuery infoQuery) {
+        final var caps = EntityCapabilities.hash(infoQuery);
+        final EntityCapabilities2.EntityCaps2Hash caps2;
+        try {
+            caps2 = EntityCapabilities2.hash(infoQuery);
+        } catch (final EntityCapabilities2.IllegalInfoQueryException e) {
+            return;
+        }
+        getDatabase().insertCapsCache(caps, caps2, infoQuery);
+        if (mucOptions.setCaps2Hash(caps2.encoded())) {
+            Log.d(Config.LOGTAG, "caps hash has changed. persisting");
+            getDatabase().updateConversation(mucOptions.getConversation());
+        }
     }
 
     private static InfoQuery clean(final InfoQuery input) {
@@ -1222,7 +1325,8 @@ public class MultiUserChatManager extends AbstractManager {
         final var packet = new Message();
         packet.setTo(conversation.getAddress().asBareJid());
         final var x = packet.addExtension(new MucUser());
-        final var invite = x.addExtension(new Invite());
+        final var invite =
+                x.addExtension(new im.conversations.android.xmpp.model.muc.user.Invite());
         invite.setTo(address.asBareJid());
         connection.sendMessagePacket(packet);
     }
@@ -1443,4 +1547,6 @@ public class MultiUserChatManager extends AbstractManager {
                 .put("muc#roomconfig_mam", true) // ejabberd saas
                 .buildOrThrow();
     }
+
+    public record Invite(Jid to, Jid by, String password) {}
 }

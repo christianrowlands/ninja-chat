@@ -1,0 +1,1 @@
+* Correction de régression (crash lors de la connexion) introduit dans la version précédente

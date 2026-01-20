@@ -3,6 +3,7 @@ package eu.siacs.conversations.crypto;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.util.Log;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.DownloadableFile;
@@ -150,10 +151,12 @@ public class PgpDecryptionService {
                             message.setEncryption(Message.ENCRYPTION_DECRYPTED);
                             final HttpConnectionManager manager =
                                     mXmppConnectionService.getHttpConnectionManager();
+                            final var autoAcceptFileSize =
+                                    new AppSettings(mXmppConnectionService).getAutoAcceptFileSize();
                             // TODO set this as 'oob'
                             if (message.trusted()
                                     && message.treatAsDownloadable()
-                                    && manager.getAutoAcceptFileSize() > 0) {
+                                    && autoAcceptFileSize.isPresent()) {
                                 manager.createNewDownloadConnection(message);
                             }
                         } catch (final IOException e) {
