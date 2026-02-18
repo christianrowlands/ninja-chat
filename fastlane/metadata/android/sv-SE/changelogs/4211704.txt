@@ -1,0 +1,3 @@
+* Erbjud högre filstorleksgräns för automatisk nedladdning
+* Tillhandahåll mer information i "Serverinfo"
+* Diverse rättelser

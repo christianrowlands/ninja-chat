@@ -1,0 +1,4 @@
+* Possibilité de choisir la sonnerie pour les appels entrants
+* Corrige la découverte des id des clés OpenPGP pour OpenKeychain 5.6+
+* Vérifie proprement les certificats TLS punycode
+* Améliore la stabilité d'établissement des sessions RTP (appels)

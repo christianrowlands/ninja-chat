@@ -16,10 +16,24 @@
         </menu>
     </item>
     <item
-        android:id="@+id/action_scan_qr_code"
+        android:id="@+id/action_qr_codes"
         android:icon="@drawable/ic_qr_code_scanner_24dp"
         android:orderInCategory="10"
-        android:title="@string/scan_qr_code"
-        android:visible="@bool/show_qr_code_scan"
-        app:showAsAction="always" />
+        android:title="@string/qr_code_actions"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_scan_qr_code"
+                android:icon="@drawable/ic_qr_code_scanner_24dp"
+                android:title="@string/scan_qr_code" />
+            <item
+                android:id="@+id/action_show_qr_code"
+                android:icon="@drawable/ic_qr_code_24dp"
+                android:title="@string/show_qr_code" />
+            <item
+                android:id="@+id/action_easy_invite"
+                android:icon="@drawable/ic_join_24dp"
+                android:title="@string/server_invite" />
+        </menu>
+    </item>
 </menu>

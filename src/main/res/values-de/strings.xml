@@ -375,9 +375,6 @@
     <string name="remove_from_room">Aus Gruppenchat entfernen</string>
     <string name="remove_from_channel">Aus Channel entfernen</string>
     <string name="could_not_change_affiliation">Zugehörigkeit von %s konnte nicht verändert werden</string>
-    <string name="ban_from_conference">Vom Gruppenchat ausschließen</string>
-    <string name="ban_from_channel">Vom Channel ausschließen</string>
-    <string name="removing_from_public_conference">Du versuchst %s aus einem öffentlichen Channel zu entfernen. Die einzige Möglichkeit, dies dauerhaft zu tun, ist den Kontakt auszuschließen.</string>
     <string name="ban_now">Kontakt ausschließen</string>
     <string name="could_not_change_role">Rolle von %s konnte nicht geändert werden</string>
     <string name="conference_options">Einstellungen für private Gruppenchats</string>
@@ -587,9 +584,9 @@
     <string name="copy_fingerprint">Fingerabdruck kopieren</string>
     <string name="all_omemo_keys_have_been_verified">Du hast alle in deinem Besitz befindlichen OMEMO-Schlüssel überprüft</string>
     <string name="verified_fingerprints">Überprüfte Fingerabdrücke</string>
-    <string name="use_camera_icon_to_scan_barcode">Nutze die Kamera, um Barcodes deiner Kontakte zu scannen</string>
+    <string name="use_camera_icon_to_scan_barcode">Nutze die Kamera, um QR-Codes deiner Kontakte zu scannen</string>
     <string name="please_wait_for_keys_to_be_fetched">Bitte warten, bis die Schlüssel abgerufen werden</string>
-    <string name="share_as_barcode">Als Barcode teilen</string>
+    <string name="share_as_barcode">Als QR-Code teilen</string>
     <string name="share_as_uri">Als XMPP-URI teilen</string>
     <string name="share_as_http">Als HTTP-Link teilen</string>
     <string name="pref_blind_trust_before_verification">Blind vertrauen vor der Überprüfung</string>
@@ -649,9 +646,9 @@
     <string name="retry_decryption">Entschlüsseln wiederholen</string>
     <string name="session_failure">Sitzungsfehler</string>
     <string name="sasl_downgrade">SASL-Mechanismus zurückgestuft</string>
-    <string name="account_status_regis_web">Der Server benötigt eine Registrierung auf einer Website</string>
-    <string name="open_website">Website öffnen</string>
-    <string name="application_found_to_open_website">Keine App zum Öffnen der Website gefunden</string>
+    <string name="account_status_regis_web">Der Server benötigt eine Registrierung auf einer Webseite</string>
+    <string name="open_website">Webseite öffnen</string>
+    <string name="application_found_to_open_website">Keine App zum Öffnen der Webseite gefunden</string>
     <string name="pref_headsup_notifications">Benachrichtigungsvorschau</string>
     <string name="pref_headsup_notifications_summary">Benachrichtigungsvorschau anzeigen</string>
     <string name="today">Heute</string>
@@ -951,7 +948,6 @@
     <string name="failed_deliveries">Fehlgeschlagene Zustellungen</string>
     <string name="more_options">Weitere Optionen</string>
     <string name="no_application_found">Keine Anwendung gefunden</string>
-    <string name="invite_to_app">Einladung zu Ninja Chat</string>
     <string name="unable_to_parse_invite">Einladung kann nicht verarbeitet werden</string>
     <string name="server_does_not_support_easy_onboarding_invites">Server unterstützt keine Generierung von Einladungen</string>
     <string name="no_active_accounts_support_this">Keine aktiven Konten unterstützen diese Funktion</string>
@@ -1014,7 +1010,7 @@
     <string name="switch_to_chat">Zum Chat wechseln</string>
     <string name="action_archive_chat">Chat archivieren</string>
     <string name="welcome_header">Nimm an der Unterhaltung teil</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Der Barcode enthält keine Fingerabdrücke für diesen Chat.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Der QR-Code enthält keine Fingerabdrücke für diesen Chat.</string>
     <string name="title_undo_swipe_out_chat">Chat archiviert</string>
     <string name="pref_send_crash_reports">Absturzberichte senden</string>
     <string name="pref_title_interface">Benutzeroberfläche</string>
@@ -1152,4 +1148,14 @@
     <string name="mobile_ticket">Mobiles Ticket</string>
     <string name="emoji_reactions">Emoji-Reaktionen</string>
     <string name="open_keyboard">Tastatur öffnen</string>
+    <string name="server_invite">Auf Server einladen</string>
+    <string name="qr_code_actions">QR-Code scannen, QR-Code anzeigen, Servereinladung</string>
+    <string name="qr_code_contains_link">Link öffnen?</string>
+    <string name="qr_code_contains_link_text">Dieser QR-Code verweist auf eine Webseite. Bitte überprüfe die unten angegebene Adresse, bevor du sie in deinem Browser öffnest:</string>
+    <string name="open_browser">Browser öffnen</string>
+    <string name="muc_user_ban_explainer">Dieser Benutzer kann keine neuen Nachrichten mehr sehen und nicht mehr an der Unterhaltung teilnehmen.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">%d Nachricht löschen</item>
+        <item quantity="other">%d Nachrichten löschen</item>
+    </plurals>
 </resources>

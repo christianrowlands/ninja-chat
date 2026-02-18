@@ -1,0 +1,1 @@
+* Combina le azioni relative al codice QR (mostra, scansiona, invita) in un singolo menu

@@ -1,0 +1,2 @@
+* Åtgärdat samtal som fastnar vid anslutning när "Använd reläer" är aktiverat, men när servern inte har några reläer
+* Bandbreddsoptimeringar

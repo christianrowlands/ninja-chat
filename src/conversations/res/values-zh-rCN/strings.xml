@@ -4,13 +4,13 @@
     <string name="use_ninja.chat">使用 ninja.chat</string>
     <string name="create_new_account">创建新账号</string>
     <string name="do_you_have_an_account">您是否已有 XMPP 账号？如果您已经在使用其他 XMPP 客户端或之前使用过 Conversations，可能已经有账号了。如果没有，您现在就可以创建新账号。\n提示：部分电子邮件服务提供者也会提供 XMPP 账号。</string>
-    <string name="server_select_text">XMPP 是独立于服务提供者的即时通讯网络。您可以选择任意 XMPP 服务器使用本应用。\n不过，为了方便起见，我们简化了在 conversations.im（专为 Conversations 优化的提供者）上创建账号的过程。</string>
-    <string name="magic_create_text_on_x">您已受邀加入 %1$s。我们将引导您完成创建账号的流程。\n当选择 %1$s 作为服务提供者时，您只需向其他服务提供者的用户提供您的完整 XMPP 地址，即可与对方互通消息。</string>
-    <string name="magic_create_text_fixed">您已受邀加入 %1$s。已为您选择了用户名。我们将引导您完成创建账号的流程。\n您只需向其他服务提供者的用户提供您的完整 XMPP 地址，即可与对方互通消息。</string>
+    <string name="server_select_text">XMPP 是独立于服务提供者的即时通讯网络。您可以选择任意 XMPP 服务器使用本应用。\n不过，为了方便起见，我们简化了在 conversations.im（专为 Conversations 优化的提供者）上创建账号的流程。</string>
+    <string name="magic_create_text_on_x">您已受邀加入 %1$s。我们将引导您完成账号创建流程。\n当选择 %1$s 作为服务提供者时，您只需向其他服务提供者的用户提供您的完整 XMPP 地址，即可与对方进行通信。</string>
+    <string name="magic_create_text_fixed">您已受邀加入 %1$s。已为您选择了用户名。我们将引导您完成账号创建流程。\n您只需向其他服务提供者的用户提供您的完整 XMPP 地址，即可与对方进行通信。</string>
     <string name="your_server_invitation">您的服务器邀请</string>
     <string name="improperly_formatted_provisioning">配置代码格式不正确</string>
-    <string name="tap_share_button_send_invite">点按分享按钮，向您的联系人发送 %1$s 的邀请。</string>
-    <string name="if_contact_is_nearby_use_qr">如果联系人在附近，也可以扫描下方二维码接受邀请。</string>
+    <string name="tap_share_button_send_invite">点按分享按钮即可向您的联系人发送加入 %1$s 的邀请。</string>
+    <string name="if_contact_is_nearby_use_qr">如果您的联系人在附近，也可以扫描下方二维码接受您的邀请。</string>
     <string name="easy_invite_share_text">加入 %1$s 和我聊天：%2$s</string>
     <string name="share_invite_with">分享邀请…</string>
 </resources>

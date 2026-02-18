@@ -1,0 +1,4 @@
+* Skicka leveranskvitton som standard, och ändra inställningen till "Läskvitton"
+* Inför inställning för att alltid använda reläer
+* Åtgärdat problem med cachning av profilbilder
+* Åtgärdat att DNS ibland inte löses när Privat DNS (DoT) är aktiverat

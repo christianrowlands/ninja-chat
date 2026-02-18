@@ -1,0 +1,3 @@
+* Affiche le bouton d'aide si l'appel A/V échoue
+* Corrige certains crashs ennuyeux
+* Corrige les connexions Jingle (transfert de fichier + appels) avec les JIDs bruts

@@ -378,9 +378,6 @@
     <string name="remove_from_room">Înlătură din discuția de grup</string>
     <string name="remove_from_channel">Înlătură din canal</string>
     <string name="could_not_change_affiliation">Nu s-a putut schimba afilierea lui %s</string>
-    <string name="ban_from_conference">Interzice accesul la discuția de grup</string>
-    <string name="ban_from_channel">Interzice accesul la canal</string>
-    <string name="removing_from_public_conference">Încercați să înlăturați pe %s dintr-un canal public. Singurul mod în care puteți face asta este să blocați utilizatorul pentru totdeauna.</string>
     <string name="ban_now">Interzice accesul acum</string>
     <string name="could_not_change_role">Nu s-a putut schimba rolul lui %s</string>
     <string name="conference_options">Configurare discuție de grup privată</string>
@@ -596,9 +593,9 @@
     <string name="copy_fingerprint">Copiază amprenta</string>
     <string name="all_omemo_keys_have_been_verified">Ați verificat toate cheile OMEMO pe care le aveți</string>
     <string name="verified_fingerprints">Amprente verificate</string>
-    <string name="use_camera_icon_to_scan_barcode">Folosește camera pentru a scana codul de bare al contactului</string>
+    <string name="use_camera_icon_to_scan_barcode">Folosește camera pentru a scana codul QR al contactului</string>
     <string name="please_wait_for_keys_to_be_fetched">Vă rugăm să așteptați până se preiau cheile</string>
-    <string name="share_as_barcode">Partajează un cod de bare</string>
+    <string name="share_as_barcode">Partajează un cod QR</string>
     <string name="share_as_uri">Partajează ca adresă XMPP</string>
     <string name="share_as_http">Partajează ca legatură HTTP</string>
     <string name="pref_blind_trust_before_verification">Încredere Oarbă Înainte de Verificare</string>
@@ -971,7 +968,6 @@
     <string name="failed_deliveries">Trimiteri eșuate</string>
     <string name="more_options">Mai multe</string>
     <string name="no_application_found">Nu s-a găsit nici o aplicație</string>
-    <string name="invite_to_app">Invitați la Ninja Chat</string>
     <string name="unable_to_parse_invite">Nu s-a putut procesa invitația</string>
     <string name="server_does_not_support_easy_onboarding_invites">Serverul nu suportă generarea de invitații</string>
     <string name="no_active_accounts_support_this">Nici un cont activ nu suporta această caracteristică</string>
@@ -1034,7 +1030,7 @@
     <string name="no_certificate_selected">Nu a fost selectat un certificat client!</string>
     <string name="start_chat">Începe discuție</string>
     <string name="corresponding_chats_closed">Discuțiile aferente au fost arhivate.</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Codul de bare nu conține o amprentă pentru această discuție.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Codul QR nu conține o amprentă pentru această discuție.</string>
     <string name="welcome_header">Alăturați-vă conversației</string>
     <string name="title_activity_new_chat">Discuție nouă</string>
     <string name="pref_title_interface">Interfață</string>
@@ -1173,4 +1169,17 @@
     <string name="mobile_ticket">Bilet mobil</string>
     <string name="emoji_reactions">Reacții cu emoticoane</string>
     <string name="open_keyboard">Deschide tastatura</string>
+    <string name="server_invite">Invită pe server</string>
+    <string name="qr_code_actions">Scanează QR, Arată QR, Invitație server</string>
+    <string name="qr_code_contains_link">Deschide adresa?</string>
+    <string name="qr_code_contains_link_text">Acest cod QR indică a adresă web. Vă rugăm să o verificați înainte de a o deschide în browser:</string>
+    <string name="open_browser">Deschide browser</string>
+    <string name="muc_user_ban_explainer">Acest utilizator nu va mai putea vedea mesaje noi și nu va mai putea participa la conversație.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Șterge %d mesaj</item>
+        <item quantity="few">Șterge %d mesaje</item>
+        <item quantity="other">Șterge %d de mesaje</item>
+    </plurals>
+    <string name="server_info_stanzas_rx_tx">Stanțe (pr/tr)</string>
+    <string name="server_info_stanzas_rx_tx_push">Stanțe (pr/tr/push)</string>
 </resources>

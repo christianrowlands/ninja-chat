@@ -1,0 +1,2 @@
+* Tillhandahålla enklare åtkomst till "Sekretesspolicy" i Google Play-versionen för Quicksy och Conversations
+* Ta bort adressboksintegreringen i Google Play-versionen av Conversations

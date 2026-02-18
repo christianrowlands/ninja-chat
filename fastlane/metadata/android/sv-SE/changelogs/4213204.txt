@@ -1,0 +1,4 @@
+* Låt ljudinspelningen pausas genom att trycka på timern
+* Åtgärdat reaktioner i privata meddelanden på gruppchattar
+* Slutat acceptera "fallback-meddelanden" för reaktioner, kvittenser och visningsmarkeringar
+* Lagt till några fler ikoner för medieförhandsvisning

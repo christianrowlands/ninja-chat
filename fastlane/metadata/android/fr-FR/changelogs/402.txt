@@ -1,0 +1,3 @@
+* Permet la génération d'invitation faciles (Easy Invite) pour les serveurs le supportant
+* Affiche les GIF envoyés depuis Movim
+* Stocke les avatars en cache

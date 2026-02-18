@@ -372,9 +372,6 @@
     <string name="remove_from_room">Вилучити з групи</string>
     <string name="remove_from_channel">Вилучити з каналу</string>
     <string name="could_not_change_affiliation">Неможливо змінити статус участі %s</string>
-    <string name="ban_from_conference">Заборонити доступ до групи</string>
-    <string name="ban_from_channel">Заборонити в каналі</string>
-    <string name="removing_from_public_conference">Ви намагаєтеся вилучити %s з публічного каналу. Єдиним способом для цього є заблокувати користувача назавжди.</string>
     <string name="ban_now">Заборонити зараз</string>
     <string name="could_not_change_role">Неможливо змінити роль %s</string>
     <string name="conference_options">Налаштування приватного чату</string>
@@ -573,7 +570,7 @@
     <string name="verified_fingerprints">Перевірені цифрові підписи</string>
     <string name="use_camera_icon_to_scan_barcode">Використайте камеру для сканування QR-коду контакту</string>
     <string name="please_wait_for_keys_to_be_fetched">Зачекайте поки ключі отримуються</string>
-    <string name="share_as_barcode">Поділитися через QR-код </string>
+    <string name="share_as_barcode">Поділитися через QR-код</string>
     <string name="share_as_uri">Поділитися XMPP URI</string>
     <string name="share_as_http">Поділитися посиланням HTTP</string>
     <string name="pref_blind_trust_before_verification">Довіряти наосліп до підтвердження</string>
@@ -1005,7 +1002,6 @@
     <string name="encrypted_with_openpgp">Зашифровано за допомогою OpenPGP</string>
     <string name="not_encrypted">Не зашифровано</string>
     <string name="exit">Вийти</string>
-    <string name="invite_to_app">Запросити до Conversations</string>
     <string name="plain_text_document">Текстовий документ</string>
     <string name="no_xmpp_adddress_found">Не знайдено адреси XMPP</string>
     <string name="no_account_deactivated">Немає (вимкнено)</string>
@@ -1203,4 +1199,16 @@
     <string name="mobile_ticket">Мобільний квиток</string>
     <string name="open_keyboard">Показати клавіатуру</string>
     <string name="emoji_reactions">Реакції емоджі</string>
+    <string name="server_invite">Запросити на сервер</string>
+    <string name="qr_code_actions">Сканувати QR-код, показати QR-код, запросити на сервер</string>
+    <string name="qr_code_contains_link">Відкрити посилання?</string>
+    <string name="open_browser">Відкрити браузер</string>
+    <string name="qr_code_contains_link_text">Цей QR-код веде на вебсайт. Перевірте адресу нижче, перш ніж відкривати її у браузері:</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Видалити %d повідомлення</item>
+        <item quantity="few">Видалити %d повідомлення</item>
+        <item quantity="many">Видалити %d повідомлень</item>
+        <item quantity="other">Видалити %d повідомлень</item>
+    </plurals>
+    <string name="muc_user_ban_explainer">Цей користувач більше не зможе бачити нові повідомлення або брати участь у розмові.</string>
 </resources>

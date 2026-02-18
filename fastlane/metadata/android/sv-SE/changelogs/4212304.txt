@@ -1,0 +1,2 @@
+* Åtgärdat samtal på Android 15
+* Åtgärdat sällsynt krasch/återinfört fel som introducerades i version 2.17.0

@@ -387,9 +387,6 @@
     <string name="remove_from_room">Исключить из конференции</string>
     <string name="remove_from_channel">Исключить из канала</string>
     <string name="could_not_change_affiliation">Невозможно изменить принадлежность %s</string>
-    <string name="ban_from_conference">Заблокировать в конференции</string>
-    <string name="ban_from_channel">Заблокировать в канале</string>
-    <string name="removing_from_public_conference">Вы пытаетесь исключить %s из публичного канала. Единственный способ это сделать — навсегда заблокировать этого пользователя. </string>
     <string name="ban_now">Заблокировать</string>
     <string name="could_not_change_role">Невозможно сменить роль %s</string>
     <string name="conference_options">Настройки приватной конференции</string>
@@ -606,9 +603,9 @@
     <string name="copy_fingerprint">Копировать отпечаток</string>
     <string name="all_omemo_keys_have_been_verified">Все имеющиеся у вас OMEMO-ключи были подтверждены</string>
     <string name="verified_fingerprints">Подтверждённые отпечатки</string>
-    <string name="use_camera_icon_to_scan_barcode">Используйте камеру для сканирования штрих-кода контакта</string>
+    <string name="use_camera_icon_to_scan_barcode">Используйте камеру для сканирования QR-кода контакта</string>
     <string name="please_wait_for_keys_to_be_fetched">Подождите получения ключей</string>
-    <string name="share_as_barcode">Отправить штрих-код</string>
+    <string name="share_as_barcode">Отправить QR-код</string>
     <string name="share_as_uri">Отправить XMPP URI</string>
     <string name="share_as_http">Отправить HTTP-ссылку</string>
     <string name="pref_blind_trust_before_verification">Слепое доверие до подтверждения</string>
@@ -966,7 +963,6 @@
     <string name="failed_deliveries">Недоставленные сообщения</string>
     <string name="more_options">Ещё</string>
     <string name="no_application_found">Не найдено приложения</string>
-    <string name="invite_to_app">Пригласить в Ninja Chat</string>
     <string name="unable_to_parse_invite">Невозможно разобрать приглашение</string>
     <string name="server_does_not_support_easy_onboarding_invites">Сервер не поддерживает создание приглашений</string>
     <string name="no_active_accounts_support_this">Ни один активный аккаунт не поддерживает эту функцию</string>
@@ -1068,7 +1064,7 @@
     <string name="archive_this_chat">Затем удалить беседу</string>
     <string name="title_undo_swipe_out_chat">Беседа архивирована</string>
     <string name="welcome_header">Присоединиться к общению</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Штрих-код не содержит отпечатков для этой беседы.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">QR-код не содержит отпечатков для этой беседы.</string>
     <string name="start_chat">Начать беседу</string>
     <string name="no_certificate_selected">Сертификат клиента не выбран!</string>
     <string name="pref_attachments_summary">Размеры файлов, сжатие, качество видео</string>
@@ -1201,4 +1197,6 @@
     <string name="pref_use_relays">Ретранслировать</string>
     <string name="emoji_reactions">Реакции эмодзи</string>
     <string name="open_keyboard">Открыть клавиатуру</string>
+    <string name="server_invite">Пригласить на сервер</string>
+    <string name="qr_code_actions">Сканировать QR-код, показать QR-код, пригласить на сервер</string>
 </resources>

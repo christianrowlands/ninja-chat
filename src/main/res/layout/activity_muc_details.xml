@@ -50,13 +50,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="32dp">
 
-                            <com.makeramen.roundedimageview.RoundedImageView
+                            <com.google.android.material.imageview.ShapeableImageView
                                 android:id="@+id/your_photo"
                                 android:layout_width="@dimen/avatar_on_details_screen_size"
                                 android:layout_height="@dimen/avatar_on_details_screen_size"
                                 android:layout_alignParentStart="true"
                                 android:layout_marginEnd="@dimen/avatar_item_distance"
-                                app:riv_corner_radius="8dp" />
+                                app:shapeAppearanceOverlay="@style/ShapeAppearance.RoundedCornersMedium" />
 
                             <LinearLayout
                                 android:layout_width="fill_parent"

@@ -377,9 +377,6 @@
     <string name="remove_from_room">Usuń z konferencji</string>
     <string name="remove_from_channel">Usuń z kanału</string>
     <string name="could_not_change_affiliation">Nie udało się zmienić stanowiska dla %s</string>
-    <string name="ban_from_conference">Zbanuj</string>
-    <string name="ban_from_channel">Zbanuj na kanale</string>
-    <string name="removing_from_public_conference">Chcesz usunąć %s z publicznego kanału. Jedynym sposobem aby to zrobić jest zbanowanie tego użytkownika na zawsze.</string>
     <string name="ban_now">Zbanuj teraz</string>
     <string name="could_not_change_role">Nie udało się zmienić funkcji %s</string>
     <string name="conference_options">Konfiguracja prywatnej rozmowy grupowej</string>
@@ -591,9 +588,9 @@
     <string name="copy_fingerprint">Skopiuj odcisk</string>
     <string name="all_omemo_keys_have_been_verified">Zweryfikowałeś wszystkie klucze OMEMO które posiadasz</string>
     <string name="verified_fingerprints">Zaufane odciski</string>
-    <string name="use_camera_icon_to_scan_barcode">Użyj aparatu, aby zeskanować kod kreskowy kontaktu</string>
+    <string name="use_camera_icon_to_scan_barcode">Użyj aparatu, aby zeskanować kod QR kontaktu</string>
     <string name="please_wait_for_keys_to_be_fetched">Proszę czekać na ściągnięcie kluczy</string>
-    <string name="share_as_barcode">Udostępnij przez kod QR</string>
+    <string name="share_as_barcode">Udostępnij jako kod QR</string>
     <string name="share_as_uri">Udostępnij przez URI XMPP</string>
     <string name="share_as_http">Udostępnij przez link HTTP</string>
     <string name="pref_blind_trust_before_verification">Ślepo Ufaj Przed Weryfikacją</string>
@@ -976,7 +973,6 @@
     <string name="failed_deliveries">Nie dostarczone wiadomości</string>
     <string name="more_options">Więcej ustawień</string>
     <string name="no_application_found">Nie znaleziono żadnej aplikacji</string>
-    <string name="invite_to_app">Zaproś do Ninja Chat</string>
     <string name="unable_to_parse_invite">Nie można przetworzyć zaproszenia</string>
     <string name="server_does_not_support_easy_onboarding_invites">Serwer nie wspiera tworzenia zaproszeń</string>
     <string name="no_active_accounts_support_this">Nie ma aktywnych kont wspierających tę funkcję</string>
@@ -1030,7 +1026,7 @@
     <string name="title_activity_new_chat">Nowa rozmowa</string>
     <string name="archive_this_chat">Usuń rozmowę później</string>
     <string name="pref_use_colorful_bubbles">Kolorowe dymki rozmowy</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Kod kreskowy nie zawiera odcisków palca dla tej rozmowy.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Kod QR nie zawiera odcisków palca dla tej rozmowy.</string>
     <string name="corresponding_chats_closed">Powiązane rozmowy zarchiwizowane.</string>
     <string name="start_chat">Rozpocznij rozmowę</string>
     <string name="unified_push_summary">Przekazywanie powiadomień do innych aplikacji kompatybilnych z UnifiedPush</string>
@@ -1179,4 +1175,16 @@
     <string name="mobile_ticket">Bilet mobilny</string>
     <string name="emoji_reactions">Reakcje emoji</string>
     <string name="open_keyboard">Otwórz klawiaturę</string>
+    <string name="server_invite">Zaproś na serwer</string>
+    <string name="qr_code_actions">Skanowanie QR‑ów, pokazywanie QR‑ów, zapraszanie na serwer</string>
+    <string name="qr_code_contains_link">Otworzyć link internetowy?</string>
+    <string name="qr_code_contains_link_text">Ten kod QR kieruje do strony internetowej. Sprawdź adres przed otwarciem go w Twojej przeglądarce:</string>
+    <string name="open_browser">Otwórz przeglądarkę</string>
+    <string name="muc_user_ban_explainer">Ten użytkownik nie będzie mógł widzieć nowych wiadomości ani uczestniczyć w rozmowie.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Usuń %d wiadomość</item>
+        <item quantity="few">Usuń %d wiadomości</item>
+        <item quantity="many">Usuń %d wiadomości</item>
+        <item quantity="other">Usuń %d wiadomości</item>
+    </plurals>
 </resources>

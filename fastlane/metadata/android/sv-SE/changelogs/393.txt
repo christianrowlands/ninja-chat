@@ -1,0 +1,3 @@
+* Visa hjälpknapp om röst-/video-samtal misslyckas
+* Åtgärdat några irriterande krascher
+* Åtgärdat Jingle-anslutningar (filöverföring + samtal) med blotta JID

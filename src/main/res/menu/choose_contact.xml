@@ -8,10 +8,4 @@
         android:icon="@drawable/ic_search_24dp"
         app:showAsAction="collapseActionView|always"
         android:title="@string/search"/>
-    <item
-        android:id="@+id/action_scan_qr_code"
-        android:title="@string/scan_qr_code"
-        android:icon="@drawable/ic_qr_code_scanner_24dp"
-        app:showAsAction="ifRoom"
-        android:visible="false"/>
 </menu>

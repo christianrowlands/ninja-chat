@@ -374,9 +374,6 @@
     <string name="remove_from_room">Expulsar de la conversación</string>
     <string name="remove_from_channel">Eliminar del canal</string>
     <string name="could_not_change_affiliation">No se puede cambiar la afiliación de %s</string>
-    <string name="ban_from_conference">Prohibir entrada en la conversación</string>
-    <string name="ban_from_channel">Prohibir entrada al canal</string>
-    <string name="removing_from_public_conference">Estás intentando eliminar a %s de un canal público. La única manera de hacerlo es prohibir su entrada para siempre. </string>
     <string name="ban_now">Prohibir ahora</string>
     <string name="could_not_change_role">No se puede cambiar el rol de %s</string>
     <string name="conference_options">Configuración de conversación en grupo privada</string>
@@ -567,7 +564,7 @@
     <string name="payment_required">Pago requerido</string>
     <string name="missing_internet_permission">Otorgue permiso de acceso a internet</string>
     <string name="me">Yo</string>
-    <string name="contact_asks_for_presence_subscription">El contacto solicita ver tus actualizaciones de estado</string>
+    <string name="contact_asks_for_presence_subscription">El contacto solicita ver tus actualizaciones de presencia</string>
     <string name="allow">Permitir</string>
     <string name="no_permission_to_access_x">Sin permiso de acceso a %s</string>
     <string name="remote_server_not_found">Servidor remoto no encontrado</string>
@@ -805,7 +802,7 @@
     <string name="the_app_is_out_of_date">Estás usando una versión desactualizada de esta aplicación.</string>
     <string name="update">Actualizar</string>
     <string name="logged_in_with_another_device">Este teléfono está registrado en otro dispositivo.</string>
-    <string name="enter_your_name_instructions">Por favor, introduce tu nombre para dejar que las personas que no están en tu agenda de contactos sepan quien eres.</string>
+    <string name="enter_your_name_instructions">Por favor, introduce tu nombre para que las personas que no te tienen en su agenda de contactos sepan quién eres.</string>
     <string name="your_name">Tu nombre</string>
     <string name="enter_your_name">Introduce tu nombre</string>
     <string name="no_name_set_instructions">Usa este botón para establecer tu nombre.</string>
@@ -963,7 +960,6 @@
     <string name="failed_deliveries">Envíos fallidos</string>
     <string name="more_options">Más opciones</string>
     <string name="no_application_found">No se ha encontrado aplicación</string>
-    <string name="invite_to_app">Invitar a Ninja Chat</string>
     <string name="unable_to_parse_invite">No se ha podido leer la invitación</string>
     <string name="server_does_not_support_easy_onboarding_invites">El servidor no admite la generación de invitaciones</string>
     <string name="no_active_accounts_support_this">Ninguna cuenta activa admite esta funcionalidad</string>
@@ -1022,7 +1018,7 @@
     <string name="welcome_header">Unirse a Conversation</string>
     <string name="pref_use_colorful_bubbles">Burbujas de chat de colores</string>
     <string name="pref_use_colorful_bubbles_summary">Colores de fondo distintos para mensajes enviados y recibidos</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">El código de barras no contiene huellas digitales para este chat.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">El código QR no contiene huellas digitales para este chat.</string>
     <string name="pref_keyboard_options">Teclado</string>
     <string name="pref_category_engagement_notifications">Notificaciones de participación</string>
     <string name="pref_category_application">Solicitud</string>
@@ -1163,4 +1159,19 @@
     <string name="pref_use_relays">Utilizar siempre relés</string>
     <string name="pref_use_relays_summary">Retransmite todas las conexiones P2P (llamadas y transferencias de archivos) a través de tu servidor para evitar revelar tu dirección IP.</string>
     <string name="mobile_ticket">Pase digital</string>
+    <string name="emoji_reactions">Reacciones con emojis</string>
+    <string name="open_keyboard">Abrir teclado</string>
+    <string name="server_invite">Invitar al servidor</string>
+    <string name="qr_code_actions">Escanear QR, Mostrar QR, Invitación al servidor</string>
+    <string name="qr_code_contains_link">¿Abrir enlace web?</string>
+    <string name="qr_code_contains_link_text">Este código QR apunta a un sitio web. Por favor, revisa la siguiente dirección antes de abrirla en tu navegador:</string>
+    <string name="open_browser">Abrir navegador</string>
+    <string name="muc_user_ban_explainer">Este usuario ya no podrá ver los mensajes nuevos ni participar en la conversación.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Eliminar %d mensaje</item>
+        <item quantity="many">Eliminar %d mensajes</item>
+        <item quantity="other">Eliminar %d mensajes</item>
+    </plurals>
+    <string name="server_info_stanzas_rx_tx_push">Estanzas (rx/tx/push)</string>
+    <string name="server_info_stanzas_rx_tx">Estanzas (rx/tx)</string>
 </resources>

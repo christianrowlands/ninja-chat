@@ -56,6 +56,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.Conversations;
@@ -103,7 +104,6 @@ import eu.siacs.conversations.utils.Resolver;
 import eu.siacs.conversations.utils.SerialSingleThreadExecutor;
 import eu.siacs.conversations.utils.TorServiceUtils;
 import eu.siacs.conversations.utils.WakeLockHelper;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.LocalizedContent;
 import eu.siacs.conversations.xml.Namespace;
@@ -130,14 +130,13 @@ import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import eu.siacs.conversations.xmpp.manager.NickManager;
 import eu.siacs.conversations.xmpp.manager.PepManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
+import eu.siacs.conversations.xmpp.manager.PushNotificationManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
 import eu.siacs.conversations.xmpp.manager.RosterManager;
 import eu.siacs.conversations.xmpp.manager.VCardManager;
 import im.conversations.android.model.Bookmark;
 import im.conversations.android.model.ImmutableBookmark;
 import im.conversations.android.xmpp.model.delay.Delay;
-import im.conversations.android.xmpp.model.muc.Affiliation;
-import im.conversations.android.xmpp.model.muc.Role;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import im.conversations.android.xmpp.model.up.Push;
 import java.io.File;
@@ -684,9 +683,6 @@ public class XmppConnectionService extends Service {
             case ACTION_IDLE_PING:
                 scheduleNextIdlePing();
                 break;
-            case ACTION_FCM_MESSAGE_RECEIVED:
-                Log.d(Config.LOGTAG, "push message arrived in service. account");
-                break;
             case ACTION_QUICK_LOG:
                 final String message = intent == null ? null : intent.getStringExtra("message");
                 if (message != null && Config.QUICK_LOG) {
@@ -782,6 +778,15 @@ public class XmppConnectionService extends Service {
                     androidId != null
                             && CryptoHelper.getAccountFingerprint(account, androidId)
                                     .equals(pushedAccountHash);
+            if (pushWasMeantForThisAccount) {
+                final var manager =
+                        account.getXmppConnection().getManager(PushNotificationManager.class);
+                Log.d(
+                        Config.LOGTAG,
+                        account.getJid().asBareJid()
+                                + ": received push notification #"
+                                + manager.incrementAndGetPushNotificationCounter());
+            }
             pingNow |=
                     processAccountState(
                             account,
@@ -3041,51 +3046,6 @@ public class XmppConnectionService extends Service {
                 .setSubject(conference, subject);
     }
 
-    public void changeAffiliationInConference(
-            final Conversation conference,
-            Jid user,
-            final Affiliation affiliation,
-            final OnAffiliationChanged callback) {
-        final var account = conference.getAccount();
-        final var future =
-                account.getXmppConnection()
-                        .getManager(MultiUserChatManager.class)
-                        .setAffiliation(conference, affiliation, user);
-        Futures.addCallback(
-                future,
-                new FutureCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void result) {
-                        if (callback != null) {
-                            callback.onAffiliationChangedSuccessful(user);
-                        } else {
-                            Log.d(
-                                    Config.LOGTAG,
-                                    "changed affiliation of " + user + " to " + affiliation);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        if (callback != null) {
-                            callback.onAffiliationChangeFailed(
-                                    user, R.string.could_not_change_affiliation);
-                        } else {
-                            Log.d(Config.LOGTAG, "could not change affiliation", t);
-                        }
-                    }
-                },
-                MoreExecutors.directExecutor());
-    }
-
-    public void changeRoleInConference(
-            final Conversation conference, final String nick, Role role) {
-        final var account = conference.getAccount();
-        account.getXmppConnection()
-                .getManager(MultiUserChatManager.class)
-                .setRole(conference.getAddress().asBareJid(), role, nick);
-    }
-
     public ListenableFuture<Void> destroyRoom(final Conversation conversation) {
         final var account = conversation.getAccount();
         return account.getXmppConnection()
@@ -3553,13 +3513,13 @@ public class XmppConnectionService extends Service {
         return null;
     }
 
-    public Conversation findUniqueConversationByJid(XmppUri xmppUri) {
+    public Conversation findUniqueConversationByJid(final MiniUri.Xmpp xmppUri) {
         List<Conversation> findings = new ArrayList<>();
         for (Conversation c : getConversations()) {
             if (c.getAccount().isEnabled()
-                    && c.getAddress().asBareJid().equals(xmppUri.getJid())
+                    && c.getAddress().asBareJid().equals(xmppUri.asJid())
                     && ((c.getMode() == Conversational.MODE_MULTI)
-                            == xmppUri.isAction(XmppUri.ACTION_JOIN))) {
+                            == xmppUri.isAction(MiniUri.Xmpp.ACTION_JOIN))) {
                 findings.add(c);
             }
         }
@@ -3900,50 +3860,44 @@ public class XmppConnectionService extends Service {
         return templates;
     }
 
-    public boolean verifyFingerprints(Contact contact, List<XmppUri.Fingerprint> fingerprints) {
-        boolean performedVerification = false;
+    public boolean verifyFingerprints(
+            final Contact contact, final Collection<String> fingerprints) {
+        final var performedVerification = new AtomicBoolean(false);
         final AxolotlService axolotlService = contact.getAccount().getAxolotlService();
-        for (XmppUri.Fingerprint fp : fingerprints) {
-            if (fp.type == XmppUri.FingerprintType.OMEMO) {
-                String fingerprint = "05" + fp.fingerprint.replaceAll("\\s", "");
-                FingerprintStatus fingerprintStatus =
-                        axolotlService.getFingerprintTrust(fingerprint);
-                if (fingerprintStatus != null) {
-                    if (!fingerprintStatus.isVerified()) {
-                        performedVerification = true;
-                        axolotlService.setFingerprintTrust(
-                                fingerprint, fingerprintStatus.toVerified());
-                    }
-                } else {
-                    axolotlService.preVerifyFingerprint(contact, fingerprint);
+        for (final var fp : fingerprints) {
+            final String fingerprint = "05" + fp.replaceAll("\\s", "");
+            FingerprintStatus fingerprintStatus = axolotlService.getFingerprintTrust(fingerprint);
+            if (fingerprintStatus != null) {
+                if (!fingerprintStatus.isVerified()) {
+                    performedVerification.set(true);
+                    axolotlService.setFingerprintTrust(fingerprint, fingerprintStatus.toVerified());
                 }
+            } else {
+                axolotlService.preVerifyFingerprint(contact, fingerprint);
             }
         }
-        return performedVerification;
+        return performedVerification.get();
     }
 
-    public boolean verifyFingerprints(Account account, List<XmppUri.Fingerprint> fingerprints) {
+    public boolean verifyFingerprints(
+            final Account account, final Collection<String> fingerprints) {
         final AxolotlService axolotlService = account.getAxolotlService();
-        boolean verifiedSomething = false;
-        for (XmppUri.Fingerprint fp : fingerprints) {
-            if (fp.type == XmppUri.FingerprintType.OMEMO) {
-                String fingerprint = "05" + fp.fingerprint.replaceAll("\\s", "");
-                Log.d(Config.LOGTAG, "trying to verify own fp=" + fingerprint);
-                FingerprintStatus fingerprintStatus =
-                        axolotlService.getFingerprintTrust(fingerprint);
-                if (fingerprintStatus != null) {
-                    if (!fingerprintStatus.isVerified()) {
-                        axolotlService.setFingerprintTrust(
-                                fingerprint, fingerprintStatus.toVerified());
-                        verifiedSomething = true;
-                    }
-                } else {
-                    axolotlService.preVerifyFingerprint(account, fingerprint);
-                    verifiedSomething = true;
+        final var verifiedSomething = new AtomicBoolean(false);
+        for (final var fp : fingerprints) {
+            final String fingerprint = "05" + fp.replaceAll("\\s", "");
+            Log.d(Config.LOGTAG, "trying to verify own fp=" + fingerprint);
+            FingerprintStatus fingerprintStatus = axolotlService.getFingerprintTrust(fingerprint);
+            if (fingerprintStatus != null) {
+                if (!fingerprintStatus.isVerified()) {
+                    axolotlService.setFingerprintTrust(fingerprint, fingerprintStatus.toVerified());
+                    verifiedSomething.set(true);
                 }
+            } else {
+                axolotlService.preVerifyFingerprint(account, fingerprint);
+                verifiedSomething.set(true);
             }
         }
-        return verifiedSomething;
+        return verifiedSomething.get();
     }
 
     public ShortcutService getShortcutService() {
@@ -3970,12 +3924,6 @@ public class XmppConnectionService extends Service {
         void onMoreMessagesLoaded(int count, Conversation conversation);
 
         void informUser(int r);
-    }
-
-    public interface OnAffiliationChanged {
-        void onAffiliationChangedSuccessful(Jid jid);
-
-        void onAffiliationChangeFailed(Jid jid, int resId);
     }
 
     public interface OnConversationUpdate {

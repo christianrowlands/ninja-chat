@@ -29,14 +29,9 @@
 
 package de.gultsch.common;
 
-import android.net.Uri;
 import android.text.Spannable;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import eu.siacs.conversations.utils.XmppUri;
 import java.util.List;
-import java.util.Objects;
 
 public class Linkify {
 
@@ -44,40 +39,28 @@ public class Linkify {
             (s, start, end) -> isPassAdditionalValidation(s.subSequence(start, end).toString());
 
     private static boolean isPassAdditionalValidation(final String match) {
-        final var scheme = Iterables.getFirst(Splitter.on(':').limit(2).splitToList(match), null);
-        if (scheme == null) {
+        try {
+            MiniUri.asMiniUri(match);
+        } catch (final IllegalArgumentException e) {
             return false;
         }
-        return switch (scheme) {
-            case "tel" -> Patterns.URI_TEL.matcher(match).matches();
-            case "http", "https" -> Patterns.URI_HTTP.matcher(match).matches();
-            case "geo" -> Patterns.URI_GEO.matcher(match).matches();
-            case "xmpp" -> new XmppUri(Uri.parse(match)).isValidJid();
-            case "taler" -> Patterns.URI_TALER.matcher(match).matches();
-            case "web+ap" -> {
-                if (Patterns.URI_WEB_AP.matcher(match).matches()) {
-                    final var webAp = new MiniUri(match);
-                    // TODO once we have fragment support check that there aren't any
-                    yield Objects.nonNull(webAp.getAuthority()) && webAp.getParameter().isEmpty();
-                } else {
-                    yield false;
-                }
-            }
-            default -> true;
-        };
+        return true;
     }
 
     public static void addLinks(final Spannable body) {
-        android.text.util.Linkify.addLinks(body, Patterns.URI_GENERIC, null, MATCH_FILTER, null);
+        android.text.util.Linkify.addLinks(
+                body, Patterns.URIS_GENERIC_IN_TEXT, null, MATCH_FILTER, null);
     }
 
     public static List<MiniUri> getLinks(final String body) {
         final var builder = new ImmutableList.Builder<MiniUri>();
-        final var matcher = Patterns.URI_GENERIC.matcher(body);
+        final var matcher = Patterns.URIS_GENERIC_IN_TEXT.matcher(body);
         while (matcher.find()) {
             final var match = matcher.group();
-            if (isPassAdditionalValidation(match)) {
-                builder.add(new MiniUri(match));
+            try {
+                builder.add(MiniUri.asMiniUri(match));
+            } catch (final IllegalArgumentException e) {
+
             }
         }
         return builder.build();

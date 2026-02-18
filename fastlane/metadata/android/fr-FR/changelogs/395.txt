@@ -1,0 +1,3 @@
+* ajout 'Retourner à la discussion' sur l'écran d'appel audio
+* Améliore les raccourcis clavier
+* Correction de problèmes

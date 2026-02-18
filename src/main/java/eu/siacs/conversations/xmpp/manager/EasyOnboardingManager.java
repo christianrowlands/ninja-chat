@@ -3,22 +3,15 @@ package eu.siacs.conversations.xmpp.manager;
 import android.content.Context;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
-import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.services.QuickConversationsService;
-import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.EasyOnboardingInvite;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import im.conversations.android.xmpp.model.commands.Command;
 import im.conversations.android.xmpp.model.stanza.Iq;
-import java.util.Collections;
-import java.util.List;
 import okhttp3.HttpUrl;
 
 public class EasyOnboardingManager extends AbstractManager {
@@ -76,25 +69,5 @@ public class EasyOnboardingManager extends AbstractManager {
         final var discoManager = this.getManager(DiscoManager.class);
         final var address = discoManager.getAddressForCommand(Namespace.EASY_ONBOARDING_INVITE);
         return Optional.fromNullable(address);
-    }
-
-    public static boolean anyHasSupport(final XmppConnectionService service) {
-        if (QuickConversationsService.isQuicksy()) {
-            return false;
-        }
-        return !getAccounts(service).isEmpty();
-    }
-
-    public static List<Account> getAccounts(final XmppConnectionService service) {
-        if (service == null) {
-            return Collections.emptyList();
-        }
-        return ImmutableList.copyOf(
-                Collections2.filter(
-                        service.getAccounts(),
-                        a ->
-                                a.getXmppConnection()
-                                        .getManager(EasyOnboardingManager.class)
-                                        .hasFeature()));
     }
 }

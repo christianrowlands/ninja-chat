@@ -1,0 +1,1 @@
+* QR-koodiga seotud tegevused (näitamine, skaneerimine, kutse koostamine) leiduvad nüüd ühes keskses menüüpunktis

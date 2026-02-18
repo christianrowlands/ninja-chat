@@ -1,0 +1,4 @@
+* Offer to delete messages when banning someone in a public channel
+* Refactor QR code scanning and URI handling
+* Play Store flavor: Stop using Google libray and interface directly with Google Play Service via IPC
+* Fix rotation issues in tablet mode

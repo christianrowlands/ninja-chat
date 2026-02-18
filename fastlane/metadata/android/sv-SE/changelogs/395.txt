@@ -1,0 +1,3 @@
+* Lagt till "Återgå till chatt" på skärmen för ljudsamtal
+* Förbättrat kortkommandon
+* Buggfixar

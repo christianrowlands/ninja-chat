@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -29,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -302,6 +304,26 @@ public class Conversation extends AbstractEntity
             }
         }
         return null;
+    }
+
+    public Set<Message> findMessagesWithOccupantIdOrRealJid(
+            final Jid realJid, final String occupantId) {
+        synchronized (this.messages) {
+            return ImmutableSet.copyOf(
+                    Collections2.filter(
+                            this.messages,
+                            m -> {
+                                if (m.serverMsgId == null) {
+                                    return false;
+                                }
+                                final var tcp = m.getTrueCounterpart();
+                                return (realJid != null
+                                                && tcp != null
+                                                && realJid.equals(tcp.asBareJid()))
+                                        || (occupantId != null
+                                                && occupantId.equals(m.getOccupantId()));
+                            }));
+        }
     }
 
     public boolean markAsDeleted(final List<String> uuids) {

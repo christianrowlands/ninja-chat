@@ -1,0 +1,3 @@
+* Minskat ekot under samtal på vissa enheter
+* Fixat inloggning när lösenord innehåller specialtecken
+* Spela kopplings- och upptagettoner på högtalaren under videosamtal

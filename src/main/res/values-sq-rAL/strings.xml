@@ -300,8 +300,6 @@
     <string name="remove_from_room">Hiqe prej fjalosjeje grupi</string>
     <string name="remove_from_channel">Hiqe prej kanali</string>
     <string name="could_not_change_affiliation">S’u ndryshua dot përshoqërim i %s</string>
-    <string name="ban_from_conference">Dëboje nga fjalosje në grup</string>
-    <string name="ban_from_channel">Dëboje nga kanali</string>
     <string name="ban_now">Dëboje tani</string>
     <string name="could_not_change_role">S’u ndryshua dot roli i %s</string>
     <string name="conference_options">Formësim fjalosje private në grup</string>
@@ -452,9 +450,9 @@
     <string name="delete_selected_keys">Fshi kyçet e përzgjedhur</string>
     <string name="copy_fingerprint">Kopjo shenja gishtash</string>
     <string name="verified_fingerprints">Shenja gishtash të verifikuar</string>
-    <string name="use_camera_icon_to_scan_barcode">Përdorni kamerën e telefonit tuaj që të skanoni një kod me vija</string>
+    <string name="use_camera_icon_to_scan_barcode">Përdorni kamerën që të skanoni kodin QR të një kontakti</string>
     <string name="please_wait_for_keys_to_be_fetched">Ju lutemi, pritni të sillen kyçet</string>
-    <string name="share_as_barcode">Ndajeni si Kod me vija</string>
+    <string name="share_as_barcode">Ndajeni si kod QR</string>
     <string name="share_as_uri">Jepe si URI XMPP</string>
     <string name="share_as_http">Ndajeni me të tjerë si lidhje HTTP</string>
     <string name="pref_blind_trust_before_verification">Besim i Verbër Para Verifikimi</string>
@@ -738,7 +736,6 @@
     <string name="failed_deliveries">Dërgime të dështuara</string>
     <string name="more_options">Më tepër mundësi</string>
     <string name="no_application_found">S’u gjet aplikacion</string>
-    <string name="invite_to_app">Ftojeni te Conversations</string>
     <string name="unable_to_parse_invite">S’arrihet të analizohet ftesë</string>
     <string name="server_does_not_support_easy_onboarding_invites">Shërbyesi s’mbulon prodhim ftesash</string>
     <string name="no_active_accounts_support_this">Këtë veçori s’e mbulon ndonjë llogari aktive</string>
@@ -874,7 +871,6 @@
 \nS’u sollën dot kyçe të rinj nga shërbyesi. Ndoshta ka diçka gabim me shërbyesin tuaj të kontakteve\?</string>
     <string name="error_no_keys_to_trust_presence">S’ka kyçe të përdorshëm për këtë kontakt.
 \nSigurohuni se keni që të dy pajtim pranie.</string>
-    <string name="removing_from_public_conference">Po rrekeni të hiqni %s nga një kanal publik. Rruga e vetme për ta bërë këtë është ta dëboni përgjithmonë atë përdorues.</string>
     <string name="non_anonymous">Bëji adresat XMPP të dukshme për këdo</string>
     <string name="could_not_modify_conference_options">S’u ndryshuan dot mundësi fjalosjeje në grup</string>
     <string name="pref_enter_is_send_summary">Përdorni tastin Enter për të dërguar mesazhin. Mundeni përherë të përdorni Ctrl+Enter për të dërguar mesazhin, edhe nëse kjo mundësi është e çaktivizuar.</string>
@@ -1022,7 +1018,7 @@
     <string name="action_archive_chat">Arkivoje fjalosjen</string>
     <string name="title_activity_new_chat">Fjalosje e re</string>
     <string name="archive_this_chat">Fshije fjalosjen më pas</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Kodi me vija s’përmban shenja gishtash për këtë fjalosje.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Kodi QR s’përmban shenja gishtash për këtë fjalosje.</string>
     <string name="switch_to_chat">Kaloni te fjalosja</string>
     <string name="title_undo_swipe_out_chat">Fjalosje e arkivuar</string>
     <string name="welcome_header">Ejani në Conversation</string>
@@ -1161,4 +1157,14 @@
     <string name="open_keyboard">Hap tastierën</string>
     <string name="pref_use_relays">Përdor rele përherë</string>
     <string name="pref_use_relays_summary">Kalojini krejt lidhjet P2P (thirrje dhe shpërngulje kartelash) përmes shërbyesit tuaj, për të shmangur lënien zbuluar të adresës tuaj IP.</string>
+    <string name="open_browser">Hap Shfletuesin</string>
+    <string name="qr_code_contains_link_text">Ky kod QR shpie te një sajt. Ju lutemi, verifikoni adresën më poshtë, para se ta hapni në shfletuesin tuaj:</string>
+    <string name="qr_code_contains_link">Të hapet Lidhja Web?</string>
+    <string name="server_invite">Ftojeni në shërbyes</string>
+    <string name="qr_code_actions">Skanoni QR, Shfaqni QR, Ftesë për në shërbyes</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Fshini %d mesazh</item>
+        <item quantity="other">Fshini %d mesazhe</item>
+    </plurals>
+    <string name="muc_user_ban_explainer">Ky përdorues s’do të jetë më në gjendje të shohë mesazhe të reja, ose të marrë pjesë te biseda.</string>
 </resources>

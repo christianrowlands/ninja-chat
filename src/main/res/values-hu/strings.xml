@@ -359,9 +359,6 @@
     <string name="remove_from_room">Eltávolítás a csoportos csevegésből</string>
     <string name="remove_from_channel">Eltávolítás a csatornából</string>
     <string name="could_not_change_affiliation">Nem sikerült %s hovatartozását megváltoztatni</string>
-    <string name="ban_from_conference">Kitiltás a csoportos csevegésből</string>
-    <string name="ban_from_channel">Kitiltás a csatornából</string>
-    <string name="removing_from_public_conference">Megpróbálta %s eltávolítását egy nyilvános csatornából. Ennek egyetlen módja, ha örökre kitiltja a felhasználót.</string>
     <string name="ban_now">Kitiltás most</string>
     <string name="could_not_change_role">Nem sikerült %s szerepét megváltoztatni</string>
     <string name="conference_options">Személyes csoportos csevegés beállításai</string>
@@ -1004,7 +1001,6 @@
     <string name="play_audio">Audió lejátszása</string>
     <string name="pause_audio">Audió szüneteltetése</string>
     <string name="no_application_found">Nem található alkalmazás</string>
-    <string name="invite_to_app">Meghívás a Conversations-be</string>
     <string name="unable_to_parse_invite">Nem lehet elemezni a meghívót</string>
     <string name="server_does_not_support_easy_onboarding_invites">A szerver nem támogatja a meghívók generálását</string>
     <string name="pref_backup_recurring">Ismétlődő biztonsági mentés</string>

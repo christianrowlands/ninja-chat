@@ -1,0 +1,4 @@
+* Möjlighet att välja ringsignal för inkommande samtal
+* Åtgärdat identifiering av OpenPGP-nyckel-ID för OpenKeychain 5.6+
+* Korrekt verifiera punycode TLS-certifikat
+* Förbättrat stabiliteten för RTP-sessionsetablering (Samtal)

@@ -1,1 +1,1 @@
-Krypterad lättanvänd XMPP-meddelandeapp för din mobil
+Krypterad och lättanvänd XMPP-snabbmeddelandeapp för din smarta telefon

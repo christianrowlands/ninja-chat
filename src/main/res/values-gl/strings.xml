@@ -375,9 +375,6 @@
     <string name="remove_from_room">Eliminar a parola en grupo</string>
     <string name="remove_from_channel">Retirar da canle</string>
     <string name="could_not_change_affiliation">Non se puido mudar a afiliación de %s</string>
-    <string name="ban_from_conference">Vetar na parola en grupo</string>
-    <string name="ban_from_channel">Vetar na canle</string>
-    <string name="removing_from_public_conference">Estás a intentar eliminar a %s dunha canle pública. O único xeito de facelo é prohibíndolle o acceso para sempre.</string>
     <string name="ban_now">Rexeitar agora</string>
     <string name="could_not_change_role">Non se puido mudar o rol de %s</string>
     <string name="conference_options">Configuración do grupo privado de conversa</string>
@@ -588,9 +585,9 @@
     <string name="copy_fingerprint">Copiar impresión dixital</string>
     <string name="all_omemo_keys_have_been_verified">Verificaches tódalas chaves OMEMO da túa propiedade</string>
     <string name="verified_fingerprints">Impresións dixitais verificadas</string>
-    <string name="use_camera_icon_to_scan_barcode">Usa a cámara para escanear o código de barras do contacto</string>
+    <string name="use_camera_icon_to_scan_barcode">Usa a cámara para escanear o código QR do contacto</string>
     <string name="please_wait_for_keys_to_be_fetched">Por favor agarde mentras se obteñen as chaves</string>
-    <string name="share_as_barcode">Compartir como Código QR</string>
+    <string name="share_as_barcode">Compartir como código QR</string>
     <string name="share_as_uri">Compartir como URI XMPP</string>
     <string name="share_as_http">Compartir como ligazón HTTP</string>
     <string name="pref_blind_trust_before_verification">Confianza cega antes da verificación</string>
@@ -952,7 +949,6 @@
     <string name="failed_deliveries">Entregas fallidas</string>
     <string name="more_options">Máis opcións</string>
     <string name="no_application_found">Non se atopa unha aplicación</string>
-    <string name="invite_to_app">Convida a Ninja Chat</string>
     <string name="unable_to_parse_invite">Non se puido enviar o convite</string>
     <string name="server_does_not_support_easy_onboarding_invites">O servidor non soporta a creación de convites</string>
     <string name="no_active_accounts_support_this">Ningunha conta activa soporta esta función</string>
@@ -1015,7 +1011,7 @@
     <string name="switch_to_chat">Cambiar á conversa</string>
     <string name="no_certificate_selected">Sen certificado cliente seleccionado!</string>
     <string name="channel_discover_opt_in_message">O descubrimento de canles usa un servizo alleo chamado &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Ao usar esta ferramenta vas enviar o teu enderezo IP e termos de busca a ese servizo. Le a súa &lt;a href=https://search.jabber.network/privacy&gt;Política de Privacidade&lt;/a&gt; para saber máis.</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">O código de barras non contén impresións dixitais para esta conversa.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">O código QR non contén impresións dixitais para esta conversa.</string>
     <string name="corresponding_chats_closed">Arquiváronse as conversas correspondentes.</string>
     <string name="title_undo_swipe_out_chat">Arquivouse a conversa</string>
     <string name="pref_summary_appearance">Decorado, Cores, Capturas, Escritura</string>
@@ -1151,4 +1147,16 @@
     <string name="pref_use_relays">Usar sempre relés</string>
     <string name="pref_use_relays_summary">Pasar todas as conexións P2P (chamadas e transferencia de ficheiros) polo teu servidor para evitar revelar o teu enderezo IP.</string>
     <string name="mobile_ticket">Resgardo do móbil</string>
+    <string name="emoji_reactions">Reaccións con emojis</string>
+    <string name="open_keyboard">Abrir teclado</string>
+    <string name="server_invite">Convidar ao servidor</string>
+    <string name="qr_code_actions">Escanear QR, Mostrar QR, Convidar ao servidor</string>
+    <string name="qr_code_contains_link">Abrir Ligazón á Web?</string>
+    <string name="qr_code_contains_link_text">Este código QR refírese a un sitio web. Comproba embaixo o enderezo antes de abrilo no navegador:</string>
+    <string name="open_browser">Abrir Navegador</string>
+    <string name="muc_user_ban_explainer">Esta usuaria xa non poderá ver as novas mensaxes ou participar na conversa.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Eliminar %d mensaxe</item>
+        <item quantity="other">Eliminar %d mensaxes</item>
+    </plurals>
 </resources>

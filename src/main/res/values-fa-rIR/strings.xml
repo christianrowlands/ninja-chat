@@ -275,7 +275,6 @@
     <string name="or_long_press_for_default">(یا نگه دارید تا به حالت پیش‌فرض برگردد)</string>
     <string name="title_pref_enable_quiet_hours">فعال‌کردن ساعت‌های خاموشی</string>
     <string name="remove_from_channel">حذف از کانال</string>
-    <string name="removing_from_public_conference">شما می‌خواهید %s را از یک کانال عمومی بیرون کنید. تنها راهش این است که این کاربر را برای همیشه ممنوع کنید.</string>
     <string name="unblock_domain_text">مسدودکردن همهٔ مخاطبان از %s را بردارید؟</string>
     <string name="file_url">نشانی پرونده</string>
     <string name="could_not_destroy_channel">حذف کانال ممکن نبود</string>
@@ -513,7 +512,6 @@
     <string name="dialog_manage_certs_title">گواهینامه‌های امنیتی را حذف کن</string>
     <string name="url_copied_to_clipboard">نشانی کپی شد</string>
     <string name="never">هرگز</string>
-    <string name="ban_from_conference">منع‌کردن از گفتگوی گروهی</string>
     <string name="omemo_fingerprint_selected_message">اثر انگشت OMEMO (منبع پیام)</string>
     <string name="openkeychain_required_long">%1$s برنامهٔ &lt;b&gt;OpenKeychain&lt;/b&gt; را به کار می‌برد تا پیام‌ها را رمزنگاری کند و کلید عمومی شما را مدیریت کند.&lt;br&gt;&lt;br&gt;با پروانهٔ ‪GPLv3+‬ منتشر شده است و روی اف-دروید و گوگل‌پلی در دسترس است.&lt;br&gt;&lt;br&gt;&lt;small&gt;(لطفاً پس از آن %1$s را دوباره اجرا کنید.)&lt;/small&gt;</string>
     <string name="conference_options">پیکربندی گفتگوی گروهی خصوصی</string>
@@ -578,7 +576,6 @@
     <string name="rtp_state_connecting">وصل می‌شود</string>
     <string name="crash_report_message">فرستادن اطلاعات مربوط به اشکال برنامه از راه حساب XMPP شما به توسعهٔ %1$s در آینده کمک می‌کند.</string>
     <string name="pref_keep_foreground_service">سرویس پیش‌زمینه</string>
-    <string name="ban_from_channel">منع‌کردن از کانال</string>
     <string name="account_settings_jabber_id">نشانی XMPP</string>
     <string name="pref_quiet_hours_summary">اعلان‌ها در این مدت خاموش خواهند ماند</string>
     <string name="server_info_csi">XEP-0352: Client State Indication</string>
@@ -587,7 +584,6 @@
     <string name="invite">دعوت</string>
     <string name="rtp_state_finding_device">یافتن دستگاه‌ها</string>
     <string name="user_has_left_conference">%1$s از گفتگوی گروهی رفت</string>
-    <string name="invite_to_app">دعوت به Ninja Chat</string>
     <string name="done">انجام شد</string>
     <string name="missing_public_keys">کلید عمومی اطلاع‌رسانی نشده</string>
     <string name="verifying">در حال تأیید…</string>

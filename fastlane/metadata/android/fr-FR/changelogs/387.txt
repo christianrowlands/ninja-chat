@@ -1,0 +1,2 @@
+* Refonte de la Connexion avec certificat
+* Ajout de la possibilité d'épingler une discussion en haut (ajout aux favoris)

@@ -366,9 +366,6 @@
     <string name="remove_from_room">Suprimeix del xat de grup</string>
     <string name="remove_from_channel">Eliminar del canal</string>
     <string name="could_not_change_affiliation">No s\'ha pogut canviar l\'afiliació del %s</string>
-    <string name="ban_from_conference">Prohibició del xat en grup</string>
-    <string name="ban_from_channel">Prohibició del canal</string>
-    <string name="removing_from_public_conference">Estàs intentant eliminar a %s d\'un canal públic. L\'única manera de fer-ho és prohibir a aquest usuari per sempre.</string>
     <string name="ban_now">Banejat ara</string>
     <string name="could_not_change_role">No s\'ha pogut canviar les regles de %s</string>
     <string name="conference_options">Configuració del xat de grup privat</string>
@@ -902,7 +899,6 @@
     <string name="failed_deliveries">Lliuraments fallits</string>
     <string name="more_options">Més opcions</string>
     <string name="no_application_found">No s\'ha trobat cap aplicació</string>
-    <string name="invite_to_app">Convidar a Ninja Chat</string>
     <string name="unable_to_parse_invite">No es pot processar la invitació</string>
     <string name="server_does_not_support_easy_onboarding_invites">El servidor no admet la generació d\'invitacions</string>
     <string name="no_active_accounts_support_this">Cap compte actiu admet aquesta funció</string>

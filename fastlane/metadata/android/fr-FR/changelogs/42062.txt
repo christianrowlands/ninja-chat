@@ -1,0 +1,1 @@
+* Désactive l'ouverture de fichier archive (.ceb) depuis le gestionnaire de fichier

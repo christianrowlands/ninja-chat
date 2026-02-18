@@ -1,0 +1,3 @@
+* Affiche le bouton d'appel pour les contacts hors-ligne s'ils ont annoncés précédemment le support
+* Le bouton retour n'abrège plus l'appel en cours
+* Corrections de problèmes

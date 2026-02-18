@@ -391,9 +391,6 @@
     <string name="remove_from_room">Remove from group chat</string>
     <string name="remove_from_channel">Remove from channel</string>
     <string name="could_not_change_affiliation">Could not change affiliation of %s</string>
-    <string name="ban_from_conference">Ban from group chat</string>
-    <string name="ban_from_channel">Ban from channel</string>
-    <string name="removing_from_public_conference">You are trying to remove %s from a public channel. The only way to do that is to ban that user forever.</string>
     <string name="ban_now">Ban now</string>
     <string name="could_not_change_role">Could not change role of %s</string>
     <string name="conference_options">Private group chat configuration</string>
@@ -616,11 +613,11 @@
     <string name="this_device_has_been_verified">This device has been verified</string>
     <string name="copy_fingerprint">Copy fingerprint</string>
     <string name="all_omemo_keys_have_been_verified">You have verified all the OMEMO keys in your possession</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">The barcode does not contain fingerprints for this chat.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">The QR code does not contain fingerprints for this chat.</string>
     <string name="verified_fingerprints">Verified fingerprints</string>
-    <string name="use_camera_icon_to_scan_barcode">Use the camera to scan a contact’s barcode</string>
+    <string name="use_camera_icon_to_scan_barcode">Use the camera to scan a contact’s QR code</string>
     <string name="please_wait_for_keys_to_be_fetched">Please wait for keys to be fetched</string>
-    <string name="share_as_barcode">Share as Barcode</string>
+    <string name="share_as_barcode">Share as QR code</string>
     <string name="share_as_uri">Share as XMPP URI</string>
     <string name="share_as_http">Share as HTTP link</string>
     <string name="pref_blind_trust_before_verification">Blind Trust Before Verification</string>
@@ -1006,7 +1003,7 @@
     <string name="failed_deliveries">Failed deliveries</string>
     <string name="more_options">More options</string>
     <string name="no_application_found">No application found</string>
-    <string name="invite_to_app">Invite to Ninja Chat</string>
+    <string name="server_invite">Invite to server</string>
     <string name="unable_to_parse_invite">Unable to parse invite</string>
     <string name="server_does_not_support_easy_onboarding_invites">Server does not support generating invites</string>
     <string name="no_active_accounts_support_this">No active accounts support this feature</string>
@@ -1099,6 +1096,8 @@
     <string name="video_is_enabled_tap_to_disable">Video is enabled. Tap to disable.</string>
     <string name="video_is_disabled_tap_to_enable">Video is disabled. Tap to enable.</string>
     <string name="server_info_login_mechanism">Login mechanism</string>
+    <string name="server_info_stanzas_rx_tx">Stanzas (rx/tx)</string>
+    <string name="server_info_stanzas_rx_tx_push">Stanzas (rx/tx/push)</string>
     <string name="could_not_add_reaction">Could not add reaction</string>
     <string name="add_reaction">Add reaction…</string>
     <string name="add_reaction_title">Add reaction</string>
@@ -1146,4 +1145,13 @@
     <string name="mobile_ticket">Mobile ticket</string>
     <string name="emoji_reactions">Emoji reactions</string>
     <string name="open_keyboard">Open keyboard</string>
+    <string name="qr_code_actions">Scan QR, Show QR, Server invite</string>
+    <string name="qr_code_contains_link">Open Web Link?</string>
+    <string name="qr_code_contains_link_text">This QR code points to a website. Please verify the address below before opening it in your browser:</string>
+    <string name="open_browser">Open Browser</string>
+    <string name="muc_user_ban_explainer">This user will no longer be able to see new messages or participate in the conversation.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Delete %d message</item>
+        <item quantity="other">Delete %d messages</item>
+    </plurals>
 </resources>

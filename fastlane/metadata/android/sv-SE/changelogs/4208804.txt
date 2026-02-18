@@ -1,0 +1,3 @@
+* Stöd P2P-filöverföring via WebRTC-datakanaler
+* Fixa interoperabilitetsproblem med Bind 2.0 på ejabberd
+* Buntat ihop rotcertifikat från Let's Encrypt, för Android 7 och äldre versioner

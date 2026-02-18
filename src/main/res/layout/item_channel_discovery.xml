@@ -9,13 +9,13 @@
         android:background="?selectableItemBackground"
         android:padding="@dimen/list_padding">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentStart="true"
             android:scaleType="centerCrop"
-            app:riv_corner_radius="6dp" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.RoundedCornersLight" />
 
         <RelativeLayout
             android:layout_width="wrap_content"

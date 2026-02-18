@@ -24,14 +24,12 @@ import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.adapter.UserAdapter;
 import eu.siacs.conversations.ui.util.MucDetailsContextMenuHelper;
-import eu.siacs.conversations.xmpp.Jid;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 
 public class MucUsersActivity extends XmppActivity
         implements XmppConnectionService.OnMucRosterUpdate,
-                XmppConnectionService.OnAffiliationChanged,
                 MenuItem.OnActionExpandListener,
                 TextWatcher {
 
@@ -114,14 +112,6 @@ public class MucUsersActivity extends XmppActivity
 
     private void displayToast(final String msg) {
         runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show());
-    }
-
-    @Override
-    public void onAffiliationChangedSuccessful(Jid jid) {}
-
-    @Override
-    public void onAffiliationChangeFailed(Jid jid, int resId) {
-        displayToast(getString(resId, jid.asBareJid().toString()));
     }
 
     @Override

@@ -1,0 +1,3 @@
+* Déplacement de l'icône appel vers la gauche pour garder les autres icônes à un endroit cohérent
+* Affiche la durée de l'appel durant l'appel
+* Départage des appels A/V (les même deux personnes s'appelant en même temps)

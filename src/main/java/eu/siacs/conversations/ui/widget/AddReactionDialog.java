@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
@@ -42,7 +43,7 @@ public class AddReactionDialog {
                 return Joiner.on("").join(Lists.transform(emojis, Emoji::getEmoji));
             };
 
-    public AddReactionDialog(final Message message, Consumer<Collection<String>> callback) {
+    public AddReactionDialog(final Message message, final Consumer<Collection<String>> callback) {
         this.message = message;
         this.callback = callback;
     }
@@ -229,13 +230,14 @@ public class AddReactionDialog {
             if (viewBinding.emojis.getVisibility() == View.VISIBLE) {
                 viewBinding.emojis.setVisibility(View.GONE);
                 viewBinding.emojiInputLayout.setVisibility(View.VISIBLE);
-                viewBinding.emojiTextInput.post(viewBinding.emojiTextInput::requestFocus);
+                viewBinding.emojiTextInput.post(this::requestFocus);
                 if (CharSequences.isEmpty(viewBinding.emojiTextInput.getEditableText())) {
                     this.viewBinding.keyboard.setIconResource(R.drawable.ic_close_24dp);
                 } else {
                     this.viewBinding.keyboard.setIconResource(R.drawable.ic_send_24dp);
                 }
             } else {
+                dismissFocus();
                 final var text = viewBinding.emojiTextInput.getText();
                 if (CharSequences.isEmpty(text)) {
                     viewBinding.emojis.setVisibility(View.VISIBLE);
@@ -245,6 +247,21 @@ public class AddReactionDialog {
                     submitTextInputEmoji(viewBinding.emojiTextInput.getText());
                 }
             }
+        }
+
+        private void requestFocus() {
+            final var ti = viewBinding.emojiTextInput;
+            if (ti.requestFocus()) {
+                final var imm = ti.getContext().getSystemService(InputMethodManager.class);
+                imm.showSoftInput(ti, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
+
+        private void dismissFocus() {
+            final var ti = viewBinding.emojiTextInput;
+            ti.clearFocus();
+            final var imm = ti.getContext().getSystemService(InputMethodManager.class);
+            imm.hideSoftInputFromWindow(ti.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
     }
 }

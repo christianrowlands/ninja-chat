@@ -9,14 +9,14 @@
         android:paddingHorizontal="@dimen/bubble_horizontal_padding"
         android:paddingVertical="@dimen/bubble_vertical_padding">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/message_photo"
             android:layout_width="@dimen/bubble_avatar_size"
             android:layout_height="@dimen/bubble_avatar_size"
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/message_box"
-            app:riv_corner_radius="8dp" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.RoundedCornersMedium" />
 
         <!-- TODO port app:layout_constraintWidth_max="@dimen/message_bubble_max_width" from c3 -->
         <LinearLayout

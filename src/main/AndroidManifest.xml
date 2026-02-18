@@ -158,8 +158,8 @@
         </receiver>
 
         <activity
-            android:enabled="false"
             android:name=".ui.UnifiedPushDistributor"
+            android:enabled="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -217,12 +217,12 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateUnchanged" />
         <activity
-            android:name=".ui.ScanActivity"
+            android:name=".ui.ScanQrCodeActivity"
             android:enableOnBackInvokedCallback="false"
             android:theme="@style/Theme.Conversations3.FullScreen"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".ui.UriHandlerActivity"
+            android:name=".ui.YuriLauncherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -243,6 +243,36 @@
                 <data android:pathPrefix="/i/" />
                 <data android:pathPrefix="/j/" />
             </intent-filter> -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="invite.joinjabber.org"
+                    android:scheme="https" />
+
+                <uri-relative-filter-group android:allow="true">
+                    <data android:path="/" />
+                    <data android:fragmentPattern=".*" />
+                </uri-relative-filter-group>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="xmpp.link"
+                    android:scheme="https" />
+
+                <uri-relative-filter-group android:allow="true">
+                    <data android:path="/" />
+                    <data android:fragmentPattern=".*" />
+                </uri-relative-filter-group>
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
 

@@ -1,0 +1,5 @@
+* Ny sida för "tom chatt", istället för att omdirigera till skärmen "ny chatt".
+* Förbättrat prestanda för stora publika gruppchattar
+* Stöd för prediktiv bakåtfunktion
+* Stöd IP-adresser i certifikat
+* Kräv TLS 1.3 för alla anslutningar (men med inställning för att välja bort kravet)

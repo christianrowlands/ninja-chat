@@ -1,0 +1,2 @@
+* Visa antal deltagare via undertext för publika gruppchattar
+* Åtgärdat att kunna gå med i MUC:s på mycket gamla Prosody-servrar

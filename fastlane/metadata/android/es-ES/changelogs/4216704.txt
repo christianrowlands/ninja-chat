@@ -1,0 +1,4 @@
+* Ofrecer para eliminar mensajes al vetar a alguien en un canal público
+* Rediseño del escaneo de códigos QR y del manejo de URI
+* Versión Play Store: dejar de usar la biblioteca de Google e interactuar directamente con los Servicios de Google Play mediante IPC
+* Corregir problemas de rotación en modo tableta

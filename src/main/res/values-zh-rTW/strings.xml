@@ -350,9 +350,6 @@
     <string name="remove_from_room">從群組聊天中移除</string>
     <string name="remove_from_channel">從頻道中移除</string>
     <string name="could_not_change_affiliation">無法變更 %s 的關係</string>
-    <string name="ban_from_conference">從群組聊天中封鎖</string>
-    <string name="ban_from_channel">從頻道中封鎖</string>
-    <string name="removing_from_public_conference">你正在嘗試從公用頻道中移除 %s。只有永遠封鎖此使用者才能將其將其移除。</string>
     <string name="ban_now">立即封鎖</string>
     <string name="could_not_change_role">無法修改 %s 的角色</string>
     <string name="conference_options">私人群組聊天組態</string>
@@ -885,7 +882,6 @@
     <string name="failed_deliveries">無法傳遞</string>
     <string name="more_options">更多選項</string>
     <string name="no_application_found">找不到應用程式</string>
-    <string name="invite_to_app">邀請至 Conversations</string>
     <string name="unable_to_parse_invite">無法剖析邀請</string>
     <string name="server_does_not_support_easy_onboarding_invites">伺服器不支援產生邀請</string>
     <string name="no_active_accounts_support_this">沒有支援此功能的啟用中帳戶</string>

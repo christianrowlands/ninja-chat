@@ -1,0 +1,2 @@
+* Åtgärdat några mindre buggar gällande gränssnittet
+* Åtgärdat anslutningsproblem med .onion-domäner på icke-standardportar

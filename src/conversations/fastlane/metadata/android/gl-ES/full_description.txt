@@ -1,7 +1,7 @@
 Un cliente Jabber/XMPP para android fácil de usar, fiable e con baixo consumo de batería. Con soporte para imaxes, conversas en grupo, e compartir a localización. Con cifraxe de extremo-a-extremo activado por defecto. Conéctase a todos os servidores modernos de Jabber, XMPP e Snikket.
 
 <b>Características</b>
-* Cifraxe extremo-a-extremo,  con OMEMO ou OpenPGP
+* Cifraxe extremo-a-extremo, con OMEMO ou OpenPGP
 * Enviar e recibir imaxes e outros tipos de ficheiros
 * Chamadas de audio e vídeo cifradas (DTLS-SRTP)
 * Detección avanzada de máquina interposta na ligazón de canles (require activación)

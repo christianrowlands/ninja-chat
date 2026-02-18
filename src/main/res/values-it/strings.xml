@@ -376,9 +376,6 @@
     <string name="remove_from_room">Rimuovi dalla chat di gruppo</string>
     <string name="remove_from_channel">Rimuovi dal canale</string>
     <string name="could_not_change_affiliation">Impossibile cambiare l’affiliazione di %s</string>
-    <string name="ban_from_conference">Bandisci dalla chat di gruppo</string>
-    <string name="ban_from_channel">Bandisci dal canale</string>
-    <string name="removing_from_public_conference">Stai tentando di rimuovere %s da un canale pubblico. L\'unico modo per farlo è di bandire quell\'utente per sempre.</string>
     <string name="ban_now">Bandisci</string>
     <string name="could_not_change_role">Impossibile cambiare ruolo di %s</string>
     <string name="conference_options">Configurazione chat di gruppo privata</string>
@@ -591,9 +588,9 @@
     <string name="copy_fingerprint">Copia impronta</string>
     <string name="all_omemo_keys_have_been_verified">Hai verificato tutte le chiavi OMEMO in tuo possesso</string>
     <string name="verified_fingerprints">Impronte verificate</string>
-    <string name="use_camera_icon_to_scan_barcode">Usa la fotocamera per scansionare il codice a barre di un contatto</string>
+    <string name="use_camera_icon_to_scan_barcode">Usa la fotocamera per scansionare il codice QR di un contatto</string>
     <string name="please_wait_for_keys_to_be_fetched">Attendi la ricezione delle chiavi</string>
-    <string name="share_as_barcode">Condividi come codice a barre</string>
+    <string name="share_as_barcode">Condividi come codice QR</string>
     <string name="share_as_uri">Condividi come URI XMPP</string>
     <string name="share_as_http">Condividi come link HTTP</string>
     <string name="pref_blind_trust_before_verification">Fiducia cieca prima della verifica</string>
@@ -966,7 +963,6 @@
     <string name="failed_deliveries">Recapiti falliti</string>
     <string name="more_options">Altre opzioni</string>
     <string name="no_application_found">Nessuna applicazione trovata</string>
-    <string name="invite_to_app">Invita su Ninja Chat</string>
     <string name="unable_to_parse_invite">Impossibile analizzare l\'invito</string>
     <string name="server_does_not_support_easy_onboarding_invites">Il server non supporta la generazione di inviti</string>
     <string name="no_active_accounts_support_this">Nessun profilo attivo supporta questa funzione</string>
@@ -1060,7 +1056,7 @@
     <string name="pref_category_server_connection">Connessione ai server</string>
     <string name="pref_privacy_summary">Notifiche di scrittura, ultima attività, disponibilità</string>
     <string name="pref_connection_summary">Nome host e porta, Tor</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Il codice a barre non contiene impronte per questa chat.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Il codice QR non contiene impronte per questa chat.</string>
     <string name="rtp_state_contact_offline">Contatto non disponibile</string>
     <string name="detect_mim_summary">L\'associazione dei canali può rilevare alcuni attacchi machine-in-the-middle</string>
     <string name="channel_discover_opt_in_message">La scoperta dei canali usa un servizio di terze parti chiamato &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;L\'uso di questa funzione invierà il tuo indirizzo IP e i termini di ricerca a quel servizio. Vedi la sua &lt;a href=https://search.jabber.network/privacy&gt;informativa sulla privacy&lt;/a&gt; per maggiori informazioni.</string>
@@ -1166,4 +1162,8 @@
     <string name="pref_use_relays">Usa sempre i relay</string>
     <string name="pref_use_relays_summary">Trasmetti tutte le connessioni P2P (chiamate e trasferimenti di file) attraverso il tuo server per evitare di svelare il tuo indirizzo IP.</string>
     <string name="mobile_ticket">Ticket mobile</string>
+    <string name="emoji_reactions">Reazioni con emoji</string>
+    <string name="open_keyboard">Apri la tastiera</string>
+    <string name="server_invite">Invita sul server</string>
+    <string name="qr_code_actions">Scansionare QR, mostrare QR, invitare al server</string>
 </resources>

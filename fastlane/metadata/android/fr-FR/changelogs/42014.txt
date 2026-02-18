@@ -1,0 +1,2 @@
+* Toujours vérifier le nom de domaine. Pas de précédence utilisateur
+* Support de la pré-authentification du roster

@@ -74,6 +74,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import de.gultsch.common.Linkify;
+import de.gultsch.common.MiniUri;
 import de.gultsch.common.Patterns;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -333,8 +334,12 @@ public class ConversationFragment extends XmppFragment
         if (messageLoaderToast != null) {
             messageLoaderToast.cancel();
         }
-        messageLoaderToast = Toast.makeText(requireContext(), resId, Toast.LENGTH_LONG);
-        messageLoaderToast.show();
+        try {
+            messageLoaderToast = Toast.makeText(requireContext(), resId, Toast.LENGTH_LONG);
+            messageLoaderToast.show();
+        } catch (final IllegalStateException ignored) {
+            // no reason to show toast when activity is gone
+        }
     }
 
     private final OnScrollListener mOnScrollListener =
@@ -2994,10 +2999,10 @@ public class ConversationFragment extends XmppFragment
     }
 
     private boolean storeNextMessage() {
-        return storeNextMessage(this.binding.textinput.getText().toString());
+        return storeNextMessage(CharSequences.nullToEmpty(this.binding.textinput.getText()));
     }
 
-    private boolean storeNextMessage(String msg) {
+    private boolean storeNextMessage(final String msg) {
         final boolean participating =
                 conversation.getMode() == Conversational.MODE_SINGLE
                         || conversation.getMucOptions().participating();
@@ -3475,7 +3480,14 @@ public class ConversationFragment extends XmppFragment
         }
         ChatStateManager.send(conversation, Config.DEFAULT_CHAT_STATE);
         if (storeNextMessage()) {
-            runOnUiThread(() -> requireConversationsActivity().onConversationsListItemUpdated());
+            runOnUiThread(
+                    () -> {
+                        try {
+                            requireConversationsActivity().onConversationsListItemUpdated();
+                        } catch (final IllegalStateException ignored) {
+
+                        }
+                    });
         }
         runOnUiThread(this::updateSendButton);
     }
@@ -3651,13 +3663,9 @@ public class ConversationFragment extends XmppFragment
                                                     message.getContact(), fingerprint);
                                     break;
                                 case R.id.action_show_qr_code:
-                                    requireXmppActivity()
-                                            .showQrCode(
-                                                    "xmpp:"
-                                                            + message.getContact()
-                                                                    .getAddress()
-                                                                    .asBareJid()
-                                                                    .toString());
+                                    final var uri =
+                                            new MiniUri.Xmpp(message.getContact().getAddress());
+                                    requireXmppActivity().showQrCode(uri);
                                     break;
                             }
                             return true;

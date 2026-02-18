@@ -380,9 +380,6 @@
     <string name="remove_from_room">Уклони из групне преписке</string>
     <string name="remove_from_channel">Уклони из канала</string>
     <string name="could_not_change_affiliation">Није могуће променити припадност за %s</string>
-    <string name="ban_from_conference">Избаци из групне преписке</string>
-    <string name="ban_from_channel">Избаци из канала</string>
-    <string name="removing_from_public_conference">Покушаваш да уклониш %s из јавног канала. Ово се постиже једино трајним избацивањем корисника.</string>
     <string name="ban_now">Избаци одмах</string>
     <string name="could_not_change_role">Није могуће променити улогу за %s</string>
     <string name="conference_options">Подешавања приватне групне преписке</string>
@@ -579,9 +576,9 @@
     <string name="this_device_has_been_verified">Овај уређај је оверен</string>
     <string name="copy_fingerprint">Копирај отисак</string>
     <string name="verified_fingerprints">Оверени отисци</string>
-    <string name="use_camera_icon_to_scan_barcode">Употреби камеру за очитавање бар-кôда контакта</string>
+    <string name="use_camera_icon_to_scan_barcode">Употреби камеру да очиташ QR кôд контакта</string>
     <string name="please_wait_for_keys_to_be_fetched">Сачекај да се добаве кључеви</string>
-    <string name="share_as_barcode">Подели као бар-кôд</string>
+    <string name="share_as_barcode">Подели као QR кôд</string>
     <string name="share_as_uri">Подели као XMPP линк</string>
     <string name="share_as_http">Подели као HTTP линк</string>
     <string name="pref_blind_trust_before_verification">Слепо одобри пре овере</string>
@@ -905,7 +902,6 @@
     <string name="play_audio">Пусти снимак</string>
     <string name="add_contact_or_create_or_join_group_chat">Додај контакт, направи или се придружи у групну преписку, или пронађи канале</string>
     <string name="no_application_found">Није пронађена апликација</string>
-    <string name="invite_to_app">Позови на Conversations</string>
     <string name="unable_to_parse_invite">Није могуће ишчитати позивницу</string>
     <string name="could_not_disable_video">Није могуће искључити видео.</string>
     <string name="no_xmpp_adddress_found">Није пронађена XMPP адреса</string>
@@ -929,7 +925,7 @@
     <string name="welcome_header_quicksy">Добродошао/ла на Quicksy!</string>
     <string name="reconnect_on_other_host">Поново повежи на други сервер</string>
     <string name="all_omemo_keys_have_been_verified">Оверио/ла си све OMEMO кључеве које поседујеш</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Бар-кôд не садржи отиске за ову преписку.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">QR кôд не садржи отиске за ову преписку.</string>
     <string name="pref_clean_private_storage_summary">Очисти приватно складиште где се чувају фајлови (могу поново да се преузму са сервера)</string>
     <string name="pref_blind_trust_before_verification_summary">Одобри нове уређаје од неоверених контаката, али питај за потврду нових уређаја за оверене контакте.</string>
     <string name="blindly_trusted_omemo_keys">Слепо одобрени OMEMO кључеви, у смислу да би то могао да буде неко други или је неко упао.</string>
@@ -1186,4 +1182,19 @@
     <string name="pref_use_relays">Увек користи релеј</string>
     <string name="pref_use_relays_summary">Усмери све P2P везе (позиве и слање фајлова) кроз твој сервер како би избегао откривање своје IP адресе.</string>
     <string name="mobile_ticket">Мобилни тикет</string>
+    <string name="emoji_reactions">Емотикон реакције</string>
+    <string name="open_keyboard">Отвори тастатуру</string>
+    <string name="server_invite">Позови на сервер</string>
+    <string name="qr_code_actions">Очитај QR, Прикажи QR, Позивнице на сервер</string>
+    <string name="qr_code_contains_link">Отвори веб линк?</string>
+    <string name="qr_code_contains_link_text">Овај QR кôд упућује на неки сајт. Потврди адресу испод пре него што је отвориш у прегледачу:</string>
+    <string name="open_browser">Отвори прегледач</string>
+    <string name="muc_user_ban_explainer">Овај корисник више неће моћи да види нове поруке нити да учествује у преписци.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Обриши %d поруку</item>
+        <item quantity="few">Обриши %d поруке</item>
+        <item quantity="other">Обриши %d порука</item>
+    </plurals>
+    <string name="server_info_stanzas_rx_tx">Станце (rx/tx)</string>
+    <string name="server_info_stanzas_rx_tx_push">Станце (rx/tx/push)</string>
 </resources>

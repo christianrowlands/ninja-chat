@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -33,12 +32,11 @@ import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.ui.adapter.ChannelSearchResultAdapter;
 import eu.siacs.conversations.ui.util.PendingItem;
 import eu.siacs.conversations.ui.util.SoftKeyboardUtils;
+import eu.siacs.conversations.ui.widget.AccountPickerDialog;
 import eu.siacs.conversations.utils.AccountUtils;
-import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.manager.BookmarkManager;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ChannelDiscoveryActivity extends XmppActivity
         implements MenuItem.OnActionExpandListener,
@@ -251,25 +249,8 @@ public class ChannelDiscoveryActivity extends XmppActivity
 
     @Override
     public void onChannelSearchResult(final Room result) {
-        final List<String> accounts = AccountUtils.getEnabledAccounts(xmppConnectionService);
-        if (accounts.size() == 1) {
-            joinChannelSearchResult(accounts.get(0), result);
-        } else if (accounts.isEmpty()) {
-            Toast.makeText(this, R.string.please_enable_an_account, Toast.LENGTH_LONG).show();
-        } else {
-            final AtomicReference<String> account = new AtomicReference<>(accounts.get(0));
-            final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(R.string.choose_account);
-            builder.setSingleChoiceItems(
-                    accounts.toArray(new CharSequence[0]),
-                    0,
-                    (dialog, which) -> account.set(accounts.get(which)));
-            builder.setPositiveButton(
-                    R.string.join,
-                    (dialog, which) -> joinChannelSearchResult(account.get(), result));
-            builder.setNegativeButton(R.string.cancel, null);
-            builder.create().show();
-        }
+        final var accountPicker = new AccountPickerDialog.Enabled(this);
+        accountPicker.pick(account -> joinChannelSearchResult(account, result));
     }
 
     @Override
@@ -294,9 +275,7 @@ public class ChannelDiscoveryActivity extends XmppActivity
         }
     }
 
-    public void joinChannelSearchResult(final String selectedAccount, final Room result) {
-        final Jid jid = Jid.of(selectedAccount);
-        final Account account = xmppConnectionService.findAccountByJid(jid);
+    public void joinChannelSearchResult(final Account account, final Room result) {
         final Conversation conversation =
                 xmppConnectionService.findOrCreateConversation(
                         account, result.getRoom(), true, true, true);

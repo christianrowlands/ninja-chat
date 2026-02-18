@@ -48,14 +48,14 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/card_padding_regular">
 
-                        <com.makeramen.roundedimageview.RoundedImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/avater"
                             android:layout_width="@dimen/avatar_on_details_screen_size"
                             android:layout_height="@dimen/avatar_on_details_screen_size"
                             android:layout_alignParentTop="true"
                             android:layout_marginEnd="@dimen/avatar_item_distance"
                             android:contentDescription="@string/account_image_description"
-                            app:riv_corner_radius="8dp" />
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.RoundedCornersMedium" />
 
                         <LinearLayout
                             android:layout_width="fill_parent"
@@ -308,6 +308,27 @@
                             android:shrinkColumns="0"
                             android:stretchColumns="1"
                             android:visibility="gone">
+
+                            <TableRow
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/stanza_rx_tx_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:singleLine="true"
+                                    android:text="@string/server_info_stanzas_rx_tx"
+                                    android:textAppearance="?textAppearanceBodyMedium" />
+
+                                <TextView
+                                    android:id="@+id/stanza_rx_tx"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:textAppearance="?textAppearanceBodyMedium" />
+                            </TableRow>
 
                             <TableRow
                                 android:layout_width="fill_parent"

@@ -3,11 +3,13 @@ package eu.siacs.conversations.services;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import com.google.common.collect.ImmutableMap;
 import de.gultsch.common.TrustManagers;
+import dev.paseto.jpaseto.Pasetos;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.android.PhoneNumberContact;
 import eu.siacs.conversations.crypto.sasl.Plain;
@@ -18,6 +20,7 @@ import eu.siacs.conversations.http.HttpConnectionManager;
 import eu.siacs.conversations.utils.AccountUtils;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.PhoneNumberUtilWrapper;
+import eu.siacs.conversations.utils.QuicksyAuthentication;
 import eu.siacs.conversations.utils.SerialSingleThreadExecutor;
 import eu.siacs.conversations.utils.SmsRetrieverWrapper;
 import eu.siacs.conversations.utils.TLSSocketFactory;
@@ -144,6 +147,9 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                                     setBundledLetsEncrypt(service, connection);
                                     connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
                                     connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
+                                    if (QuicksyAuthentication.hasSharedSecret()) {
+                                        setAuthorization(e164, connection);
+                                    }
                                     setHeader(connection);
                                     final int code = connection.getResponseCode();
                                     if (code == 200) {
@@ -308,7 +314,21 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         }
     }
 
-    private void setHeader(HttpURLConnection connection) {
+    private void setAuthorization(final String e164, final HttpURLConnection connection) {
+        final String token =
+                Pasetos.V2
+                        .LOCAL
+                        .builder()
+                        .setSharedSecret(QuicksyAuthentication.getSharedSecret())
+                        .setSubject(e164)
+                        .claim("Installation-Id", getInstallationId())
+                        .claim("User-Agent", HttpConnectionManager.getUserAgent())
+                        .claim("Device", String.format("%s %s", Build.MANUFACTURER, Build.MODEL))
+                        .compact();
+        connection.setRequestProperty("Authorization", token);
+    }
+
+    private void setHeader(final HttpURLConnection connection) {
         connection.setRequestProperty("User-Agent", HttpConnectionManager.getUserAgent());
         connection.setRequestProperty("Installation-Id", getInstallationId());
         connection.setRequestProperty("Accept-Language", Locale.getDefault().getLanguage());

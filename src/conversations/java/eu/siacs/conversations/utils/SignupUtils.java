@@ -1,6 +1,5 @@
 package eu.siacs.conversations.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -25,8 +24,8 @@ public class SignupUtils {
     }
 
     public static Intent getTokenRegistrationIntent(
-            final Activity activity, Jid jid, String preAuth) {
-        final Intent intent = new Intent(activity, MagicCreateActivity.class);
+            final Context context, Jid jid, String preAuth) {
+        final Intent intent = new Intent(context, MagicCreateActivity.class);
         if (jid.isDomainJid()) {
             intent.putExtra(MagicCreateActivity.EXTRA_DOMAIN, jid.getDomain().toString());
         } else {
@@ -37,16 +36,16 @@ public class SignupUtils {
         return intent;
     }
 
-    public static Intent getSignUpIntent(final Activity activity) {
-        return getSignUpIntent(activity, false);
+    public static Intent getSignUpIntent(final Context context) {
+        return getSignUpIntent(context, false);
     }
 
-    public static Intent getSignUpIntent(final Activity activity, final boolean toServerChooser) {
+    public static Intent getSignUpIntent(final Context context, final boolean toServerChooser) {
         final Intent intent;
         if (toServerChooser) {
-            intent = new Intent(activity, PickServerActivity.class);
+            intent = new Intent(context, PickServerActivity.class);
         } else {
-            intent = new Intent(activity, WelcomeActivity.class);
+            intent = new Intent(context, WelcomeActivity.class);
         }
         return intent;
     }

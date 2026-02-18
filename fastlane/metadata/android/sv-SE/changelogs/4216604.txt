@@ -1,0 +1,1 @@
+* Kombinera QR-kod-relaterade åtgärder (visa, skanna, bjud in) i en central meny

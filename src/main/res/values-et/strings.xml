@@ -310,7 +310,6 @@
     <string name="new_password">Uus salasõna</string>
     <string name="password_should_not_be_empty">Salasõna ei saa tühi olla</string>
     <string name="remove_from_room">Eemalda vestlusrühmast</string>
-    <string name="ban_from_conference">Keela ligipääs vestlusrühma</string>
     <string name="conference_options">Privaatse vestlusrühma seadistused</string>
     <string name="modified_conference_options">Vestlusrühma seadistused on muudetud!</string>
     <string name="could_not_modify_conference_options">Vestlusrühma seadistuste muutmine ei õnnestunud</string>
@@ -518,9 +517,7 @@
     <string name="could_not_change_affiliation">Kasutaja „%s“ kuuluvuse muutmine ei õnnestunud</string>
     <string name="remove_owner_privileges">Võta omaniku õigused ära</string>
     <string name="remove_from_channel">Eemalda kanalilt</string>
-    <string name="ban_from_channel">Keela ligipääs kanalile</string>
     <string name="could_not_change_role">Kasutaja „%s“ rolli muutmine ei õnnestunud</string>
-    <string name="removing_from_public_conference">Sa üritad eemaldada kasutajat „%s“ avalikult kanalilt. Ainus viis seda teha on talle igavese suhtluskeelu seadmine.</string>
     <string name="ban_now">Keela ligipääs nüüd</string>
     <string name="sending_x_file">Saadame faili „%s“</string>
     <string name="offering_x_file">Pakume faili „%s“</string>
@@ -833,11 +830,11 @@
     <string name="this_device_has_been_verified">See seade on verifitseeritud</string>
     <string name="copy_fingerprint">Kopeeri sõrmejälg</string>
     <string name="all_omemo_keys_have_been_verified">Sa oled verifitseerinud kõik sinu valduses olevad OMEMO-võtmed</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">See triipkood ei sisalda selle vestluse sõrmejägi.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">See QR-kood ei sisalda antud vestluse sõrmejägi.</string>
     <string name="verified_fingerprints">Verifitseeritud sõrmejäljed</string>
-    <string name="use_camera_icon_to_scan_barcode">Kasuta kaamerat kontakti triipkoodi skaneerimiseks</string>
+    <string name="use_camera_icon_to_scan_barcode">Kasuta kaamerat kontakti QR-kood skaneerimiseks</string>
     <string name="please_wait_for_keys_to_be_fetched">Palun oota, kuni võtmed saavad laaditud</string>
-    <string name="share_as_barcode">Jaga triipkoodina</string>
+    <string name="share_as_barcode">Jaga QR-koodina</string>
     <string name="share_as_http">Jaga HTTP lingina</string>
     <string name="pref_blind_trust_before_verification">Enne verifitseerimist usalda pimesi</string>
     <string name="pref_blind_trust_before_verification_summary">Usalda verifitseerimata kontaktide uusi seadmeid, aga küsi kinnitust verifitseeritud kontaktide uute seadmete puhul.</string>
@@ -1048,7 +1045,6 @@
     <string name="failed_deliveries">Vead kohaletoimetamisel</string>
     <string name="more_options">Täiendavad valikud</string>
     <string name="no_application_found">Rakendust ei leidunud</string>
-    <string name="invite_to_app">Kutsu kasutama Conversationsit</string>
     <string name="unable_to_enable_video">Video kasutuselevõtmine ei õnnestu.</string>
     <string name="could_not_disable_video">Video kasutuselt eemaldamine ei õnnestu.</string>
     <string name="unified_push_distributor">UnifiedPushi levitaja</string>
@@ -1173,4 +1169,14 @@
     <string name="mobile_ticket">Nutipääsmik</string>
     <string name="open_keyboard">Ava klahvistik</string>
     <string name="emoji_reactions">Emojiga reageerimine</string>
+    <string name="server_invite">Kutse kasutama serverit</string>
+    <string name="qr_code_actions">Skaneeri QR-koodi, näita QR-koodi serveri kutse</string>
+    <string name="qr_code_contains_link">Kas avad veebilingi?</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Kustuta %d sõnum</item>
+        <item quantity="other">Kustuta %d sõnumit</item>
+    </plurals>
+    <string name="muc_user_ban_explainer">See kasutaja ei näe enam uusi sõnumeid ega saa osaleda vestlustes.</string>
+    <string name="open_browser">Ava veebibrauseris</string>
+    <string name="qr_code_contains_link_text">See QR-kood viitab veebisaidile. Enne veebibrauseris avamist palun kontrolli, kas see aadress on ikka loogiline ja õige:</string>
 </resources>

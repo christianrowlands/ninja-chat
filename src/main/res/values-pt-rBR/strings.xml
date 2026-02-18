@@ -370,9 +370,6 @@
     <string name="remove_from_room">Remover do grupo</string>
     <string name="remove_from_channel">Remover do canal</string>
     <string name="could_not_change_affiliation">Não foi possível alterar a filiação de %s</string>
-    <string name="ban_from_conference">Banir do grupo</string>
-    <string name="ban_from_channel">Banir do canal</string>
-    <string name="removing_from_public_conference">Você está tentando remover %s de um canal público. A única forma de fazer isso é banir este usuário para sempre.</string>
     <string name="ban_now">Banir agora</string>
     <string name="could_not_change_role">Não foi possível alterar o cargo de %s</string>
     <string name="conference_options">Configuração do grupo privado</string>
@@ -582,9 +579,9 @@
     <string name="copy_fingerprint">Copiar impressão digital</string>
     <string name="all_omemo_keys_have_been_verified">Você verificou todas as chaves OMEMO em sua posse</string>
     <string name="verified_fingerprints">Impressões digitais verificadas</string>
-    <string name="use_camera_icon_to_scan_barcode">Use a câmera para capturar o código de barras de um contato</string>
+    <string name="use_camera_icon_to_scan_barcode">Use a câmera para capturar o código QR de um contato</string>
     <string name="please_wait_for_keys_to_be_fetched">Aguarde o descarregamento das chaves</string>
-    <string name="share_as_barcode">Compartilhar como código de barras</string>
+    <string name="share_as_barcode">Compartilhar como código QR</string>
     <string name="share_as_uri">Compartilhar como URI XMPP</string>
     <string name="share_as_http">Compartilhar como link HTTP</string>
     <string name="pref_blind_trust_before_verification">Confiar cegamente antes de verificar</string>
@@ -956,7 +953,6 @@
     <string name="failed_deliveries">Entregas falhas</string>
     <string name="more_options">Mais opções</string>
     <string name="no_application_found">Não foi encontrado nenhum app</string>
-    <string name="invite_to_app">Convidar para o Ninja Chat</string>
     <string name="unable_to_parse_invite">Não foi possível interpretar o convite</string>
     <string name="server_does_not_support_easy_onboarding_invites">O servidor não suporta a criação de convites</string>
     <string name="no_active_accounts_support_this">Nenhuma conta ativa suporta esse recurso</string>
@@ -1049,7 +1045,7 @@
     <string name="quicksy_wants_your_consent">O Quicksy pede seu consentimento ao usar seus dados</string>
     <string name="reconnect_on_other_host">Reconectar em outro servidor</string>
     <string name="no_permission_to_place_call">Sem permissão para fazer uma ligação</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Este código de barras não contém impressões digitais para esta conversa.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Este código QR não contém impressões digitais para esta conversa.</string>
     <string name="pref_dynamic_colors">Cores dinâmicas</string>
     <string name="pref_dynamic_colors_summary">Cores do sistema (Material You)</string>
     <string name="outdated_backup_file_format">Você está tentando importar um backup com um formato desatualizado</string>
@@ -1156,4 +1152,8 @@
     <string name="pref_use_relays">Sempre usar relês</string>
     <string name="pref_use_relays_summary">Passar todas as conexões \"diretas\" (chamadas e transferências de arquivo) pelo seu servidor para evitar revelar seu endereço de IP.</string>
     <string name="mobile_ticket">Ingresso móvel</string>
+    <string name="server_invite">Convidar para o servidor</string>
+    <string name="emoji_reactions">Reações de emoji</string>
+    <string name="open_keyboard">Abrir teclado</string>
+    <string name="qr_code_actions">Ler QR, mostrar QR, convite do servidor</string>
 </resources>

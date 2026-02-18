@@ -198,8 +198,6 @@
     <string name="advanced_mode">വിപുലമായ മോഡ്</string>
     <string name="remove_from_room">ഗ്രൂപ്പ് ചാറ്റിൽ നിന്ന് മാറ്റുക</string>
     <string name="remove_from_channel">ചാനലിൽ നിന്ന് നീക്കം ചെയ്യുക</string>
-    <string name="ban_from_conference">ഗ്രൂപ്പ് ചാറ്റിൽ നിന്ന് നിരോധിക്കൂ</string>
-    <string name="ban_from_channel">ചാനലിൽ നിന്ന് നിരോധിക്കൂ</string>
     <string name="ban_now">ഇപ്പോൾ നിരോധിക്കൂ</string>
     <string name="members_only">സ്വകാര്യ, അംഗങ്ങൾ മാത്രം</string>
     <string name="you_are_not_participating">നിങ്ങൾ പങ്കെടുക്കുന്നില്ല</string>
@@ -309,6 +307,5 @@
     <string name="search_this_conversation">ഈ സംഭാഷണം</string>
     <string name="your_avatar">നിങ്ങളുടെ അവതാർ</string>
     <string name="more_options">കൂടുതൽ ഓപ്ഷനുകൾ</string>
-    <string name="invite_to_app">Conversations-ലേക്ക് ക്ഷണിക്കുക</string>
     <string name="backup_started_message">ബാക്കപ്പ് ആരംഭിച്ചു. അത് പൂർത്തിയായിക്കഴിഞ്ഞാൽ നിങ്ങൾക്ക് ഒരു അറിയിപ്പ് ലഭിക്കും.</string>
 </resources>

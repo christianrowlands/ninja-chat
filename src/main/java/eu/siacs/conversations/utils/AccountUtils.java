@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import com.google.common.collect.Collections2;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Longs;
 import eu.siacs.conversations.R;
@@ -14,7 +13,6 @@ import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.XmppActivity;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,10 +125,5 @@ public class AccountUtils {
         if (manageAccounts != null) {
             manageAccounts.setVisible(MANAGE_ACCOUNT_ACTIVITY != null);
         }
-    }
-
-    public static String[] asStrings(final Collection<Account> accounts) {
-        return Collections2.transform(accounts, a -> a.getJid().asBareJid().toString())
-                .toArray(new String[0]);
     }
 }

@@ -14,8 +14,11 @@ import im.conversations.android.xmpp.model.data.Data;
 import im.conversations.android.xmpp.model.push.Disable;
 import im.conversations.android.xmpp.model.push.Enable;
 import im.conversations.android.xmpp.model.stanza.Iq;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PushNotificationManager extends AbstractManager {
+
+    private final AtomicInteger pushNotificationCounter = new AtomicInteger();
 
     public PushNotificationManager(final Context context, final XmppConnection connection) {
         super(context, connection);
@@ -74,6 +77,14 @@ public class PushNotificationManager extends AbstractManager {
 
     public boolean hasFeature() {
         return getManager(DiscoManager.class).hasAccountFeature(Namespace.PUSH);
+    }
+
+    public int incrementAndGetPushNotificationCounter() {
+        return this.pushNotificationCounter.incrementAndGet();
+    }
+
+    public int getPushNotificationCounter() {
+        return this.pushNotificationCounter.get();
     }
 
     public static class Registration {

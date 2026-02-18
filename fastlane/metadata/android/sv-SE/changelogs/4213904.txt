@@ -1,0 +1,2 @@
+* Lägg till möjlighet att välja plats för säkerhetskopieringar
+* Fler URI:er (tel:, mailto:) är nu klickbara

@@ -57,6 +57,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.zxing.WriterException;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
@@ -211,7 +213,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         mToast.show();
     }
 
-    protected final void refreshUi() {
+    public final void refreshUi() {
         final long diff = SystemClock.elapsedRealtime() - mLastUiRefresh;
         if (diff > Config.REFRESH_UI_INTERVAL) {
             mRefreshUiHandler.removeCallbacks(mRefreshUiRunnable);
@@ -997,22 +999,22 @@ public abstract class XmppActivity extends ActionBarActivity {
         return false;
     }
 
-    protected String getShareableUri() {
+    protected MiniUri getShareableUri() {
         return getShareableUri(false);
     }
 
-    protected String getShareableUri(boolean http) {
+    protected MiniUri getShareableUri(boolean http) {
         return null;
     }
 
-    protected void shareLink(boolean http) {
-        String uri = getShareableUri(http);
-        if (uri == null || uri.isEmpty()) {
+    protected void shareLink(final boolean http) {
+        final var uri = getShareableUri(http);
+        if (uri == null) {
             return;
         }
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, getShareableUri(http));
+        intent.putExtra(Intent.EXTRA_TEXT, getShareableUri(http).asUri().toString());
         try {
             startActivity(Intent.createChooser(intent, getText(R.string.share_uri_with)));
         } catch (ActivityNotFoundException e) {
@@ -1060,8 +1062,8 @@ public abstract class XmppActivity extends ActionBarActivity {
         showQrCode(getShareableUri());
     }
 
-    protected void showQrCode(final String uri) {
-        if (uri == null || uri.isEmpty()) {
+    protected void showQrCode(final MiniUri uri) {
+        if (uri == null) {
             return;
         }
         final Point size = new Point();
@@ -1092,7 +1094,15 @@ public abstract class XmppActivity extends ActionBarActivity {
                             com.google.android.material.R.attr.colorSurfaceContainerHighest,
                             "No surface color configured");
         }
-        final var bitmap = BarcodeProvider.create2dBarcodeBitmap(uri, width, black, white);
+        final Bitmap bitmap;
+        try {
+            bitmap =
+                    BarcodeProvider.create2dBarcodeBitmap(
+                            uri.asUri().toString(), width, black, white);
+        } catch (final WriterException e) {
+            Log.e(Config.LOGTAG, "could not create qr code", e);
+            return;
+        }
         final ImageView view = new ImageView(this);
         view.setBackgroundColor(white);
         view.setImageBitmap(bitmap);

@@ -305,8 +305,6 @@
     <string name="remove_from_room">Taldetik kendu</string>
     <string name="remove_from_channel">Kanaletik kendu</string>
     <string name="could_not_change_affiliation">%s(r)en afiliazioa ezin izan da aldatu</string>
-    <string name="ban_from_conference">Taldean egotea debekatu</string>
-    <string name="ban_from_channel">Kanalean egotea debekatu</string>
     <string name="ban_now">Debekatu orain</string>
     <string name="could_not_change_role">%s(r)en rola ezin izan da aldatu</string>
     <string name="conference_options">Talde pribatuaren konfigurazioa</string>

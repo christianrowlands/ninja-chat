@@ -1,0 +1,3 @@
+* Corrige les messages réenvoyé lors de l'usage de SASL2
+* Corrige les vidéos noire sur certains appareils
+* Corrige les crashs lors de mot de passes vides

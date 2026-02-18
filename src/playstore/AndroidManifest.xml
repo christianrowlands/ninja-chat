@@ -5,30 +5,27 @@
     <!-- Remove this line if Google Play Store is giving you a hard time -->
     <!-- <uses-permission android:name="android.permission.READ_CONTACTS"/> -->
 
+    <queries>
+        <package android:name="com.google.android.gms" />
+        <intent>
+            <action android:name="com.google.android.c2dm.intent.REGISTER" />
+        </intent>
+    </queries>
+
+
     <application android:icon="@mipmap/new_launcher">
 
-        <meta-data
-            android:name="firebase_analytics_collection_deactivated"
-            android:value="true" />
-        <meta-data
-            android:name="google_analytics_adid_collection_enabled"
-            android:value="false" />
-
         <receiver
-            android:name=".services.MaintenanceReceiver"
+            android:name=".receiver.PushMessageReceiver"
             android:exported="true"
-            android:permission="android.permission.CHANGE_CONFIGURATION">
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="eu.siacs.conversations.RENEW_INSTANCE_ID" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".receiver.PushMessageReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
     </application>
 </manifest>

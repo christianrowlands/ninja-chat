@@ -31,6 +31,7 @@
 -dontwarn com.google.android.gms.ads.identifier.AdvertisingIdClient
 -dontwarn com.google.android.gms.ads.identifier.AdvertisingIdClient$Info
 -dontwarn java.lang.**
+-dontwarn com.google.auto.service.AutoService
 -dontwarn javax.lang.**
 -dontwarn org.webrtc.Dav1dDecoder
 

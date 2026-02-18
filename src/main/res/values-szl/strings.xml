@@ -387,9 +387,6 @@
     <string name="remove_from_room">Wyciep z kōnferyncyje</string>
     <string name="remove_from_channel">Wyciep z kanału</string>
     <string name="could_not_change_affiliation">Niy szło umiynić stanowiska ôd %s</string>
-    <string name="ban_from_conference">Wyklucz</string>
-    <string name="ban_from_channel">Wyklucz na kanale</string>
-    <string name="removing_from_public_conference">Chcesz wyciepnōńć %s z publicznego kanału. Jedyny spusōb na to, to je wykluczyć ta ôsoba na dycki.</string>
     <string name="ban_now">Wyklucz teroz</string>
     <string name="could_not_change_role">Niy szło zmiynić funkcyje %s</string>
     <string name="conference_options">Kōnfiguracyjo prywatnyj kōnferyncyje</string>
@@ -964,7 +961,6 @@
     <string name="failed_deliveries">Niypodarzōne lifrowania</string>
     <string name="more_options">Wiyncyj ôpcyjōw</string>
     <string name="no_application_found">Żodno aplikacyjo niyznojdziōno</string>
-    <string name="invite_to_app">Zaproś do Conversations</string>
     <string name="unable_to_parse_invite">Niy idzie przetworzić zaproszynio</string>
     <string name="server_does_not_support_easy_onboarding_invites">Serwer niy spiyro gynerowanio zaproszyń</string>
     <string name="no_active_accounts_support_this">Żodne aktywne kōnta niy spiyrajōm tyj funkcyje</string>

@@ -1,0 +1,2 @@
+* Stöd för "Service Outage Status"
+* Mindre säkerhetsfixar vid tolkning av flera bodies, occupant-IDs och stanza-ID

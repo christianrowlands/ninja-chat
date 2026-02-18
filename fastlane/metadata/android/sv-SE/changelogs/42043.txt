@@ -1,1 +1,1 @@
-* Fixade återgång med filöverföring via P2P
+* Åtgärdat återinfört fel vid P2P-filöverföring

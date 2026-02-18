@@ -531,8 +531,6 @@
     <string name="clear_other_devices_desc">Tem a certeza que quer remover todos os outros dispositivos do anúncio OMEMO? Da próxima vez que os seus dispositivos se conectarem, eles serão anunciados novamente, mas podem não receber mensagens enviadas entretanto.</string>
     <string name="error_trustkeys_title">Algo de errado não está certo</string>
     <string name="password_should_not_be_empty">A password não pode estar vazia</string>
-    <string name="ban_from_channel">Banir do canal</string>
-    <string name="removing_from_public_conference">Está a tentar remover %s de um canal público. A única maneira de o fazer é a banir o utilizador para sempre.</string>
     <string name="snooze">Snooze</string>
     <string name="conference_options">Configuração da conversa em grupo privada</string>
     <string name="channel_options">Configuração do canal público</string>
@@ -552,7 +550,6 @@
     <string name="no_application_found_to_display_location">Nenhuma app foi encontrada para mostrar a localização</string>
     <string name="user_has_left_conference">%1$s saiu da conversa em grupo</string>
     <string name="account_status_host_unknown">Não responsável pelo domínio</string>
-    <string name="ban_from_conference">Banir da conversa em grupo</string>
     <string name="title_undo_swipe_out_group_chat">Sair da conversa em grupo privada</string>
     <string name="download_failed_invalid_file">Download falhou: Ficheiro inválido</string>
     <string name="pref_away_when_screen_off">Ausente quando o dispositivo está bloqueado</string>
@@ -614,7 +611,7 @@
     <string name="data_saver_enabled_explained">O seu sistema operativo está a restringir %1$s de aceder a Internet em segundo plano. Para receber notificações de novas mensagens, deve permitir %1$s acesso sem restrições quando “Data saver” está ativo.\n%1$s irá se esforçar para economizar dados quando possível.</string>
     <string name="device_does_not_support_data_saver">O seu dispositivo não permite desativar a economia de dados para %1$s.</string>
     <string name="error_unable_to_create_temporary_file">Não foi possível criar ficheiro temporário</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">O código de barras não contém impressões digitais para esta conversa.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">O código QR não contém impressões digitais para esta conversa.</string>
     <string name="verified_fingerprints">Impressões digitais verificadas</string>
     <string name="invalid_barcode">Código QR inválido</string>
     <string name="pref_clean_private_storage">Limpar armazenamento privado</string>
@@ -623,11 +620,11 @@
     <string name="all_omemo_keys_have_been_verified">Verificou todas as chaves OMEMO na sua posse</string>
     <string name="this_device_has_been_verified">Este dispositivo foi verificado</string>
     <string name="please_wait_for_keys_to_be_fetched">Por favor, espere a obtenção de chaves</string>
-    <string name="share_as_barcode">Partilhar como código de barras</string>
+    <string name="share_as_barcode">Partilhar como código QR</string>
     <string name="share_as_http">Partilhar como link HTTP</string>
     <string name="pref_blind_trust_before_verification">Confiar Cegamente Antes da Verificação</string>
     <string name="pref_delete_omemo_identities_summary">Regenerar as suas chaves OMEMO. Todos os seus contactos terão que verificar novamente. Use só como último recurso.</string>
-    <string name="use_camera_icon_to_scan_barcode">Use a câmara para capturar o código de barras de um contacto</string>
+    <string name="use_camera_icon_to_scan_barcode">Use a câmara para capturar o código QR de um contacto</string>
     <string name="pref_blind_trust_before_verification_summary">Confiar novos dispositivos de contactos não verificados, mas solicitar confirmação manual de novos dispositivos para contactos verificados.</string>
     <string name="i_followed_this_link_from_a_trusted_source">Eu segui este link de uma fonte que confio</string>
     <string name="not_trusted">Não conviável</string>
@@ -984,7 +981,6 @@
     <string name="microphone_unavailable">O microfone está indisponível</string>
     <string name="backup_started_message">O backup foi iniciado. Receberá uma notificação quando for concluído.</string>
     <string name="no_application_found">Nenhuma aplicação encontrada</string>
-    <string name="invite_to_app">Convidar para o Conversations</string>
     <string name="unable_to_parse_invite">Impossível processar o convite</string>
     <string name="server_does_not_support_easy_onboarding_invites">O servidor não suporta geração de convites</string>
     <string name="search_all_conversations">Todas as conversas</string>
@@ -1158,4 +1154,6 @@
     <string name="mobile_ticket">Passe de Telemóvel</string>
     <string name="emoji_reactions">Reações de emojis</string>
     <string name="open_keyboard">Abrir teclado</string>
+    <string name="server_invite">Convidar para o servidor</string>
+    <string name="qr_code_actions">Ler QR, Mostrar QR, Convite do Servidor</string>
 </resources>

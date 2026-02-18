@@ -13,14 +13,14 @@ public class PatternTest {
     public void shortImMessage() {
         final var message =
                 "Hi. I'm refactoring how URIs are linked in Conversations. We now support more URI"
-                    + " schemes like mailto:user@example.com and tel:+1-269-555-0107 and obviously"
+                    + " schemes like mailto:user@example.com and tel:+1-269-555-0107, and obviously"
                     + " maintain support for things like"
-                    + " xmpp:conversations@conference.siacs.eu?join and https://example.com however"
-                    + " we no longer link domains that aren't actual URIs like example.com to avoid"
-                    + " some false positives.";
+                    + " xmpp:conversations@conference.siacs.eu?join and https://example.com."
+                    + " However we no longer link domains that aren't actual URIs like example.com"
+                    + " to avoid some false positives.";
 
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)
@@ -42,7 +42,7 @@ public class PatternTest {
                     + " (https://en.wikipedia.org/wiki/Ambiguity_(disambiguation)). Let me know if"
                     + " you have questions!";
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)
@@ -57,7 +57,7 @@ public class PatternTest {
     public void parenthesis() {
         final var message = "Daniel is on Mastodon (https://gultsch.social/@daniel)";
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)
@@ -70,7 +70,7 @@ public class PatternTest {
     public void fullWidthSpace() {
         final var message = "\u3000https://conversations.im";
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)
@@ -83,7 +83,7 @@ public class PatternTest {
     public void fullWidthColon() {
         final var message = "\uFF1Ahttps://conversations.im";
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)
@@ -96,7 +96,7 @@ public class PatternTest {
     public void newLine() {
         final var message = "\nxmpp:example.com";
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)
@@ -109,7 +109,7 @@ public class PatternTest {
     public void code() {
         final var message = "`xmpp:example.com`";
         final var matches =
-                Patterns.URI_GENERIC
+                Patterns.URIS_GENERIC_IN_TEXT
                         .matcher(message)
                         .results()
                         .map(MatchResult::group)

@@ -1,1 +1,1 @@
-* mindre stabilitetsförbättringar för A/V-samtal
+* Mindre stabilitetsförbättringar för ljud-/videosamtal

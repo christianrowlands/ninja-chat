@@ -24,7 +24,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.EasyOnboardingInviteActivity"
-            android:label="@string/invite_to_app"
+            android:label="@string/server_invite"
             android:launchMode="singleTask" />
     </application>
 </manifest>

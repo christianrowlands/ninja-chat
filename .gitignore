@@ -4,6 +4,7 @@
 
 src/conversationsPlaystore/res/values/push.xml
 src/quicksyPlaystore/res/values/push.xml
+src/quicksyPlaystore/java/eu/siacs/conversations/utils/QuicksyAuthentication.java
 
 
 # https://github.com/github/gitignore/blob/master/Gradle.gitignore

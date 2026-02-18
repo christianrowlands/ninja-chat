@@ -1,0 +1,2 @@
+* Återställ åtkomst till Channel Discovery för Android 6 och Android 7
+* Förbättrat loggningen av misslyckad samtalsintegration

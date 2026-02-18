@@ -1,0 +1,3 @@
+* Affiche des barres noires lorsque la vidéo distante ne correspond pas au ratio de l'écran
+* Améliore la performance de recherche
+* Ajout d'un paramètre pour empêcher les captures d'écran

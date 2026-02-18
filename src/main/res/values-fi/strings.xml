@@ -360,9 +360,6 @@
     <string name="remove_owner_privileges">Peru omistajuus</string>
     <string name="remove_from_room">Poista ryhmäkeskustelusta</string>
     <string name="remove_from_channel">Poista kanavalta</string>
-    <string name="ban_from_conference">Estä ryhmäkeskustelusta</string>
-    <string name="ban_from_channel">Estä kanavalta</string>
-    <string name="removing_from_public_conference">Olet poistamassa %s:n julkiselta kanavalta. Ainoa tapa tehdä se on estää kyseinen käyttäjä ikuisesti. </string>
     <string name="ban_now">Estä nyt</string>
     <string name="could_not_change_role">%s:n roolin muuttaminen epäonnistui</string>
     <string name="conference_options">Yksityisen ryhmäkeskustelun asetukset</string>
@@ -873,7 +870,6 @@
     <string name="failed_deliveries">Toimitusvirheet</string>
     <string name="more_options">Lisää vaihtoehtoja</string>
     <string name="no_application_found">Sovellusta ei löytynyt</string>
-    <string name="invite_to_app">Kutsu Conversationsiin</string>
     <string name="unable_to_parse_invite">Kutsun jäsentäminen epäonnistui</string>
     <string name="server_does_not_support_easy_onboarding_invites">Palvelin ei tue kutsujen luomista</string>
     <string name="no_active_accounts_support_this">Yksikään aktiivinen tili ei tue tätä toimintoa</string>

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import com.google.common.base.Strings;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityWelcomeBinding;
@@ -27,17 +28,16 @@ import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.InstallReferrerUtils;
 import eu.siacs.conversations.utils.SignupUtils;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import java.util.Arrays;
 import java.util.List;
 
-public class WelcomeActivity extends XmppActivity
+public class WelcomeActivity extends QrCodeProcessingActivity
         implements XmppConnectionService.OnAccountCreated, KeyChainAliasCallback {
 
     private static final int REQUEST_IMPORT_BACKUP = 0x63fb;
 
-    private XmppUri inviteUri;
+    private MiniUri.Xmpp inviteUri;
 
     public static void launch(AppCompatActivity activity) {
         Intent intent = new Intent(activity, WelcomeActivity.class);
@@ -48,25 +48,24 @@ public class WelcomeActivity extends XmppActivity
 
     public void onInstallReferrerDiscovered(final Uri referrer) {
         Log.d(Config.LOGTAG, "welcome activity: on install referrer discovered " + referrer);
-        if ("xmpp".equalsIgnoreCase(referrer.getScheme())) {
-            final XmppUri xmppUri = new XmppUri(referrer);
-            runOnUiThread(() -> processXmppUri(xmppUri));
+        if (MiniUri.getOrNull(referrer) instanceof MiniUri.Xmpp xmpp) {
+            runOnUiThread(() -> processXmppUri(xmpp));
         } else {
             Log.i(Config.LOGTAG, "install referrer was not an XMPP uri");
         }
     }
 
-    private void processXmppUri(final XmppUri xmppUri) {
-        if (!xmppUri.isValidJid()) {
+    private void processXmppUri(final MiniUri.Xmpp xmppUri) {
+        if (!xmppUri.isAddress()) {
             return;
         }
-        final String preAuth = xmppUri.getParameter(XmppUri.PARAMETER_PRE_AUTH);
-        final Jid jid = xmppUri.getJid();
+        final String preAuth = xmppUri.getParameter(MiniUri.Xmpp.PARAMETER_PRE_AUTH);
+        final Jid jid = xmppUri.asJid();
         final Intent intent;
-        if (xmppUri.isAction(XmppUri.ACTION_REGISTER)) {
+        if (xmppUri.isAction(MiniUri.Xmpp.ACTION_REGISTER)) {
             intent = SignupUtils.getTokenRegistrationIntent(this, jid, preAuth);
-        } else if (xmppUri.isAction(XmppUri.ACTION_ROSTER)
-                && "y".equals(xmppUri.getParameter(XmppUri.PARAMETER_IBR))) {
+        } else if (xmppUri.isAction(MiniUri.Xmpp.ACTION_ROSTER)
+                && "y".equals(xmppUri.getParameter(MiniUri.Xmpp.PARAMETER_IBR))) {
             intent = SignupUtils.getTokenRegistrationIntent(this, jid.getDomain(), preAuth);
             intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, xmppUri.toString());
         } else {
@@ -156,7 +155,7 @@ public class WelcomeActivity extends XmppActivity
                 }
                 break;
             case R.id.action_scan_qr_code:
-                UriHandlerActivity.scan(this, true);
+                requestPermissionAndScanQrCode();
                 break;
             case R.id.action_add_account_with_cert:
                 addAccountFromKey();
@@ -207,7 +206,6 @@ public class WelcomeActivity extends XmppActivity
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults);
         if (grantResults.length > 0) {
             if (allGranted(grantResults)) {
                 switch (requestCode) {

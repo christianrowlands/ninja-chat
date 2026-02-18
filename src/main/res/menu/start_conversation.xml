@@ -9,12 +9,6 @@
         app:actionLayout="@layout/actionview_search"
         app:showAsAction="collapseActionView|always" />
     <item
-        android:id="@+id/action_scan_qr_code"
-        android:icon="@drawable/ic_qr_code_scanner_24dp"
-        android:title="@string/scan_qr_code"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_hide_offline"
         android:checkable="true"
         android:checked="false"

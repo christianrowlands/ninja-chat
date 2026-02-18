@@ -1,0 +1,2 @@
+* Åtgärdat problemet med att vissa videor inte komprimeras
+* Fixa sällsynt krasch när man öppnar notiser

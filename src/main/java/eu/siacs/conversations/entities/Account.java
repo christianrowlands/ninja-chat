@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpDecryptionService;
@@ -20,14 +23,12 @@ import eu.siacs.conversations.http.ServiceOutageStatus;
 import eu.siacs.conversations.services.AvatarService;
 import eu.siacs.conversations.utils.Resolver;
 import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.jingle.RtpCapability;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
 import eu.siacs.conversations.xmpp.manager.RosterManager;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -627,46 +628,28 @@ public class Account extends AbstractEntity implements AvatarService.Avatar {
         return this.avatar;
     }
 
-    public String getShareableUri() {
-        List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
-        final String uri = "xmpp:" + this.getJid().asBareJid().toString();
-        if (fingerprints.isEmpty()) {
-            return uri;
-        } else {
-            return XmppUri.getFingerprintUri(uri, fingerprints, ';');
-        }
+    public MiniUri.Xmpp getShareableUri() {
+        return new MiniUri.Xmpp(this.getJid().asBareJid(), getFingerprints());
     }
 
-    public String getShareableLink() {
-        List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
-        String uri =
-                "https://ninja.chat/i/"
-                        + XmppUri.lameUrlEncode(this.getJid().asBareJid().toString());
-        if (fingerprints.isEmpty()) {
-            return uri;
-        } else {
-            return XmppUri.getFingerprintUri(uri, fingerprints, '&');
-        }
+    public MiniUri.Http getShareableLink() {
+        return getShareableUri().asInvitationUri();
     }
 
-    private List<XmppUri.Fingerprint> getFingerprints() {
-        ArrayList<XmppUri.Fingerprint> fingerprints = new ArrayList<>();
+    private ImmutableMap<String, Collection<String>> getFingerprints() {
+        final ImmutableMultimap.Builder<String, String> builder = new ImmutableMultimap.Builder<>();
         final var axolotlService = getAxolotlService();
-        fingerprints.add(
-                new XmppUri.Fingerprint(
-                        XmppUri.FingerprintType.OMEMO,
-                        axolotlService.getOwnFingerprint().substring(2),
-                        axolotlService.getOwnDeviceId()));
+        builder.put(
+                String.format("omemo-sid-%d", axolotlService.getOwnDeviceId()),
+                axolotlService.getOwnFingerprint().substring(2));
         for (XmppAxolotlSession session : axolotlService.findOwnSessions()) {
             if (session.getTrust().isVerified() && session.getTrust().isActive()) {
-                fingerprints.add(
-                        new XmppUri.Fingerprint(
-                                XmppUri.FingerprintType.OMEMO,
-                                session.getFingerprint().substring(2).replaceAll("\\s", ""),
-                                session.getRemoteAddress().getDeviceId()));
+                builder.put(
+                        String.format("omemo-sid-%d", session.getRemoteAddress().getDeviceId()),
+                        session.getFingerprint().substring(2));
             }
         }
-        return fingerprints;
+        return builder.build().asMap();
     }
 
     public boolean isOnlineAndConnected() {

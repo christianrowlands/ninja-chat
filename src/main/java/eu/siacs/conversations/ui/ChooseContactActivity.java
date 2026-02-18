@@ -16,12 +16,10 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import com.google.common.base.Strings;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
@@ -29,9 +27,6 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.ListItem;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected;
-import eu.siacs.conversations.ui.util.ActivityResult;
-import eu.siacs.conversations.ui.util.PendingItem;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +50,6 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity
     private boolean showEnterJid = false;
     private boolean startSearching = false;
     private boolean multiple = false;
-
-    private final PendingItem<ActivityResult> postponedActivityResult = new PendingItem<>();
 
     public static Intent create(Activity activity, Conversation conversation) {
         final Intent intent = new Intent(activity, ChooseContactActivity.class);
@@ -138,9 +131,9 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity
                                 getResources().getBoolean(R.bool.start_searching));
     }
 
-    private void onFabClicked(View v) {
+    private void onFabClicked(final View v) {
         if (selected.isEmpty()) {
-            showEnterJidDialog(null);
+            showEnterJidDialog();
         } else {
             submitSelection();
         }
@@ -241,10 +234,6 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         super.onCreateOptionsMenu(menu);
-        final Intent i = getIntent();
-        boolean showEnterJid = i != null && i.getBooleanExtra(EXTRA_SHOW_ENTER_JID, false);
-        menu.findItem(R.id.action_scan_qr_code)
-                .setVisible(isCameraFeatureAvailable() && showEnterJid);
         MenuItem mMenuSearchView = menu.findItem(R.id.action_search);
         if (startSearching) {
             mMenuSearchView.expandActionView();
@@ -301,30 +290,19 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity
         // nothing to do. This Activity doesn't implement any listeners
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_scan_qr_code:
-                ScanActivity.scan(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    protected void showEnterJidDialog(XmppUri uri) {
+    protected void showEnterJidDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        Jid jid = uri == null ? null : uri.getJid();
         EnterJidDialog dialog =
                 EnterJidDialog.newInstance(
                         mActivatedAccounts,
                         getString(R.string.enter_contact),
                         getString(R.string.select),
-                        jid == null ? null : jid.asBareJid().toString(),
+                        null,
                         getIntent().getStringExtra(EXTRA_ACCOUNT),
                         true,
                         false);
@@ -347,28 +325,6 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, requestCode, intent);
-        ActivityResult activityResult = ActivityResult.of(requestCode, resultCode, intent);
-        if (xmppConnectionService != null) {
-            handleActivityResult(activityResult);
-        } else {
-            this.postponedActivityResult.push(activityResult);
-        }
-    }
-
-    private void handleActivityResult(ActivityResult activityResult) {
-        if (activityResult.resultCode == RESULT_OK
-                && activityResult.requestCode == ScanActivity.REQUEST_SCAN_QR_CODE) {
-            String result = activityResult.data.getStringExtra(ScanActivity.INTENT_EXTRA_RESULT);
-            XmppUri uri = new XmppUri(Strings.nullToEmpty(result));
-            if (uri.isValidJid()) {
-                showEnterJidDialog(uri);
-            }
-        }
-    }
-
-    @Override
     protected void onBackendConnected() {
         filterContacts();
         this.mActivatedAccounts.clear();
@@ -377,22 +333,11 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity
                 this.mActivatedAccounts.add(account.getJid().asBareJid().toString());
             }
         }
-        ActivityResult activityResult = this.postponedActivityResult.pop();
-        if (activityResult != null) {
-            handleActivityResult(activityResult);
-        }
         final Fragment fragment =
                 getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
-        if (fragment instanceof OnBackendConnected) {
-            ((OnBackendConnected) fragment).onBackendConnected();
+        if (fragment instanceof OnBackendConnected callback) {
+            callback.onBackendConnected();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        ScanActivity.onRequestPermissionResult(this, requestCode, grantResults);
     }
 
     @Override

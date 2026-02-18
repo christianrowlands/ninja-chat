@@ -13,18 +13,21 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.base.Strings;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.DialogEnterJidBinding;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.adapter.KnownHostsAdapter;
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected;
 import eu.siacs.conversations.ui.util.DelayedHintHelper;
+import eu.siacs.conversations.utils.CharSequences;
 import eu.siacs.conversations.xmpp.Jid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class EnterJidDialog extends DialogFragment implements OnBackendConnected, TextWatcher {
 
@@ -81,8 +84,8 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
     public void onStart() {
         super.onStart();
         final Activity activity = getActivity();
-        if (activity instanceof XmppActivity
-                && ((XmppActivity) activity).xmppConnectionService != null) {
+        if (activity instanceof XmppActivity xmppActivity
+                && xmppActivity.xmppConnectionService != null) {
             refreshKnownHosts();
         }
     }
@@ -151,35 +154,47 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         return dialog;
     }
 
-    private void handleEnter(DialogEnterJidBinding binding, String account) {
+    private void handleEnter(final DialogEnterJidBinding binding, final String account) {
         final Jid accountJid;
         if (!binding.account.isEnabled() && account == null) {
             return;
         }
         try {
-            accountJid = Jid.of(binding.account.getEditableText().toString());
+            accountJid = Jid.of(CharSequences.nullToEmpty(binding.account.getText()));
         } catch (final IllegalArgumentException e) {
             return;
         }
+        final var context = binding.getRoot().getContext();
+
+        final var input = CharSequences.nullToEmpty(binding.jid.getText());
+        final var asMiniUri = MiniUri.getXmppUriOrNull(input);
+
         final Jid contactJid;
-        try {
-            contactJid = Jid.ofUserInput(binding.jid.getText().toString().trim());
-        } catch (final IllegalArgumentException e) {
-            binding.jidLayout.setError(getActivity().getString(R.string.invalid_jid));
-            return;
+
+        if (asMiniUri != null
+                && asMiniUri.isAddress()
+                && !asMiniUri.isAction(MiniUri.Xmpp.ACTION_JOIN)) {
+            contactJid = Objects.requireNonNull(asMiniUri.asJid());
+            binding.jid.setText(contactJid.toString());
+            binding.jid.setSelection(binding.jid.getText().length());
+        } else {
+            try {
+                contactJid = Jid.ofUserInput(binding.jid.getText().toString().trim());
+            } catch (final IllegalArgumentException e) {
+                binding.jidLayout.setError(context.getString(R.string.invalid_jid));
+                return;
+            }
         }
 
         if (!issuedWarning && sanityCheckJid) {
             if (contactJid.isDomainJid()) {
-                binding.jidLayout.setError(
-                        getActivity().getString(R.string.this_looks_like_a_domain));
+                binding.jidLayout.setError(context.getString(R.string.this_looks_like_a_domain));
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add_anway);
                 issuedWarning = true;
                 return;
             }
             if (suspiciousSubDomain(contactJid.getDomain().toString())) {
-                binding.jidLayout.setError(
-                        getActivity().getString(R.string.this_looks_like_channel));
+                binding.jidLayout.setError(context.getString(R.string.this_looks_like_channel));
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add_anway);
                 issuedWarning = true;
                 return;

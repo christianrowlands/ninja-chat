@@ -1,0 +1,3 @@
+* Erbjud generering av Easy Invite på servrar som har stöd för funktionen.
+* Visa GIF-filer skickade från Movim
+* Lagra visningsbilder i cachen

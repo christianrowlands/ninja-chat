@@ -1,0 +1,11 @@
+Version 2.10.9
+* Demande les permissions Bluetooth lors des appels A/V (vous pouvez la rejeter si vous n'utilisez pas d'écouteurs Bluetooth)
+* Corrige un problème lors d'appel vers Movim
+* Corrige mauvais avatar affiché pour les salons de discussion
+* Toujours demander pour la désactivation des optimisations batterie
+* Défini un drapeau local pour les notifications 'x comptes connectés'
+* Corrige les interactions avec le plugin Google Maps Share Location
+* Retire le pied de page concernant les frais du serveur
+* Stocke les fichiers à l'endroit approprié pour Android 11
+* Tente de reconnecter un appel après une bascule de réseau
+* Afficher le JID appelant et JID du compte appelé sur l'écran d'appel entrant

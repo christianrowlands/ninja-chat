@@ -1,0 +1,3 @@
+* Åtgärdat anslutningsproblem när olika konton använde olika SCRAM-mekanismer
+* Lagt till stöd för SCRAM-SHA-512
+* Tillåt P2P-filöverföring (Jingle) med egen kontakt

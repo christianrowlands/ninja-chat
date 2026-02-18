@@ -1,0 +1,2 @@
+* Åtgärdat Quicksy-registrering på Android 6 och Android 7
+* Spela upp ringsignal för inkommande samtal på aviseringskanalen

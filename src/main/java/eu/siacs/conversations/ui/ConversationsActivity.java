@@ -58,6 +58,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.common.collect.Iterables;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OmemoSetting;
@@ -76,16 +78,15 @@ import eu.siacs.conversations.ui.util.ConversationMenuConfigurator;
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PendingItem;
 import eu.siacs.conversations.ui.util.ToolbarUtils;
+import eu.siacs.conversations.ui.widget.AccountPickerDialog;
 import eu.siacs.conversations.utils.ExceptionHelper;
 import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.utils.XmppUri;
-import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
 import java.util.Arrays;
 import java.util.List;
 import org.openintents.openpgp.util.OpenPgpApi;
 
-public class ConversationsActivity extends XmppActivity
+public class ConversationsActivity extends QrCodeProcessingActivity
         implements OnConversationSelected,
                 OnConversationArchived,
                 OnConversationsListItemUpdated,
@@ -94,8 +95,7 @@ public class ConversationsActivity extends XmppActivity
                 XmppConnectionService.OnConversationUpdate,
                 XmppConnectionService.OnRosterUpdate,
                 OnUpdateBlocklist,
-                XmppConnectionService.OnShowErrorToast,
-                XmppConnectionService.OnAffiliationChanged {
+                XmppConnectionService.OnShowErrorToast {
 
     public static final String ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW";
     public static final String EXTRA_CONVERSATION = "conversationUuid";
@@ -280,7 +280,6 @@ public class ConversationsActivity extends XmppActivity
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults);
         if (grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 switch (requestCode) {
@@ -390,18 +389,24 @@ public class ConversationsActivity extends XmppActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_conversations, menu);
-        final MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
-        if (qrCodeScanMenuItem != null) {
-            if (isCameraFeatureAvailable()) {
-                final var fragment =
-                        getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-                boolean visible =
-                        getResources().getBoolean(R.bool.show_qr_code_scan)
-                                && fragment instanceof ConversationsOverviewFragment;
-                qrCodeScanMenuItem.setVisible(visible);
-            } else {
-                qrCodeScanMenuItem.setVisible(false);
-            }
+        final var qrCodeActions = menu.findItem(R.id.action_qr_codes);
+        if (qrCodeActions == null) {
+            return super.onCreateOptionsMenu(menu);
+        }
+        final var fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+        boolean visible =
+                getResources().getBoolean(R.bool.show_qr_code_scan)
+                        && fragment instanceof ConversationsOverviewFragment;
+        if (visible) {
+            final var qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
+            final var showQrCodeMenuItem = menu.findItem(R.id.action_show_qr_code);
+            final var easyOnboardInvite = menu.findItem(R.id.action_easy_invite);
+            qrCodeActions.setVisible(true);
+            qrCodeScanMenuItem.setVisible(isCameraFeatureAvailable());
+            showQrCodeMenuItem.setVisible(new AccountPickerDialog.Enabled(this).hasAnyAccounts());
+            easyOnboardInvite.setVisible(new AccountPickerDialog.EasyInvite(this).hasAnyAccounts());
+        } else {
+            qrCodeActions.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -424,24 +429,12 @@ public class ConversationsActivity extends XmppActivity
         }
     }
 
-    private void displayToast(final String msg) {
-        runOnUiThread(
-                () -> Toast.makeText(ConversationsActivity.this, msg, Toast.LENGTH_SHORT).show());
-    }
-
-    @Override
-    public void onAffiliationChangedSuccessful(Jid jid) {}
-
-    @Override
-    public void onAffiliationChangeFailed(Jid jid, int resId) {
-        displayToast(getString(resId, jid.asBareJid().toString()));
-    }
-
     private void openConversation(@Nullable final Conversation conversation, final Bundle extras) {
         final var fragmentManager = getSupportFragmentManager();
         executePendingTransactions(fragmentManager);
         final boolean mainNeedsRefresh;
         if (binding.secondaryFragment != null) {
+            fragmentManager.popBackStackImmediate();
             final var secondaryFragment = fragmentManager.findFragmentById(R.id.secondary_fragment);
             if (conversation == null) {
                 if (secondaryFragment != null) {
@@ -504,11 +497,10 @@ public class ConversationsActivity extends XmppActivity
         }
     }
 
-    public boolean onXmppUriClicked(Uri uri) {
-        XmppUri xmppUri = new XmppUri(uri);
-        if (xmppUri.isValidJid() && !xmppUri.hasFingerprints()) {
+    public boolean onXmppUriClicked(final MiniUri.Xmpp uri) {
+        if (uri.isAddress() && uri.getOmemoFingerprints().isEmpty()) {
             final Conversation conversation =
-                    xmppConnectionService.findUniqueConversationByJid(xmppUri);
+                    xmppConnectionService.findUniqueConversationByJid(uri);
             if (conversation != null) {
                 openConversation(conversation, null);
                 return true;
@@ -518,7 +510,7 @@ public class ConversationsActivity extends XmppActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (MenuDoubleTabUtil.shouldIgnoreTap()) {
             return false;
         }
@@ -535,7 +527,10 @@ public class ConversationsActivity extends XmppActivity
                 }
                 break;
             case R.id.action_scan_qr_code:
-                UriHandlerActivity.scan(this);
+                requestPermissionAndScanQrCode();
+                return true;
+            case R.id.action_show_qr_code:
+                new AccountPickerDialog.Enabled(this).pick(a -> showQrCode(a.getShareableUri()));
                 return true;
             case R.id.action_search_all_conversations:
                 startActivity(new Intent(this, SearchActivity.class));
@@ -565,7 +560,7 @@ public class ConversationsActivity extends XmppActivity
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull final Bundle savedInstanceState) {
         final Intent pendingIntent = pendingViewIntent.peek();
         savedInstanceState.putParcelable(
                 "intent", pendingIntent != null ? pendingIntent : getIntent());
@@ -600,8 +595,24 @@ public class ConversationsActivity extends XmppActivity
 
     private void initializeFragments() {
         final var fragmentManager = getSupportFragmentManager();
+        final var fragments = fragmentManager.getFragments();
+        final var optional = Iterables.tryFind(fragments, f -> f instanceof ConversationFragment);
         final var existing = fragmentManager.findFragmentById(R.id.main_fragment);
-        if (existing != null) {
+        if (existing instanceof ConversationsOverviewFragment
+                && binding.secondaryFragment == null
+                && optional.isPresent()) {
+            Log.d(Config.LOGTAG, "moving ConversationFragment from secondary to main");
+            fragmentManager.popBackStackImmediate();
+            final var remove = fragmentManager.beginTransaction();
+            remove.remove(optional.get());
+            remove.commitNow();
+            final var transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.main_fragment, optional.get());
+            transaction.addToBackStack(null);
+            transaction.commitAllowingStateLoss();
+            return;
+        }
+        if (existing != null && binding.secondaryFragment == null) {
             return;
         }
         final var transaction = fragmentManager.beginTransaction();

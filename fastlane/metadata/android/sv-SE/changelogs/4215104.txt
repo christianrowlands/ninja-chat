@@ -1,0 +1,2 @@
+* Visa "Senast sedd", tydligt i chattrubriken (när aktiverat)
+* Diverse rättelser

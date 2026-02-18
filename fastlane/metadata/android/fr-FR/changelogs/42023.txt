@@ -1,0 +1,2 @@
+* Corrige un crash lors du rendu de certaines citations
+* Corrige un crash sur l'écran d'accueil

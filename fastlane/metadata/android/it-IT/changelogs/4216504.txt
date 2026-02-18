@@ -1,0 +1,2 @@
+* Corrette le chiamate che si bloccavano alla connessione quando era attivo 'Usa relay' ma il server non ne ha
+* Ottimizzazioni della banda di rete

@@ -8,11 +8,11 @@
         android:background="?selectableItemBackgroundBorderless"
         android:padding="2dp">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
-            app:riv_corner_radius="6dp" />
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.RoundedCornersLight" />
     </eu.siacs.conversations.ui.widget.SquareFrameLayout>
 </layout>

@@ -1,0 +1,4 @@
+* Recherche des discussions individuelles
+* Notifie l'utilisateur si la livraison du message échoue
+* Retient les noms affichés (pseudo) des utilisateurs Quicksy après les redémarrages
+* Ajout du bouton pour démarrer Orbot (Tor) depuis la notification si nécessaire

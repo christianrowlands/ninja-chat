@@ -40,11 +40,14 @@ import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import de.gultsch.common.Linkify;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -75,7 +78,6 @@ import eu.siacs.conversations.utils.Resolver;
 import eu.siacs.conversations.utils.SignupUtils;
 import eu.siacs.conversations.utils.TorServiceUtils;
 import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
@@ -88,6 +90,7 @@ import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
 import eu.siacs.conversations.xmpp.manager.PepManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
+import eu.siacs.conversations.xmpp.manager.PushNotificationManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
 import im.conversations.android.xmpp.model.data.Data;
 import im.conversations.android.xmpp.model.mam.Preferences;
@@ -160,7 +163,7 @@ public class EditAccountActivity extends OmemoActivity
     private Toast mFetchingMamPrefsToast;
     private String mSavedInstanceAccount;
     private boolean mSavedInstanceInit = false;
-    private XmppUri pendingUri = null;
+    private MiniUri.Xmpp pendingUri = null;
     private boolean mUseTor;
     private ActivityEditAccountBinding binding;
     private final OnClickListener mSaveButtonClickListener =
@@ -585,15 +588,16 @@ public class EditAccountActivity extends OmemoActivity
     }
 
     @Override
-    protected void processFingerprintVerification(XmppUri uri) {
+    protected void processFingerprintVerification(final MiniUri.Xmpp uri) {
         processFingerprintVerification(uri, true);
     }
 
-    protected void processFingerprintVerification(XmppUri uri, boolean showWarningToast) {
+    protected void processFingerprintVerification(
+            final MiniUri.Xmpp uri, boolean showWarningToast) {
         if (mAccount != null
-                && mAccount.getJid().asBareJid().equals(uri.getJid())
-                && uri.hasFingerprints()) {
-            if (xmppConnectionService.verifyFingerprints(mAccount, uri.getFingerprints())) {
+                && mAccount.getJid().asBareJid().equals(uri.asJid())
+                && uri.hasOmemoFingerprints()) {
+            if (xmppConnectionService.verifyFingerprints(mAccount, uri.getOmemoFingerprints())) {
                 Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
                 updateAccountInformation(false);
             }
@@ -711,7 +715,7 @@ public class EditAccountActivity extends OmemoActivity
     }
 
     @Override
-    protected String getShareableUri(boolean http) {
+    protected MiniUri getShareableUri(final boolean http) {
         if (mAccount != null) {
             return http ? mAccount.getShareableLink() : mAccount.getShareableUri();
         } else {
@@ -751,7 +755,10 @@ public class EditAccountActivity extends OmemoActivity
             this.binding.accountRegisterNew.setVisibility(View.GONE);
         }
         this.binding.actionEditYourName.setOnClickListener(this::onEditYourNameClicked);
-        this.binding.scanButton.setOnClickListener((v) -> ScanActivity.scan(this));
+        this.binding.scanButton.setOnClickListener(
+                (v) -> {
+                    requestPermissionAndScanQrCode();
+                });
     }
 
     private void onEditYourNameClicked(View view) {
@@ -834,10 +841,11 @@ public class EditAccountActivity extends OmemoActivity
             } catch (final IllegalArgumentException | NullPointerException ignored) {
                 this.jidToEdit = null;
             }
-            final Uri data = intent.getData();
-            final XmppUri xmppUri = data == null ? null : new XmppUri(data);
+            final var miniUri = MiniUri.getOrNull(intent.getData());
             final boolean scanned = intent.getBooleanExtra("scanned", false);
-            if (jidToEdit != null && xmppUri != null && xmppUri.hasFingerprints()) {
+            if (jidToEdit != null
+                    && miniUri instanceof MiniUri.Xmpp xmppUri
+                    && xmppUri.hasOmemoFingerprints()) {
                 if (scanned) {
                     if (xmppConnectionServiceBound) {
                         processFingerprintVerification(xmppUri, false);
@@ -895,7 +903,7 @@ public class EditAccountActivity extends OmemoActivity
         }
     }
 
-    private void displayVerificationWarningDialog(final XmppUri xmppUri) {
+    private void displayVerificationWarningDialog(final MiniUri.Xmpp xmppUri) {
         final MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(R.string.verify_omemo_keys);
         View view = getLayoutInflater().inflate(R.layout.dialog_verify_fingerprints, null);
@@ -922,12 +930,12 @@ public class EditAccountActivity extends OmemoActivity
     @Override
     public void onNewIntent(@NonNull final Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getData() != null) {
-            final XmppUri uri = new XmppUri(intent.getData());
+        final var miniUri = MiniUri.getOrNull(intent.getData());
+        if (miniUri instanceof MiniUri.Xmpp xmpp) {
             if (xmppConnectionServiceBound) {
-                processFingerprintVerification(uri, false);
+                processFingerprintVerification(xmpp, false);
             } else {
-                this.pendingUri = uri;
+                this.pendingUri = xmpp;
             }
         }
     }
@@ -1292,6 +1300,20 @@ public class EditAccountActivity extends OmemoActivity
                 this.binding.serverInfoSasl2.setText(R.string.server_info_unavailable);
             }
             this.binding.loginMechanism.setText(Strings.nullToEmpty(features.loginMechanism()));
+            final var stanzas = connection.getStanzaRxTx();
+            final var pushManager = connection.getManager(PushNotificationManager.class);
+            final var pushCount = pushManager.getPushNotificationCounter();
+            final List<Integer> stanzaRxTxValues;
+            if (PushManagementService.isStub()
+                    || pushCount == 0
+                    || !new PushManagementService(this).available(mAccount)) {
+                this.binding.stanzaRxTxLabel.setText(R.string.server_info_stanzas_rx_tx);
+                stanzaRxTxValues = ImmutableList.of(stanzas.rx(), stanzas.tx());
+            } else {
+                this.binding.stanzaRxTxLabel.setText(R.string.server_info_stanzas_rx_tx_push);
+                stanzaRxTxValues = ImmutableList.of(stanzas.rx(), stanzas.tx(), pushCount);
+            }
+            this.binding.stanzaRxTx.setText(Joiner.on('/').join(stanzaRxTxValues));
             if (connection.getManager(PepManager.class).isAvailable()) {
                 AxolotlService axolotlService = this.mAccount.getAxolotlService();
                 if (axolotlService != null && axolotlService.isPepBroken()) {

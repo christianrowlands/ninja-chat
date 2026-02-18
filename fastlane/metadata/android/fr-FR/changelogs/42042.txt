@@ -1,0 +1,2 @@
+* Corrige la boucle de renvoi pour les serveurs qui ne supportent que sm:2
+* Afficher 'Basculer vers vidéo' seulement si l'autre personne supporte la vidéo

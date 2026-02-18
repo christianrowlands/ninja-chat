@@ -1,0 +1,3 @@
+* Uppdaterat libwebrtc-beroende till M117, samt uppdaterat libvpx
+* Gått tillbaka till AAC för röstmeddelanden
+* Stöd för appspecifika språkinställningar

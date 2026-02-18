@@ -374,9 +374,6 @@
     <string name="remove_from_room">Supprimer du groupe</string>
     <string name="remove_from_channel">Supprimer du salon</string>
     <string name="could_not_change_affiliation">Impossible de changer l\'affiliation de %s</string>
-    <string name="ban_from_conference">Bannir du groupe</string>
-    <string name="ban_from_channel">Bannir du salon</string>
-    <string name="removing_from_public_conference">Vous essayez de supprimer %s d\'un salon public. La seule façon de le faire est de bannir cet·te utilisateur·ice pour toujours.</string>
     <string name="ban_now">Bannir maintenant</string>
     <string name="could_not_change_role">Impossible de changer le rôle de %s</string>
     <string name="conference_options">Configuration du groupe privé</string>
@@ -585,9 +582,9 @@
     <string name="copy_fingerprint">Copier l\'empreinte</string>
     <string name="all_omemo_keys_have_been_verified">Vous avez vérifié toutes les clés OMEMO en votre possession</string>
     <string name="verified_fingerprints">Empreintes vérifiées</string>
-    <string name="use_camera_icon_to_scan_barcode">Utilisez l\'appareil photo pour scanner le code-barres d\'un contact</string>
+    <string name="use_camera_icon_to_scan_barcode">Utilisez l\'appareil photo pour scanner le QR code d\'un contact</string>
     <string name="please_wait_for_keys_to_be_fetched">Veuillez attendre que les clés soient récupérées</string>
-    <string name="share_as_barcode">Partager par code-barres</string>
+    <string name="share_as_barcode">Partager par QR code</string>
     <string name="share_as_uri">Partager par URI XMPP</string>
     <string name="share_as_http">Partager par lien HTTP</string>
     <string name="pref_blind_trust_before_verification">Faire aveuglément confiance avant vérification</string>
@@ -941,7 +938,6 @@
     <string name="failed_deliveries">Échec lors de la livraison</string>
     <string name="more_options">Plus d\'options</string>
     <string name="no_application_found">Aucune application trouvée</string>
-    <string name="invite_to_app">Inviter sur Ninja Chat</string>
     <string name="unable_to_parse_invite">Impossible de lire l\'invitation</string>
     <string name="server_does_not_support_easy_onboarding_invites">Le serveur ne prend pas en charge la génération d\'invitations</string>
     <string name="no_active_accounts_support_this">Aucun compte actif ne prend en charge cette fonctionalité</string>
@@ -1032,7 +1028,7 @@
     <string name="pref_keyboard_options">Clavier</string>
     <string name="pref_create_backup_one_off_summary">Créer une sauvegarde ponctuelle</string>
     <string name="pref_backup_recurring">Créer une sauvegarde récurrente</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Le code-barre ne contient pas les empreintes pour cette conversation.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Le QR code ne contient pas les empreintes pour cette conversation.</string>
     <string name="corresponding_chats_closed">Les conversations correspondantes ont été archivés.</string>
     <string name="title_activity_new_chat">Nouvelle conversation</string>
     <string name="remove_bookmark_and_close">Voulez-vous supprimer le favori %s et archiver la conversation ?</string>
@@ -1173,4 +1169,7 @@
     <string name="pref_use_relays">Tojours utiliser les relais</string>
     <string name="pref_use_relays_summary">Relaye toutes les connections P2P (appels et transferts de fichiers) via votre serveur pour éviter de révéler votre adresse IP.</string>
     <string name="mobile_ticket">Ticket mobile</string>
+    <string name="server_invite">Invitation serveur</string>
+    <string name="open_keyboard">Ouvrir le clavier</string>
+    <string name="qr_code_actions">Scanner le QR code, Afficher le QR code, Invitation Serveur</string>
 </resources>

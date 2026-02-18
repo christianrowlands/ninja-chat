@@ -26,7 +26,7 @@
     <string name="minutes_ago">%d min sedan</string>
     <plurals name="x_unread_conversations">
         <item quantity="one">%d oläst chatt</item>
-        <item quantity="other">%d o-lästa chattar</item>
+        <item quantity="other">%d olästa chattar</item>
     </plurals>
     <string name="sending">skickar…</string>
     <string name="message_decrypting">Avkrypterar meddelande. Vänta…</string>
@@ -123,9 +123,9 @@
     <string name="pref_notification_grace_period">Tidsfrist</string>
     <string name="pref_notification_grace_period_summary">Tidsfrist för hur länge aviseringar ska vara tysta efter att aktivitet har upptäckts på en av dina andra enheter.</string>
     <string name="pref_advanced_options">Avancerat</string>
-    <string name="pref_never_send_crash_summary">Genom att skicka in stack-spår så hjälper du till med utvecklingen</string>
-    <string name="pref_confirm_messages">Bekräfta meddelanden</string>
-    <string name="pref_confirm_messages_summary">Låt dina kontakter veta när du har mottagit och läst deras meddelanden</string>
+    <string name="pref_never_send_crash_summary">Genom att skicka in stapelspår (stack traces) hjälper du till med utvecklingen</string>
+    <string name="pref_confirm_messages">Läskvitton</string>
+    <string name="pref_confirm_messages_summary">När funktionen är aktiverad, kan dina kontakter se när du har läst deras meddelanden.</string>
     <string name="pref_prevent_screenshots">Förhindra skärmdumpar</string>
     <string name="pref_prevent_screenshots_summary">Dölj innehållet från applikationen i appväxlaren, och blockera skärmdumpar</string>
     <string name="pref_ui_options">Gränssnitt</string>
@@ -277,7 +277,7 @@
     <string name="ignore">Ignorera</string>
     <string name="without_mutual_presence_updates"><b>Varning:</b> Att skicka detta utan ömsesidiga närvarouppdateringar kan orsaka oväntade problem.\n\n<small>Gå till \"Kontaktuppgifter\" för att verifiera dina närvaroprenumerationer.</small></string>
     <string name="pref_security_settings">Säkerhet</string>
-    <string name="pref_allow_message_correction">Meddelandekorrigering</string>
+    <string name="pref_allow_message_correction">Redigering av meddelanden</string>
     <string name="pref_allow_message_correction_summary">Tillåt dina kontakter att retroaktivt redigera sina meddelanden</string>
     <string name="pref_expert_options">Expertinställningar</string>
     <string name="pref_expert_options_summary">Var försiktig med dessa</string>
@@ -383,9 +383,6 @@
     <string name="remove_from_room">Ta bort från gruppchatt</string>
     <string name="remove_from_channel">Ta bort från kanal</string>
     <string name="could_not_change_affiliation">Kunde inte ändra anknytningen till %s</string>
-    <string name="ban_from_conference">Blockera från gruppchatt</string>
-    <string name="ban_from_channel">Blockera från kanal</string>
-    <string name="removing_from_public_conference">Du försöker att ta bort %s från en offentlig kanal. Det enda sättet att göra det på, är att stänga av användaren för alltid.</string>
     <string name="ban_now">Bannlys nu</string>
     <string name="could_not_change_role">Kunde inte ändra rollen för %s</string>
     <string name="conference_options">Konfiguration för privat gruppchatt</string>
@@ -468,8 +465,8 @@
     <string name="pref_treat_vibrate_as_silent">Behandla vibrera-läget som tyst läge</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Visa som upptagen när enheten är satt till att endast vibrera</string>
     <string name="pref_show_connection_options">Värdnamn &amp; Port</string>
-    <string name="pref_show_connection_options_summary">Visa värdnamn och portinställningar när du skapar ett konto</string>
-    <string name="hostname_example">xmpp.ninja.chat</string>
+    <string name="pref_show_connection_options_summary">Visa utökade anslutningsinställningar vid kontokonfiguration</string>
+    <string name="hostname_example">xmpp.exempel.se</string>
     <string name="action_add_account_with_certificate">Logga in med certifikat</string>
     <string name="unable_to_parse_certificate">Det gick inte att tolka certifikatet</string>
     <string name="mam_prefs">Arkiveringsinställningar</string>
@@ -524,8 +521,8 @@
     <string name="selection_too_large">Det valda området är för stort</string>
     <string name="no_accounts">(Inga aktiverade konton)</string>
     <string name="this_field_is_required">Detta fält är obligatoriskt</string>
-    <string name="correct_message">Korrigera meddelande</string>
-    <string name="send_corrected_message">Skicka korrigerat meddelande</string>
+    <string name="correct_message">Redigera</string>
+    <string name="send_corrected_message">Skicka redigerat meddelande</string>
     <string name="no_keys_just_confirm">Du har redan litat på den här personens fingeravtryck. Genom att välja \"Klar\", bekräftar du bara att %s är en del av den här gruppchatten.</string>
     <string name="this_account_is_disabled">Du har inaktiverat det här kontot</string>
     <string name="security_error_invalid_file_access">Säkerhetsfel: Ogiltig filåtkomst!</string>
@@ -597,9 +594,9 @@
     <string name="copy_fingerprint">Kopiera fingeravtryck</string>
     <string name="all_omemo_keys_have_been_verified">Du har verifierat alla OMEMO-nycklar i din ägo</string>
     <string name="verified_fingerprints">Verifierade fingeravtryck</string>
-    <string name="use_camera_icon_to_scan_barcode">Använd kameran för att skanna en kontakts streckkod</string>
+    <string name="use_camera_icon_to_scan_barcode">Använd kameran för att skanna en kontakts QR-kod</string>
     <string name="please_wait_for_keys_to_be_fetched">Var god vänta på att nycklarna ska hämtas</string>
-    <string name="share_as_barcode">Dela som streckkod</string>
+    <string name="share_as_barcode">Dela som QR-kod</string>
     <string name="share_as_uri">Dela som XMPP-URI</string>
     <string name="share_as_http">Dela som HTTP-länk</string>
     <string name="pref_blind_trust_before_verification">Blind tillit före verifiering</string>
@@ -773,7 +770,7 @@
     <string name="start_orbot">Starta Orbot</string>
     <string name="ebook">e-bok</string>
     <string name="open_with">Öppna med…</string>
-    <string name="set_profile_picture">Profil-bild</string>
+    <string name="set_profile_picture">Profilbild</string>
     <string name="choose_account">Välj konto</string>
     <string name="restore_backup">Återställ säkerhetskopia</string>
     <string name="restore">Återställ</string>
@@ -873,7 +870,7 @@
     <string name="add_to_favorites">Fäst flik till toppen</string>
     <string name="remove_from_favorites">Lossa flik från toppen</string>
     <string name="gpx_track">GPX-spår</string>
-    <string name="could_not_correct_message">Det gick inte att korrigera meddelandet</string>
+    <string name="could_not_correct_message">Det gick inte att redigera meddelandet</string>
     <string name="search_all_conversations">Alla chatter</string>
     <string name="search_this_conversation">Den här chatten</string>
     <string name="your_avatar">Din visningsbild</string>
@@ -893,7 +890,6 @@
     <string name="failed_deliveries">Misslyckade leveranser</string>
     <string name="more_options">Fler alternativ</string>
     <string name="no_application_found">Ingen applikation hittades</string>
-    <string name="invite_to_app">Bjud in till Conversations</string>
     <string name="no_xmpp_adddress_found">Ingen XMPP-adress hittades</string>
     <plurals name="n_missed_calls_from_x">
         <item quantity="one">%1$d missat samtal från %2$s</item>
@@ -962,7 +958,7 @@
     <string name="unable_to_connect_to_server">Det gick inte att ansluta till servern.</string>
     <string name="something_went_wrong_processing_your_request">Något gick fel när din begäran behandlades.</string>
     <string name="unknown_api_error_response">Okänt svar från servern.</string>
-    <string name="we_have_sent_you_an_sms_to_x">Vi har skickat ett SMS till <b>%s</b>.</string>
+    <string name="we_have_sent_you_an_sms_to_x"><![CDATA[Vi har skickat ett SMS till <b>%s</b>.]]></string>
     <string name="enter_country_code_and_phone_number">Quicksy kommer att skicka ett SMS (operatörsavgifter kan tillkomma) för att verifiera ditt telefonnummer. Ange din landskod och ditt telefonnummer:</string>
     <string name="missed_calls_channel_name">Missade samtal</string>
     <string name="pref_use_share_location_plugin_summary">Använd Dela plats-tillägget istället för den inbyggda kartan</string>
@@ -1086,11 +1082,11 @@
     <string name="account_status_connection_timeout">Tidsgräns för anslutning</string>
     <string name="account_status_tls_error_protocol">Svag transportsäkerhet (Ingen TLS 1.3)</string>
     <string name="account_status_tls_error_untrusted">Icke pålitligt certifikat</string>
-    <string name="uri_copied_to_clipboard">Kopierade URI till klippbordet</string>
+    <string name="uri_copied_to_clipboard">Kopierade URI till urklipp</string>
     <string name="no_contacts_permission">%1$s behöver åtkomst till dina kontakter</string>
     <string name="pref_use_colorful_bubbles_summary">Distinkta bakgrundsfärger för skickade och mottagna meddelanden</string>
     <string name="no_permission_to_place_call">Ingen åtkomst för att göra ett telefon-samtal</string>
-    <string name="barcode_does_not_contain_fingerprints_for_this_chat">Streckkoden innehåller inte fingeravtryck för den här chatten.</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_chat">QR-koden innehåller inga fingeravtryck för den här chatten.</string>
     <string name="corresponding_chats_closed">Motsvarande chattar arkiverade.</string>
     <string name="pref_dynamic_colors_summary">Systemfärger (Material You)</string>
     <string name="copy_geo_uri">Kopiera geo-position</string>
@@ -1100,7 +1096,7 @@
     <string name="pref_align_start">Vänster-justerade meddelanden</string>
     <string name="last_seen">sågs senast %s</string>
     <string name="strong_transport_security">Stark transport-säkerhet</string>
-    <string name="call_is_using_earpiece">Samtalet använder hörselsnäcka</string>
+    <string name="call_is_using_earpiece">Samtalet använder hörselsnäcka.</string>
     <string name="call_is_using_speaker">Samtalet använder högtalare.</string>
     <string name="call_is_using_bluetooth">Samtalet använder blåtand.</string>
     <string name="could_not_add_reaction">Kunde inte lägga till reaktion</string>
@@ -1133,4 +1129,44 @@
     <string name="pref_call_integration_summary">Samtal från den här appen interagerar med vanliga telefonsamtal så som att avsluta ett samtal när ett annat påbörjas.</string>
     <string name="pref_fullscreen_notification_summary">Tillåt den här appen att visa aviseringar om inkommande samtal som tar upp hela skärmen när enheten är låst.</string>
     <string name="delete_avatar_message">Skulle du vilja radera din avatar? En del klienter kan komma att fortsätta att visa en cachad kopia av din avatar.</string>
+    <string name="account_status_channel_binding">Ingen kanalbindning</string>
+    <string name="server_info_occupant_id">XEP-0421: Occupant Identifiers</string>
+    <string name="server_info_moderated_message_retraction">XEP-0425: Moderated Message Retraction</string>
+    <string name="download_failed_could_not_establish_tls">Kunde inte etablera en TLS-anslutning</string>
+    <string name="channel_discover_opt_in_message">Funktionen kanalupptäckt använder en tredjepartstjänst som heter &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Om du använder den här funktionen kommer din IP-adress och dina söktermer att skickas till den tjänsten. Se deras &lt;a href=https://search.jabber.network/privacy&gt;integritetspolicy&lt;/a&gt; för mer information.</string>
+    <string name="enable_account_to_delete">Det här kontot är inaktiverat. Aktivera det för att ta bort kontot från servern.</string>
+    <string name="incoming_call">Inkommande samtal</string>
+    <plurals name="x_participants">
+        <item quantity="one">%1$d deltagare</item>
+        <item quantity="other">%1$d deltagare</item>
+    </plurals>
+    <string name="pref_summary_security">Totalsträckskryptering, blind tillit före verifiering, MITM-detektering</string>
+    <string name="pref_notifications_summary">Nådperiod, ringsignal, vibration, främlingar</string>
+    <string name="pref_title_trust_system_ca_store">Certifikatutfärdare</string>
+    <string name="detect_mim">Kräv kanalbindning</string>
+    <string name="detect_mim_summary">Kanalbindning kan upptäcka vissa machine-in-the-middle-attacker</string>
+    <string name="pref_privacy_summary">Skrivindikatorer, senast sedd, tillgänglighet</string>
+    <string name="pref_connection_summary_w_cd">Värdnamn och port, Tor, P2P, kanalupptäckt</string>
+    <string name="pref_category_engagement_notifications">Interaktionsnotiser</string>
+    <string name="pref_up_long_summary">När du agerar som UnifiedPush-distributör, kommer den ihållande, pålitliga och batterivänliga XMPP-anslutningen att användas för att väcka andra UnifiedPush-kompatibla appar, som Tusky, Ltt.rs, FluffyChat och fler.</string>
+    <string name="pref_backup_summary">Skapa engångsföreteelser, schemalägg återkommande</string>
+    <string name="pref_create_backup_one_off_summary">Skapa engångssäkerhetskopior</string>
+    <string name="custom_notifications_enable">Aktivera anpassade aviseringsinställningar (prioritet, ljud, vibration) för den här konversationen?</string>
+    <string name="pref_backup_location">Säkerhetskopieringsplats</string>
+    <string name="account_status_service_outage_scheduled">Planerad nedtid</string>
+    <string name="pref_account_avatar_summary">Visa profilbilder för konton på utgående meddelanden för enkel identifiering och hantering.</string>
+    <string name="require_tls_v1_3">Kräv Transport Layer Security (TLS) protokollversion 1.3 för alla anslutningar</string>
+    <string name="number_reactions_are_restricted">Reaktionsgräns nådd.</string>
+    <string name="this_reaction_isnt_allowed">Den här reaktionen är inte tillåten.</string>
+    <string name="peer_to_peer">Peer-to-peer</string>
+    <string name="pref_use_relays">Använd alltid reläer</string>
+    <string name="pref_use_relays_summary">Vidarebefordra alla P2P-anslutningar (samtal och filöverföringar) via din server för att undvika att avslöja din IP-adress.</string>
+    <string name="mobile_ticket">Mobilbiljett</string>
+    <string name="emoji_reactions">Emoji-reaktioner</string>
+    <string name="open_keyboard">Öppna tangentbordet</string>
+    <string name="server_invite">Bjud in till server</string>
+    <string name="qr_code_actions">Skanna QR-kod, visa QR-kod, serverinbjudan</string>
+    <string name="qr_code_contains_link">Öppna webblänk?</string>
+    <string name="qr_code_contains_link_text">Denna QR-kod pekar till en webbplats. Kontrollera adressen nedan innan du öppnar den i din webbläsare:</string>
+    <string name="open_browser">Öppna webbläsare</string>
 </resources>

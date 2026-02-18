@@ -1,1 +1,1 @@
-* Fixade mindre återgångar som introducerades med 2.13.1
+* Åtgärdat mindre återinförda fel som introducerades med version 2.13.1

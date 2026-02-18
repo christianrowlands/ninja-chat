@@ -371,9 +371,6 @@
     <string name="remove_from_room">グループチャットから削除</string>
     <string name="remove_from_channel">談話室から削除</string>
     <string name="could_not_change_affiliation">%s の所属を変更できません</string>
-    <string name="ban_from_conference">グループチャットから出禁にする</string>
-    <string name="ban_from_channel">談話室から出禁にする</string>
-    <string name="removing_from_public_conference">あなたは公開談話室から %s を削除しようとしています。その唯一の手段は、そのユーザーを永久に出禁にすることです。</string>
     <string name="ban_now">今すぐ出禁にする</string>
     <string name="could_not_change_role">%s の役割を変更できません</string>
     <string name="conference_options">非公開グループチャットの環境設定</string>
@@ -933,7 +930,6 @@
     <string name="failed_deliveries">配信に失敗</string>
     <string name="more_options">更なるオプション</string>
     <string name="no_application_found">アプリケーションが見つかりません</string>
-    <string name="invite_to_app">Conversationsに招待</string>
     <string name="unable_to_parse_invite">招待を解析できません</string>
     <string name="server_does_not_support_easy_onboarding_invites">サーバーは招待の作成に対応していません</string>
     <string name="no_active_accounts_support_this">この機能をサポートするアクティブなアカウントがありません</string>

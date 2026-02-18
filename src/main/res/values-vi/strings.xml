@@ -370,9 +370,6 @@
     <string name="remove_from_room">Xoá khỏi cuộc trò chuyện nhóm</string>
     <string name="remove_from_channel">Xoá khỏi kênh</string>
     <string name="could_not_change_affiliation">Không thể đổi mối quan hệ của %s</string>
-    <string name="ban_from_conference">Cấm khỏi cuộc trò chuyện nhóm</string>
-    <string name="ban_from_channel">Cấm khỏi kênh</string>
-    <string name="removing_from_public_conference">Bạn đang cố xoá %s khỏi một kênh công khai. Cách duy nhất để làm thế là cấm người dùng đó mãi mãi.</string>
     <string name="ban_now">Cấm ngay</string>
     <string name="could_not_change_role">Không thể đổi phận sự của %s</string>
     <string name="conference_options">Thiết lâp cuộc trò chuyện nhóm riêng tư</string>
@@ -918,7 +915,6 @@
     <string name="failed_deliveries">Gửi đi thất bại</string>
     <string name="more_options">Thêm tuỳ chọn</string>
     <string name="no_application_found">Không tìm thấy ứng dụng nào</string>
-    <string name="invite_to_app">Mời vào Conversations</string>
     <string name="unable_to_parse_invite">Không thể xử lý lời mời</string>
     <string name="server_does_not_support_easy_onboarding_invites">Máy chủ không hỗ trợ tạo lời mời</string>
     <string name="no_active_accounts_support_this">Không có tài khoản đang hoạt động nào hỗ trợ tính năng này</string>

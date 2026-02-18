@@ -42,7 +42,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
@@ -53,7 +52,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
@@ -61,7 +59,6 @@ import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.FragmentConversationsOverviewBinding;
-import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.services.QuickConversationsService;
@@ -71,11 +68,10 @@ import eu.siacs.conversations.ui.interfaces.OnConversationSelected;
 import eu.siacs.conversations.ui.util.PendingActionHelper;
 import eu.siacs.conversations.ui.util.PendingItem;
 import eu.siacs.conversations.ui.util.ScrollState;
+import eu.siacs.conversations.ui.widget.AccountPickerDialog;
 import eu.siacs.conversations.utils.AccountUtils;
-import eu.siacs.conversations.xmpp.manager.EasyOnboardingManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ConversationsOverviewFragment extends XmppFragment {
 
@@ -159,10 +155,6 @@ public class ConversationsOverviewFragment extends XmppFragment {
                 public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                     menuInflater.inflate(R.menu.fragment_conversations_overview, menu);
                     AccountUtils.showHideMenuItems(menu);
-                    final MenuItem easyOnboardInvite = menu.findItem(R.id.action_easy_invite);
-                    easyOnboardInvite.setVisible(
-                            EasyOnboardingManager.anyHasSupport(
-                                    requireXmppActivity().xmppConnectionService));
                     final MenuItem privacyPolicyMenuItem =
                             menu.findItem(R.id.action_privacy_policy);
                     privacyPolicyMenuItem.setVisible(
@@ -385,34 +377,11 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     private void selectAccountToStartEasyInvite() {
-        final var accounts =
-                EasyOnboardingManager.getAccounts(requireXmppActivity().xmppConnectionService);
-        if (accounts.isEmpty()) {
-            // This can technically happen if opening the menu item races with accounts reconnecting
-            // or something
-            Toast.makeText(
-                            requireContext(),
-                            R.string.no_active_accounts_support_this,
-                            Toast.LENGTH_LONG)
-                    .show();
-        } else if (accounts.size() == 1) {
-            openEasyInviteScreen(accounts.get(0));
-        } else {
-            final var selectedAccount = new AtomicReference<>(accounts.get(0));
-            final var alertDialogBuilder = new MaterialAlertDialogBuilder(requireContext());
-            alertDialogBuilder.setTitle(R.string.choose_account);
-            final var asStrings = AccountUtils.asStrings(accounts);
-            alertDialogBuilder.setSingleChoiceItems(
-                    asStrings, 0, (dialog, which) -> selectedAccount.set(accounts.get(which)));
-            alertDialogBuilder.setNegativeButton(R.string.cancel, null);
-            alertDialogBuilder.setPositiveButton(
-                    R.string.ok, (dialog, which) -> openEasyInviteScreen(selectedAccount.get()));
-            alertDialogBuilder.create().show();
-        }
-    }
-
-    private void openEasyInviteScreen(final Account account) {
-        EasyOnboardingInviteActivity.launch(account, requireContext());
+        final var accountPicker = new AccountPickerDialog.EasyInvite(requireXmppActivity());
+        accountPicker.pick(
+                account -> {
+                    EasyOnboardingInviteActivity.launch(account, requireContext());
+                });
     }
 
     @Override

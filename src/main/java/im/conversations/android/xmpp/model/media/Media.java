@@ -1,8 +1,8 @@
 package im.conversations.android.xmpp.model.media;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import de.gultsch.common.MiniUri;
-import eu.siacs.conversations.xml.Element;
 import im.conversations.android.annotation.XmlElement;
 import im.conversations.android.xmpp.model.Extension;
 import java.util.Collection;
@@ -17,9 +17,19 @@ public class Media extends Extension {
 
     public Collection<MiniUri> getUris() {
         final var uris =
-                Collections2.filter(
-                        Collections2.transform(this.getExtensions(Uri.class), Element::getContent),
-                        Objects::nonNull);
-        return Collections2.transform(uris, MiniUri::new);
+                Collections2.transform(
+                        this.getExtensions(Uri.class),
+                        uri -> {
+                            final var content = uri == null ? null : uri.getContent();
+                            if (Strings.isNullOrEmpty(content)) {
+                                return null;
+                            }
+                            try {
+                                return MiniUri.tryInternalParse(content);
+                            } catch (final IllegalArgumentException e) {
+                                return null;
+                            }
+                        });
+        return Collections2.filter(uris, Objects::nonNull);
     }
 }

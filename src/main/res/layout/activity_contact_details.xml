@@ -44,14 +44,14 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/card_padding_regular">
 
-                        <com.makeramen.roundedimageview.RoundedImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/details_avatar"
                             android:layout_width="@dimen/publish_avatar_size"
                             android:layout_height="@dimen/publish_avatar_size"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:scaleType="centerCrop"
-                            app:riv_corner_radius="8dp" />
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.RoundedCornersMedium" />
 
                         <TextView
                             android:id="@+id/details_contact_xmpp_address"

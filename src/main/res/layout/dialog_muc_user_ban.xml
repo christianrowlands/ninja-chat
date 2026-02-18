@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="?dialogPreferredPadding">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/muc_user_ban_explainer"
+            android:textAppearance="?textAppearanceBodyLarge" />
+
+        <TextView
+            android:id="@+id/jid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:maxLines="1"
+            android:textAppearance="?textAppearanceBodyMedium"
+            tools:text="test@example.com"
+            android:layout_marginVertical="12sp"/>
+
+        <CheckBox
+            android:id="@+id/delete_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@plurals/delete_n_messages"/>
+
+
+
+    </LinearLayout>
+</layout>

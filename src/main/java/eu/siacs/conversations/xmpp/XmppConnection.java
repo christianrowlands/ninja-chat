@@ -2791,6 +2791,10 @@ public class XmppConnection implements Runnable {
         }
     }
 
+    public StanzaRxTx getStanzaRxTx() {
+        return new StanzaRxTx(this.stanzasReceived, this.stanzasSent);
+    }
+
     public void setInteractive(boolean interactive) {
         this.mInteractive = interactive;
     }
@@ -2910,6 +2914,8 @@ public class XmppConnection implements Runnable {
             }
         }
     }
+
+    public record StanzaRxTx(int rx, int tx) {}
 
     private static class LoginInfo {
         public final SaslMechanism saslMechanism;

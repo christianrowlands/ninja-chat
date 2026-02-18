@@ -15,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import com.google.android.material.color.MaterialColors;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.google.zxing.WriterException;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityEasyInviteBinding;
@@ -113,9 +114,15 @@ public class EasyOnboardingInviteActivity extends XmppActivity {
                             com.google.android.material.R.attr.colorSurface,
                             "No surface color configured");
         }
-        final Bitmap bitmap =
-                BarcodeProvider.create2dBarcodeBitmap(
-                        invite.getShareableLink(), width, black, white);
+        final Bitmap bitmap;
+        try {
+            bitmap =
+                    BarcodeProvider.create2dBarcodeBitmap(
+                            invite.getShareableLink(), width, black, white);
+        } catch (final WriterException e) {
+            Log.e(Config.LOGTAG, "could not create QR code", e);
+            return;
+        }
         binding.qrCode.setImageBitmap(bitmap);
     }
 

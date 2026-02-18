@@ -1,0 +1,5 @@
+* Implementerat Extensible SASL Profile, Bind 2.0 och Fast, för snabbare återanslutningar
+* Implementerat kanalbindning
+* Lagt till möjlighet att växla från ljudsamtal till videosamtal
+* Lagt till möjlighet att ta bort egen visningsbild
+* Lagt till avisering för missade samtal

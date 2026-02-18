@@ -1,0 +1,2 @@
+* Flyttat meddelandebubblor närmare varandra, istället för att slå ihop dem
+* Lagt till möjlighet att dölja profilbilder i chattvyer när det inte är absolut nödvändigt (Inställningar / Gränssnitt / Chattbubblor / Visa profilbilder)

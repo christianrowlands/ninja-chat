@@ -17,6 +17,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import de.gultsch.common.FutureMerger;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
@@ -26,7 +27,6 @@ import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.StringUtils;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
@@ -35,6 +35,7 @@ import im.conversations.android.xmpp.Entity;
 import im.conversations.android.xmpp.EntityCapabilities;
 import im.conversations.android.xmpp.EntityCapabilities2;
 import im.conversations.android.xmpp.IqErrorException;
+import im.conversations.android.xmpp.StreamElementWriter;
 import im.conversations.android.xmpp.model.Extension;
 import im.conversations.android.xmpp.model.conference.DirectInvite;
 import im.conversations.android.xmpp.model.data.Data;
@@ -521,7 +522,10 @@ public class MultiUserChatManager extends AbstractManager {
                 mucOptions.setError(MucOptions.Error.SHUTDOWN);
             } else if (!codes.contains(MucUser.STATUS_CODE_CHANGED_NICK)) {
                 mucOptions.setError(MucOptions.Error.UNKNOWN);
-                Log.d(Config.LOGTAG, "unknown unavailable in MUC: " + presence);
+                Log.d(
+                        Config.LOGTAG,
+                        "unknown unavailable in MUC: "
+                                + StreamElementWriter.asStringUnchecked(presence));
             }
         } else {
             final var item = x.getItem();
@@ -581,26 +585,15 @@ public class MultiUserChatManager extends AbstractManager {
             mucOptions.setError(MucOptions.Error.RESOURCE_CONSTRAINT);
         } else if (condition instanceof Condition.RemoteServerTimeout) {
             mucOptions.setError(MucOptions.Error.REMOTE_SERVER_TIMEOUT);
-        } else if (condition instanceof Condition.Gone conditionGone) {
-            final String gone = conditionGone.getContent();
-            final Jid alternate;
-            if (gone != null) {
-                final XmppUri xmppUri = new XmppUri(gone);
-                if (xmppUri.isValidJid()) {
-                    alternate = xmppUri.getJid();
-                } else {
-                    alternate = null;
-                }
-            } else {
-                alternate = null;
-            }
+        } else if (condition instanceof Condition.Gone gone) {
+            final var uri = MiniUri.getOrNull(gone.getContent());
             mucOptions.setError(MucOptions.Error.DESTROYED);
-            if (alternate != null) {
+            if (uri instanceof MiniUri.Xmpp xmpp && xmpp.isAddress()) {
                 Log.d(
                         Config.LOGTAG,
                         conversation.getAccount().getJid().asBareJid()
                                 + ": muc destroyed. alternate location "
-                                + alternate);
+                                + xmpp.asJid());
             }
         } else {
             final var text = error.getTextAsString();
@@ -891,9 +884,6 @@ public class MultiUserChatManager extends AbstractManager {
             }
         }
         this.service.updateConversationUi();
-
-        Log.d(Config.LOGTAG, "emoji restrictions: " + mucOptions.getReactionsRestrictions());
-
         return null;
     }
 

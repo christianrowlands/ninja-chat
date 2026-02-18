@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.collect.ImmutableSet;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OmemoSetting;
@@ -26,7 +27,6 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.IrregularUnicodeDetector;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import java.util.ArrayList;
@@ -127,8 +127,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                                     Toast.LENGTH_SHORT)
                             .show();
                 } else {
-                    ScanActivity.scan(this);
-                    // new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
+                    requestPermissionAndScanQrCode();
                     return true;
                 }
         }
@@ -144,16 +143,17 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     @Override
-    protected void processFingerprintVerification(XmppUri uri) {
+    protected void processFingerprintVerification(final MiniUri.Xmpp uri) {
         if (mConversation != null
                 && mAccount != null
-                && uri.hasFingerprints()
+                && uri.hasOmemoFingerprints()
                 && mAccount.getAxolotlService()
                         .getCryptoTargets(mConversation)
-                        .contains(uri.getJid())) {
+                        .contains(uri.asJid())) {
             boolean performedVerification =
                     xmppConnectionService.verifyFingerprints(
-                            mAccount.getRoster().getContact(uri.getJid()), uri.getFingerprints());
+                            mAccount.getRoster().getContact(uri.asJid()),
+                            uri.getOmemoFingerprints());
             boolean keys = reloadFingerprints();
             if (performedVerification
                     && !keys
@@ -171,9 +171,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             Log.d(
                     Config.LOGTAG,
                     "xmpp uri was: "
-                            + uri.getJid()
+                            + uri.asJid()
                             + " has Fingerprints: "
-                            + uri.hasFingerprints());
+                            + uri.hasOmemoFingerprints());
             Toast.makeText(
                             this,
                             R.string.barcode_does_not_contain_fingerprints_for_this_chat,

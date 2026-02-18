@@ -1,0 +1,11 @@
+Version 2.10.9
+* Fråga efter Bluetooth-behörigheter vid ljud-/videosamtal (du kan neka om du inte använder Bluetooth-headset)
+* Åtgärdat bugg vid samtal med Movim
+* Åtgärdat att fel profilbild visades för gruppchattar
+* Fråga alltid om avstående från batterioptimeringar
+* Sätt "lokal endast"-flagga på notiser om "x anslutna konton"
+* Åtgärda interaktion med Google Maps Share Location-plugin
+* Ta bort fotnot om serveravgift
+* Lagra filer på plats som är lämplig för Android 11
+* Försök återansluta samtal efter nätverksbyte
+* Visa uppringarens JID och kontots JID på inkommande samtalsskärm

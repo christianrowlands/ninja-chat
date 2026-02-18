@@ -1,0 +1,1 @@
+* Ndërthurje veprimesh të lidhura me kode QR (shfaqje, skanim, ftesë) në një menu qendrore

@@ -1,0 +1,4 @@
+* Enklare åtkomst till "Visa QR-kod"
+* Stöd för PEP Native Bookmarks
+* Stöd för SDP Offer/Answer Model (Används av SIP-gateways)
+* Ökat mål-API till Android 14

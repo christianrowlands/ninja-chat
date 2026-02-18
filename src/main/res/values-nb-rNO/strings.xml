@@ -256,7 +256,6 @@
     <string name="remove_admin_privileges">Tilbakekall administratorrettigheter</string>
     <string name="remove_from_room">Fjern fra gruppesludring</string>
     <string name="could_not_change_affiliation">Kunne ikke endre tilknytningen til %s</string>
-    <string name="ban_from_conference">Bannlys fra gruppesludring</string>
     <string name="ban_now">Bannlys nå</string>
     <string name="could_not_change_role">Kunne ikke endre rollen til %s</string>
     <string name="members_only">Privat, kun for medlemmer</string>

@@ -340,8 +340,6 @@
     <string name="remove_from_room">Verwijderen uit groepsgesprek</string>
     <string name="remove_from_channel">Verwijderen uit kanaal</string>
     <string name="could_not_change_affiliation">Kan de aansluiting van %s niet wijzigen</string>
-    <string name="ban_from_conference">Verbannen uit groepsgesprek</string>
-    <string name="ban_from_channel">Verbannen uit kanaal</string>
     <string name="ban_now">Nu verbannen</string>
     <string name="could_not_change_role">Kan rol van %s niet wijzigen</string>
     <string name="conference_options">Instellingen voor privégroep</string>
@@ -782,7 +780,6 @@
     <string name="failed_deliveries">Mislukte afleveringen</string>
     <string name="more_options">Meer opties</string>
     <string name="no_application_found">Geen applicatie gevonden</string>
-    <string name="invite_to_app">Nodig uit bij Conversations</string>
     <string name="unable_to_parse_invite">Kan uitnodiging niet verwerken</string>
     <string name="no_active_accounts_support_this">Geen actieve accounts ondersteunen deze functie</string>
     <string name="backup_started_message">De backup is gestart. Je krijgt een bericht als het voltooid is.</string>
@@ -877,7 +874,6 @@
     <string name="shared_text_with_x">Tekst gedeeld met %s</string>
     <string name="error_no_keys_to_trust_presence">Er zijn geen bruikbare sleutels beschikbaar voor dit contact.
 \nZorg ervoor dat jullie allebei een aanwezigheidsabonnement hebben.</string>
-    <string name="removing_from_public_conference">Je probeert %s te verwijderen van een publiek kanaal. De enige manier om dat te doen, is door die gebruiker voor altijd te verbannen.</string>
     <string name="shared_file_with_x">Bestand gedeeld met %s</string>
     <string name="shared_image_with_x">Afbeelding gedeeld met %s</string>
     <string name="shared_images_with_x">Afbeeldingen gedeeld met %s</string>

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -62,6 +61,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -81,7 +81,7 @@ import eu.siacs.conversations.ui.util.PendingItem;
 import eu.siacs.conversations.ui.util.SoftKeyboardUtils;
 import eu.siacs.conversations.ui.widget.SwipeRefreshListFragment;
 import eu.siacs.conversations.utils.AccountUtils;
-import eu.siacs.conversations.utils.XmppUri;
+import eu.siacs.conversations.utils.CharSequences;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
 import eu.siacs.conversations.xmpp.XmppConnection;
@@ -555,7 +555,8 @@ public class StartConversationActivity extends XmppActivity
     protected void showQrForContact() {
         int position = contact_context_id;
         Contact contact = (Contact) contacts.get(position);
-        showQrCode("xmpp:" + contact.getAddress().asBareJid().toString());
+        final var uri = new MiniUri.Xmpp(contact.getAddress());
+        showQrCode(uri);
     }
 
     protected void toggleContactBlock() {
@@ -628,7 +629,7 @@ public class StartConversationActivity extends XmppActivity
                         getString(R.string.add),
                         prefilledJid,
                         invite == null ? null : invite.account,
-                        invite == null || !invite.hasFingerprints(),
+                        invite == null || !invite.uri.hasOmemoFingerprints(),
                         true);
 
         dialog.setOnEnterJidDialogPositiveListener(
@@ -643,8 +644,8 @@ public class StartConversationActivity extends XmppActivity
                     }
 
                     final Contact contact = account.getRoster().getContact(contactJid);
-                    if (invite != null && invite.getName() != null) {
-                        contact.setServerName(invite.getName());
+                    if (invite != null && invite.uri.getName() != null) {
+                        contact.setServerName(invite.uri.getName());
                     }
                     if (contact.isSelf()) {
                         switchToConversation(contact);
@@ -656,14 +657,14 @@ public class StartConversationActivity extends XmppActivity
                         final String preAuth =
                                 invite == null
                                         ? null
-                                        : invite.getParameter(XmppUri.PARAMETER_PRE_AUTH);
+                                        : invite.uri.getParameter(MiniUri.Xmpp.PARAMETER_PRE_AUTH);
                         xmppConnectionService.createContact(contact, preAuth);
-                        if (invite != null && invite.hasFingerprints()) {
+                        if (invite != null && invite.uri.hasOmemoFingerprints()) {
                             xmppConnectionService.verifyFingerprints(
-                                    contact, invite.getFingerprints());
+                                    contact, invite.uri.getOmemoFingerprints());
                         }
                         switchToConversationDoNotAppend(
-                                contact, invite == null ? null : invite.getBody());
+                                contact, invite == null ? null : invite.uri.getBody());
                         return true;
                     }
                 });
@@ -772,12 +773,10 @@ public class StartConversationActivity extends XmppActivity
         getMenuInflater().inflate(R.menu.start_conversation, menu);
         AccountUtils.showHideMenuItems(menu);
         final MenuItem menuHideOffline = menu.findItem(R.id.action_hide_offline);
-        final MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
         final MenuItem privacyPolicyMenuItem = menu.findItem(R.id.action_privacy_policy);
         privacyPolicyMenuItem.setVisible(
                 BuildConfig.PRIVACY_POLICY != null
                         && QuickConversationsService.isPlayStoreFlavor());
-        qrCodeScanMenuItem.setVisible(isCameraFeatureAvailable());
         if (QuickConversationsService.isQuicksy()) {
             menuHideOffline.setVisible(false);
         } else {
@@ -808,9 +807,6 @@ public class StartConversationActivity extends XmppActivity
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                return true;
-            case R.id.action_scan_qr_code:
-                UriHandlerActivity.scan(this);
                 return true;
             case R.id.action_hide_offline:
                 mHideOfflineContacts = !item.isChecked();
@@ -976,7 +972,6 @@ public class StartConversationActivity extends XmppActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0)
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults);
                 if (requestCode == REQUEST_SYNC_CONTACTS && xmppConnectionServiceBound) {
                     if (QuickConversationsService.isQuicksy()) {
                         setRefreshing(true);
@@ -1040,13 +1035,11 @@ public class StartConversationActivity extends XmppActivity
     }
 
     protected boolean processViewIntent(@NonNull Intent intent) {
-        final String inviteUri = intent.getStringExtra(EXTRA_INVITE_URI);
-        if (inviteUri != null) {
-            final Invite invite = new Invite(inviteUri);
-            invite.account = intent.getStringExtra(EXTRA_ACCOUNT);
-            if (invite.isValidJid()) {
-                return invite.invite();
-            }
+        final var inviteUri = MiniUri.getOrNull(intent.getStringExtra(EXTRA_INVITE_URI));
+        if (inviteUri instanceof MiniUri.Xmpp xmpp && xmpp.isAddress()) {
+            final Invite invite =
+                    new Invite(xmpp, intent.getStringExtra(EXTRA_ACCOUNT), false, false);
+            return handleJid(invite);
         }
         final String action = intent.getAction();
         if (action == null) {
@@ -1055,13 +1048,15 @@ public class StartConversationActivity extends XmppActivity
         switch (action) {
             case Intent.ACTION_SENDTO:
             case Intent.ACTION_VIEW:
-                Uri uri = intent.getData();
-                if (uri != null) {
-                    Invite invite =
-                            new Invite(intent.getData(), intent.getBooleanExtra("scanned", false));
-                    invite.account = intent.getStringExtra(EXTRA_ACCOUNT);
-                    invite.forceDialog = intent.getBooleanExtra("force_dialog", false);
-                    return invite.invite();
+                final var uri = MiniUri.getOrNull(intent.getData());
+                if (uri instanceof MiniUri.Xmpp xmpp && xmpp.isAddress()) {
+                    final var invite =
+                            new Invite(
+                                    xmpp,
+                                    intent.getStringExtra(EXTRA_ACCOUNT),
+                                    intent.getBooleanExtra("scanned", false),
+                                    intent.getBooleanExtra("force_dialog", false));
+                    return handleJid(invite);
                 } else {
                     return false;
                 }
@@ -1069,29 +1064,29 @@ public class StartConversationActivity extends XmppActivity
         return false;
     }
 
-    private boolean handleJid(Invite invite) {
+    private boolean handleJid(final Invite invite) {
         List<Contact> contacts =
-                xmppConnectionService.findContacts(invite.getJid(), invite.account);
-        if (invite.isAction(XmppUri.ACTION_JOIN)) {
-            Conversation muc = xmppConnectionService.findFirstMuc(invite.getJid());
+                xmppConnectionService.findContacts(invite.uri.asJid(), invite.account);
+        if (invite.uri.isAction(MiniUri.Xmpp.ACTION_JOIN)) {
+            Conversation muc = xmppConnectionService.findFirstMuc(invite.uri.asJid());
             if (muc != null && !invite.forceDialog) {
-                switchToConversationDoNotAppend(muc, invite.getBody());
+                switchToConversationDoNotAppend(muc, invite.uri.getBody());
                 return true;
             } else {
-                showJoinConferenceDialog(invite.getJid().asBareJid().toString());
+                showJoinConferenceDialog(invite.uri.asJid().asBareJid().toString());
                 return false;
             }
         } else if (contacts.isEmpty()) {
-            showCreateContactDialog(invite.getJid().toString(), invite);
+            showCreateContactDialog(invite.uri.asJid().toString(), invite);
             return false;
         } else if (contacts.size() == 1) {
             Contact contact = contacts.get(0);
-            if (!invite.isSafeSource() && invite.hasFingerprints()) {
+            if (!invite.scanned() && invite.uri.hasOmemoFingerprints()) {
                 displayVerificationWarningDialog(contact, invite);
             } else {
-                if (invite.hasFingerprints()) {
+                if (invite.uri.hasOmemoFingerprints()) {
                     if (xmppConnectionService.verifyFingerprints(
-                            contact, invite.getFingerprints())) {
+                            contact, invite.uri.getOmemoFingerprints())) {
                         Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT)
                                 .show();
                     }
@@ -1099,17 +1094,17 @@ public class StartConversationActivity extends XmppActivity
                 if (invite.account != null) {
                     xmppConnectionService.getShortcutService().report(contact);
                 }
-                switchToConversationDoNotAppend(contact, invite.getBody());
+                switchToConversationDoNotAppend(contact, invite.uri.getBody());
             }
             return true;
         } else {
             if (mMenuSearchView != null) {
                 mMenuSearchView.expandActionView();
                 mSearchEditText.setText("");
-                mSearchEditText.append(invite.getJid().toString());
-                filter(invite.getJid().toString());
+                mSearchEditText.append(invite.uri.asJid().toString());
+                filter(invite.uri.asJid().toString());
             } else {
-                mInitialSearchValue.push(invite.getJid().toString());
+                mInitialSearchValue.push(invite.uri.asJid().toString());
             }
             return true;
         }
@@ -1131,10 +1126,11 @@ public class StartConversationActivity extends XmppActivity
         builder.setPositiveButton(
                 R.string.confirm,
                 (dialog, which) -> {
-                    if (isTrustedSource.isChecked() && invite.hasFingerprints()) {
-                        xmppConnectionService.verifyFingerprints(contact, invite.getFingerprints());
+                    if (isTrustedSource.isChecked() && invite.uri.hasOmemoFingerprints()) {
+                        xmppConnectionService.verifyFingerprints(
+                                contact, invite.uri.getOmemoFingerprints());
                     }
-                    switchToConversationDoNotAppend(contact, invite.getBody());
+                    switchToConversationDoNotAppend(contact, invite.uri.getBody());
                 });
         builder.setNegativeButton(
                 R.string.cancel, (dialog, which) -> StartConversationActivity.this.finish());
@@ -1237,18 +1233,15 @@ public class StartConversationActivity extends XmppActivity
         if (account == null) {
             return;
         }
-        final String input = jid.getText().toString().trim();
-        Jid conferenceJid;
-        try {
-            conferenceJid = Jid.ofUserInput(input);
-        } catch (final IllegalArgumentException e) {
-            final XmppUri xmppUri = new XmppUri(input);
-            if (xmppUri.isValidJid() && xmppUri.isAction(XmppUri.ACTION_JOIN)) {
-                final Editable editable = jid.getEditableText();
-                editable.clear();
-                editable.append(xmppUri.getJid().toString());
-                conferenceJid = xmppUri.getJid();
-            } else {
+        final String input = CharSequences.nullToEmpty(jid.getText()).trim();
+        final var asUri = MiniUri.getXmppUriOrNull(input);
+        final Jid conferenceJid;
+        if (asUri != null && asUri.isAddress() && asUri.isAction(MiniUri.Xmpp.ACTION_JOIN)) {
+            conferenceJid = asUri.asJid();
+        } else {
+            try {
+                conferenceJid = Jid.ofUserInput(input);
+            } catch (final IllegalArgumentException e) {
                 layout.setError(getString(R.string.invalid_jid));
                 return;
             }
@@ -1548,33 +1541,5 @@ public class StartConversationActivity extends XmppActivity
         return intent;
     }
 
-    private class Invite extends XmppUri {
-
-        public String account;
-
-        boolean forceDialog = false;
-
-        Invite(final String uri) {
-            super(uri);
-        }
-
-        Invite(Uri uri, boolean safeSource) {
-            super(uri, safeSource);
-        }
-
-        boolean invite() {
-            if (!isValidJid()) {
-                Toast.makeText(
-                                StartConversationActivity.this,
-                                R.string.invalid_jid,
-                                Toast.LENGTH_SHORT)
-                        .show();
-                return false;
-            }
-            if (getJid() != null) {
-                return handleJid(this);
-            }
-            return false;
-        }
-    }
+    public record Invite(MiniUri.Xmpp uri, String account, boolean scanned, boolean forceDialog) {}
 }

@@ -1,0 +1,2 @@
+* Arreglo: las llamadas ya no se taban durante la conexión si "Utilizar siempre relés" está activado pero el servidor no posee ninguno
+* Optimizaciones de ancho de banda

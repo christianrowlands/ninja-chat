@@ -1,0 +1,2 @@
+* Corrige la recherche sur Android <= 5
+* Améliore la consommation mémoire

@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -69,7 +70,6 @@ import eu.siacs.conversations.utils.IrregularUnicodeDetector;
 import eu.siacs.conversations.utils.PhoneNumberUtilWrapper;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.utils.XEP0392Helper;
-import eu.siacs.conversations.utils.XmppUri;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
@@ -233,13 +233,9 @@ public class ContactDetailsActivity extends OmemoActivity
     }
 
     @Override
-    protected String getShareableUri(boolean http) {
-        if (http) {
-            return "https://ninja.chat/i/"
-                    + XmppUri.lameUrlEncode(contact.getAddress().asBareJid().toString());
-        } else {
-            return "xmpp:" + contact.getAddress().asBareJid().toString();
-        }
+    protected MiniUri getShareableUri(final boolean http) {
+        final var uri = new MiniUri.Xmpp(contact.getAddress());
+        return http ? uri.asInvitationUri() : uri;
     }
 
     @Override
@@ -588,7 +584,7 @@ public class ContactDetailsActivity extends OmemoActivity
         binding.scanButton.setVisibility(
                 hasKeys && isCameraFeatureAvailable ? View.VISIBLE : View.GONE);
         if (hasKeys) {
-            binding.scanButton.setOnClickListener((v) -> ScanActivity.scan(this));
+            binding.scanButton.setOnClickListener((v) -> requestPermissionAndScanQrCode());
         }
         if (contact.getPgpKeyId() != 0) {
             hasKeys = true;
@@ -744,11 +740,11 @@ public class ContactDetailsActivity extends OmemoActivity
     }
 
     @Override
-    protected void processFingerprintVerification(XmppUri uri) {
+    protected void processFingerprintVerification(final MiniUri.Xmpp uri) {
         if (contact != null
-                && contact.getAddress().asBareJid().equals(uri.getJid())
-                && uri.hasFingerprints()) {
-            if (xmppConnectionService.verifyFingerprints(contact, uri.getFingerprints())) {
+                && contact.getAddress().asBareJid().equals(uri.asJid())
+                && uri.hasOmemoFingerprints()) {
+            if (xmppConnectionService.verifyFingerprints(contact, uri.getOmemoFingerprints())) {
                 Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
             }
         } else {

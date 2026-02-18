@@ -1,6 +1,5 @@
 package eu.siacs.conversations.ui;
 
-import android.content.Intent;
 import android.os.Build;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -8,10 +7,10 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
@@ -19,14 +18,13 @@ import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
 import eu.siacs.conversations.databinding.ItemDeviceFingerprintBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.utils.CryptoHelper;
-import eu.siacs.conversations.utils.XmppUri;
 
-public abstract class OmemoActivity extends XmppActivity {
+public abstract class OmemoActivity extends QrCodeScanningActivity {
 
     private Account mSelectedAccount;
     protected String mSelectedFingerprint;
 
-    protected XmppUri mPendingFingerprintVerificationUri = null;
+    protected MiniUri.Xmpp mPendingFingerprintVerificationUri = null;
 
     @Override
     public void onCreateContextMenu(
@@ -68,28 +66,41 @@ public abstract class OmemoActivity extends XmppActivity {
             copyOmemoFingerprint(mSelectedFingerprint);
             return true;
         } else if (itemId == R.id.verify_scan) {
-            ScanActivity.scan(this);
+            requestPermissionAndScanQrCode();
             return true;
         } else {
             return super.onContextItemSelected(item);
         }
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == ScanActivity.REQUEST_SCAN_QR_CODE && resultCode == RESULT_OK) {
-            String result = intent.getStringExtra(ScanActivity.INTENT_EXTRA_RESULT);
-            XmppUri uri = new XmppUri(result == null ? "" : result);
+    protected void onQrCodeScanned(final String code) {
+        final MiniUri miniUri;
+        try {
+            miniUri = MiniUri.tryParse(code.trim());
+        } catch (final IllegalArgumentException e) {
+            Toast.makeText(this, R.string.invalid_barcode, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (miniUri instanceof MiniUri.Xmpp xmpp && xmpp.isAddress()) {
             if (xmppConnectionServiceBound) {
-                processFingerprintVerification(uri);
+                processFingerprintVerification(xmpp);
             } else {
-                this.mPendingFingerprintVerificationUri = uri;
+                this.mPendingFingerprintVerificationUri = xmpp;
             }
+        } else if (miniUri instanceof MiniUri.Transformable transformable
+                && transformable.transform() instanceof MiniUri.Xmpp xmpp
+                && xmpp.isAddress()) {
+            if (xmppConnectionServiceBound) {
+                processFingerprintVerification(xmpp);
+            } else {
+                this.mPendingFingerprintVerificationUri = xmpp;
+            }
+        } else {
+            Toast.makeText(this, R.string.invalid_barcode, Toast.LENGTH_LONG).show();
         }
     }
 
-    protected abstract void processFingerprintVerification(XmppUri uri);
+    protected abstract void processFingerprintVerification(MiniUri.Xmpp uri);
 
     protected void copyOmemoFingerprint(String fingerprint) {
         if (copyTextToClipboard(
@@ -241,14 +252,5 @@ public abstract class OmemoActivity extends XmppActivity {
                     refreshUi();
                 });
         builder.create().show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(
-            final int requestCode,
-            @NonNull final String[] permissions,
-            @NonNull final int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        ScanActivity.onRequestPermissionResult(this, requestCode, grantResults);
     }
 }

@@ -1,1 +1,1 @@
-Jabber/XMPP med enkelt inträde och enkel upptäckt
+Jabber/XMPP med Easy Entry och Easy Discovery

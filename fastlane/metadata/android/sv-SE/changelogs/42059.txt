@@ -1,0 +1,2 @@
+* Uppdaterat Target SDK till version 33, igen
+* Åtgärdat problem på servrar som stöder SASL2 utan inbyggt Stream Management

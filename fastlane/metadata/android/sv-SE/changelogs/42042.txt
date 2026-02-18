@@ -1,0 +1,2 @@
+* Åtgärdat återsändningsslinga på servrar som endast stöder sm:2
+* Visa endast "Byt till video" om den andra parten har stöd för videosamtal

@@ -1,0 +1,3 @@
+* Réduit l'écho durant les appels sur certains appareils
+* Corrige l'identification lorsque le mot de passe contient certains caractères spéciaux
+* Lit les sons de numérotation et tonalité occupé sur le haut-parleur lors des appels vidéos

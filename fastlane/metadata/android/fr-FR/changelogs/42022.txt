@@ -1,0 +1,2 @@
+* Corrige les problèmes avec certaines vidéos qui ne sont pas comprimées
+* Corrige un crash rare à l'ouverture de la notification

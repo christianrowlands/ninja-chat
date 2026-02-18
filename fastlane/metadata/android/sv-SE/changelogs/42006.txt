@@ -1,0 +1,2 @@
+* Verifiera röst-/video-samtal med redan existerande OMEMO-sessioner
+* Förbättrat kompatibiliteten med icke-libwebrtc WebRTC-implementationer

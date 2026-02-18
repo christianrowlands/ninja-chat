@@ -1,0 +1,2 @@
+* Åtgärdat samtalsintegration på vissa enheter med Android 14
+* Introducerat inställningen "Inbjudningar från främlingar"
