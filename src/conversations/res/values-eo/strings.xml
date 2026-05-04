@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="use_conversations.im">Uzi ninja.chat</string>
+    <string name="use_ninja.chat">Uzi ninja.chat</string>
     <string name="magic_create_text_on_x">Vi estis invitita al %1$s. Ni gvidos vin tra la procezo de kreado de konto.
 \nElektante %1$s kiel provizanton vi povos komuniki kun uzantoj de aliaj provizantoj donante al ili vian plenan XMPP-adreson.</string>
     <string name="do_you_have_an_account">Ĉu vi jam havas XMPP-konton\? Ĉi tio povus esti la kazo se vi jam uzas alian XMPP-klienton aŭ antaŭe uzis Conversations. Se ne, vi povas krei novan XMPP-konton nun.
