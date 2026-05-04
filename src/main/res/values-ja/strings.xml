@@ -357,17 +357,8 @@
     <string name="enable_all_accounts">すべてのアカウントを有効化</string>
     <string name="disable_all_accounts">すべてのアカウントを無効化</string>
     <string name="perform_action_with">アクションを実行...</string>
-    <string name="no_affiliation">所属なし</string>
-    <string name="no_role">オフライン</string>
     <string name="outcast">追放</string>
     <string name="member">メンバー</string>
-    <string name="advanced_mode">詳細モード</string>
-    <string name="grant_membership">メンバー権限を付与</string>
-    <string name="remove_membership">メンバー権限を取消</string>
-    <string name="grant_admin_privileges">管理者権限を付与</string>
-    <string name="remove_admin_privileges">管理者権限を取消</string>
-    <string name="grant_owner_privileges">所有者権限を付与</string>
-    <string name="remove_owner_privileges">所有者権限を取消</string>
     <string name="remove_from_room">グループチャットから削除</string>
     <string name="remove_from_channel">談話室から削除</string>
     <string name="could_not_change_affiliation">%s の所属を変更できません</string>
@@ -448,10 +439,6 @@
     <string name="pref_presence_settings">在席状況</string>
     <string name="pref_away_when_screen_off">デバイスがロックされているときは離席</string>
     <string name="pref_away_when_screen_off_summary">デバイスがロックされているときは離席と表示します</string>
-    <string name="pref_dnd_on_silent_mode">サイレントモードのときは取込中</string>
-    <string name="pref_dnd_on_silent_mode_summary">デバイスがサイレントモードのときは取込中と表示します</string>
-    <string name="pref_treat_vibrate_as_silent">バイブレートをサイレントモードとして扱う</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">デバイスがバイブレートのときは取込中と表示します</string>
     <string name="pref_show_connection_options">ホスト名とポート番号</string>
     <string name="pref_show_connection_options_summary">アカウントを設定するときに、拡張設定項目を表示します</string>
     <string name="hostname_example">xmpp.ninja.chat</string>
@@ -579,11 +566,9 @@
     <string name="copy_fingerprint">指紋をコピー</string>
     <string name="all_omemo_keys_have_been_verified">所有するすべての OMEMO 鍵を検証しました</string>
     <string name="verified_fingerprints">指紋を検証しました</string>
-    <string name="use_camera_icon_to_scan_barcode">カメラを使用して連絡先のバーコードをスキャンします</string>
+    <string name="use_camera_icon_to_scan_barcode">カメラを使用して連絡先のQRコードをスキャンします</string>
     <string name="please_wait_for_keys_to_be_fetched">鍵が取得されるのをお待ちください</string>
-    <string name="share_as_barcode">バーコードで共有</string>
-    <string name="share_as_uri">XMPP URI で共有</string>
-    <string name="share_as_http">HTTP リンクで共有</string>
+    <string name="share_as_uri">XMPP URI を共有</string>
     <string name="pref_blind_trust_before_verification">検証前に無条件に信頼</string>
     <string name="pref_blind_trust_before_verification_summary">検証されていない連絡先からの新しいデバイスは信頼しますが、検証済みの連絡先については新しいデバイスを手動で確認するよう求めます。</string>
     <string name="blindly_trusted_omemo_keys">無条件に信頼されている OMEMO 鍵です。他の誰かである可能性や、誰かに盗聴される危険性があります。</string>
@@ -1100,4 +1085,5 @@
     <string name="account_status_tls_error_untrusted">信頼できない証明書</string>
     <string name="account_status_channel_binding">チャネルバインディング非対応</string>
     <string name="delete_message">メッセージ削除</string>
+    <string name="account_status_airplane_mode">機内モード</string>
 </resources>

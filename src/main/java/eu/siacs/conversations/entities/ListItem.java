@@ -3,11 +3,11 @@ package eu.siacs.conversations.entities;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import eu.siacs.conversations.services.AvatarService;
 import eu.siacs.conversations.xmpp.Jid;
-import java.util.Collection;
+import im.conversations.android.model.DynamicTag;
+import java.util.List;
 import java.util.Locale;
 
 public interface ListItem extends Comparable<ListItem>, AvatarService.Avatar {
@@ -15,7 +15,7 @@ public interface ListItem extends Comparable<ListItem>, AvatarService.Avatar {
 
     Jid getAddress();
 
-    Collection<Tag> getTags();
+    List<DynamicTag> getTags();
 
     default boolean match(final String needle) {
         if (Strings.isNullOrEmpty(needle)) {
@@ -50,27 +50,15 @@ public interface ListItem extends Comparable<ListItem>, AvatarService.Avatar {
     }
 
     private boolean matchInTag(final String needle) {
-        for (final Tag tag : getTags()) {
-            if (tag.getName().toLowerCase(Locale.US).contains(needle)) {
+        for (final DynamicTag tag : this.getTags()) {
+            if (tag instanceof DynamicTag.RosterGroup(String name)
+                    && Strings.nullToEmpty(name)
+                            .toLowerCase(Locale.getDefault())
+                            .contains(needle)) {
                 return true;
             }
+            // TODO match for hat and availability
         }
         return false;
-    }
-
-    final class Tag {
-        private final String name;
-
-        private Tag(final String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public static Collection<Tag> of(final Collection<String> tags) {
-            return Collections2.transform(tags, Tag::new);
-        }
     }
 }

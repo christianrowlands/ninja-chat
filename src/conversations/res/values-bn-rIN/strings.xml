@@ -13,6 +13,5 @@
     <string name="improperly_formatted_provisioning">Provisioning code-এ গরমিল আছে</string>
     <string name="tap_share_button_send_invite">Share বোতামটা টিপে %1$s-কে একটি আমন্ত্রপত্র পাঠান</string>
     <string name="if_contact_is_nearby_use_qr">পরিচিত ব্যক্তি যদি নিকটেই থাকেন, তাহলে তারা এই কোডটাও স্ক্যান করে নিতে পারেন</string>
-    <string name="easy_invite_share_text">%1$sতে এসো, আর আমার সাথে কথা বলো: %2$s</string>
     <string name="share_invite_with">একটি আমন্ত্রণপত্র দেওয়া যাক...</string>
 </resources>

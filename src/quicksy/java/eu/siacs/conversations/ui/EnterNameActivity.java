@@ -46,7 +46,7 @@ public class EnterNameActivity extends XmppActivity
             intent = new Intent(this, PublishProfilePictureActivity.class);
             intent.putExtra("setup", true);
             intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
-            StartConversationActivity.addInviteUri(intent, getIntent());
+            StartConversationActivity.addInviteUri(intent, this);
         }
         startActivity(intent);
         finish();

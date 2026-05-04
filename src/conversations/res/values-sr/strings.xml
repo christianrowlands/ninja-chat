@@ -13,7 +13,6 @@
     <string name="improperly_formatted_provisioning">Неисправно форматиран провизиони кôд</string>
     <string name="tap_share_button_send_invite">Притисни дугме за дељење како би свом контакту послао/ла позивницу на %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Ако је твој контакт у близини, може да скенира кôд у наставку како би прихватио твоју позивницу.</string>
-    <string name="easy_invite_share_text">Пријави се на %1$s и разговарај са мном: %2$s</string>
     <string name="share_invite_with">Подели позивницу са…</string>
     <string name="magic_create_text_fixed">Позван/а си на %1$s. Корисничко име је већ одабрано за тебе. Спровешћемо те кроз поступак прављења налога.
 \nМожеш да комуницираш са корисницима других провајдера тако што им проследиш своју пуну XMPP адресу.</string>

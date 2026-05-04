@@ -117,22 +117,11 @@
                                 app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-                        <TextView
-                            android:id="@+id/details_last_seen"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/tags"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="8sp"
-                            android:textAppearance="?textAppearanceTitleSmall"
-                            tools:text="@string/just_now" />
-
                         <LinearLayout
                             android:id="@+id/status_message_subscription_box"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/details_last_seen"
+                            android:layout_below="@+id/tags"
                             android:layout_alignStart="@+id/details_contact_xmpp_address"
                             android:layout_marginTop="8sp"
                             android:orientation="vertical">

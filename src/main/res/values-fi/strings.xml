@@ -348,16 +348,8 @@
     <string name="password_should_not_be_empty">Salasana ei voi olla tyhjä</string>
     <string name="enable_all_accounts">Kaikki tilit käyttöön</string>
     <string name="disable_all_accounts">Kaikki tilit pois käytöstä</string>
-    <string name="no_role">Poissa</string>
     <string name="outcast">Hylkiö</string>
     <string name="member">Jäsen</string>
-    <string name="advanced_mode">Edistynyt tila</string>
-    <string name="grant_membership">Myönnä jäsenyys</string>
-    <string name="remove_membership">Peru jäsenyys</string>
-    <string name="grant_admin_privileges">Myönnä ylläpitäjän oikeudet</string>
-    <string name="remove_admin_privileges">Peru ylläpitäjän oikeudet</string>
-    <string name="grant_owner_privileges">Myönnä omistajuus</string>
-    <string name="remove_owner_privileges">Peru omistajuus</string>
     <string name="remove_from_room">Poista ryhmäkeskustelusta</string>
     <string name="remove_from_channel">Poista kanavalta</string>
     <string name="ban_now">Estä nyt</string>
@@ -432,10 +424,6 @@
     <string name="pref_presence_settings">Saatavuus</string>
     <string name="pref_away_when_screen_off">Poissa kun laite on lukittu</string>
     <string name="pref_away_when_screen_off_summary">Näytä minut poissaolevana kun näyttö on lukittu</string>
-    <string name="pref_dnd_on_silent_mode">Kiireinen kun laite on äänetön</string>
-    <string name="pref_dnd_on_silent_mode_summary">Näytä minut kiireisenä kun laite on äänettömänä</string>
-    <string name="pref_treat_vibrate_as_silent">Kohtele vain värinä -tilaa äänettömän lailla</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Näytä minut kiireisenä kun laite on vain värinä -tilassa</string>
     <string name="pref_show_connection_options">Isäntänimi ja portti</string>
     <string name="pref_show_connection_options_summary">Näytä laajennetut yhteysasetukset tilin määrittämisen yhteydessä</string>
     <string name="hostname_example">xmpp.esimerkki.fi</string>
@@ -557,9 +545,7 @@
     <string name="verified_fingerprints">Varmennetut sormenjäljet</string>
     <string name="use_camera_icon_to_scan_barcode">Käytä kameraa yhteystietosi viivakoodin lukemiseen</string>
     <string name="please_wait_for_keys_to_be_fetched">Odota hetki, avaimia ladataan</string>
-    <string name="share_as_barcode">Jaa viivakoodina</string>
     <string name="share_as_uri">Jaa XMPP-osoitteena</string>
-    <string name="share_as_http">Jaa HTTP-linkkinä</string>
     <string name="pref_blind_trust_before_verification">Sokea luottamus ennen varmistusta</string>
     <string name="pref_blind_trust_before_verification_summary">Luota uusiin laitteisiin varmistamattomilta yhteystiedoilta, mutta vaadi varmistettujen yhteystietojen uusien laitteiden manuaalinen hyväksyminen.</string>
     <string name="blindly_trusted_omemo_keys">OMEMO-avaimiin luotetaan sokeasti, eli ne voivat olla jonkun muun tai joku voi salakuunnella.</string>
@@ -1008,7 +994,6 @@
     <string name="privacy_policy">Tietosuojakäytäntö</string>
     <string name="search_countries">Etsi maita</string>
     <string name="contact_list_integration_not_available">Yhteystietolistan integrointi ei ole saatavilla</string>
-    <string name="no_affiliation">Ei sidossuhdetta</string>
     <string name="shared_text_with_x">Teksti jaettu %s:n kanssa</string>
     <string name="pref_headsup_notifications">Huomioi ilmoitukset</string>
     <string name="pref_headsup_notifications_summary">Näytä huomioidut ilmoitukset</string>

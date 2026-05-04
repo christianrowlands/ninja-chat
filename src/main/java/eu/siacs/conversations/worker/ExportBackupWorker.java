@@ -35,6 +35,7 @@ import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.utils.BackupFileHeader;
 import eu.siacs.conversations.utils.Compatibility;
+import eu.siacs.conversations.utils.Random;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +47,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -197,7 +197,6 @@ public class ExportBackupWorker extends Worker {
                     NoSuchProviderException,
                     WorkStoppedException {
         final var context = getApplicationContext();
-        final SecureRandom secureRandom = new SecureRandom();
         Log.d(
                 Config.LOGTAG,
                 String.format(
@@ -205,8 +204,8 @@ public class ExportBackupWorker extends Worker {
                         account.getJid().asBareJid(), account.getUuid()));
         final byte[] IV = new byte[12];
         final byte[] salt = new byte[16];
-        secureRandom.nextBytes(IV);
-        secureRandom.nextBytes(salt);
+        Random.SECURE_RANDOM.nextBytes(IV);
+        Random.SECURE_RANDOM.nextBytes(salt);
         final BackupFileHeader backupFileHeader =
                 new BackupFileHeader(
                         context.getString(R.string.app_name),

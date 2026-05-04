@@ -3,6 +3,7 @@ package eu.siacs.conversations.entities;
 import androidx.annotation.NonNull;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.Jid;
+import im.conversations.android.model.DynamicTag;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class RawBlockable implements ListItem, Blockable {
     }
 
     @Override
-    public List<Tag> getTags() {
+    public List<DynamicTag> getTags() {
         return Collections.emptyList();
     }
 

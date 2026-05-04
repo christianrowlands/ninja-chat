@@ -1,0 +1,3 @@
+* Show warning in chat if contact is in different time zone and it is night time for them
+* Show warning in chat if contact is DND
+* Refactor automatic DND handling (based on system DND)

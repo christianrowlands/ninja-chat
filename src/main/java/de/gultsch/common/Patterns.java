@@ -12,7 +12,7 @@ public class Patterns {
     private static List<String> PUBLIC_URI_SCHEMES =
             Arrays.asList(
                     "tel", "xmpp", "http", "https", "geo", "mailto", "web+ap", "gemini", "magnet",
-                    "taler");
+                    "taler", "mumble");
     private static List<String> INTERNAL_URI_SCHEMES =
             new ImmutableList.Builder<String>()
                     .addAll(PUBLIC_URI_SCHEMES)
@@ -27,7 +27,7 @@ public class Patterns {
             Pattern.compile("^tel:\\+?(\\d{1,4}[-./()\\s]?)*\\d{1,4}(;.*)?$");
 
     public static final Pattern URI_HTTP = Pattern.compile("https?://\\S+");
-
+    public static final Pattern URI_MUMBLE = Pattern.compile("mumble://\\S+");
     public static final Pattern URI_WEB_AP = Pattern.compile("web\\+ap://\\S+");
 
     public static Pattern URI_GEO =

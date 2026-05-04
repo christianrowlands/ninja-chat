@@ -1,0 +1,4 @@
+* permitir que usuários definam seus próprios apelidos 
+* resumir o download de arquivos encriptados OMEMO
+* Canais agora usam '#' como um símbolo no avatar
+* Quicksy usa 'sempre' como encriptação OMEMO padrão (oculta o ícone de cadeado)

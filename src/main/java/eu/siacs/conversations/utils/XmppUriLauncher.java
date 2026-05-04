@@ -5,17 +5,17 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.Conversations;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.persistance.DatabaseBackend;
 import eu.siacs.conversations.ui.EditAccountActivity;
 import eu.siacs.conversations.ui.ShareWithActivity;
 import eu.siacs.conversations.ui.StartConversationActivity;
-import eu.siacs.conversations.xmpp.Jid;
 import java.util.Collection;
+import java.util.Objects;
 
 public class XmppUriLauncher {
 
@@ -32,18 +32,20 @@ public class XmppUriLauncher {
     }
 
     public void launch(final MiniUri.Xmpp xmppUri) {
-        final var accounts = DatabaseBackend.getInstance(context).getAccountAddresses(false);
+        final var accounts = Conversations.getInstance(context).getAccounts();
         launch(accounts, xmppUri);
     }
 
-    public void launch(final Collection<Jid> accounts, final MiniUri.Xmpp uri) {
+    private void launch(
+            final Collection<DatabaseBackend.AccountWithOptions> accounts, final MiniUri.Xmpp uri) {
+        final var addresses = DatabaseBackend.AccountWithOptions.getAddresses(accounts);
         Log.d(Config.LOGTAG, "trying to launch: " + uri);
         final Intent intent;
         final var jid = uri.asJid();
         if (SignupUtils.isSupportTokenRegistry() && uri.isAddress() && jid != null) {
             final String preAuth = uri.getParameter(MiniUri.Xmpp.PARAMETER_PRE_AUTH);
             if (uri.isAction(MiniUri.Xmpp.ACTION_REGISTER)) {
-                if (jid.getLocal() != null && accounts.contains(jid.asBareJid())) {
+                if (jid.getLocal() != null && addresses.contains(jid.asBareJid())) {
                     showError(R.string.account_already_exists);
                     return;
                 }
@@ -51,15 +53,11 @@ public class XmppUriLauncher {
                 this.context.startActivity(intent);
                 return;
             }
-            if (accounts.isEmpty()
+            if (!DatabaseBackend.AccountWithOptions.hasEnabledAccount(accounts)
                     && uri.isAction(MiniUri.Xmpp.ACTION_ROSTER)
-                    && "y"
-                            .equalsIgnoreCase(
-                                    Strings.nullToEmpty(
-                                                    uri.getParameter(MiniUri.Xmpp.PARAMETER_IBR))
-                                            .trim())) {
+                    && uri.isYesIbr()) {
                 intent = SignupUtils.getTokenRegistrationIntent(context, jid.getDomain(), preAuth);
-                intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, uri.toString());
+                intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, uri.asUri().toString());
                 this.context.startActivity(intent);
                 return;
             }
@@ -71,7 +69,7 @@ public class XmppUriLauncher {
         if (accounts.isEmpty()) {
             if (uri.isAddress()) {
                 intent = SignupUtils.getSignUpIntent(context);
-                intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, uri.toString());
+                intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, uri.asUri().toString());
                 this.context.startActivity(intent);
             } else {
                 showError(R.string.invalid_jid);
@@ -92,7 +90,9 @@ public class XmppUriLauncher {
                     intent = new Intent(context, StartConversationActivity.class);
                     intent.setAction(Intent.ACTION_VIEW);
                     intent.setData(uri.asUri());
-                    intent.putExtra("account", Iterables.getFirst(accounts, null).toString());
+                    intent.putExtra(
+                            "account",
+                            Objects.requireNonNull(Iterables.getFirst(addresses, null)).toString());
                 }
             } else {
                 intent = new Intent(context, ShareWithActivity.class);
@@ -100,7 +100,7 @@ public class XmppUriLauncher {
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, body);
             }
-        } else if (jid != null && accounts.contains(jid)) {
+        } else if (jid != null && addresses.contains(jid)) {
             intent = new Intent(context, EditAccountActivity.class);
             intent.setAction(Intent.ACTION_VIEW);
             intent.putExtra("jid", jid.asBareJid().toString());

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pick_a_server">Piliin ang iyong XMPP provider</string>
+    <string name="use_conversations.im">Gamitin ang conversations.im</string>
+    <string name="create_new_account">Gumawa ng bagong account</string>
+    <string name="do_you_have_an_account">May XMPP account na? Posible ito kapag gumagamit kayo ng ibang XMPP client o gumamit kayo ng Conversations dati. Kung hindi, pwede namang gumawa ng bagong XMPP account ngayon.\nPaghiwatig: Ilang mga email provider ay nagpo-provide din ng mga XMPP account.</string>
+    <string name="tap_share_button_send_invite">Pindutin ang share button para ipasa ang imbitasyon sa %1$s sa inyong contact.</string>
+    <string name="share_invite_with">Ibahagi ang imbitasyon sa…</string>
+</resources>

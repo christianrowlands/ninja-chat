@@ -1,14 +1,15 @@
 package eu.siacs.conversations.services;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import de.gultsch.common.TrustManagers;
+import com.google.common.primitives.Longs;
 import dev.paseto.jpaseto.Pasetos;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.android.PhoneNumberContact;
@@ -19,30 +20,22 @@ import eu.siacs.conversations.entities.Entry;
 import eu.siacs.conversations.http.HttpConnectionManager;
 import eu.siacs.conversations.utils.AccountUtils;
 import eu.siacs.conversations.utils.CryptoHelper;
+import eu.siacs.conversations.utils.NetworkManager;
 import eu.siacs.conversations.utils.PhoneNumberUtilWrapper;
 import eu.siacs.conversations.utils.QuicksyAuthentication;
 import eu.siacs.conversations.utils.SerialSingleThreadExecutor;
 import eu.siacs.conversations.utils.SmsRetrieverWrapper;
-import eu.siacs.conversations.utils.TLSSocketFactory;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.manager.RosterManager;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import io.michaelrocks.libphonenumber.android.Phonenumber;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -58,12 +51,16 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.SSLPeerUnverifiedException;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class QuickConversationsService extends AbstractQuickConversationsService {
 
@@ -78,7 +75,8 @@ public class QuickConversationsService extends AbstractQuickConversationsService
 
     private static final String API_DOMAIN = "api." + Config.QUICKSY_DOMAIN;
 
-    private static final String BASE_URL = "https://" + API_DOMAIN;
+    private static final HttpUrl BASE_URL =
+            new HttpUrl.Builder().host(API_DOMAIN).scheme("https").build();
 
     private final Set<OnVerificationRequested> mOnVerificationRequested =
             Collections.newSetFromMap(new WeakHashMap<>());
@@ -99,13 +97,16 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         super(xmppConnectionService);
     }
 
-    private static long retryAfter(HttpURLConnection connection) {
-        try {
-            return SystemClock.elapsedRealtime()
-                    + (Long.parseLong(connection.getHeaderField("Retry-After")) * 1000L);
-        } catch (Exception e) {
+    private static long retryAfter(final Response response) {
+        final var retryAfter = response.header("Retry-After");
+        if (Strings.isNullOrEmpty(retryAfter)) {
             return 0;
         }
+        final var retryAfterLong = Longs.tryParse(retryAfter);
+        if (retryAfterLong == null) {
+            return 0;
+        }
+        return SystemClock.elapsedRealtime() + (retryAfterLong * 1000L);
     }
 
     public void addOnVerificationRequestedListener(
@@ -134,28 +135,61 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         }
     }
 
-    public void requestVerification(Phonenumber.PhoneNumber phoneNumber) {
+    public void requestVerification(final Phonenumber.PhoneNumber phoneNumber) {
         final String e164 = PhoneNumberUtilWrapper.normalize(service, phoneNumber);
         if (mVerificationRequestInProgress.compareAndSet(false, true)) {
             SmsRetrieverWrapper.start(service);
-            new Thread(
-                            () -> {
-                                try {
-                                    final URL url = new URL(BASE_URL + "/authentication/" + e164);
-                                    final HttpURLConnection connection =
-                                            (HttpURLConnection) url.openConnection();
-                                    setBundledLetsEncrypt(service, connection);
-                                    connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
-                                    connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
-                                    if (QuicksyAuthentication.hasSharedSecret()) {
-                                        setAuthorization(e164, connection);
+            final var okHttp = HttpConnectionManager.okHttpClient(service);
+            final var requestBuilder =
+                    new Request.Builder()
+                            .url(
+                                    BASE_URL.newBuilder()
+                                            .addPathSegment("authentication")
+                                            .addPathSegment(e164)
+                                            .build())
+                            .addHeader("Installation-Id", getInstallationId())
+                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                            .get();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                    && QuicksyAuthentication.hasSharedSecret()) {
+                final String token =
+                        Pasetos.V2
+                                .LOCAL
+                                .builder()
+                                .setSharedSecret(QuicksyAuthentication.getSharedSecret())
+                                .setSubject(e164)
+                                .claim("Installation-Id", getInstallationId())
+                                .claim("User-Agent", HttpConnectionManager.getUserAgent())
+                                .claim(
+                                        "Device",
+                                        String.format("%s %s", Build.MANUFACTURER, Build.MODEL))
+                                .compact();
+                requestBuilder.addHeader("Authorization", token);
+            }
+            okHttp.newCall(requestBuilder.build())
+                    .enqueue(
+                            new Callback() {
+                                @Override
+                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                    final int code = getApiErrorCode(e);
+                                    synchronized (mOnVerificationRequested) {
+                                        for (OnVerificationRequested onVerificationRequested :
+                                                mOnVerificationRequested) {
+                                            onVerificationRequested.onVerificationRequestFailed(
+                                                    code);
+                                        }
                                     }
-                                    setHeader(connection);
-                                    final int code = connection.getResponseCode();
+                                    mVerificationRequestInProgress.set(false);
+                                }
+
+                                @Override
+                                public void onResponse(
+                                        @NonNull Call call, @NonNull Response response) {
+                                    final var code = response.code();
                                     if (code == 200) {
                                         createAccountAndWait(phoneNumber, 0L);
                                     } else if (code == 429) {
-                                        createAccountAndWait(phoneNumber, retryAfter(connection));
+                                        createAccountAndWait(phoneNumber, retryAfter(response));
                                     } else {
                                         synchronized (mOnVerificationRequested) {
                                             for (OnVerificationRequested onVerificationRequested :
@@ -165,43 +199,9 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                                             }
                                         }
                                     }
-                                } catch (IOException e) {
-                                    final int code = getApiErrorCode(e);
-                                    synchronized (mOnVerificationRequested) {
-                                        for (OnVerificationRequested onVerificationRequested :
-                                                mOnVerificationRequested) {
-                                            onVerificationRequested.onVerificationRequestFailed(
-                                                    code);
-                                        }
-                                    }
-                                } finally {
                                     mVerificationRequestInProgress.set(false);
                                 }
-                            })
-                    .start();
-        }
-    }
-
-    private static void setBundledLetsEncrypt(
-            final Context context, final HttpURLConnection connection) {
-        if (connection instanceof HttpsURLConnection httpsURLConnection) {
-            final SSLSocketFactory socketFactory;
-            try {
-                socketFactory =
-                        new TLSSocketFactory(
-                                new X509TrustManager[] {
-                                    TrustManagers.createForAndroidVersion(context)
-                                },
-                                context);
-            } catch (final KeyManagementException
-                    | NoSuchAlgorithmException
-                    | KeyStoreException
-                    | CertificateException
-                    | IOException e) {
-                Log.e(Config.LOGTAG, "could not configured bundled LetsEncrypt", e);
-                return;
-            }
-            httpsURLConnection.setSSLSocketFactory(socketFactory);
+                            });
         }
     }
 
@@ -212,7 +212,8 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         }
     }
 
-    private void createAccountAndWait(Phonenumber.PhoneNumber phoneNumber, final long timestamp) {
+    private void createAccountAndWait(
+            final Phonenumber.PhoneNumber phoneNumber, final long timestamp) {
         String local = PhoneNumberUtilWrapper.normalize(service, phoneNumber);
         Log.d(
                 Config.LOGTAG,
@@ -241,43 +242,60 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         }
     }
 
-    public void verify(final Account account, String pin) {
+    public void verify(final Account account, final String pin) {
         if (mVerificationInProgress.compareAndSet(false, true)) {
-            new Thread(
-                            () -> {
-                                try {
-                                    final URL url = new URL(BASE_URL + "/password");
-                                    final HttpURLConnection connection =
-                                            (HttpURLConnection) url.openConnection();
-                                    setBundledLetsEncrypt(service, connection);
-                                    connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
-                                    connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
-                                    connection.setRequestMethod("POST");
-                                    connection.setRequestProperty(
-                                            "Authorization",
-                                            Plain.getAuthorization(account.getUsername(), pin));
-                                    setHeader(connection);
-                                    final OutputStream os = connection.getOutputStream();
-                                    final BufferedWriter writer =
-                                            new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                                    writer.write(account.getPassword());
-                                    writer.flush();
-                                    writer.close();
-                                    os.close();
-                                    connection.connect();
-                                    final int code = connection.getResponseCode();
+            final var okHttp = HttpConnectionManager.okHttpClient(service);
+            final RequestBody body =
+                    RequestBody.create(
+                            account.getPassword(), MediaType.parse("text/plain; charset=utf-8"));
+
+            final var request =
+                    new Request.Builder()
+                            .url(BASE_URL.newBuilder().addPathSegment("password").build())
+                            .addHeader(
+                                    "Authorization",
+                                    Plain.getAuthorization(account.getUsername(), pin))
+                            .addHeader("Installation-Id", getInstallationId())
+                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                            .post(body)
+                            .build();
+            okHttp.newCall(request)
+                    .enqueue(
+                            new Callback() {
+                                @Override
+                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                    final int code = getApiErrorCode(e);
+                                    synchronized (mOnVerification) {
+                                        for (OnVerification onVerification : mOnVerification) {
+                                            onVerification.onVerificationFailed(code);
+                                        }
+                                    }
+                                    mVerificationInProgress.set(false);
+                                }
+
+                                @Override
+                                public void onResponse(
+                                        @NonNull Call call, @NonNull Response response) {
+                                    final var code = response.code();
                                     if (code == 200 || code == 201) {
                                         account.setOption(Account.OPTION_UNVERIFIED, false);
                                         account.setOption(Account.OPTION_DISABLED, false);
                                         awaitingAccountStateChange = new CountDownLatch(1);
                                         service.updateAccount(account);
                                         try {
-                                            awaitingAccountStateChange.await(5, TimeUnit.SECONDS);
+                                            if (!awaitingAccountStateChange.await(
+                                                    5, TimeUnit.SECONDS)) {
+                                                Log.d(
+                                                        Config.LOGTAG,
+                                                        account.getJid().asBareJid()
+                                                                + ": timer expired while waiting"
+                                                                + " for account to connect");
+                                            }
                                         } catch (InterruptedException e) {
                                             Log.d(
                                                     Config.LOGTAG,
                                                     account.getJid().asBareJid()
-                                                            + ": timer expired while waiting for"
+                                                            + ":interrupted while waiting for"
                                                             + " account to connect");
                                         }
                                         synchronized (mOnVerification) {
@@ -286,7 +304,7 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                                             }
                                         }
                                     } else if (code == 429) {
-                                        final long retryAfter = retryAfter(connection);
+                                        final long retryAfter = retryAfter(response);
                                         synchronized (mOnVerification) {
                                             for (OnVerification onVerification : mOnVerification) {
                                                 onVerification.onVerificationRetryAt(retryAfter);
@@ -299,39 +317,10 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                                             }
                                         }
                                     }
-                                } catch (IOException e) {
-                                    final int code = getApiErrorCode(e);
-                                    synchronized (mOnVerification) {
-                                        for (OnVerification onVerification : mOnVerification) {
-                                            onVerification.onVerificationFailed(code);
-                                        }
-                                    }
-                                } finally {
                                     mVerificationInProgress.set(false);
                                 }
-                            })
-                    .start();
+                            });
         }
-    }
-
-    private void setAuthorization(final String e164, final HttpURLConnection connection) {
-        final String token =
-                Pasetos.V2
-                        .LOCAL
-                        .builder()
-                        .setSharedSecret(QuicksyAuthentication.getSharedSecret())
-                        .setSubject(e164)
-                        .claim("Installation-Id", getInstallationId())
-                        .claim("User-Agent", HttpConnectionManager.getUserAgent())
-                        .claim("Device", String.format("%s %s", Build.MANUFACTURER, Build.MODEL))
-                        .compact();
-        connection.setRequestProperty("Authorization", token);
-    }
-
-    private void setHeader(final HttpURLConnection connection) {
-        connection.setRequestProperty("User-Agent", HttpConnectionManager.getUserAgent());
-        connection.setRequestProperty("Installation-Id", getInstallationId());
-        connection.setRequestProperty("Accept-Language", Locale.getDefault().getLanguage());
     }
 
     private String getInstallationId() {
@@ -341,7 +330,7 @@ public class QuickConversationsService extends AbstractQuickConversationsService
     }
 
     private int getApiErrorCode(final Exception e) {
-        if (!service.hasInternetConnection()) {
+        if (new NetworkManager(service).getHint() != NetworkManager.Hint.ACTIVE) {
             return API_ERROR_AIRPLANE_MODE;
         } else if (e instanceof UnknownHostException) {
             return API_ERROR_UNKNOWN_HOST;
@@ -463,7 +452,7 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                 needsCacheClean = contact.setPhoneContact(phoneNumberContact);
             } else {
                 needsCacheClean = contact.unsetPhoneContact(PhoneNumberContact.class);
-                Log.d(Config.LOGTAG, uri.toString() + " vanished from address book");
+                Log.d(Config.LOGTAG, uri + " vanished from address book");
             }
             if (needsCacheClean) {
                 service.getAvatarService().clear(contact);
@@ -586,16 +575,8 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         void startBackgroundVerification(String pin);
     }
 
-    private static class Attempt {
-        private final long timestamp;
-        private final int hash;
-
+    private record Attempt(long timestamp, int hash) {
         private static final Attempt NULL = new Attempt(0, 0);
-
-        private Attempt(long timestamp, int hash) {
-            this.timestamp = timestamp;
-            this.hash = hash;
-        }
 
         public static Attempt create(int hash) {
             return new Attempt(SystemClock.elapsedRealtime(), hash);

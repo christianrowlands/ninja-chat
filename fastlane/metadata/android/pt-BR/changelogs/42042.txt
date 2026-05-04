@@ -1,0 +1,2 @@
+* Corrigir loop de reenvio em servidores que somente suportam sm:2
+* Mostrar 'Trocar para vídeo' somente se o outro participante suporta vídeo

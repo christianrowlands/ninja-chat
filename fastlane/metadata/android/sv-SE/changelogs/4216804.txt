@@ -1,0 +1,3 @@
+* Åtgärdat inbjudnings-URI:er för IRC-kanaler
+* Visa röd varningsikon i konferensdetaljer för MUC:er som inte uppfyller kraven
+* Åtgärdat anslutning och återanslutningsförsök som berör flygplansläget och VPN-anslutningar

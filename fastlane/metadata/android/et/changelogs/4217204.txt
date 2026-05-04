@@ -1,0 +1,3 @@
+* Kuvame hoiatust, kui vestluse osapool on muus ajavööndis ja seal hetkel on öö
+* Kuvame hoiatust, kui vestluse osapool on märkinud olekuks „Ära sega“
+* Uus iteratsioon „Ära sega“ oleku käsitlemisest (põhineb süsteemi „Ära sega“ olekul)

@@ -1,0 +1,4 @@
+* Introduzir configuração avançada para performar descoberta de canais no servidor local ao invés de search.jabber.network
+* Ativar marcas de verificação de entrega por padrão e remover a configuração
+* Ativar ‘Botão de enviar indica estado’ por padrão e remover a configuração
+* Mover configurações de Backup e Serviço de Primeiro Plano para a tela principal

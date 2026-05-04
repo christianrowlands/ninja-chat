@@ -1,0 +1,1 @@
+* Remover a função de descoberta de canais da versão da Google Play

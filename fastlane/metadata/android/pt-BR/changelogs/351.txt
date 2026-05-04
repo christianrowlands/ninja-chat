@@ -1,0 +1,3 @@
+* correções para a transferência de arquivos Jingle IBB
+* correções para revisões repetidas enchendo a base de dados
+* trocar para Last Message Correction v1.1

@@ -1,0 +1,3 @@
+* Shfaq sinjalizim në fjalosje, nëse kontakti gjendet në zonë tjetër kohore dhe për të është kohë nate
+* Shfaq sinjalizim nëse kontakti është MMB
+* Ripunim trajtimi të automatizuar gjendjesh MMB (bazuar në MMB sistemi)

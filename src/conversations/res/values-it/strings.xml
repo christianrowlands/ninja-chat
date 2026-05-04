@@ -13,6 +13,5 @@
     <string name="improperly_formatted_provisioning">Codice di approvvigionamento formattato male</string>
     <string name="tap_share_button_send_invite">Tocca il pulsante condividi per inviare al contatto un invito per %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Se il contatto è vicino, può anche scansionare il codice sottostante per accettare il tuo invito.</string>
-    <string name="easy_invite_share_text">Unisciti a %1$s e chatta con me: %2$s</string>
     <string name="share_invite_with">Condividi invito con…</string>
 </resources>

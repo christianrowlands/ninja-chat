@@ -1,0 +1,3 @@
+* Mostrar o botão de ajuda se a chamada de Áudio/Vídeo falhar
+* Alguns travamentos irritantes foram corrigidos
+* Conexões Jingle foram corrigidas (transferência de arquivos + chamadas) com JIDs básicos

@@ -4,18 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityMucUsersBinding;
@@ -27,6 +26,7 @@ import eu.siacs.conversations.ui.util.MucDetailsContextMenuHelper;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MucUsersActivity extends XmppActivity
         implements XmppConnectionService.OnMucRosterUpdate,
@@ -63,7 +63,7 @@ public class MucUsersActivity extends XmppActivity
     }
 
     private void submitFilteredList(final String search) {
-        if (TextUtils.isEmpty(search)) {
+        if (Strings.isNullOrEmpty(search)) {
             userAdapter.submitList(Ordering.natural().immutableSortedCopy(allUsers));
         } else {
             final String needle = search.toLowerCase(Locale.getDefault());
@@ -71,7 +71,11 @@ public class MucUsersActivity extends XmppActivity
                     Ordering.natural()
                             .immutableSortedCopy(
                                     Collections2.filter(
-                                            this.allUsers, user -> contains(user, needle))));
+                                            this.allUsers,
+                                            user ->
+                                                    contains(
+                                                            Objects.requireNonNull(user),
+                                                            needle))));
         }
     }
 
@@ -79,9 +83,14 @@ public class MucUsersActivity extends XmppActivity
         final String name = user.getDisplayName();
         final var resource = user.resource();
         final var realAddress = user.getRealJid();
+        final var hats =
+                Collections2.transform(
+                        user.getHats(),
+                        h -> Objects.requireNonNull(h).title().toLowerCase(Locale.getDefault()));
         return name.toLowerCase(Locale.getDefault()).contains(needle)
                 || Strings.nullToEmpty(resource).toLowerCase(Locale.getDefault()).contains(needle)
-                || (realAddress != null && realAddress.toString().contains(needle));
+                || (realAddress != null && realAddress.toString().contains(needle))
+                || Iterables.any(hats, h -> Objects.requireNonNull(h).contains(needle));
     }
 
     @Override
@@ -101,17 +110,13 @@ public class MucUsersActivity extends XmppActivity
         setSupportActionBar(binding.toolbar);
         Activities.setStatusAndNavigationBarColors(this, binding.getRoot());
         configureActionBar(getSupportActionBar(), true);
-        this.userAdapter = new UserAdapter(getPreferences().getBoolean("advanced_muc_mode", false));
+        this.userAdapter = new UserAdapter();
         binding.list.setAdapter(this.userAdapter);
     }
 
     @Override
     public void onMucRosterUpdate() {
         loadAndSubmitUsers();
-    }
-
-    private void displayToast(final String msg) {
-        runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -127,7 +132,7 @@ public class MucUsersActivity extends XmppActivity
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
+    public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
         mSearchEditText.post(
                 () -> {
                     mSearchEditText.requestFocus();
@@ -139,7 +144,7 @@ public class MucUsersActivity extends XmppActivity
     }
 
     @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
+    public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
         final InputMethodManager imm =
                 (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(

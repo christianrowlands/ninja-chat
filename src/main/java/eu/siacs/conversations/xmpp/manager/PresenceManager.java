@@ -19,7 +19,6 @@ import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
 import im.conversations.android.xmpp.Entity;
@@ -102,7 +101,7 @@ public class PresenceManager extends AbstractManager {
         }
 
         final PgpEngine pgp = this.service.getPgpEngine();
-        final Element x = presence.getExtension(Signed.class);
+        final var x = presence.getExtension(Signed.class);
         if (pgp != null && x != null) {
             final String status = presence.getStatus();
             final long keyId = pgp.fetchKeyId(account, status, x.getContent());
@@ -347,8 +346,8 @@ public class PresenceManager extends AbstractManager {
 
     private im.conversations.android.xmpp.model.stanza.Presence.Availability getTargetPresence() {
         final var device = new Device(context);
-        if (appSettings.isDndOnSilentMode()
-                && device.isPhoneSilenced(appSettings.isTreatVibrateAsSilent())) {
+        if (appSettings.isDndSyncSystem()
+                && device.isPhoneSilenced(appSettings.isDndIncludeSilentMode())) {
             return im.conversations.android.xmpp.model.stanza.Presence.Availability.DND;
         } else if (appSettings.isAwayWhenScreenLocked() && device.isScreenLocked()) {
             return im.conversations.android.xmpp.model.stanza.Presence.Availability.AWAY;

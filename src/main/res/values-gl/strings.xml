@@ -132,7 +132,7 @@
     <string name="send_presence_updates">Enviar actualizacións de presenza</string>
     <string name="receive_presence_updates">Recibir actualizacións de presenza</string>
     <string name="ask_for_presence_updates">Solicitar actualizacións de presenza</string>
-    <string name="attach_choose_picture">Seleccionar imaxe</string>
+    <string name="attach_choose_picture">Escoller imaxe</string>
     <string name="attach_take_picture">Facer foto</string>
     <string name="preemptively_grant">Por defecto conceder solicitudes de subscrición</string>
     <string name="error_not_an_image_file">O arquivo seleccionado non é unha imaxe</string>
@@ -150,7 +150,7 @@
     <string name="account_status_offline">Sen conexión</string>
     <string name="account_status_unauthorized">Non autorizado</string>
     <string name="account_status_not_found">Servidor non atopado</string>
-    <string name="account_status_no_internet">Sen conectividade</string>
+    <string name="account_status_no_internet">Sen internet</string>
     <string name="account_status_regis_fail">Erro no rexistro</string>
     <string name="account_status_regis_conflict">O identificador xa está en uso</string>
     <string name="account_status_regis_success">Rexistro completado</string>
@@ -272,7 +272,7 @@
     <string name="pref_expert_options">Axustes de experta</string>
     <string name="pref_expert_options_summary">Por favor ten tino con estos axustes</string>
     <string name="title_activity_about_x">Sobre %s</string>
-    <string name="title_pref_quiet_hours">Non molestar</string>
+    <string name="title_pref_quiet_hours">Horas de tranquilidade</string>
     <string name="title_pref_quiet_hours_start_time">Hora de inicio</string>
     <string name="title_pref_quiet_hours_end_time">Hora de finalización</string>
     <string name="title_pref_enable_quiet_hours">Establecer horario sen notificacións</string>
@@ -361,17 +361,8 @@
     <string name="enable_all_accounts">Activar todas as contas</string>
     <string name="disable_all_accounts">Desactivar todas as contas</string>
     <string name="perform_action_with">Realizar a acción con</string>
-    <string name="no_affiliation">Sen afiliación</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Outcast</string>
     <string name="member">Membro</string>
-    <string name="advanced_mode">Modo avanzado</string>
-    <string name="grant_membership">Conceder privilexios de membresía</string>
-    <string name="remove_membership">Retirar privilexios de membresía</string>
-    <string name="grant_admin_privileges">Dar privilexios de administración</string>
-    <string name="remove_admin_privileges">Revocar privilexios de administración</string>
-    <string name="grant_owner_privileges">Conceder privilexios de propiedade</string>
-    <string name="remove_owner_privileges">Retirar privilexios de propiedade</string>
     <string name="remove_from_room">Eliminar a parola en grupo</string>
     <string name="remove_from_channel">Retirar da canle</string>
     <string name="could_not_change_affiliation">Non se puido mudar a afiliación de %s</string>
@@ -453,10 +444,6 @@
     <string name="pref_presence_settings">Dispoñibilidade</string>
     <string name="pref_away_when_screen_off">Ausente se bloqueado</string>
     <string name="pref_away_when_screen_off_summary">Mostrar como Ausente cando o dispositivo está bloqueado</string>
-    <string name="pref_dnd_on_silent_mode">En modolo silencioso, Ocupado</string>
-    <string name="pref_dnd_on_silent_mode_summary">Mostrar como Ocupado se o dispositivo está en silencio</string>
-    <string name="pref_treat_vibrate_as_silent">Trata a vibración como modo silencioso</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Mostrar como Ocupado cando o dispositivo está en vibración</string>
     <string name="pref_show_connection_options">Servidor e Porto</string>
     <string name="pref_show_connection_options_summary">Mostar axustes de conexión ampliados ao configurar unha conta</string>
     <string name="hostname_example">xmpp.exemplo.com</string>
@@ -534,7 +521,7 @@
     <string name="presence_online">En liña</string>
     <string name="presence_away">Fóra</string>
     <string name="presence_xa">Non dipoñible</string>
-    <string name="presence_dnd">Ocupada</string>
+    <string name="presence_dnd">Non molestar</string>
     <string name="secure_password_generated">Xerouse un contrasinal seguro</string>
     <string name="device_does_not_support_battery_op">O teu dispositivo non permite evitar a optimización a batería</string>
     <string name="registration_please_wait">Fallo no rexistro: inténteo de novo</string>
@@ -587,9 +574,7 @@
     <string name="verified_fingerprints">Impresións dixitais verificadas</string>
     <string name="use_camera_icon_to_scan_barcode">Usa a cámara para escanear o código QR do contacto</string>
     <string name="please_wait_for_keys_to_be_fetched">Por favor agarde mentras se obteñen as chaves</string>
-    <string name="share_as_barcode">Compartir como código QR</string>
-    <string name="share_as_uri">Compartir como URI XMPP</string>
-    <string name="share_as_http">Compartir como ligazón HTTP</string>
+    <string name="share_as_uri">Compartir URI XMPP</string>
     <string name="pref_blind_trust_before_verification">Confianza cega antes da verificación</string>
     <string name="pref_blind_trust_before_verification_summary">Confiar en dispositivos novos de contactos non verificados, pero solicitar confirmación manual de novos dispositivos para contactos verificados.</string>
     <string name="blindly_trusted_omemo_keys">Chaves OMEMO de confianza cega, significa que podería ser calquera outra persoa ou algunha impostora.</string>
@@ -659,7 +644,7 @@
     <string name="certificate_does_not_contain_jid">O certificado non contén un enderezo XMPP</string>
     <string name="server_info_partial">parcial</string>
     <string name="attach_record_video">Gravar vídeo</string>
-    <string name="copy_to_clipboard">Copiar ao portapapeis</string>
+    <string name="copy_to_clipboard">Copiar</string>
     <string name="message_copied_to_clipboard">Mensaxe copiada ao portapapeis</string>
     <string name="message">Mensaxe</string>
     <string name="private_messages_are_disabled">As mensaxes privadas están desactivadas</string>
@@ -1055,7 +1040,7 @@
     <string name="unsupported_operation">Operación sen soporte</string>
     <string name="pref_fullscreen_notification">Notificacións en pantalla completa</string>
     <string name="pref_fullscreen_notification_summary">Permitir que a app mostre a notificación de chamada entrante a pantalla completa cando o dispositivo está bloqueado.</string>
-    <string name="pref_backup_summary">Crear única, Programar recurrentes</string>
+    <string name="pref_backup_summary">Crear única, Programar recurrentes, Almacenaxe</string>
     <string name="pref_create_backup_one_off_summary">Crear unha copia de apoio</string>
     <string name="allow_private_messages">Permitir mensaxes privadas</string>
     <string name="your_avatar_tap_to_select_new_avatar">O teu avatar. Toca para escoller un novo avatar desde a galería.</string>
@@ -1159,4 +1144,29 @@
         <item quantity="one">Eliminar %d mensaxe</item>
         <item quantity="other">Eliminar %d mensaxes</item>
     </plurals>
+    <string name="server_info_stanzas_rx_tx">Stanzas (rx/tx)</string>
+    <string name="server_info_stanzas_rx_tx_push">Stanzas (rx/tx/push)</string>
+    <string name="share_invitation">Compartir invitación</string>
+    <string name="publish_qr_code">Publicar código QR</string>
+    <string name="give_membership">Outorgar membresía</string>
+    <string name="remove_membership">Retirar membresía</string>
+    <string name="make_admin">Facer Admin</string>
+    <string name="make_owner">Conceder propiedade</string>
+    <string name="dismiss_as_owner">Retirar propiedade</string>
+    <string name="dismiss_as_admin">Degradar Admin</string>
+    <string name="account_status_airplane_mode">Modo avión</string>
+    <string name="account_status_regis_invalid_captcha">CAPTCHA non válido</string>
+    <string name="its_time_for_contact">Son as ^1 para ^2</string>
+    <string name="backup_and_restore">Copia e Restablecemento</string>
+    <string name="pref_import_backup_summary">Selecciona o ficheiro para restablecer os teus datos</string>
+    <string name="pref_category_backup_storage">Almacenaxe</string>
+    <string name="pref_entity_time_summary">Comparte a túa hora actual cos contactos para ver a súa en reciprocidade.</string>
+    <string name="pref_entity_time">Compartir hora local</string>
+    <string name="contact_has_paused_their_notifications">%s detivo as súas notificacións</string>
+    <string name="pref_sync_system_dnd">Sincr DND do sistema</string>
+    <string name="pref_sync_system_dnd_summary">Establece automaticamente o estado a «Non Molestar» cando o modo Non Molestar de Android estea activo.</string>
+    <string name="pref_include_silent_modes">Incluír modos silenciosos</string>
+    <string name="pref_include_silent_modes_summary">Tamén indicar «Non Molestar» cando as notificacións estean silenciadas ou o teléfono en modo vibración.</string>
+    <string name="presence_offline">Sen conexión</string>
+    <string name="rtp_state_no_internet">Sen conexión a internet</string>
 </resources>

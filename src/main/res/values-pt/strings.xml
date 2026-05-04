@@ -105,7 +105,7 @@
     <string name="account_status_offline">Offline</string>
     <string name="account_status_unauthorized">Não autorizado</string>
     <string name="account_status_not_found">Servidor não encontrado</string>
-    <string name="account_status_no_internet">Sem conectividade</string>
+    <string name="account_status_no_internet">Sem internet</string>
     <string name="account_status_regis_fail">O registo falhou</string>
     <string name="account_status_regis_conflict">O nome de utilizador já está em uso</string>
     <string name="account_status_regis_success">Registo efetuado com sucesso</string>
@@ -242,13 +242,8 @@
     <string name="enable_all_accounts">Ativar todas as contas</string>
     <string name="disable_all_accounts">Desativar todas as contas</string>
     <string name="perform_action_with">Realizar a ação com</string>
-    <string name="no_affiliation">Sem afiliação</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Banido</string>
     <string name="member">Membro</string>
-    <string name="advanced_mode">Modo avançado</string>
-    <string name="grant_admin_privileges">Conceder privilégios de administração</string>
-    <string name="remove_admin_privileges">Revogar privilégios de administração</string>
     <string name="remove_from_room">Remover da conversa em grupo</string>
     <string name="could_not_change_affiliation">Não foi possível alterar a afiliação de %s</string>
     <string name="ban_now">Banir agora</string>
@@ -312,7 +307,6 @@
     <string name="account_status_tor_unavailable">Rede Tor indisponível</string>
     <string name="server_info_broken">Existe um problema</string>
     <string name="pref_presence_settings">Disponibilidade</string>
-    <string name="pref_treat_vibrate_as_silent">Tratar vibrar como modo silencioso</string>
     <string name="pref_show_connection_options">Host &amp; Porta</string>
     <string name="pref_show_connection_options_summary">Mostrar as definições da configuração extendida ao configurar uma conta</string>
     <string name="hostname_example">xmpp.exemplo.com</string>
@@ -361,7 +355,7 @@
     <string name="presence_online">Online</string>
     <string name="presence_away">Ausente</string>
     <string name="presence_xa">Não disponível</string>
-    <string name="presence_dnd">Ocupado</string>
+    <string name="presence_dnd">Não Perturbar</string>
     <string name="secure_password_generated">Foi gerada uma palavra-passe segura</string>
     <string name="device_does_not_support_battery_op">O seu dispositivo não suporta o desligamento da optimização da bateria</string>
     <string name="registration_please_wait">Registo falhou: Tente de novo mais tarde</string>
@@ -507,7 +501,6 @@
     <string name="notification_backup_created_subtitle">Os ficheiros de backup foram guardados em %s</string>
     <string name="no_application_found_to_open_link">Nenhuma aplicação foi encontrada para abrir o link</string>
     <string name="error_no_keys_to_trust_server_error">Não há chaves utilizáveis disponíveis para este contacto.\nNão foi possível obter novas chaves do servidor. Pode ser um problema com o servidor de contactos?</string>
-    <string name="grant_membership">Conceder privilégios de membro</string>
     <string name="pref_create_backup">Criar backup</string>
     <string name="pref_create_backup_summary">Backups serão guardados em %s</string>
     <string name="notification_create_backup_title">Criando ficheiros de backup</string>
@@ -518,9 +511,6 @@
     <string name="preparing_file">Preparando para partilhar ficheiro</string>
     <string name="file_deleted">Ficheiro apagado</string>
     <string name="no_application_found_to_open_file">Nenhuma aplicação encontrada para abrir este ficheiro</string>
-    <string name="remove_membership">Revogar privilégios de membro</string>
-    <string name="grant_owner_privileges">Conceder privilégios de dono</string>
-    <string name="remove_owner_privileges">Revogar privilégios de dono</string>
     <string name="remove_from_channel">Remover do canal</string>
     <string name="file_transmission_failed">não foi possivel partilhar ficheiro</string>
     <string name="file_transmission_cancelled">transmissão de ficheiro cancelada</string>
@@ -555,8 +545,6 @@
     <string name="pref_away_when_screen_off">Ausente quando o dispositivo está bloqueado</string>
     <string name="shared_images_with_x">Imagens partilhadas com %s</string>
     <string name="shared_text_with_x">Texto partilhado com %s</string>
-    <string name="pref_dnd_on_silent_mode">Ocupado em modo silencioso</string>
-    <string name="pref_dnd_on_silent_mode_summary">Mostra como Ocupado quando o dispositivo está em modo silencioso</string>
     <string name="unable_to_fetch_mam_prefs">Não foi possível obter as preferências do arquivamento</string>
     <string name="certificate_chain_is_not_trusted">Cadeia de certificado não confiada</string>
     <string name="jid_does_not_match_certificate">Endereço XMPP não coincide com o certificado</string>
@@ -569,7 +557,6 @@
     <string name="captcha_required">CAPTCHA necessária</string>
     <string name="shared_file_with_x">Ficheiro partilhado com %s</string>
     <string name="shared_image_with_x">Imagem partilhada com %s</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Mostra como Ocupado quando o dispositivo está em modo vibração</string>
     <string name="quicksy_wants_your_consent">Quicksy pede o seu consentimento ao usar a sua data</string>
     <string name="no_keys_just_confirm">Já confiou a impressão digital desta pessoa. Ao selecionar “Concluído” está apenas confirmando que %s é parte do grupo.</string>
     <string name="sync_with_contacts_long">%1$s processa a sua lista de contactos localmente, no seu dispositivo, para mostrar os nomes e fotos de perfil de contactos correspondentes em XMPP.\n\nNenhuma informação da lista de contactos sai do seu dispositivo!</string>
@@ -605,7 +592,7 @@
     <string name="report_jid_as_spammer">Reportar este endereço XMPP por spam.</string>
     <string name="no_permission_to_access_x">Sem permissão para aceder %s</string>
     <string name="pref_clean_cache_summary">Limpar a pasta de cache (usada pela câmara)</string>
-    <string name="share_as_uri">Partilhar como URI XMPP</string>
+    <string name="share_as_uri">Partilhar URI XMPP</string>
     <string name="pref_clean_cache">Limpar cache</string>
     <string name="verifying_omemo_keys_trusted_source">Está prestes a verificar as chaves OMEMO de %1$s após clicar um link. Isto só é seguro se seguiu este link de uma fonte confiada, onde somente %2$s possa o ter publicado.</string>
     <string name="data_saver_enabled_explained">O seu sistema operativo está a restringir %1$s de aceder a Internet em segundo plano. Para receber notificações de novas mensagens, deve permitir %1$s acesso sem restrições quando “Data saver” está ativo.\n%1$s irá se esforçar para economizar dados quando possível.</string>
@@ -620,8 +607,6 @@
     <string name="all_omemo_keys_have_been_verified">Verificou todas as chaves OMEMO na sua posse</string>
     <string name="this_device_has_been_verified">Este dispositivo foi verificado</string>
     <string name="please_wait_for_keys_to_be_fetched">Por favor, espere a obtenção de chaves</string>
-    <string name="share_as_barcode">Partilhar como código QR</string>
-    <string name="share_as_http">Partilhar como link HTTP</string>
     <string name="pref_blind_trust_before_verification">Confiar Cegamente Antes da Verificação</string>
     <string name="pref_delete_omemo_identities_summary">Regenerar as suas chaves OMEMO. Todos os seus contactos terão que verificar novamente. Use só como último recurso.</string>
     <string name="use_camera_icon_to_scan_barcode">Use a câmara para capturar o código QR de um contacto</string>
@@ -1083,7 +1068,7 @@
     <string name="clients_may_not_support_av">O cliente XMPP do seu contacto pode não suportar chamadas de áudio/vídeo.</string>
     <string name="sos_scheduled_return">É esperado que o serviço volte às %s</string>
     <string name="could_not_moderate_message">Impossível moderar mensagem</string>
-    <string name="pref_backup_summary">Criar único, Programar recorrente</string>
+    <string name="pref_backup_summary">Criar único, Programar recorrente, Localização de armazenamento</string>
     <string name="pref_up_long_summary">Quando agindo como um Distribuidor de Unified Push, a conexão XMPP persistente, confiável e de baixo consumo de bateria será usada para acordar outras aplicações compatíveis com UnifiedPush como Tusky, Ltt.rs, FluffyChat e mais.</string>
     <string name="video_is_enabled_tap_to_disable">Vídeo está ativado. Toque para desativar.</string>
     <string name="pref_category_application">Aplicação</string>
@@ -1156,4 +1141,38 @@
     <string name="open_keyboard">Abrir teclado</string>
     <string name="server_invite">Convidar para o servidor</string>
     <string name="qr_code_actions">Ler QR, Mostrar QR, Convite do Servidor</string>
+    <string name="server_info_stanzas_rx_tx">Stanzas (rx/tx)</string>
+    <string name="server_info_stanzas_rx_tx_push">Stanzas (rx/tx/push)</string>
+    <string name="qr_code_contains_link">Abrir Ligação?</string>
+    <string name="qr_code_contains_link_text">Este código QR aponta para um website. Por favor, verifique este endereço antes de o abrir no seu navegador:</string>
+    <string name="open_browser">Abrir Navegador</string>
+    <string name="muc_user_ban_explainer">Este utilizador não conseguirá ver novas mensagens ou participar na conversa.</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Eliminar %d mensagem</item>
+        <item quantity="many">Eliminar %d mensagens</item>
+        <item quantity="other">Eliminar %d mensagens</item>
+    </plurals>
+    <string name="share_invitation">Partilhar convite</string>
+    <string name="publish_qr_code">Publicar código QR</string>
+    <string name="give_membership">Encarregar de membro</string>
+    <string name="remove_membership">Revogar privilégios de membro</string>
+    <string name="make_admin">Encarregar de administrador</string>
+    <string name="dismiss_as_admin">Desencarregar de administrador</string>
+    <string name="make_owner">Encarregar de dono</string>
+    <string name="dismiss_as_owner">Desencarregar de dono</string>
+    <string name="account_status_airplane_mode">Modo Avião</string>
+    <string name="account_status_regis_invalid_captcha">CAPTCHA inválida</string>
+    <string name="its_time_for_contact">São ^1 para ^2</string>
+    <string name="backup_and_restore">Cópia de Segurança &amp; Restaurar</string>
+    <string name="pref_import_backup_summary">Selecione um ficheiro da cópia para restaurar os seus dados</string>
+    <string name="pref_category_backup_storage">Armazenamento</string>
+    <string name="pref_entity_time_summary">Partilhe o seu tempo atual com contactos para ver o tempo atual deles em troca.</string>
+    <string name="pref_entity_time">Partilhar tempo local</string>
+    <string name="contact_has_paused_their_notifications">%s pausou as suas notificações</string>
+    <string name="pref_sync_system_dnd">Sincronizar DND do sistema</string>
+    <string name="pref_sync_system_dnd_summary">Automaticamente define o seu estado como \"Não Perturbar\" quando o modo DND do Android está ativo.</string>
+    <string name="pref_include_silent_modes">Incluir modos silenciosos</string>
+    <string name="pref_include_silent_modes_summary">Também definir \"Não Perturbar\" quando as notificações estão silenciadas ou o telemóvel está em modo vibrar.</string>
+    <string name="presence_offline">Offline</string>
+    <string name="rtp_state_no_internet">Sem conexão à internet</string>
 </resources>

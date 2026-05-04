@@ -13,6 +13,5 @@
     <string name="improperly_formatted_provisioning">Неправилно форматиран код за достъп</string>
     <string name="tap_share_button_send_invite">Докоснете бутона за споделяне, за да изпратите на контакта си покана за %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Ако контактът Ви е наблизо, може да сканира кода по-долу, за да приеме поканата Ви.</string>
-    <string name="easy_invite_share_text">Присъедини се в %1$s и си пиши с мен: %2$s</string>
     <string name="share_invite_with">Споделяне на поканата чрез…</string>
 </resources>

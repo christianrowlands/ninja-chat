@@ -114,7 +114,7 @@
     <string name="account_status_offline">I shkëputur</string>
     <string name="account_status_unauthorized">E paautorizuar</string>
     <string name="account_status_not_found">S’u gjet shërbyes</string>
-    <string name="account_status_no_internet">Pa lidhje</string>
+    <string name="account_status_no_internet">S’ka internet</string>
     <string name="account_status_regis_fail">Regjistrimi dështoi</string>
     <string name="account_status_regis_conflict">Emër përdoruesi tashmë në përdorim</string>
     <string name="account_status_regis_success">Regjistrimi u plotësua</string>
@@ -287,16 +287,7 @@
     <string name="enable_all_accounts">Aktivizo krejt llogaritë</string>
     <string name="disable_all_accounts">Çaktivizo krejt llogaritë</string>
     <string name="perform_action_with">Kryeje veprimin me</string>
-    <string name="no_affiliation">Pa përshoqërim</string>
-    <string name="no_role">I shkëputur</string>
     <string name="member">Anëtar</string>
-    <string name="advanced_mode">Mënyrë e thelluar</string>
-    <string name="grant_membership">Akordojini privilegje anëtari</string>
-    <string name="remove_membership">Shfuqizoni privilegje anëtari</string>
-    <string name="grant_admin_privileges">Akordoni privilegje përgjegjësi</string>
-    <string name="remove_admin_privileges">Shfuqizoni privilegje përgjegjësi</string>
-    <string name="grant_owner_privileges">Akordojini privilegje të zoti</string>
-    <string name="remove_owner_privileges">Shfuqizoni privilegje të zoti</string>
     <string name="remove_from_room">Hiqe prej fjalosjeje grupi</string>
     <string name="remove_from_channel">Hiqe prej kanali</string>
     <string name="could_not_change_affiliation">S’u ndryshua dot përshoqërim i %s</string>
@@ -362,7 +353,6 @@
     <string name="server_info_broken">I dëmtuar</string>
     <string name="pref_away_when_screen_off">“I larguar”, kur pajisja është e kyçur</string>
     <string name="pref_away_when_screen_off_summary">Shfaqmë si “I lraguar”, kur pajisja është e kyçur</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Shfaqmë si “I zënë”, kur pajisja është në dridhje</string>
     <string name="pref_show_connection_options">Strehëemër &amp; Portë</string>
     <string name="action_add_account_with_certificate">Hyni me dëshmi</string>
     <string name="unable_to_parse_certificate">S’u analizua dot dëshmi</string>
@@ -411,7 +401,7 @@
     <string name="presence_chat">I lirë për Fjalosje</string>
     <string name="presence_online">Në linjë</string>
     <string name="presence_away">I larguar</string>
-    <string name="presence_dnd">I zënë</string>
+    <string name="presence_dnd">Mos Më Shqetësoni</string>
     <string name="secure_password_generated">U prodhua një fjalëkalim i siguruar</string>
     <string name="registration_please_wait">Regjistrimi dështoi: Riprovoni më vonë</string>
     <string name="registration_password_too_weak">Regjistrimi dështoi: Fjalëkalim shumë i dobët</string>
@@ -452,9 +442,7 @@
     <string name="verified_fingerprints">Shenja gishtash të verifikuar</string>
     <string name="use_camera_icon_to_scan_barcode">Përdorni kamerën që të skanoni kodin QR të një kontakti</string>
     <string name="please_wait_for_keys_to_be_fetched">Ju lutemi, pritni të sillen kyçet</string>
-    <string name="share_as_barcode">Ndajeni si kod QR</string>
-    <string name="share_as_uri">Jepe si URI XMPP</string>
-    <string name="share_as_http">Ndajeni me të tjerë si lidhje HTTP</string>
+    <string name="share_as_uri">Ndani URI XMPP me të tjerë</string>
     <string name="pref_blind_trust_before_verification">Besim i Verbër Para Verifikimi</string>
     <string name="not_trusted">Jo i besuar</string>
     <string name="invalid_barcode">Kod QR i pavlefshëm</string>
@@ -499,7 +487,7 @@
     <string name="pref_validate_hostname">Vlerësoj strehemër me DNSSEC</string>
     <string name="server_info_partial">të pjesshme</string>
     <string name="attach_record_video">Regjistroni video</string>
-    <string name="copy_to_clipboard">Kopjoje në të papastër</string>
+    <string name="copy_to_clipboard">Kopjoje</string>
     <string name="message_copied_to_clipboard">Mesazhi u kopjua në të papastër</string>
     <string name="message">Mesazh</string>
     <string name="private_messages_are_disabled">Mesazhet private janë të çaktivizuara</string>
@@ -879,9 +867,6 @@
     <string name="pref_chat_states_summary">Bëjuni të ditur kontakteve tuaj, kur shkruani mesazhe për ta</string>
     <string name="pref_dont_trust_system_cas_title">Mos beso DA sistemi</string>
     <string name="pref_quick_action_summary">Zëvendëso butonin “Dërgoje” me veprim të shpejtë</string>
-    <string name="pref_dnd_on_silent_mode">“I zënë” nën mënyrën e heshtur</string>
-    <string name="pref_dnd_on_silent_mode_summary">Shfaqe si “I zënë”, kur pajisja gjendet nën mënyrën e heshtur</string>
-    <string name="pref_treat_vibrate_as_silent">Trajtoje dridhjen si mënyrë heshturazi</string>
     <string name="pref_show_connection_options_summary">Kur ujdiset një llogari, shfaq rregullime të zgjeruara lidhjeje</string>
     <string name="hostname_example">xmpp.example.com</string>
     <string name="fetching_mam_prefs">Po sillen parapëlqime arkivimi. Ju lutemi, pritni…</string>
@@ -1167,4 +1152,29 @@
         <item quantity="other">Fshini %d mesazhe</item>
     </plurals>
     <string name="muc_user_ban_explainer">Ky përdorues s’do të jetë më në gjendje të shohë mesazhe të reja, ose të marrë pjesë te biseda.</string>
+    <string name="publish_qr_code">Boto kod QR</string>
+    <string name="share_invitation">Ndani ftesë me të tjerë</string>
+    <string name="dismiss_as_admin">Hiqeni nga përgjegjës</string>
+    <string name="make_admin">Bëjeni përgjegjës</string>
+    <string name="give_membership">Jepni anëtarësim</string>
+    <string name="remove_membership">Hiqini anëtarësimin</string>
+    <string name="make_owner">Bëjeni të zotin</string>
+    <string name="dismiss_as_owner">Hiqeni nga zot</string>
+    <string name="account_status_airplane_mode">Mënyra aeroplan</string>
+    <string name="account_status_regis_invalid_captcha">CAPTCHA e pavlefshme</string>
+    <string name="backup_and_restore">Kopjeruani &amp; Riktheni</string>
+    <string name="pref_import_backup_summary">Që të riktheni të dhënat tuaja, përzgjidhni një kartelë kopjeruajtje</string>
+    <string name="pref_category_backup_storage">Depozitë</string>
+    <string name="pref_entity_time">Tregoni kohën vendore</string>
+    <string name="pref_entity_time_summary">Tregojuni kontakteve tuaj kohën tuaj vendore, që të mund të shihni të tyren.</string>
+    <string name="its_time_for_contact">Është ^1 për ^2</string>
+    <string name="contact_has_paused_their_notifications">%s ka ndalur njoftimet e veta</string>
+    <string name="pref_headsup_notifications">Njoftime “Vini re”</string>
+    <string name="pref_headsup_notifications_summary">Shfaq njoftime “Vini re”</string>
+    <string name="pref_sync_system_dnd">Njëkohëso DND sistemi</string>
+    <string name="pref_sync_system_dnd_summary">Caktoni automatikisht gjendjen tuaj si “Mos Më Shqetësoni”, kur mënyra DND e Android-it është aktive.</string>
+    <string name="pref_include_silent_modes">Përfshi mënyra të heshtura</string>
+    <string name="pref_include_silent_modes_summary">Sinjalizo gjithashtu “Mos më Shqetësoni”, kur njoftimet heshtohen, ose telefoni gjendet nën mënyrën dridhje.</string>
+    <string name="presence_offline">Jashtë linje</string>
+    <string name="rtp_state_no_internet">S’ka lidhje në internet</string>
 </resources>

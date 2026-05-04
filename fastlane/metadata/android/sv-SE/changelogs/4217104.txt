@@ -1,0 +1,3 @@
+* Visa hattar i publika gruppchattar som har dem
+* Åtgärdat en krash när man ändrarde OMEMO bundle access model
+* Åtgärdat en krash när man delade XMPP-adresser för Quicksy

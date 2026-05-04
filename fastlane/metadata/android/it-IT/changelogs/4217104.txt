@@ -1,0 +1,3 @@
+* Mostra ruoli (cappelli) in conferenze pubbliche che li ammettono
+* Corretto crash nella modifica dl modello di accesso del bundle OMEMO
+* Corretto crash nella condivisione di indirizzi XMPP Quicksy

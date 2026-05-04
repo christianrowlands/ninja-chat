@@ -11,6 +11,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.services.UnifiedPushBroker;
+import java.time.Instant;
 import java.util.List;
 
 public class UnifiedPushDatabase extends SQLiteOpenHelper {
@@ -53,7 +54,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
                         null,
                         null,
                         null)) {
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 existingApplication = Optional.of(cursor.getString(0));
             } else {
                 existingApplication = Optional.absent();
@@ -79,7 +80,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
 
     public List<PushTarget> getRenewals(final String account, final String transport) {
         final ImmutableList.Builder<PushTarget> renewalBuilder = ImmutableList.builder();
-        final long expiration = System.currentTimeMillis() + UnifiedPushBroker.TIME_TO_RENEW;
+        final var expiration = Instant.now().plus(UnifiedPushBroker.TIME_TO_RENEW).toEpochMilli();
         final SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         try (final Cursor cursor =
                 sqLiteDatabase.query(
@@ -90,7 +91,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
                         null,
                         null,
                         null)) {
-            while (cursor != null && cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 renewalBuilder.add(
                         new PushTarget(
                                 cursor.getString(cursor.getColumnIndexOrThrow("application")),
@@ -102,7 +103,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
 
     public ApplicationEndpoint getEndpoint(
             final String account, final String transport, final String instance) {
-        final long expiration = System.currentTimeMillis() + UnifiedPushBroker.TIME_TO_RENEW;
+        final long expiration = Instant.now().plus(UnifiedPushBroker.TIME_TO_RENEW).toEpochMilli();
         final SQLiteDatabase sqLiteDatabase = getReadableDatabase();
         try (final Cursor cursor =
                 sqLiteDatabase.query(
@@ -115,7 +116,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
                         null,
                         null,
                         null)) {
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 return new ApplicationEndpoint(
                         cursor.getString(cursor.getColumnIndexOrThrow("application")),
                         cursor.getString(cursor.getColumnIndexOrThrow("endpoint")));
@@ -136,7 +137,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
                         null,
                         null,
                         null)) {
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 builder.add(
                         new PushTarget(
                                 cursor.getString(cursor.getColumnIndexOrThrow("application")),
@@ -159,7 +160,7 @@ public class UnifiedPushDatabase extends SQLiteOpenHelper {
                         new String[] {
                             transport.account.getUuid(), transport.transport.toString()
                         })) {
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
                 return cursor.getInt(0) > 0;
             }
         }

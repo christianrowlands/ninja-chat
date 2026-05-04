@@ -1,0 +1,2 @@
+* Corrigir o problema onde alguns vídeos não são comprimidos
+* Corrigir um travamento raro que ocorre ao abrir uma notificação

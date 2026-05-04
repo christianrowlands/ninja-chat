@@ -1,0 +1,1 @@
+* Suporta para sa awtomatikong paglipat ng tema sa Android 10

@@ -12,6 +12,5 @@
     <string name="improperly_formatted_provisioning">Falsch formatierter Provisionierungscode</string>
     <string name="tap_share_button_send_invite">Tippe auf die \"Teilen\"-Schaltfläche, um deinem Kontakt eine Einladung auf %1$s zu senden.</string>
     <string name="if_contact_is_nearby_use_qr">Wenn dein Kontakt in der Nähe ist, kann er auch den untenstehenden Code einscannen, um deine Einladung anzunehmen.</string>
-    <string name="easy_invite_share_text">Komme zu %1$s und chatte mit mir: %2$s</string>
     <string name="share_invite_with">Einladung teilen mit…</string>
 </resources>

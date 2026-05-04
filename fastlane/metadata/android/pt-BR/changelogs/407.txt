@@ -1,0 +1,3 @@
+* Mostrar o botão de chamada para contatos offline se previamente anunciaram o suporte
+* Botão de retornar não termina a chamada quando uma está conectada
+* correções de erros

@@ -194,12 +194,7 @@
     <string name="enable_all_accounts">הפעל את כל החשבונות</string>
     <string name="disable_all_accounts">נטרל את כל החשבונות</string>
     <string name="perform_action_with">בצע פעולה באמצעות</string>
-    <string name="no_affiliation">אין שיוך</string>
-    <string name="no_role">לא מקוון</string>
     <string name="member">חבר בקבוצה</string>
-    <string name="advanced_mode">מצב מתקדם</string>
-    <string name="grant_admin_privileges">הענק הרשאות מנהל</string>
-    <string name="remove_admin_privileges">שלול הרשאות מנהל</string>
     <string name="could_not_change_affiliation">לא ניתן לשנות את השיוך של %s</string>
     <string name="ban_now">חסום עכשיו</string>
     <string name="could_not_change_role">לא ניתן לשנות את התפקיד של %s</string>

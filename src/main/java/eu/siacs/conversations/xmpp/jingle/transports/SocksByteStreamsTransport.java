@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.utils.Random;
 import eu.siacs.conversations.utils.SocksSocketFactory;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.Namespace;
@@ -43,7 +44,6 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -479,8 +479,7 @@ public class SocksByteStreamsTransport implements Transport {
                 final String destination,
                 final boolean useTor,
                 final boolean useRelays) {
-            final SecureRandom secureRandom = new SecureRandom();
-            this.port = secureRandom.nextInt(60_000) + 1024;
+            this.port = Random.SECURE_RANDOM.nextInt(60_000) + 1024;
             this.destination = destination;
             final InetAddress[] localAddresses;
             if (Config.USE_DIRECT_JINGLE_CANDIDATES && !useTor && !useRelays) {

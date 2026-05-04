@@ -51,14 +51,9 @@ public class EasyOnboardingInviteActivity extends XmppActivity {
     }
 
     private void share() {
-        final String shareText =
-                getString(
-                        R.string.easy_invite_share_text,
-                        easyOnboardingInvite.getDomain(),
-                        easyOnboardingInvite.getShareableLink());
         final Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, easyOnboardingInvite.getShareableLink().toString());
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getString(R.string.share_invite_with)));
     }
@@ -118,7 +113,7 @@ public class EasyOnboardingInviteActivity extends XmppActivity {
         try {
             bitmap =
                     BarcodeProvider.create2dBarcodeBitmap(
-                            invite.getShareableLink(), width, black, white);
+                            invite.getShareableLink().toString(), width, black, white);
         } catch (final WriterException e) {
             Log.e(Config.LOGTAG, "could not create QR code", e);
             return;
@@ -147,7 +142,7 @@ public class EasyOnboardingInviteActivity extends XmppActivity {
         }
         final Account account = xmppConnectionService.findAccountByJid(jid);
         final var future =
-                account.getXmppConnection().getManager(EasyOnboardingManager.class).get();
+                account.getXmppConnection().getManager(EasyOnboardingManager.class).createAccount();
         Futures.addCallback(
                 future,
                 new FutureCallback<>() {

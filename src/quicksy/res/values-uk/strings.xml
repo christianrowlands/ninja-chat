@@ -8,5 +8,5 @@
     <string name="not_available_in_your_country">Цей застосунок недоступний у Вашій країні.</string>
     <string name="unable_to_verify_server_identity">Автентичність сервера не підтверджено.</string>
     <string name="unknown_security_error">Невідома помилка безпеки.</string>
-    <string name="timeout_while_connecting_to_server">Вичерпано час для встановлення з\'єднання із сервером.</string>
+    <string name="timeout_while_connecting_to_server">Вичерпано час для встановлення з’єднання із сервером.</string>
 </resources>

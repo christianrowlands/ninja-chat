@@ -152,7 +152,7 @@
     <string name="account_status_offline">Hors-ligne</string>
     <string name="account_status_unauthorized">Non autorisé</string>
     <string name="account_status_not_found">Impossible de trouver le serveur</string>
-    <string name="account_status_no_internet">Aucune connectivité</string>
+    <string name="account_status_no_internet">Pas d’internet</string>
     <string name="account_status_regis_fail">Échec de l\'inscription</string>
     <string name="account_status_regis_conflict">Identifiant déjà utilisé</string>
     <string name="account_status_regis_success">Inscription réussie</string>
@@ -305,7 +305,7 @@
     <string name="web_address">adresse web</string>
     <string name="scan_qr_code">Scanner le QR code</string>
     <string name="show_qr_code">Montrer le QR code</string>
-    <string name="show_block_list">Afficher la liste des comptes bloqués</string>
+    <string name="show_block_list">Comptes bloqués</string>
     <string name="account_details">Détails du compte</string>
     <string name="confirm">Confirmer</string>
     <string name="try_again">Réessayer</string>
@@ -360,17 +360,8 @@
     <string name="enable_all_accounts">Activer tous les comptes</string>
     <string name="disable_all_accounts">Désactiver tous les comptes</string>
     <string name="perform_action_with">Faire une action avec</string>
-    <string name="no_affiliation">Aucune affiliation</string>
-    <string name="no_role">Hors ligne</string>
     <string name="outcast">Banni·e</string>
     <string name="member">Membre</string>
-    <string name="advanced_mode">Mode avancé</string>
-    <string name="grant_membership">Accorder des privilèges aux membres</string>
-    <string name="remove_membership">Révoquer les privilèges des membres</string>
-    <string name="grant_admin_privileges">Accorder des privilèges d\'administrateur·ice</string>
-    <string name="remove_admin_privileges">Révoquer des privilèges d\'administrateur·ice</string>
-    <string name="grant_owner_privileges">Accorder des privilèges de propriétaire</string>
-    <string name="remove_owner_privileges">Révoquer les privilèges du propriétaire</string>
     <string name="remove_from_room">Supprimer du groupe</string>
     <string name="remove_from_channel">Supprimer du salon</string>
     <string name="could_not_change_affiliation">Impossible de changer l\'affiliation de %s</string>
@@ -451,10 +442,6 @@
     <string name="pref_presence_settings">Disponibilité</string>
     <string name="pref_away_when_screen_off">Absent quand l\'appareil est verrouillé</string>
     <string name="pref_away_when_screen_off_summary">Afficher comme étant absent lorsque l\'appareil est verrouillé</string>
-    <string name="pref_dnd_on_silent_mode">Occupé en mode silence</string>
-    <string name="pref_dnd_on_silent_mode_summary">Occupé lorsque l\'appareil est en mode silencieux</string>
-    <string name="pref_treat_vibrate_as_silent">Indisponible en mode vibreur</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Occupé lorsque l\'appareil est en mode vibreur</string>
     <string name="pref_show_connection_options">Nom d\'hôte et port</string>
     <string name="pref_show_connection_options_summary">Montrer les paramètres étendus de connexion lors du paramétrage d\'un compte</string>
     <string name="hostname_example">xmpp.ninja.chat</string>
@@ -584,9 +571,7 @@
     <string name="verified_fingerprints">Empreintes vérifiées</string>
     <string name="use_camera_icon_to_scan_barcode">Utilisez l\'appareil photo pour scanner le QR code d\'un contact</string>
     <string name="please_wait_for_keys_to_be_fetched">Veuillez attendre que les clés soient récupérées</string>
-    <string name="share_as_barcode">Partager par QR code</string>
-    <string name="share_as_uri">Partager par URI XMPP</string>
-    <string name="share_as_http">Partager par lien HTTP</string>
+    <string name="share_as_uri">Partager l’URI XMPP</string>
     <string name="pref_blind_trust_before_verification">Faire aveuglément confiance avant vérification</string>
     <string name="pref_blind_trust_before_verification_summary">Faire automatiquement confiance aux nouveaux appareils des contacts qui n\'ont pas été vérifiés auparavant mais demander une confirmation manuelle à chaque fois qu\'un contact vérifié auparavant utilise un nouvel appareil.</string>
     <string name="blindly_trusted_omemo_keys">Les clés OMEMO ont fait l\'objet d\'une confiance aveugle, cela signifie qu\'il pourrait s\'agir de quelqu\'un d\'autre ou que quelqu\'un aurait pu intercepter l\'échange.</string>
@@ -1172,4 +1157,25 @@
     <string name="server_invite">Invitation serveur</string>
     <string name="open_keyboard">Ouvrir le clavier</string>
     <string name="qr_code_actions">Scanner le QR code, Afficher le QR code, Invitation Serveur</string>
+    <string name="share_invitation">Partager l’invitation</string>
+    <string name="emoji_reactions">Réactions émoji</string>
+    <string name="qr_code_contains_link">Ouvrir le lien web ?</string>
+    <string name="qr_code_contains_link_text">Ce code QR pointe vers un site web. Vérifiez l’adresse ci-dessus avant de l’ouvrir dans votre navigateur :</string>
+    <string name="open_browser">Ouvrir le navigateur</string>
+    <string name="publish_qr_code">Publier le code QR</string>
+    <string name="muc_user_ban_explainer">Cette utilisateur·rice ne pourra plus voir les nouveaux messages ou participer à la conversation.</string>
+    <string name="server_info_stanzas_rx_tx">Stanzas (rx/tx)</string>
+    <string name="server_info_stanzas_rx_tx_push">Stanzas (rx/tx/push)</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Supprimer %d message</item>
+        <item quantity="many">Supprimer %d de messages</item>
+        <item quantity="other">Supprimer %d messages</item>
+    </plurals>
+    <string name="account_status_airplane_mode">Mode avion</string>
+    <string name="give_membership">Ajouter comme membre</string>
+    <string name="remove_membership">Retirer comme membre</string>
+    <string name="make_admin">Ajouter comme admin</string>
+    <string name="dismiss_as_admin">Retirer comme admin</string>
+    <string name="make_owner">Ajouter comme propriétaire</string>
+    <string name="dismiss_as_owner">Retirer comme propriétaire</string>
 </resources>

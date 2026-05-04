@@ -42,6 +42,16 @@ public class RosterManager extends AbstractManager implements Roster {
         this.service = service;
     }
 
+    public boolean versioning() {
+        final var streamFeatures = this.connection.getStreamFeatures();
+        return streamFeatures != null && streamFeatures.rosterVersioning();
+    }
+
+    public boolean preApproval() {
+        final var streamFeatures = this.connection.getStreamFeatures();
+        return streamFeatures != null && streamFeatures.rosterPreApproval();
+    }
+
     public void request() {
         final var iq = new Iq(Iq.Type.GET);
         final var query = iq.addExtension(new Query());

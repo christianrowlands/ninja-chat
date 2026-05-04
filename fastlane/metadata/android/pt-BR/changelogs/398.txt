@@ -1,0 +1,4 @@
+* Buscar conversas individuais
+* Notificar o usuário se a entrega da mensagem falhar
+* Lembrar nomes de exibição (apelidos) de usuários Quicksy entre reinícios
+* Adicionar botão para começar Orbot (Tor) a partir da notificação, se for necessário

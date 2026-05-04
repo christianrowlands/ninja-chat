@@ -11,6 +11,5 @@
     <string name="improperly_formatted_provisioning">קוד הקצאה בפורמט שגוי</string>
     <string name="tap_share_button_send_invite">הקש על כפתור השיתוף כדי לשלוח לאיש הקשר שלך הזמנה אל %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">אם איש הקשר שלך נמצא בקרבת מקום, הוא יכול גם לסרוק את הקוד למטה כדי לקבל הזמנה.</string>
-    <string name="easy_invite_share_text">הצטרף ל-%1$s ושוחח איתי: %2$s</string>
     <string name="share_invite_with">שתף הזמנה באמצעות…</string>
 </resources>

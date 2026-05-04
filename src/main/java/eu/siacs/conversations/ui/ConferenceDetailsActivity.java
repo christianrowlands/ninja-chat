@@ -3,7 +3,6 @@ package eu.siacs.conversations.ui;
 import static eu.siacs.conversations.utils.StringUtils.changed;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
@@ -39,6 +37,7 @@ import eu.siacs.conversations.entities.MucOptions.User;
 import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdate;
 import eu.siacs.conversations.services.XmppConnectionService.OnMucRosterUpdate;
 import eu.siacs.conversations.ui.adapter.MediaAdapter;
+import eu.siacs.conversations.ui.adapter.UserAdapter;
 import eu.siacs.conversations.ui.adapter.UserPreviewAdapter;
 import eu.siacs.conversations.ui.interfaces.OnMediaLoaded;
 import eu.siacs.conversations.ui.text.FixedURLSpan;
@@ -56,7 +55,6 @@ import eu.siacs.conversations.xmpp.manager.BookmarkManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import im.conversations.android.model.Bookmark;
 import im.conversations.android.xmpp.model.muc.Affiliation;
-import im.conversations.android.xmpp.model.muc.Role;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -71,8 +69,6 @@ public class ConferenceDetailsActivity extends XmppActivity
     private MediaAdapter mMediaAdapter;
     private UserPreviewAdapter mUserPreviewAdapter;
     private String uuid = null;
-
-    private boolean mAdvancedMode = false;
 
     private final FutureCallback<Void> renameCallback =
             new FutureCallback<Void>() {
@@ -176,8 +172,7 @@ public class ConferenceDetailsActivity extends XmppActivity
                     final MaterialAlertDialogBuilder builder =
                             new MaterialAlertDialogBuilder(ConferenceDetailsActivity.this);
                     MucConfiguration configuration =
-                            MucConfiguration.get(
-                                    ConferenceDetailsActivity.this, mAdvancedMode, mucOptions);
+                            MucConfiguration.get(ConferenceDetailsActivity.this, mucOptions);
                     builder.setTitle(configuration.title);
                     final boolean[] values = configuration.values;
                     builder.setMultiChoiceItems(
@@ -220,8 +215,10 @@ public class ConferenceDetailsActivity extends XmppActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final var showMore =
+                savedInstanceState != null && savedInstanceState.getBoolean("show_more");
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_muc_details);
         Activities.setStatusAndNavigationBarColors(this, binding.getRoot());
         this.binding.changeConferenceButton.setOnClickListener(this.mChangeConferenceSettings);
@@ -249,8 +246,9 @@ public class ConferenceDetailsActivity extends XmppActivity
                                             ContextCompat.getMainExecutor(this));
                                     return null;
                                 }));
-        this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
-        this.binding.mucInfoMore.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
+        this.binding.jidWarning.setOnClickListener(
+                v -> this.binding.mucInfoMore.setVisibility(View.VISIBLE));
+        this.binding.mucInfoMore.setVisibility(showMore ? View.VISIBLE : View.GONE);
         this.binding.notificationStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
         this.binding.yourPhoto.setOnClickListener(
                 v -> {
@@ -306,6 +304,13 @@ public class ConferenceDetailsActivity extends XmppActivity
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull final Bundle savedInstanceState) {
+        savedInstanceState.putBoolean(
+                "show_more", binding.mucInfoMore.getVisibility() == View.VISIBLE);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (MenuDoubleTabUtil.shouldIgnoreTap()) {
             return false;
@@ -326,14 +331,9 @@ public class ConferenceDetailsActivity extends XmppActivity
             case R.id.action_destroy_room:
                 destroyRoom();
                 break;
-            case R.id.action_advanced_mode:
-                this.mAdvancedMode = !menuItem.isChecked();
-                menuItem.setChecked(this.mAdvancedMode);
-                getPreferences().edit().putBoolean("advanced_muc_mode", mAdvancedMode).apply();
-                final boolean online =
-                        mConversation != null && mConversation.getMucOptions().online();
-                this.binding.mucInfoMore.setVisibility(
-                        this.mAdvancedMode && online ? View.VISIBLE : View.GONE);
+            case R.id.action_server_info_show_more:
+                final var show = !menuItem.isChecked();
+                this.binding.mucInfoMore.setVisibility(show ? View.VISIBLE : View.GONE);
                 invalidateOptionsMenu();
                 updateView();
                 break;
@@ -462,9 +462,9 @@ public class ConferenceDetailsActivity extends XmppActivity
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         final MenuItem menuItemSaveBookmark = menu.findItem(R.id.action_save_as_bookmark);
-        final MenuItem menuItemAdvancedMode = menu.findItem(R.id.action_advanced_mode);
+        final var serverInfo = menu.findItem(R.id.action_server_info_show_more);
         final MenuItem menuItemDestroyRoom = menu.findItem(R.id.action_destroy_room);
-        menuItemAdvancedMode.setChecked(mAdvancedMode);
+        serverInfo.setChecked(binding.mucInfoMore.getVisibility() == View.VISIBLE);
         if (mConversation == null) {
             return true;
         }
@@ -639,11 +639,11 @@ public class ConferenceDetailsActivity extends XmppActivity
             this.binding.mucSubject.setVisibility(View.GONE);
         }
         this.binding.mucYourNick.setText(mucOptions.getActualNick());
+        UserAdapter.setHats(this.binding.tags, self.getDynamicTags());
         if (mucOptions.online()) {
+            this.binding.jidWarning.setVisibility(
+                    mucOptions.isCompliant() ? View.INVISIBLE : View.VISIBLE);
             this.binding.usersWrapper.setVisibility(View.VISIBLE);
-            this.binding.mucInfoMore.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
-            this.binding.mucRole.setVisibility(View.VISIBLE);
-            this.binding.mucRole.setText(getStatus(self));
             if (mucOptions.getSelf().ranks(Affiliation.OWNER)) {
                 this.binding.mucSettings.setVisibility(View.VISIBLE);
                 this.binding.mucConferenceType.setText(MucConfiguration.describe(this, mucOptions));
@@ -682,8 +682,8 @@ public class ConferenceDetailsActivity extends XmppActivity
                 this.binding.changeConferenceButton.setVisibility(View.INVISIBLE);
             }
         } else {
+            this.binding.jidWarning.setVisibility(View.INVISIBLE);
             this.binding.usersWrapper.setVisibility(View.GONE);
-            this.binding.mucInfoMore.setVisibility(View.GONE);
             this.binding.mucSettings.setVisibility(View.GONE);
         }
 
@@ -728,40 +728,6 @@ public class ConferenceDetailsActivity extends XmppActivity
         } else {
             this.binding.noUsersHints.setVisibility(View.GONE);
         }
-    }
-
-    public static String getStatus(Context context, User user, final boolean advanced) {
-        if (advanced) {
-            return String.format(
-                    "%s (%s)",
-                    context.getString(affiliationToStringRes(user.getAffiliation())),
-                    context.getString(roleToStringRes(user.getRole())));
-        } else {
-            return context.getString(affiliationToStringRes(user.getAffiliation()));
-        }
-    }
-
-    private static @StringRes int affiliationToStringRes(final Affiliation affiliation) {
-        return switch (affiliation) {
-            case OWNER -> R.string.owner;
-            case ADMIN -> R.string.admin;
-            case MEMBER -> R.string.member;
-            case NONE -> R.string.no_affiliation;
-            case OUTCAST -> R.string.outcast;
-        };
-    }
-
-    private static @StringRes int roleToStringRes(final Role role) {
-        return switch (role) {
-            case MODERATOR -> R.string.moderator;
-            case VISITOR -> R.string.visitor;
-            case PARTICIPANT -> R.string.participant;
-            case NONE -> R.string.no_role;
-        };
-    }
-
-    private String getStatus(User user) {
-        return getStatus(this, user, mAdvancedMode);
     }
 
     private void displayToast(final String msg) {

@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.SSLProtocolException;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
@@ -68,13 +69,18 @@ public class TLSSocketFactory extends SSLSocketFactory {
                 context);
     }
 
-    private static Socket enableTLSOnSocket(final Socket socket, final Context context) {
+    private static Socket enableTLSOnSocket(final Socket socket, final Context context)
+            throws SSLProtocolException {
         if (socket instanceof SSLSocket sslSocket) {
             // in Quicksy the setting for requiring TLSv1.3 is hidden; we always require it
-            SSLSockets.setSecurity(
-                    sslSocket,
-                    QuickConversationsService.isQuicksy()
-                            || new AppSettings(context).isRequireTlsV13());
+            try {
+                SSLSockets.setSecurity(
+                        sslSocket,
+                        QuickConversationsService.isQuicksy()
+                                || new AppSettings(context).isRequireTlsV13());
+            } catch (final IllegalArgumentException e) {
+                throw new SSLProtocolException("Could not set security requirements on socket");
+            }
         }
         return socket;
     }

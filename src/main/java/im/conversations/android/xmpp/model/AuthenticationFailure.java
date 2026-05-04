@@ -1,5 +1,6 @@
 package im.conversations.android.xmpp.model;
 
+import com.google.common.base.Strings;
 import im.conversations.android.xmpp.model.sasl.SaslError;
 
 public abstract class AuthenticationFailure extends StreamElement {
@@ -12,7 +13,13 @@ public abstract class AuthenticationFailure extends StreamElement {
         return this.getExtension(SaslError.class);
     }
 
-    public String getText() {
-        return this.findChildContent("text");
+    public abstract String getText();
+
+    public static String message(final String text, final SaslError condition) {
+        if (Strings.isNullOrEmpty(text)) {
+            return condition != null ? condition.getClass().getSimpleName() : null;
+        } else {
+            return text;
+        }
     }
 }

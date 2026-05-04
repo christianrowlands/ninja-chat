@@ -1,0 +1,2 @@
+* Reestruturar a Interface de Login com certificado
+* Adicionar a habilidade de fixar conversas no topo (adicionar aos favoritos)

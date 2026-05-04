@@ -1,0 +1,3 @@
+* Naprawienie URI zaproszeń dla kanałów IRC
+* Pokazywanie czerwonej ikony ostrzeżenia w szczegółach konferencji niekompatybilnych MUC‑ów
+* Naprawienie obsługi połączenia i ponownych prób gdy używany jest tryb samolotowy i VPN‑y

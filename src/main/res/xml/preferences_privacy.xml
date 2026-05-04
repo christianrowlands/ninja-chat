@@ -19,6 +19,12 @@
             android:key="last_activity"
             android:summary="@string/pref_broadcast_last_activity_summary"
             android:title="@string/pref_broadcast_last_activity" />
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/entity_time"
+            android:icon="@drawable/ic_schedule_24dp"
+            android:key="entity_time"
+            android:summary="@string/pref_entity_time_summary"
+            android:title="@string/pref_entity_time" />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_interaction">
@@ -50,20 +56,22 @@
             android:key="away_when_screen_off"
             android:summary="@string/pref_away_when_screen_off_summary"
             android:title="@string/pref_away_when_screen_off" />
+        <!-- The name of the key reflects the old functionality but will be reused -->
         <SwitchPreferenceCompat
-            android:defaultValue="@bool/dnd_on_silent_mode"
+            android:defaultValue="@bool/dnd_sync_system"
             android:dependency="manually_change_presence"
             android:icon="@drawable/ic_do_not_disturb_on_24dp"
             android:key="dnd_on_silent_mode"
-            android:summary="@string/pref_dnd_on_silent_mode_summary"
-            android:title="@string/pref_dnd_on_silent_mode" />
+            android:summary="@string/pref_sync_system_dnd_summary"
+            android:title="@string/pref_sync_system_dnd" />
+        <!-- The name of the key mirrors the old (pre DND mode) functionality. Elsewhere in the app it will be referred to as DND_INCLUDE_SILENT_MODES -->
         <SwitchPreferenceCompat
-            android:defaultValue="@bool/treat_vibrate_as_silent"
+            android:defaultValue="@bool/dnd_include_silent_modes"
             android:dependency="dnd_on_silent_mode"
             android:icon="@drawable/ic_vibration_24dp"
             android:key="treat_vibrate_as_silent"
-            android:summary="@string/pref_treat_vibrate_as_dnd_summary"
-            android:title="@string/pref_treat_vibrate_as_silent" />
+            android:summary="@string/pref_include_silent_modes_summary"
+            android:title="@string/pref_include_silent_modes" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_application">
         <SwitchPreferenceCompat

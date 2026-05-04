@@ -1,0 +1,4 @@
+* Umożliwienie usuwania wiadomości po zbanowaniu uczestnika publicznego kanału
+* Refaktoryzacja skanowania kodów QR i obsługi URI
+* Wersja dla Sklepu Play: zakończenie używania Google libray i komunikacja bezpośrednio z Usługami Google Play poprzez IPC
+* Naprawienie problemów z obracaniem w trybie tabletu

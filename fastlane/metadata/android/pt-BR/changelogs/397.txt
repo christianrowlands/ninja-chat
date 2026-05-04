@@ -1,0 +1,3 @@
+* Lidar com arquivos GPX
+* Melhorar desempenho para restauração de backups
+* correções de erros

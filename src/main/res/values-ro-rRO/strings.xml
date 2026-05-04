@@ -153,7 +153,7 @@
     <string name="account_status_offline">Deconectat</string>
     <string name="account_status_unauthorized">Neautorizat</string>
     <string name="account_status_not_found">Serverul nu a fost găsit</string>
-    <string name="account_status_no_internet">Fără conexiune</string>
+    <string name="account_status_no_internet">Fără acces Internet</string>
     <string name="account_status_regis_fail">Înregistrare eșuată</string>
     <string name="account_status_regis_conflict">Nume de utilizator deja alocat</string>
     <string name="account_status_regis_success">Înregistrare completă</string>
@@ -263,9 +263,7 @@
     <string name="enable">Activează</string>
     <string name="conference_requires_password">Discuția de grup necesită o parolă</string>
     <string name="enter_password">Introduceți parola</string>
-    <string name="request_presence_updates">Vă rugăm să cereți mai întâi actualizări de prezență de la acest contact.
-\n
-\n<small>Acestea vor fi folosite pentru a determina ce aplicații folosește contactul dumneavoastră.</small>.</string>
+    <string name="request_presence_updates">Vă rugăm să cereți mai întâi actualizări de prezență de la acest contact.\n\n<small>Acestea vor fi folosite pentru a determina ce aplicații folosește contactul dumneavoastră</small>.</string>
     <string name="request_now">Cere acum</string>
     <string name="ignore">Ignora</string>
     <string name="without_mutual_presence_updates"><b>Atenție:</b> Trimițând aceasta fără actualizări de prezență reciproce ar putea produce probleme neprevazute.\n\n<small>Mergeți la \"Detalii contact\" pentru a verifica abonările la actualizările de prezență.</small></string>
@@ -364,17 +362,8 @@
     <string name="enable_all_accounts">Activează toate conturile</string>
     <string name="disable_all_accounts">Dezactivează toate conturile</string>
     <string name="perform_action_with">Efectuaza actiune cu</string>
-    <string name="no_affiliation">Fara afiliere</string>
-    <string name="no_role">Deconectat</string>
     <string name="outcast">proscris</string>
     <string name="member">Membru</string>
-    <string name="advanced_mode">Mod avansat</string>
-    <string name="grant_membership">Acordă privilegii de membru</string>
-    <string name="remove_membership">Abrogă privilegiile de membru</string>
-    <string name="grant_admin_privileges">Acordă privilegiile de administrator</string>
-    <string name="remove_admin_privileges">Abrogă privilegiile de administrator</string>
-    <string name="grant_owner_privileges">Acordă privilegii de proprietar</string>
-    <string name="remove_owner_privileges">Abrogă privilegiile de proprietar</string>
     <string name="remove_from_room">Înlătură din discuția de grup</string>
     <string name="remove_from_channel">Înlătură din canal</string>
     <string name="could_not_change_affiliation">Nu s-a putut schimba afilierea lui %s</string>
@@ -394,10 +383,10 @@
     <string name="reply">Răspunde</string>
     <string name="mark_as_read">Marchează ca citit</string>
     <string name="pref_input_options">Opțiuni introducere text</string>
-    <string name="pref_enter_is_send">ENTER trimite</string>
+    <string name="pref_enter_is_send">Enter trimite</string>
     <string name="pref_enter_is_send_summary">Apasă tasta Enter pentru a trimite mesajul. Puteți mereu apăsa Ctrl-Enter pentru a trimite mesajul, chiar dacă această opțiune nu este activată.</string>
-    <string name="pref_display_enter_key">Arată tasta ENTER</string>
-    <string name="pref_display_enter_key_summary">Preschimbă tasta emoticon în ENTER</string>
+    <string name="pref_display_enter_key">Arată tasta Enter</string>
+    <string name="pref_display_enter_key_summary">Preschimbă tasta emoticon în Enter</string>
     <string name="audio">audio</string>
     <string name="video">video</string>
     <string name="image">imagine</string>
@@ -457,10 +446,6 @@
     <string name="pref_presence_settings">Setări de disponibilitate</string>
     <string name="pref_away_when_screen_off">Plecat când dispozitivul este blocat</string>
     <string name="pref_away_when_screen_off_summary">Prezintă clientul drept \"Plecat\" atunci când dispozitivul este blocat</string>
-    <string name="pref_dnd_on_silent_mode">\"Ocupat\" în modul silențios</string>
-    <string name="pref_dnd_on_silent_mode_summary">Prezintă clientul drept \"Ocupat\" atunci când dispozitivul este în mod silențios</string>
-    <string name="pref_treat_vibrate_as_silent">Tratează modul vibrație ca silențios</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Prezintă clientul drept \"Ocupat\" atunci când dispozitivul este în mod vibrație</string>
     <string name="pref_show_connection_options">Nume gazdă &amp; port</string>
     <string name="pref_show_connection_options_summary">Arată opțiuni extinse de conectare atunci când se configurează un cont</string>
     <string name="hostname_example">xmpp.exemplu.ro</string>
@@ -542,7 +527,7 @@
     <string name="presence_online">Conectat(ă)</string>
     <string name="presence_away">Plecat(ă)</string>
     <string name="presence_xa">Indisponibil(ă)</string>
-    <string name="presence_dnd">Ocupat(ă)</string>
+    <string name="presence_dnd">Nu deranjați</string>
     <string name="secure_password_generated">O parolă sigură a fost generată</string>
     <string name="device_does_not_support_battery_op">Dispozitivul dumneavoastră nu suportă dezactivarea optimizării de baterie pentru această aplicație</string>
     <string name="registration_please_wait">Înregistrare eșuată: Încercați din nou mai târziu</string>
@@ -564,7 +549,7 @@
     <string name="pref_theme_dark">Întunecat</string>
     <string name="unable_to_connect_to_keychain">Nu s-a putut face conectarea la OpenKeychain</string>
     <string name="this_device_is_no_longer_in_use">Acest dispozitiv nu mai este în uz</string>
-    <string name="type_pc">PC</string>
+    <string name="type_pc">Calculator</string>
     <string name="type_phone">Telefon mobil</string>
     <string name="type_tablet">Tabletă</string>
     <string name="type_web">Navigator internet</string>
@@ -595,9 +580,7 @@
     <string name="verified_fingerprints">Amprente verificate</string>
     <string name="use_camera_icon_to_scan_barcode">Folosește camera pentru a scana codul QR al contactului</string>
     <string name="please_wait_for_keys_to_be_fetched">Vă rugăm să așteptați până se preiau cheile</string>
-    <string name="share_as_barcode">Partajează un cod QR</string>
-    <string name="share_as_uri">Partajează ca adresă XMPP</string>
-    <string name="share_as_http">Partajează ca legatură HTTP</string>
+    <string name="share_as_uri">Partajează legătură XMPP</string>
     <string name="pref_blind_trust_before_verification">Încredere Oarbă Înainte de Verificare</string>
     <string name="pref_blind_trust_before_verification_summary">Ai încredere în toate dispozitivele noi ale contactelor care nu au fost verificate anterior, dar cere confirmarea manuală pentru dispozitivele noi ale contactelor verificate.</string>
     <string name="blindly_trusted_omemo_keys">Încredere oarbă în aceste chei OMEMO, aceasta înseamnă că ar putea fi altcineva sau cineva și-a strecurat propriile chei.</string>
@@ -673,7 +656,7 @@
     <string name="certificate_does_not_contain_jid">Certificatul nu conține o adresă XMPP</string>
     <string name="server_info_partial">parțial</string>
     <string name="attach_record_video">Înregistrare video</string>
-    <string name="copy_to_clipboard">Copiază în clipboard</string>
+    <string name="copy_to_clipboard">Copiază</string>
     <string name="message_copied_to_clipboard">Mesaj copiat în clipboard</string>
     <string name="message">Mesaj</string>
     <string name="private_messages_are_disabled">Mesajele private sunt dezactivate</string>
@@ -1070,7 +1053,7 @@
     <string name="pref_large_font_summary">Mărește fontul pentru textul din mesaje</string>
     <string name="pref_accept_invites_from_strangers">Invitații de la persoane necunoscute</string>
     <string name="pref_accept_invites_from_strangers_summary">Acceptă invitații la discuții de grup de la persoane care nu sunt în lista de contacte</string>
-    <string name="pref_backup_summary">Creează o dată, Programează recurent</string>
+    <string name="pref_backup_summary">Creează o dată, Programează recurent, Locație stocare</string>
     <string name="pref_create_backup_one_off_summary">Creați o copie de rezervă unică</string>
     <string name="pref_backup_recurring">Copie de rezervă recurentă</string>
     <string name="pref_fullscreen_notification">Notificări pe tot ecranul</string>
@@ -1182,4 +1165,27 @@
     </plurals>
     <string name="server_info_stanzas_rx_tx">Stanțe (pr/tr)</string>
     <string name="server_info_stanzas_rx_tx_push">Stanțe (pr/tr/push)</string>
+    <string name="share_invitation">Partajează invitație</string>
+    <string name="publish_qr_code">Publică cod QR</string>
+    <string name="give_membership">Acordă rol de membru</string>
+    <string name="make_admin">Acordă rol de administrator</string>
+    <string name="make_owner">Acordă rol de proprietar</string>
+    <string name="remove_membership">Abrogă rol de membru</string>
+    <string name="dismiss_as_admin">Abrogă rol de administrator</string>
+    <string name="dismiss_as_owner">Abrogă rol de proprietar</string>
+    <string name="account_status_airplane_mode">Modul Avion</string>
+    <string name="account_status_regis_invalid_captcha">CAPTCHA invalid</string>
+    <string name="its_time_for_contact">Este ^1 pentru ^2</string>
+    <string name="backup_and_restore">Copie siguranță &amp; restaurare</string>
+    <string name="pref_import_backup_summary">Selectați fișier de rezervă pentru restaurare date</string>
+    <string name="pref_category_backup_storage">Stocare</string>
+    <string name="pref_entity_time_summary">Partajați-vă ora curentă cu contactele pentru a putea vedea ora lor locală.</string>
+    <string name="pref_entity_time">Partajează ora locală</string>
+    <string name="contact_has_paused_their_notifications">%s și-a întrerupt notificările</string>
+    <string name="pref_sync_system_dnd">Sincronizare mod \"Nu deranjați\"</string>
+    <string name="pref_sync_system_dnd_summary">Setați automat starea dvs. la \"Nu deranjați\" atunci când modul Android este activ.</string>
+    <string name="pref_include_silent_modes">Include modurile silențioase</string>
+    <string name="pref_include_silent_modes_summary">Semnalează \"Nu deranjați\" și atunci când notificările sunt dezactivate sau telefonul este pe vibrație.</string>
+    <string name="presence_offline">Deconectat</string>
+    <string name="rtp_state_no_internet">Fără conexiune Internet</string>
 </resources>

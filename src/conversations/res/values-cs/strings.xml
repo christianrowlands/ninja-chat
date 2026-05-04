@@ -11,6 +11,5 @@
     <string name="improperly_formatted_provisioning">Nesprávně naformátovaný konfigurační kód</string>
     <string name="tap_share_button_send_invite">Klepněte na tlačítko sdílení a pošlete svému kontaktu pozvánku do %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Pokud je váš kontakt nablízku, může také naskenovat níže uvedený kód a přijmout vaši pozvánku.</string>
-    <string name="easy_invite_share_text">Přidej se ke %1$s a povídej si se mnou: %2$s</string>
     <string name="share_invite_with">Sdílet pozvánku s…</string>
 </resources>

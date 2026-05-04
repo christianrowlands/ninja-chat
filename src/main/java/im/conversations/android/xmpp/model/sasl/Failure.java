@@ -8,4 +8,10 @@ public class Failure extends AuthenticationFailure {
     public Failure() {
         super(Failure.class);
     }
+
+    @Override
+    public String getText() {
+        final var text = this.getExtension(Text.class);
+        return text != null ? text.getContent() : null;
+    }
 }

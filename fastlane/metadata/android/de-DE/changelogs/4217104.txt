@@ -1,0 +1,3 @@
+* Stellung in öffentlichen Konferenzen anzeigen, sofern vorhanden
+* Absturz beim Ändern des OMEMO-Bundle-Zugriffsmodells behoben
+* Absturz beim Teilen von Quicksy-XMPP-Adressen behoben

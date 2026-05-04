@@ -1,0 +1,3 @@
+* adicionar 'Retornar à conversa' para a tela de chamada de áudio
+* Melhorar atalhos de teclado
+* correções de erros

@@ -30,27 +30,33 @@ public class Device {
         return locked || !interactive;
     }
 
-    public boolean isPhoneSilenced(final boolean vibrateIsSilent) {
+    public boolean isPhoneSilenced(final boolean includeSilentModes) {
+        try {
+            return isPhoneSilencedUnchecked(includeSilentModes);
+        } catch (final Throwable throwable) {
+            Log.e(Config.LOGTAG, "could not check DND mode", throwable);
+            return false;
+        }
+    }
+
+    private boolean isPhoneSilencedUnchecked(final boolean includeSilentModes) {
         final var notificationManager = context.getSystemService(NotificationManager.class);
         final int filter =
                 notificationManager == null
                         ? NotificationManager.INTERRUPTION_FILTER_UNKNOWN
                         : notificationManager.getCurrentInterruptionFilter();
-        final boolean notificationDnd = filter >= NotificationManager.INTERRUPTION_FILTER_PRIORITY;
-        final var audioManager = context.getSystemService(AudioManager.class);
-        final int ringerMode =
-                audioManager == null
-                        ? AudioManager.RINGER_MODE_NORMAL
-                        : audioManager.getRingerMode();
-        try {
-            if (vibrateIsSilent) {
-                return notificationDnd || ringerMode != AudioManager.RINGER_MODE_NORMAL;
-            } else {
-                return notificationDnd || ringerMode == AudioManager.RINGER_MODE_SILENT;
-            }
-        } catch (final Throwable throwable) {
-            Log.d(Config.LOGTAG, "platform bug in isPhoneSilenced", throwable);
-            return notificationDnd;
+        if (filter >= NotificationManager.INTERRUPTION_FILTER_PRIORITY) {
+            return true;
+        }
+        if (includeSilentModes) {
+            final var audioManager = context.getSystemService(AudioManager.class);
+            final int ringerMode =
+                    audioManager == null
+                            ? AudioManager.RINGER_MODE_NORMAL
+                            : audioManager.getRingerMode();
+            return AudioManager.RINGER_MODE_NORMAL != ringerMode;
+        } else {
+            return false;
         }
     }
 

@@ -11,6 +11,5 @@
     <string name="improperly_formatted_provisioning">配置代码格式不正确</string>
     <string name="tap_share_button_send_invite">点按分享按钮即可向您的联系人发送加入 %1$s 的邀请。</string>
     <string name="if_contact_is_nearby_use_qr">如果您的联系人在附近，也可以扫描下方二维码接受您的邀请。</string>
-    <string name="easy_invite_share_text">加入 %1$s 和我聊天：%2$s</string>
     <string name="share_invite_with">分享邀请…</string>
 </resources>

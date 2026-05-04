@@ -26,6 +26,7 @@ import eu.siacs.conversations.services.CallIntegration;
 import eu.siacs.conversations.services.CallIntegrationConnectionService;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
+import eu.siacs.conversations.utils.NetworkManager;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
@@ -819,7 +820,12 @@ public class JingleManager extends AbstractManager {
         // instead
         // we may or may not want to match this with the tone we are playing (see
         // callIntegration.error() or callIntegration.busy())
-        final var endUserState = RtpEndUserState.CONNECTIVITY_ERROR;
+        final RtpEndUserState endUserState;
+        if (new NetworkManager(this.context).getHint() == NetworkManager.Hint.ACTIVE) {
+            endUserState = RtpEndUserState.CONNECTIVITY_ERROR;
+        } else {
+            endUserState = RtpEndUserState.NO_INTERNET;
+        }
         Log.d(Config.LOGTAG, "call proposal still in device discovery state after timeout");
         setTerminalSessionState(proposal, endUserState);
 

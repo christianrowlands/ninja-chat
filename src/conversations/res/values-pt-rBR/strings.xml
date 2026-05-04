@@ -13,6 +13,5 @@
     <string name="improperly_formatted_provisioning">Código de provisionamento formatado de maneira incorreta</string>
     <string name="tap_share_button_send_invite">Toque no botão compartilhar para enviar, para seu contato, um convite para %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Se seu contato estiver por perto, ele também pode ler o código abaixo para aceitar seu convite.</string>
-    <string name="easy_invite_share_text">Entre no %1$s e converse comigo: %2$s</string>
     <string name="share_invite_with">Compartilhe o convite com…</string>
 </resources>

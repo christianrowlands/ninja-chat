@@ -41,6 +41,10 @@ public abstract class ScramMechanism extends SaslMechanism {
                 }
             };
 
+    // For the SCRAM-SHA-1/SCRAM-SHA-1-PLUS SASL mechanism, servers SHOULD announce a hash
+    // iteration-count of at least 4096.
+    // https://datatracker.ietf.org/doc/html/rfc5802#section-5.1
+    private static final int ITERATION_COUNT_MINIMUM = 4096;
     private static final byte[] CLIENT_KEY_BYTES = "Client Key".getBytes();
     private static final byte[] SERVER_KEY_BYTES = "Server Key".getBytes();
     private static final Cache<CacheKey, KeyPair> CACHE =
@@ -56,10 +60,7 @@ public abstract class ScramMechanism extends SaslMechanism {
         super(account);
         this.channelBinding = channelBinding;
         if (channelBinding == ChannelBinding.NONE) {
-            // TODO this needs to be changed to "y,," for the scram internal down grade protection
-            // but we might risk compatibility issues if the server supports a binding that we don’t
-            // support
-            this.gs2Header = "n,,";
+            this.gs2Header = "y,,";
         } else {
             this.gs2Header =
                     String.format(
@@ -184,6 +185,14 @@ public abstract class ScramMechanism extends SaslMechanism {
         if (iterationCount == null || iterationCount < 0) {
             throw new AuthenticationException("Server did not send iteration count");
         }
+
+        if (iterationCount < ITERATION_COUNT_MINIMUM) {
+            throw new AuthenticationException(
+                    String.format(
+                            "Weak iteration count. %d instead of %d",
+                            iterationCount, ITERATION_COUNT_MINIMUM));
+        }
+
         if (!nonce.startsWith(clientNonce)) {
             throw new AuthenticationException(
                     "Server nonce does not contain client nonce: " + nonce);

@@ -1,0 +1,3 @@
+* Corretti gli URI di invito per canali IRC
+* Mostra un'icona rossa di avviso nei dettagli delle conferenze dei MUC non conformi
+* Corretto il comportamento di connessione e di nuovi tentativi riguardo la modalità aereo e le VPN

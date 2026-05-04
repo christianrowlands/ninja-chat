@@ -287,7 +287,7 @@ public class Message extends AbstractEntity
         return null;
     }
 
-    public static Message createStatusMessage(Conversation conversation, String body) {
+    public static Message createStatusMessage(final Conversation conversation, final String body) {
         final Message message = new Message(conversation);
         message.setType(Message.TYPE_STATUS);
         message.setStatus(Message.STATUS_RECEIVED);

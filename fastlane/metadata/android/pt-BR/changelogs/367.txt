@@ -1,0 +1,2 @@
+* Corrigir seleção de avatar em alguns dispositivos Android 10
+* Corrigir transferência de arquivos para arquivos grandes

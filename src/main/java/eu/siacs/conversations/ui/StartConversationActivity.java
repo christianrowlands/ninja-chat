@@ -54,7 +54,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.FutureCallback;
@@ -89,12 +88,14 @@ import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.BookmarkManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import im.conversations.android.model.Bookmark;
+import im.conversations.android.model.DynamicTag;
 import im.conversations.android.model.ImmutableBookmark;
 import im.conversations.android.xmpp.model.stanza.Presence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public class StartConversationActivity extends XmppActivity
         implements XmppConnectionService.OnConversationUpdate,
@@ -177,15 +178,19 @@ public class StartConversationActivity extends XmppActivity
                 public void onTextChanged(CharSequence s, int start, int before, int count) {}
             };
     private MenuItem mMenuSearchView;
-    private final ListItemAdapter.OnTagClickedListener mOnTagClickedListener =
-            new ListItemAdapter.OnTagClickedListener() {
+    private final Consumer<DynamicTag> mOnTagClickedListener =
+            new Consumer<>() {
                 @Override
-                public void onTagClicked(String tag) {
-                    if (mMenuSearchView != null) {
+                public void accept(DynamicTag dynamicTag) {
+                    final var searchView = mMenuSearchView;
+                    if (searchView == null) {
+                        return;
+                    }
+                    if (dynamicTag instanceof DynamicTag.RosterGroup(String name)) {
                         mMenuSearchView.expandActionView();
                         mSearchEditText.setText("");
-                        mSearchEditText.append(tag);
-                        filter(tag);
+                        mSearchEditText.append(name);
+                        filter(name);
                     }
                 }
             };
@@ -305,9 +310,8 @@ public class StartConversationActivity extends XmppActivity
         mListPagerAdapter = new ListPagerAdapter(getSupportFragmentManager());
         binding.startConversationViewPager.setAdapter(mListPagerAdapter);
 
-        mConferenceAdapter = new ListItemAdapter(this, conferences);
-        mContactsAdapter = new ListItemAdapter(this, contacts);
-        mContactsAdapter.setOnTagClickedListener(this.mOnTagClickedListener);
+        mConferenceAdapter = new ListItemAdapter(this, conferences, this.mOnTagClickedListener);
+        mContactsAdapter = new ListItemAdapter(this, contacts, this.mOnTagClickedListener);
 
         final SharedPreferences preferences = getPreferences();
 
@@ -1036,6 +1040,7 @@ public class StartConversationActivity extends XmppActivity
 
     protected boolean processViewIntent(@NonNull Intent intent) {
         final var inviteUri = MiniUri.getOrNull(intent.getStringExtra(EXTRA_INVITE_URI));
+        Log.d(Config.LOGTAG, "inviteUri: " + inviteUri);
         if (inviteUri instanceof MiniUri.Xmpp xmpp && xmpp.isAddress()) {
             final Invite invite =
                     new Invite(xmpp, intent.getStringExtra(EXTRA_ACCOUNT), false, false);
@@ -1140,7 +1145,7 @@ public class StartConversationActivity extends XmppActivity
         dialog.show();
     }
 
-    protected void filter(String needle) {
+    protected void filter(final String needle) {
         if (xmppConnectionServiceBound) {
             this.filterContacts(needle);
             this.filterConferences(needle);
@@ -1516,25 +1521,35 @@ public class StartConversationActivity extends XmppActivity
         }
     }
 
-    public static void addInviteUri(final Intent to, final Intent from) {
-        if (from != null && from.hasExtra(EXTRA_INVITE_URI)) {
-            final String invite = from.getStringExtra(EXTRA_INVITE_URI);
-            Log.d(Config.LOGTAG, "dragging on invite uri: " + invite);
-            to.putExtra(EXTRA_INVITE_URI, invite);
+    public static void addInviteUri(final Intent to, final BaseActivity activity) {
+        final var source = activity.getIntent();
+        if (source == null || !source.hasExtra(EXTRA_INVITE_URI)) {
+            return;
         }
+        final var uri = MiniUri.getXmppUriOrNull(source.getStringExtra(EXTRA_INVITE_URI));
+        if (uri == null) {
+            return;
+        }
+        Log.d(Config.LOGTAG, "dragging on invite uri: " + uri.asUri());
+        to.putExtra(EXTRA_INVITE_URI, uri.asUri().toString());
     }
 
     public static Intent startOrConversationsActivity(
             final BaseActivity baseActivity, @Nullable final Account account) {
         final var currentIntent = baseActivity.getIntent();
-        final var invite =
-                currentIntent == null ? null : currentIntent.getStringExtra(EXTRA_INVITE_URI);
+        final MiniUri.Xmpp invite;
+        if (currentIntent != null) {
+            invite = MiniUri.getXmppUriOrNull(currentIntent.getStringExtra(EXTRA_INVITE_URI));
+        } else {
+            invite = null;
+        }
         final Intent intent;
-        if (Strings.isNullOrEmpty(invite) || account == null) {
+        if (invite == null || account == null) {
             intent = new Intent(baseActivity, ConversationsActivity.class);
         } else {
             intent = new Intent(baseActivity, StartConversationActivity.class);
-            intent.putExtra(EXTRA_INVITE_URI, invite);
+            Log.d(Config.LOGTAG, "dragging on invite uri: " + invite.asUri());
+            intent.putExtra(EXTRA_INVITE_URI, invite.asUri().toString());
             intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

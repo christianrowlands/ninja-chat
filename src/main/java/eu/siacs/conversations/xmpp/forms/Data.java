@@ -5,6 +5,7 @@ import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.Namespace;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class Data extends Element {
         submit();
     }
 
-    public void submit() {
+    private void submit() {
         this.setAttribute("type", "submit");
         removeUnnecessaryChildren();
         for (Field field : getFields()) {
@@ -80,21 +81,16 @@ public class Data extends Element {
         }
     }
 
-    public static Data parse(Element element) {
-        Data data = new Data();
-        data.setAttributes(element.getAttributes());
+    public static Data parse(final Element element) {
+        final var data = new Data();
+        data.setAttributes(new HashMap<>(element.getAttributes()));
         data.setChildren(element.getChildren());
         return data;
     }
 
-    public void setFormType(String formType) {
-        Field field = this.put(FORM_TYPE, formType);
+    public void setFormType(final String formType) {
+        final var field = this.put(FORM_TYPE, formType);
         field.setAttribute("type", "hidden");
-    }
-
-    public String getFormType() {
-        String type = getValue(FORM_TYPE);
-        return type == null ? "" : type;
     }
 
     public String getValue(String name) {

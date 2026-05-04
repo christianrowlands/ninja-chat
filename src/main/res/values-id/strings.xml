@@ -306,13 +306,8 @@
     <string name="enable_all_accounts">Aktifkan semua akun</string>
     <string name="disable_all_accounts">Menonaktifkan semua account</string>
     <string name="perform_action_with">Lakukan aksi dengan</string>
-    <string name="no_affiliation">Tidak ada afiliasi</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Orang buangan</string>
     <string name="member">Member</string>
-    <string name="advanced_mode">Mode lanjut</string>
-    <string name="grant_admin_privileges">Memberikan hak istimewa admin</string>
-    <string name="remove_admin_privileges">Mencabut hak istimewa admin</string>
     <string name="could_not_change_affiliation">Tidak bisa mengubah afiliasi %s</string>
     <string name="ban_now">Tendang sekarang</string>
     <string name="could_not_change_role">Tidak dapat merumah role %s</string>

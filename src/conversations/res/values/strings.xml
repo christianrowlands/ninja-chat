@@ -12,6 +12,5 @@
     <string name="improperly_formatted_provisioning">Improperly formatted provisioning code</string>
     <string name="tap_share_button_send_invite">Tap the share button to send your contact an invitation to %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">If your contact is nearby, they can also scan the code below to accept your invitation.</string>
-    <string name="easy_invite_share_text">Join %1$s and chat with me: %2$s</string>
     <string name="share_invite_with">Share invite with…</string>
 </resources>

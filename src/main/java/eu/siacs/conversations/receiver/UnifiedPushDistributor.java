@@ -4,33 +4,32 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.persistance.UnifiedPushDatabase;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.Compatibility;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class UnifiedPushDistributor extends BroadcastReceiver {
 
-    // distributor actions (these are actios used for connector->distributor broadcasts)
+    // distributor actions (these are actions used for connector->distributor broadcasts)
     // we, the distributor, have a broadcast receiver listening for those actions
 
     public static final String ACTION_REGISTER = "org.unifiedpush.android.distributor.REGISTER";
@@ -67,12 +66,32 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
         }
         final String action = intent.getAction();
         final String application;
-        final Parcelable appVerification = intent.getParcelableExtra("app");
-        if (appVerification instanceof PendingIntent pendingIntent) {
-            application = pendingIntent.getIntentSender().getCreatorPackage();
-            Log.d(Config.LOGTAG, "received application name via pending intent " + application);
+        final Parcelable pi = intent.getParcelableExtra("pi");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            final String sentFromPackage = getSentFromPackage();
+            if (Strings.isNullOrEmpty(sentFromPackage)) {
+                final var fallback = asApplication(pi);
+                if (Strings.isNullOrEmpty(fallback)) {
+                    Log.d(Config.LOGTAG, "register/unregister command did not include application");
+                    return;
+                }
+                final var targetSdk = getTargetSdk(context, fallback);
+                if (targetSdk >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    Log.d(
+                            Config.LOGTAG,
+                            "not accepting fallback because " + fallback + " targets " + targetSdk);
+                    return;
+                }
+                application = fallback;
+            } else {
+                application = sentFromPackage;
+            }
         } else {
-            application = intent.getStringExtra("application");
+            application = asApplication(pi);
+        }
+        if (Strings.isNullOrEmpty(application)) {
+            Log.d(Config.LOGTAG, "register/unregister command did not include application");
+            return;
         }
         final Parcelable messenger = intent.getParcelableExtra("messenger");
         final String instance = intent.getStringExtra("token");
@@ -80,10 +99,29 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
         switch (Strings.nullToEmpty(action)) {
             case ACTION_REGISTER -> register(context, application, instance, features, messenger);
             case ACTION_UNREGISTER -> unregister(context, instance);
-            case Intent.ACTION_PACKAGE_FULLY_REMOVED -> unregisterApplication(
-                    context, intent.getData());
-            default -> Log.d(
-                    Config.LOGTAG, "UnifiedPushDistributor received unknown action " + action);
+            case Intent.ACTION_PACKAGE_FULLY_REMOVED ->
+                    unregisterApplication(context, intent.getData());
+            default ->
+                    Log.d(
+                            Config.LOGTAG,
+                            "UnifiedPushDistributor received unknown action " + action);
+        }
+    }
+
+    private static String asApplication(final Parcelable parcelable) {
+        if (parcelable instanceof PendingIntent pendingIntent) {
+            return Strings.emptyToNull(pendingIntent.getIntentSender().getCreatorPackage());
+        } else {
+            return null;
+        }
+    }
+
+    private static int getTargetSdk(final Context context, final String application) {
+        try {
+            return context.getPackageManager().getApplicationInfo(application, 0).targetSdkVersion;
+        } catch (final PackageManager.NameNotFoundException e) {
+            // this will def. be over our max sdk of 34
+            return Integer.MIN_VALUE;
         }
     }
 
@@ -185,7 +223,8 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
             quickLog(
                     context,
                     String.format(
-                            "successfully unregistered token %s from UnifiedPushed (application requested unregister)",
+                            "successfully unregistered token %s from UnifiedPushed (application"
+                                    + " requested unregister)",
                             instance));
             Log.d(Config.LOGTAG, "successfully removed " + instance + " from UnifiedPush");
             // TODO send UNREGISTERED broadcast back to app?!
@@ -204,7 +243,8 @@ public class UnifiedPushDistributor extends BroadcastReceiver {
                 quickLog(
                         context,
                         String.format(
-                                "successfully removed %s from UnifiedPushed (ACTION_PACKAGE_FULLY_REMOVED)",
+                                "successfully removed %s from UnifiedPushed"
+                                        + " (ACTION_PACKAGE_FULLY_REMOVED)",
                                 application));
                 Log.d(Config.LOGTAG, "successfully removed " + application + " from UnifiedPush");
             }

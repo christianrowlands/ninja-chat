@@ -8,6 +8,7 @@ import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.http.ServiceOutageStatus;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.XmppConnection;
+import eu.siacs.conversations.xmpp.manager.ClientStateIndicationManager;
 import eu.siacs.conversations.xmpp.manager.JingleManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import java.util.concurrent.TimeUnit;
@@ -46,13 +47,12 @@ public class AccountStateProcessor extends XmppConnection.Delegate
             if (account.setShowErrorNotification(true)) {
                 this.service.databaseBackend.updateAccount(account);
             }
-            if (this.connection.getFeatures().csi()) {
+            final var csiManager = getManager(ClientStateIndicationManager.class);
+            if (csiManager.hasFeature()) {
                 if (this.service.checkListeners()) {
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + " sending csi//inactive");
-                    connection.sendInactive();
+                    csiManager.indicateInactive();
                 } else {
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + " sending csi//active");
-                    connection.sendActive();
+                    csiManager.indicateActive();
                 }
             }
             final var mucManager = getManager(MultiUserChatManager.class);
@@ -75,16 +75,15 @@ public class AccountStateProcessor extends XmppConnection.Delegate
                         account.getJid().asBareJid()
                                 + ": went into offline state during low ping mode."
                                 + " reconnecting now");
-                this.service.reconnectAccount(account, true, false);
+                this.service.reconnectAccount(account, false);
             } else {
                 final int timeToReconnect = SECURE_RANDOM.nextInt(10) + 2;
                 this.service.scheduleWakeUpCall(timeToReconnect, account.getUuid().hashCode());
             }
         } else if (account.getStatus() == Account.State.REGISTRATION_SUCCESSFUL) {
             this.service.databaseBackend.updateAccount(account);
-            this.service.reconnectAccount(account, true, false);
-        } else if (account.getStatus() != Account.State.CONNECTING
-                && account.getStatus() != Account.State.NO_INTERNET) {
+            this.service.reconnectAccount(account, false);
+        } else if (account.getStatus() != Account.State.CONNECTING) {
             this.service.resetSendingToWaiting(account);
             if (connection != null && account.getStatus().isAttemptReconnect()) {
                 final boolean aggressive =
@@ -99,7 +98,7 @@ public class AccountStateProcessor extends XmppConnection.Delegate
                                     + ": error connecting account. reconnecting now."
                                     + " lowPingTimeout="
                                     + lowPingTimeoutMode);
-                    this.service.reconnectAccount(account, true, false);
+                    this.service.reconnectAccount(account, false);
                 } else {
                     final int attempt = connection.getAttempt() + 1;
                     Log.d(

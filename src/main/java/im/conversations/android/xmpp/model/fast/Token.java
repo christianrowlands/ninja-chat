@@ -9,4 +9,8 @@ public class Token extends Extension {
     public Token() {
         super(Token.class);
     }
+
+    public String getToken() {
+        return this.getAttribute("token");
+    }
 }

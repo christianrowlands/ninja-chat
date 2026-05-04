@@ -162,7 +162,7 @@ public class BackupSettingsFragment extends XmppPreferenceFragment {
     @Override
     public void onStart() {
         super.onStart();
-        requireActivity().setTitle(R.string.backup);
+        requireActivity().setTitle(R.string.backup_and_restore);
     }
 
     private boolean onBackupPreferenceClicked(final Preference preference) {

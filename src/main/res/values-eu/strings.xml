@@ -291,17 +291,8 @@
     <string name="enable_all_accounts">Kontu guztiak gaitu</string>
     <string name="disable_all_accounts">Kontu guztiak ezgaitu</string>
     <string name="perform_action_with">Ekintza honekin egin</string>
-    <string name="no_affiliation">Afiliaziorik ez</string>
-    <string name="no_role">Lineaz kanpo</string>
     <string name="outcast">Baztertutakoa</string>
     <string name="member">Kidea</string>
-    <string name="advanced_mode">Modu aurreratua</string>
-    <string name="grant_membership">Kide baimenak eman</string>
-    <string name="remove_membership">Kide baimenak ezezaztu</string>
-    <string name="grant_admin_privileges">Administratzaile baimenak eman</string>
-    <string name="remove_admin_privileges">Administratzaile baimenak ezeztatu</string>
-    <string name="grant_owner_privileges">Jabe baimenak eman</string>
-    <string name="remove_owner_privileges">Jabe baimenak ezezaztu</string>
     <string name="remove_from_room">Taldetik kendu</string>
     <string name="remove_from_channel">Kanaletik kendu</string>
     <string name="could_not_change_affiliation">%s(r)en afiliazioa ezin izan da aldatu</string>
@@ -373,7 +364,6 @@
     <string name="account_status_bind_failure">Estekatzeak hust egin du</string>
     <string name="server_info_broken">Hondatuta</string>
     <string name="pref_presence_settings">Eskuragarritasuna</string>
-    <string name="pref_treat_vibrate_as_silent">Dardara modu isila bezala tratatu</string>
     <string name="pref_show_connection_options">Konexioaren ezarpen luzatuak</string>
     <string name="pref_show_connection_options_summary">Ostalariaren izena eta ataka ezarpenak erakutsi kontu bat ezartzerakoan</string>
     <string name="hostname_example">xmpp.adibidea.com</string>
@@ -467,9 +457,7 @@
     <string name="verified_fingerprints">Egiaztatutako hatz-markak</string>
     <string name="use_camera_icon_to_scan_barcode">Kamera erabili kontaktuaren barra kodea eskaneatzeko</string>
     <string name="please_wait_for_keys_to_be_fetched">Mesedez itxaron gakoak ekarri arte</string>
-    <string name="share_as_barcode">Barra kode bezala partekatu</string>
     <string name="share_as_uri">XMPP URI bezala partekatu</string>
-    <string name="share_as_http">HTTP link bezala partekatu</string>
     <string name="pref_blind_trust_before_verification">Egiaztatu aurreko fidagarritasun itsua</string>
     <string name="not_trusted">Ez fidagarria</string>
     <string name="invalid_barcode">2D barra kodea baliogabea</string>

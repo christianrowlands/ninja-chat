@@ -22,6 +22,7 @@ import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.manager.DiscoManager;
+import im.conversations.android.model.DynamicTag;
 import im.conversations.android.xmpp.EntityCapabilities2;
 import im.conversations.android.xmpp.model.Hash;
 import im.conversations.android.xmpp.model.data.Data;
@@ -41,6 +42,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
 public class MucOptions {
@@ -109,6 +111,7 @@ public class MucOptions {
                         null,
                         role,
                         affiliation,
+                        Collections.emptySet(),
                         false);
     }
 
@@ -359,9 +362,22 @@ public class MucOptions {
         return features.contains(Namespace.OCCUPANT_ID);
     }
 
+    public boolean hats() {
+        final var features = getFeatures();
+        return features.contains(Namespace.HATS);
+    }
+
     public boolean moderation() {
         final var features = getFeatures();
         return features.contains(Namespace.MODERATION);
+    }
+
+    public boolean isCompliant() {
+        if (isPrivateAndNonAnonymous()) {
+            return occupantId() && mamSupport();
+        } else {
+            return occupantId() && mamSupport() && moderation();
+        }
     }
 
     public User deleteUser(final Jid jid) {
@@ -475,6 +491,7 @@ public class MucOptions {
 
     @Nullable
     public User getUser(final IdentifiableUser identifiableUser) {
+        final var self = getSelf();
         final var occupantId = identifiableUser.mucUserOccupantId();
         final var realAddress = identifiableUser.mucUserRealAddress();
         final var address = identifiableUser.mucUserAddress();
@@ -486,7 +503,6 @@ public class MucOptions {
                 if (byOccupantId != null) {
                     return byOccupantId;
                 }
-                final var self = getSelf();
                 final var bySelf =
                         self != null && occupantId.equals(self.getOccupantId()) ? self : null;
                 if (bySelf != null) {
@@ -502,6 +518,9 @@ public class MucOptions {
                 final var offline = this.users.get(Id.realAddress(realAddress));
                 if (offline != null) {
                     return offline;
+                }
+                if (self != null && realAddress.equals(account.getJid().asBareJid())) {
+                    return self;
                 }
                 return Iterables.find(
                         this.users.values(), u -> realAddress.equals(u.realJid), null);
@@ -815,6 +834,7 @@ public class MucOptions {
         private final String occupantId;
         private final Role role;
         private final Affiliation affiliation;
+        private final Set<DynamicTag.Hat> hats;
         private Long pgpKeyId;
         private String avatar;
         private Class<? extends ChatStateNotification> chatState = null;
@@ -825,17 +845,20 @@ public class MucOptions {
                 final Jid realJid,
                 final String occupantId,
                 final Role role,
-                final Affiliation affiliation) {
+                final Affiliation affiliation,
+                final Set<DynamicTag.Hat> hats) {
             Preconditions.checkNotNull(options, "MucOptions must not be null");
             Preconditions.checkNotNull(role, "Role must not be null. Use NONE instead");
             Preconditions.checkNotNull(
                     affiliation, "Affiliation must not be null. Use NONE instead");
+            Preconditions.checkNotNull(hats, "pass an empty set instead of null for hats");
             this.options = options;
             this.fullJid = fullJid;
             this.realJid = realJid != null ? realJid.asBareJid() : null;
             this.occupantId = occupantId;
             this.role = role;
             this.affiliation = affiliation;
+            this.hats = hats;
         }
 
         public AddressableId asId() {
@@ -858,6 +881,25 @@ public class MucOptions {
 
         public Affiliation getAffiliation() {
             return this.affiliation;
+        }
+
+        public Set<DynamicTag.Hat> getHats() {
+            return this.hats;
+        }
+
+        public List<DynamicTag> getDynamicTags() {
+            if (this.role == Role.NONE && this.affiliation == Affiliation.NONE) {
+                return ImmutableList.copyOf(this.hats);
+            } else {
+                final var builder =
+                        new ImmutableList.Builder<DynamicTag>()
+                                .add(new DynamicTag.Attributes(this.affiliation, this.role))
+                                .addAll(this.hats);
+                if (this.role == Role.NONE) {
+                    builder.add(new DynamicTag.Status(Presence.Availability.OFFLINE));
+                }
+                return builder.build();
+            }
         }
 
         public long getPgpKeyId() {
@@ -1013,7 +1055,13 @@ public class MucOptions {
 
         public User asOfflineUser() {
             return new User(
-                    this.options, null, this.realJid, this.occupantId, Role.NONE, affiliation);
+                    this.options,
+                    null,
+                    this.realJid,
+                    this.occupantId,
+                    Role.NONE,
+                    affiliation,
+                    Collections.emptySet());
         }
 
         public User withAffiliation(final Affiliation affiliation) {
@@ -1023,7 +1071,8 @@ public class MucOptions {
                     this.realJid,
                     this.occupantId,
                     this.role,
-                    affiliation);
+                    affiliation,
+                    this.hats);
         }
 
         public Self asConnectedSelf() {
@@ -1038,6 +1087,7 @@ public class MucOptions {
                     this.occupantId,
                     this.role,
                     this.affiliation,
+                    this.hats,
                     true);
         }
 
@@ -1068,8 +1118,9 @@ public class MucOptions {
                 final String occupantId,
                 final Role role,
                 final Affiliation affiliation,
+                final Set<DynamicTag.Hat> hats,
                 final boolean connected) {
-            super(options, fullJid, realJid, occupantId, role, affiliation);
+            super(options, fullJid, realJid, occupantId, role, affiliation, hats);
             Preconditions.checkNotNull(
                     realJid, "The self muc user should not have a null real jid");
             Preconditions.checkArgument(
@@ -1096,6 +1147,7 @@ public class MucOptions {
                     getOccupantId(),
                     Role.NONE,
                     getAffiliation(),
+                    getHats(),
                     false);
         }
     }
@@ -1107,7 +1159,14 @@ public class MucOptions {
                 final Jid fullJid,
                 final Jid realJid,
                 final String occupantId) {
-            super(options, fullJid, realJid, occupantId, Role.NONE, Affiliation.NONE);
+            super(
+                    options,
+                    fullJid,
+                    realJid,
+                    occupantId,
+                    Role.NONE,
+                    Affiliation.NONE,
+                    Collections.emptySet());
         }
     }
 

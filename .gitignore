@@ -4,7 +4,6 @@
 
 src/conversationsPlaystore/res/values/push.xml
 src/quicksyPlaystore/res/values/push.xml
-src/quicksyPlaystore/java/eu/siacs/conversations/utils/QuicksyAuthentication.java
 
 
 # https://github.com/github/gitignore/blob/master/Gradle.gitignore
@@ -13,6 +12,7 @@ build/
 captures/
 signing.properties
 signing.managed.properties
+quicksy-auth-secret.properties
 # Ignore Gradle GUI config
 gradle-app.setting
 

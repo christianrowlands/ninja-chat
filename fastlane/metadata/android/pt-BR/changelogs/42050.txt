@@ -1,0 +1,1 @@
+* Aumentar o raio de canto nas imagens de perfis

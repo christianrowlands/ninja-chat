@@ -14,6 +14,7 @@ import im.conversations.android.xmpp.model.up.Push;
 import im.conversations.android.xmpp.model.up.Register;
 import im.conversations.android.xmpp.model.up.Registered;
 import java.time.Instant;
+import java.util.Objects;
 import okhttp3.HttpUrl;
 
 public class UnifiedPushManager extends AbstractManager {
@@ -54,12 +55,19 @@ public class UnifiedPushManager extends AbstractManager {
         return Futures.transform(
                 future,
                 response -> {
-                    final var registered = response.getExtension(Registered.class);
+                    final var registered =
+                            Objects.requireNonNull(response).getExtension(Registered.class);
                     if (registered == null) {
                         throw new IllegalStateException("Registered missing from response");
                     }
                     final var endpoint = registered.getEndpoint();
                     final var expiration = registered.getExpiration();
+                    if (endpoint == null || expiration == null) {
+                        throw new IllegalStateException("endpoint or expiration missing");
+                    }
+                    if (expiration.isBefore(Instant.now())) {
+                        throw new IllegalStateException("Expiration is in the past");
+                    }
                     return new Registration(endpoint, expiration);
                 },
                 MoreExecutors.directExecutor());

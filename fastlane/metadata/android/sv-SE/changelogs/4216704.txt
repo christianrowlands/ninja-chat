@@ -1,0 +1,4 @@
+* Möjlighet att radera meddelanden när man blockerar någon i en publik chatt
+* Omstrukturering av QR-kodskanning och URI-hantering
+* Play Store-versionen: Sluta använda Googles bibliotek och gränssnitt direkt med Google Play Service via IPC
+* Åtgärdat rotationsproblem i surfplattelläget

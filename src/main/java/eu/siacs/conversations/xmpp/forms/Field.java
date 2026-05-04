@@ -4,6 +4,7 @@ import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xml.Namespace;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,9 +44,9 @@ public class Field extends Element {
         }
     }
 
-    public static Field parse(Element element) {
-        Field field = new Field();
-        field.setAttributes(element.getAttributes());
+    public static Field parse(final Element element) {
+        final var field = new Field();
+        field.setAttributes(new HashMap<>(element.getAttributes()));
         field.setChildren(element.getChildren());
         return field;
     }

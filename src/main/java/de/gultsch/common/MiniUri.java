@@ -1,8 +1,6 @@
 package de.gultsch.common;
 
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
@@ -14,6 +12,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.common.escape.CharEscaper;
+import com.google.common.primitives.Chars;
+import com.google.common.primitives.Ints;
 import eu.siacs.conversations.xmpp.Jid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -28,6 +29,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import okhttp3.HttpUrl;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class MiniUri {
 
@@ -103,7 +106,29 @@ public class MiniUri {
         return builder.build().asMap();
     }
 
-    public static String urlDecodeOrEmpty(final String input) {
+    private static String percentDecode(final @NonNull String encoded) {
+        if (Strings.isNullOrEmpty(encoded)) {
+            return encoded;
+        }
+        final var decoded = new StringBuilder();
+        for (int i = 0; i < encoded.length(); i++) {
+            final char c = encoded.charAt(i);
+            if (c == '%' && i + 2 < encoded.length()) {
+                final var value = Ints.tryParse(encoded.substring(i + 1, i + 3), 16);
+                if (value != null) {
+                    decoded.append(Chars.checkedCast(value));
+                    i += 2;
+                } else {
+                    decoded.append(c);
+                }
+            } else {
+                decoded.append(c);
+            }
+        }
+        return decoded.toString();
+    }
+
+    private static String urlDecodeOrEmpty(final String input) {
         try {
             return URLDecoder.decode(input, "UTF-8");
         } catch (final UnsupportedEncodingException | IllegalArgumentException e) {
@@ -111,7 +136,7 @@ public class MiniUri {
         }
     }
 
-    public static String urlEncode(final String input) {
+    private static String urlEncode(final String input) {
         try {
             return URLEncoder.encode(input, "UTF-8");
         } catch (final UnsupportedEncodingException e) {
@@ -242,6 +267,7 @@ public class MiniUri {
                 }
                 throw new IllegalArgumentException("HTTP URI does not match pattern");
             }
+            case "mumble" -> asMiniUriIfMatch(Patterns.URI_MUMBLE, uri);
             case "geo" -> asMiniUriIfMatch(Patterns.URI_GEO, uri);
             case "xmpp" -> new Xmpp(uri);
             case "taler" -> asMiniUriIfMatch(Patterns.URI_TALER, uri);
@@ -249,8 +275,9 @@ public class MiniUri {
             case "web+ap" -> {
                 if (Patterns.URI_WEB_AP.matcher(uri).matches()) {
                     final var webAp = new MiniUri(uri);
-                    // TODO once we have fragment support check that there aren't any
-                    if (Objects.nonNull(webAp.getAuthority()) && webAp.getParameter().isEmpty()) {
+                    if (Objects.nonNull(webAp.getAuthority())
+                            && webAp.getParameter().isEmpty()
+                            && Strings.isNullOrEmpty(webAp.getFragment())) {
                         yield webAp;
                     }
                 }
@@ -286,6 +313,7 @@ public class MiniUri {
         public static final String ACTION_ROSTER = "roster";
         public static final String PARAMETER_PRE_AUTH = "preauth";
         public static final String PARAMETER_IBR = "ibr";
+        public static final String PARAMETER_BODY = "body";
 
         private final Jid jid;
 
@@ -294,7 +322,7 @@ public class MiniUri {
             Preconditions.checkArgument(getScheme().equals("xmpp"), "scheme must be xmpp");
             Preconditions.checkArgument(
                     Objects.isNull(getAuthority()), "authorities are not supported");
-            final var path = getPath();
+            final var path = MiniUri.percentDecode(getPath());
             if (Strings.isNullOrEmpty(path)) {
                 if (this.getParameter().isEmpty()) {
                     throw new IllegalArgumentException(
@@ -311,7 +339,12 @@ public class MiniUri {
         }
 
         public Xmpp(final Jid jid, final Map<String, Collection<String>> parameter) {
-            this(String.format("%s:%s%s", "xmpp", jid.toString(), asQueryString(parameter)));
+            this(
+                    String.format(
+                            "%s:%s%s",
+                            "xmpp",
+                            LIGHT_URI_ESCAPER.escape(jid.toString()),
+                            asQueryString(parameter)));
         }
 
         private static String asQueryString(final Map<String, Collection<String>> parameter) {
@@ -370,11 +403,15 @@ public class MiniUri {
         }
 
         public String getBody() {
-            return getParameterFlat().get("body");
+            return getParameter(PARAMETER_BODY);
         }
 
         public String getName() {
-            return getParameterFlat().get("name");
+            return getParameter("name");
+        }
+
+        public boolean isYesIbr() {
+            return "y".equalsIgnoreCase(getParameter(PARAMETER_IBR));
         }
 
         public Http asInvitationUri() {
@@ -415,7 +452,7 @@ public class MiniUri {
                     final var isJoin = action != null && action.equals("j");
                     final Jid jid;
                     try {
-                        jid = Jid.ofUserInput(urlDecodeOrEmpty(Iterables.getLast(pathSegments)));
+                        jid = Jid.ofUserInput(percentDecode(Iterables.getLast(pathSegments)));
                     } catch (final IllegalArgumentException e) {
                         return this;
                     }
@@ -468,4 +505,18 @@ public class MiniUri {
             return new Xmpp(jid);
         }
     }
+
+    private static final CharEscaper LIGHT_URI_ESCAPER =
+            new CharEscaper() {
+
+                private static final Collection<Character> CHARACTERS = Arrays.asList('#', '%');
+
+                @Override
+                protected char @Nullable [] escape(final char c) {
+                    if (CHARACTERS.contains(c)) {
+                        return String.format("%%%02x", (int) c).toCharArray();
+                    }
+                    return null;
+                }
+            };
 }

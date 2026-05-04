@@ -9,11 +9,11 @@ import java.lang.reflect.InvocationTargetException;
 
 public final class ExtensionFactory {
 
-    public static Element create(final String name, final String namespace) {
-        final Class<? extends Extension> clazz = of(name, namespace);
+    public static Element create(final Id id) {
+        final Class<? extends Extension> clazz = of(id);
         if (clazz == null) {
-            Log.d(Config.LOGTAG, "missing extension for [" + name + "#" + namespace + "]");
-            return new Element(name, namespace);
+            Log.d(Config.LOGTAG, "missing extension for [" + id.name + "#" + id.namespace + "]");
+            return new Element(id.name, id.namespace);
         }
         final Constructor<? extends Element> constructor;
         try {
@@ -32,8 +32,8 @@ public final class ExtensionFactory {
         }
     }
 
-    private static Class<? extends Extension> of(final String name, final String namespace) {
-        return Extensions.EXTENSION_CLASS_MAP.get(new Id(name, namespace));
+    private static Class<? extends Extension> of(final Id id) {
+        return Extensions.EXTENSION_CLASS_MAP.get(id);
     }
 
     public static Id id(final Class<? extends Extension> clazz) {

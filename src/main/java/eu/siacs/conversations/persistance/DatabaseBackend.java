@@ -15,6 +15,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
@@ -52,6 +53,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -1620,10 +1622,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 final var cached = cursor.getString(0);
                 try {
-                    final var element = XmlElementReader.read(cached);
-                    if (element instanceof InfoQuery infoQuery) {
-                        return infoQuery;
-                    }
+                    return XmlElementReader.read(cached, InfoQuery.class);
                 } catch (final IOException e) {
                     Log.e(Config.LOGTAG, "could not restore info query from cache", e);
                     return null;
@@ -1632,7 +1631,6 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 return null;
             }
         }
-        return null;
     }
 
     public static class FilePath {
@@ -1755,21 +1753,16 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return getAccounts(db);
     }
 
-    public Collection<Jid> getAccountAddresses(final boolean enabledOnly) {
-        return Collections2.transform(getAccountWithOptions(enabledOnly), a -> a.jid);
+    public Collection<Jid> getAccountAddresses() {
+        return AccountWithOptions.getAddresses(getAccountWithOptions());
     }
 
     public Set<AccountWithOptions> getAccountWithOptions() {
-        return getAccountWithOptions(false);
-    }
-
-    private Set<AccountWithOptions> getAccountWithOptions(final boolean enabledOnly) {
         final SQLiteDatabase db = this.getReadableDatabase();
         final var addresses = new ImmutableSet.Builder<AccountWithOptions>();
         final String[] columns = new String[] {Account.USERNAME, Account.SERVER, Account.OPTIONS};
-        final String where = enabledOnly ? "not options & (1 <<1)" : null;
         try (final Cursor cursor =
-                db.query(Account.TABLENAME, columns, where, null, null, null, null)) {
+                db.query(Account.TABLENAME, columns, null, null, null, null, null)) {
             while (cursor.moveToNext()) {
                 final var address = Jid.of(cursor.getString(0), cursor.getString(1), null);
                 addresses.add(new AccountWithOptions(address, cursor.getInt(2)));
@@ -2694,6 +2687,18 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public record AccountWithOptions(Jid jid, int options) {
         public boolean isOptionSet(final int option) {
             return ((options & (1 << option)) != 0);
+        }
+
+        public static boolean hasEnabledAccount(final Collection<AccountWithOptions> accounts) {
+            return Iterables.any(
+                    accounts,
+                    a ->
+                            !Objects.requireNonNull(a).isOptionSet(Account.OPTION_DISABLED)
+                                    && !a.isOptionSet(Account.OPTION_SOFT_DISABLED));
+        }
+
+        public static Collection<Jid> getAddresses(final Collection<AccountWithOptions> accounts) {
+            return Collections2.transform(accounts, a -> Objects.requireNonNull(a).jid);
         }
     }
 }

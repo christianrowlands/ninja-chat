@@ -1,67 +1,71 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_change_presence"
         android:icon="@drawable/ic_announcement_24dp"
-        app:showAsAction="always"
-        android:title="@string/edit_status_message"/>
+        android:title="@string/edit_status_message"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_24dp"
-        app:showAsAction="always"
-        android:title="@string/share_uri_with">
+        android:title="@string/share_uri_with"
+        app:showAsAction="always">
         <menu>
             <item
                 android:id="@+id/action_share_uri"
-                android:title="@string/share_as_uri"/>
+                android:icon="@drawable/ic_xmpp_24dp"
+                android:title="@string/share_as_uri" />
             <item
                 android:id="@+id/action_share_http"
-                android:title="@string/share_as_http"/>
-            <item
-                android:id="@+id/action_share_barcode"
-                android:title="@string/share_as_barcode"/>
+                android:icon="@drawable/ic_join_24dp"
+                android:title="@string/share_invitation" />
             <item
                 android:id="@+id/action_show_qr_code"
-                android:title="@string/show_qr_code"/>
+                android:icon="@drawable/ic_qr_code_24dp"
+                android:title="@string/show_qr_code" />
+            <item
+                android:id="@+id/action_share_barcode"
+                android:icon="@drawable/ic_publish_24dp"
+                android:title="@string/publish_qr_code" />
         </menu>
     </item>
 
     <item
         android:id="@+id/action_show_block_list"
-        app:showAsAction="never"
-        android:title="@string/show_block_list"/>
+        android:title="@string/show_block_list"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_renew_certificate"
-        app:showAsAction="never"
         android:title="@string/action_renew_certificate"
-        android:visible="false"/>
+        android:visible="false"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_server_info_show_more"
         android:checkable="true"
         android:checked="false"
-        app:showAsAction="never"
-        android:title="@string/server_info_show_more"/>
+        android:title="@string/server_info_show_more"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_mam_prefs"
-        android:title="@string/mam_prefs"/>
+        android:title="@string/mam_prefs" />
 
     <item
         android:id="@+id/action_change_password_on_server"
-        app:showAsAction="never"
-        android:title="@string/change_password"/>
+        android:title="@string/change_password"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete_account"
-        android:title="@string/mgmt_account_delete"/>
+        android:title="@string/mgmt_account_delete" />
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
 </menu>

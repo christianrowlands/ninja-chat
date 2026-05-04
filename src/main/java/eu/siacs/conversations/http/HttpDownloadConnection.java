@@ -61,16 +61,12 @@ public class HttpDownloadConnection implements Transferable {
 
     @Override
     public boolean start() {
-        if (mXmppConnectionService.hasInternetConnection()) {
-            if (this.mStatus == STATUS_OFFER_CHECK_FILESIZE) {
-                checkFileSize(true);
-            } else {
-                download(true);
-            }
-            return true;
+        if (this.mStatus == STATUS_OFFER_CHECK_FILESIZE) {
+            checkFileSize(true);
         } else {
-            return false;
+            download(true);
         }
+        return true;
     }
 
     public void init(boolean interactive) {

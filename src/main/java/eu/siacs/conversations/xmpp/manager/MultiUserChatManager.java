@@ -30,6 +30,7 @@ import eu.siacs.conversations.utils.StringUtils;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
+import im.conversations.android.model.DynamicTag;
 import im.conversations.android.model.ImmutableBookmark;
 import im.conversations.android.xmpp.Entity;
 import im.conversations.android.xmpp.EntityCapabilities;
@@ -41,6 +42,7 @@ import im.conversations.android.xmpp.model.conference.DirectInvite;
 import im.conversations.android.xmpp.model.data.Data;
 import im.conversations.android.xmpp.model.disco.info.InfoQuery;
 import im.conversations.android.xmpp.model.error.Condition;
+import im.conversations.android.xmpp.model.hats.Hats;
 import im.conversations.android.xmpp.model.hints.NoCopy;
 import im.conversations.android.xmpp.model.hints.NoStore;
 import im.conversations.android.xmpp.model.jabber.Subject;
@@ -416,10 +418,18 @@ public class MultiUserChatManager extends AbstractManager {
         final Jid jid = account.getJid();
         final var conversation = mucOptions.getConversation();
         final var occupant = presence.getOnlyExtension(OccupantId.class);
+        final var hatsExtension = presence.getOnlyExtension(Hats.class);
         final String occupantId =
                 mucOptions.occupantId() && occupant != null ? occupant.getId() : null;
+        final Set<DynamicTag.Hat> hats;
+        if (mucOptions.hats() && hatsExtension != null) {
+            hats = transform(hatsExtension.getHats());
+        } else {
+            hats = Collections.emptySet();
+        }
+
         final MucOptions.User user =
-                MultiUserChatManager.itemToUser(conversation, item, from, occupantId);
+                MultiUserChatManager.itemToUser(conversation, item, from, occupantId, hats);
         if (codes.contains(MucUser.STATUS_CODE_SELF_PRESENCE)
                 || (codes.contains(MucUser.STATUS_CODE_ROOM_CREATED)
                         && jid.equals(item.getJid()))) {
@@ -465,6 +475,21 @@ public class MultiUserChatManager extends AbstractManager {
         if (vCardUpdate != null) {
             getManager(AvatarManager.class).handleVCardUpdate(from, vCardUpdate);
         }
+    }
+
+    private static Set<DynamicTag.Hat> transform(
+            final Collection<im.conversations.android.xmpp.model.hats.Hat> rawHats) {
+        final var hatBuilder = new ImmutableSet.Builder<DynamicTag.Hat>();
+        for (final var rawHat : rawHats) {
+            final var title = rawHat.getTitle();
+            final var uri = rawHat.getUri();
+            final var optionalHue = rawHat.getHue();
+            if (Strings.isNullOrEmpty(title) || Strings.isNullOrEmpty(uri)) {
+                continue;
+            }
+            hatBuilder.add(new DynamicTag.Hat(uri, title, optionalHue.orNull()));
+        }
+        return hatBuilder.build();
     }
 
     private void handleUnavailablePresence(final Presence presence) {
@@ -536,7 +561,9 @@ public class MultiUserChatManager extends AbstractManager {
                         mucOptions.occupantId() && occupant != null ? occupant.getId() : null;
                 // TODO if there is a re-name status code we can potentially avoid an unnecessary
                 // switch to offline by parsing the nick from the item element
-                user = MultiUserChatManager.itemToUser(conversation, item, from, occupantId);
+                user =
+                        MultiUserChatManager.itemToUser(
+                                conversation, item, from, occupantId, Collections.emptySet());
 
                 // TODO not calling delete after update currently breaks renames and possibly other
                 // things
@@ -1303,13 +1330,14 @@ public class MultiUserChatManager extends AbstractManager {
                         + address
                         + " to "
                         + conversation.getAddress().asBareJid());
-        final MucOptions.User user =
-                getOrCreateState(conversation)
-                        .getUser(MucOptions.IdentifiableUser.realAddress(address.asBareJid()));
+        final var state = getOrCreateState(conversation);
+        final var user =
+                state.getUser(MucOptions.IdentifiableUser.realAddress(address.asBareJid()));
         if (user == null || user.getAffiliation() == Affiliation.OUTCAST) {
-            // TODO either don’t do this or pick a better target affiliation for members only
-            Log.d(Config.LOGTAG, "changing affiliation of invitee to None");
-            this.setAffiliation(conversation, Affiliation.NONE, address);
+            final var targetAffiliation =
+                    state.membersOnly() ? Affiliation.MEMBER : Affiliation.NONE;
+            Log.d(Config.LOGTAG, "changing affiliation of invitee to " + targetAffiliation);
+            this.setAffiliation(conversation, targetAffiliation, address);
         }
 
         final var packet = new Message();
@@ -1410,7 +1438,8 @@ public class MultiUserChatManager extends AbstractManager {
             final var mucUser = message.getExtension(MucUser.class);
             final var item = mucUser == null ? null : mucUser.getItem();
             if (item != null) {
-                return itemToUser(state.getConversation(), item, from, occupantId);
+                return itemToUser(
+                        state.getConversation(), item, from, occupantId, Collections.emptySet());
             }
         }
         if (occupantId != null) {
@@ -1426,14 +1455,15 @@ public class MultiUserChatManager extends AbstractManager {
     public static MucOptions.User itemToUser(
             final Conversation conference,
             final im.conversations.android.xmpp.model.muc.Item item) {
-        return itemToUser(conference, item, null, null);
+        return itemToUser(conference, item, null, null, Collections.emptySet());
     }
 
     public static MucOptions.User itemToUser(
             final Conversation conference,
             final im.conversations.android.xmpp.model.muc.Item item,
             final Jid from,
-            final String occupantId) {
+            final String occupantId,
+            final Set<DynamicTag.Hat> hats) {
         final var affiliation = item.getAffiliation();
         final var role = item.getRole();
         final Jid fullAddress;
@@ -1446,7 +1476,13 @@ public class MultiUserChatManager extends AbstractManager {
         }
         final Jid realJid = Jid.Invalid.getNullForInvalid(item.getAttributeAsJid("jid"));
         return new MucOptions.User(
-                conference.getMucOptions(), fullAddress, realJid, occupantId, role, affiliation);
+                conference.getMucOptions(),
+                fullAddress,
+                realJid,
+                occupantId,
+                role,
+                affiliation,
+                hats);
     }
 
     private static Jid ofNick(final Conversation conversation, final String nick) {

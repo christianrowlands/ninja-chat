@@ -326,17 +326,8 @@
     <string name="enable_all_accounts">Alle accounts inschakelen</string>
     <string name="disable_all_accounts">Alle accounts uitschakelen</string>
     <string name="perform_action_with">Actie uitvoeren met</string>
-    <string name="no_affiliation">Geen aansluiting</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Verstoteling</string>
     <string name="member">Lid</string>
-    <string name="advanced_mode">Geavanceerde modus</string>
-    <string name="grant_membership">Lidprivileges verlenen</string>
-    <string name="remove_membership">Lidprivileges intrekken</string>
-    <string name="grant_admin_privileges">Beheerdersprivileges verlenen</string>
-    <string name="remove_admin_privileges">Beheerdersprivileges ontzeggen</string>
-    <string name="grant_owner_privileges">Eigenaarsprivileges verlenen</string>
-    <string name="remove_owner_privileges">Eigenaarsprivileges intrekken</string>
     <string name="remove_from_room">Verwijderen uit groepsgesprek</string>
     <string name="remove_from_channel">Verwijderen uit kanaal</string>
     <string name="could_not_change_affiliation">Kan de aansluiting van %s niet wijzigen</string>
@@ -409,7 +400,6 @@
     <string name="account_status_bind_failure">Bindingsfout</string>
     <string name="server_info_broken">Gebroken</string>
     <string name="pref_presence_settings">Aanwezigheid</string>
-    <string name="pref_treat_vibrate_as_silent">Trillen behandelen als stille modus</string>
     <string name="pref_show_connection_options">Hostname &amp; poort</string>
     <string name="pref_show_connection_options_summary">Uitgebreide verbindingsinstellingen weergeven bij het instellen van een account</string>
     <string name="hostname_example">xmpp.voorbeeld.be</string>
@@ -503,9 +493,7 @@
     <string name="verified_fingerprints">Geverifieerde vingerafdrukken</string>
     <string name="use_camera_icon_to_scan_barcode">Gebruik de camera om de streepjescode van een contact te scannen</string>
     <string name="please_wait_for_keys_to_be_fetched">Wacht tot de sleutels zijn opgehaald</string>
-    <string name="share_as_barcode">Delen als streepjescode</string>
     <string name="share_as_uri">Delen als XMPP-URI</string>
-    <string name="share_as_http">Delen als HTTP-link</string>
     <string name="pref_blind_trust_before_verification">Blindelings vertrouwen vóór verificatie</string>
     <string name="not_trusted">Onvertrouwd</string>
     <string name="invalid_barcode">Ongeldige QR-code</string>
@@ -870,7 +858,6 @@
     <string name="download_failed_invalid_file">Download mislukt: Ongeldig bestand</string>
     <string name="pref_away_when_screen_off">Afwezig wanneer het apparaat is vergrendeld</string>
     <string name="pref_away_when_screen_off_summary">Afwezig melden als het apparaat vergrendeld is</string>
-    <string name="pref_dnd_on_silent_mode_summary">Bezet melden als het apparaat in stille modus is</string>
     <string name="shared_text_with_x">Tekst gedeeld met %s</string>
     <string name="error_no_keys_to_trust_presence">Er zijn geen bruikbare sleutels beschikbaar voor dit contact.
 \nZorg ervoor dat jullie allebei een aanwezigheidsabonnement hebben.</string>
@@ -879,7 +866,6 @@
     <string name="shared_images_with_x">Afbeeldingen gedeeld met %s</string>
     <string name="hostname_or_onion">Server- of .onion-adres</string>
     <string name="pref_enter_is_send_summary">Gebruik de Enter-toets om een bericht te verzenden. Je kunt altijd Ctrl + Enter gebruiken om een bericht te verzenden, zelfs als deze optie is uitgeschakeld.</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Bezet melden als het apparaat op trillen staat</string>
     <string name="clear_other_devices_desc">Weet je zeker dat je alle andere apparaten uit de OMEMO-aankondiging wilt verwijderen? De volgende keer dat je apparaten verbinding maken, zullen ze zichzelf opnieuw aankondigen, maar ontvangen ze mogelijk geen berichten die ondertussen zijn verzonden.</string>
     <string name="account_status_host_unknown">Niet verantwoordelijk voor domein</string>
     <string name="title_undo_swipe_out_chat">Chat gearchiveerd</string>
@@ -889,7 +875,6 @@
     <string name="welcome_header_quicksy">Welkom bij Quicksy!</string>
     <string name="agree_and_continue">Akkoord en doorgaan</string>
     <string name="quicksy_wants_your_consent">Quicksy vraagt toestemming om je gegevens te gebruiken</string>
-    <string name="pref_dnd_on_silent_mode">Bezet in stille modus</string>
     <string name="no_storage_permission">Verleen %1$s toegang tot externe opslag</string>
     <string name="no_camera_permission">Verleen %1$s toegang tot de camera</string>
     <string name="pref_picture_compression_summary">Tip: Gebruik \'Bestand kiezen\' in plaats van \'Afbeelding kiezen\' om afzonderlijke afbeeldingen ongecomprimeerd te verzenden, ongeacht deze instelling.</string>

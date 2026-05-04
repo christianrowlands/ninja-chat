@@ -4,28 +4,20 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-
-import java.util.List;
-
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityPickServerBinding;
 import eu.siacs.conversations.entities.Account;
+import java.util.List;
 
 public class PickServerActivity extends XmppActivity {
 
     @Override
-    protected void refreshUiReal() {
-
-    }
+    protected void refreshUiReal() {}
 
     @Override
-    protected void onBackendConnected() {
-
-    }
-
+    protected void onBackendConnected() {}
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -57,41 +49,42 @@ public class PickServerActivity extends XmppActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         super.onCreate(savedInstanceState);
-        ActivityPickServerBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_pick_server);
+        ActivityPickServerBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.activity_pick_server);
         Activities.setStatusAndNavigationBarColors(this, binding.getRoot());
         setSupportActionBar(binding.toolbar);
         configureActionBar(getSupportActionBar());
-        binding.useCim.setOnClickListener(v -> {
-            final Intent intent = new Intent(this, MagicCreateActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            addInviteUri(intent);
-            startActivity(intent);
-        });
-        binding.useOwnProvider.setOnClickListener(v -> {
-            List<Account> accounts = xmppConnectionService.getAccounts();
-            Intent intent = new Intent(this, EditAccountActivity.class);
-            intent.putExtra(EditAccountActivity.EXTRA_FORCE_REGISTER, true);
-            if (accounts.size() == 1) {
-                intent.putExtra("jid", accounts.get(0).getJid().asBareJid().toString());
-                intent.putExtra("init", true);
-            } else if (!accounts.isEmpty()) {
-                intent = new Intent(this, ManageAccountActivity.class);
-            }
-            addInviteUri(intent);
-            startActivity(intent);
-        });
-
+        binding.useCim.setOnClickListener(
+                v -> {
+                    final Intent intent = new Intent(this, MagicCreateActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    addInviteUri(intent);
+                    startActivity(intent);
+                });
+        binding.useOwnProvider.setOnClickListener(
+                v -> {
+                    List<Account> accounts = xmppConnectionService.getAccounts();
+                    Intent intent = new Intent(this, EditAccountActivity.class);
+                    intent.putExtra(EditAccountActivity.EXTRA_FORCE_REGISTER, true);
+                    if (accounts.size() == 1) {
+                        intent.putExtra("jid", accounts.get(0).getJid().asBareJid().toString());
+                        intent.putExtra("init", true);
+                    } else if (!accounts.isEmpty()) {
+                        intent = new Intent(this, ManageAccountActivity.class);
+                    }
+                    addInviteUri(intent);
+                    startActivity(intent);
+                });
     }
 
-    public void addInviteUri(Intent intent) {
-        StartConversationActivity.addInviteUri(intent, getIntent());
+    public void addInviteUri(final Intent intent) {
+        StartConversationActivity.addInviteUri(intent, this);
     }
 
-    public static void launch(AppCompatActivity activity) {
+    public static void launch(final AppCompatActivity activity) {
         Intent intent = new Intent(activity, PickServerActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);
     }
-
 }

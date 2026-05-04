@@ -1,0 +1,4 @@
+* Möglichkeit zur Löschung von Nachrichten, wenn jemand aus einem öffentlichen Kanal ausgeschlossen wird
+* Überarbeitung des QR-Code-Scannens und der URI-Verarbeitung
+* Play Store-Variante: Keine Verwendung der Google-Bibliothek mehr, sondern direkte Anbindung an Google Play Services über IPC
+* Rotationsprobleme im Tablet-Modus behoben

@@ -10,8 +10,8 @@ import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import im.conversations.android.xmpp.model.bookmark2.Extensions;
 import im.conversations.android.xmpp.model.roster.Group;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.immutables.value.Value;
 import org.jspecify.annotations.Nullable;
 
@@ -79,12 +79,12 @@ public abstract class Bookmark implements ListItem {
 
     @Override
     @Value.Derived
-    public Collection<Tag> getTags() {
+    public List<DynamicTag> getTags() {
         final var extensions = this.getExtensions();
         if (extensions == null) {
             return Collections.emptyList();
         }
-        return Tag.of(Group.getGroups(extensions.getExtensions(Group.class)));
+        return DynamicTag.RosterGroup.of(Group.getGroups(extensions.getExtensions(Group.class)));
     }
 
     public static String nickOfAddress(final Account account, final Jid address) {

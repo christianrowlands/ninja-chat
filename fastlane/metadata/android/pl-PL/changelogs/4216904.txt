@@ -1,0 +1,1 @@
+* Naprawienie logowania do Prosody 0.12

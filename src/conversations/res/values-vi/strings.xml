@@ -15,6 +15,5 @@
     <string name="improperly_formatted_provisioning">Mã cung cấp sai định dạng</string>
     <string name="tap_share_button_send_invite">Nhấn nút chia sẻ để gửi đến liên hệ của bạn một lời mời vào “%1$s”.</string>
     <string name="if_contact_is_nearby_use_qr">Nếu liên hệ của bạn đang ở gần bên bạn, họ có thể quét mã ở dưới để chấp nhận lời mời của bạn.</string>
-    <string name="easy_invite_share_text">Hãy tham gia vào “%1$s” và trò chuyện với tôi: %2$s</string>
     <string name="share_invite_with">Chia sẻ lời mời với…</string>
 </resources>

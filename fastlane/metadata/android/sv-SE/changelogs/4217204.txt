@@ -1,0 +1,3 @@
+* Visa varning i chatten om kontakten befinner sig i en annan tidszon och det är natt för dem
+* Visa varning i chatten om kontakten är i stör ej
+* Omstrukturera automatisk hantering av stör ej (baserat på systemets stör ej)

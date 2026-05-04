@@ -148,12 +148,12 @@
     <string name="error_security_exception">Апликација којом си поделио/ла овај фајл није дала неопходне дозволе.</string>
     <string name="account_status_unknown">Непознато</string>
     <string name="account_status_disabled">Привремено искључен</string>
-    <string name="account_status_online">На вези</string>
+    <string name="account_status_online">На мрежи</string>
     <string name="account_status_connecting">Повезивање\u2026</string>
-    <string name="account_status_offline">Није на вези</string>
+    <string name="account_status_offline">Ван мреже</string>
     <string name="account_status_unauthorized">Неовлашћен</string>
     <string name="account_status_not_found">Сервер није пронађен</string>
-    <string name="account_status_no_internet">Не постоји веза</string>
+    <string name="account_status_no_internet">Нема интернета</string>
     <string name="account_status_regis_fail">Регистрација није успела</string>
     <string name="account_status_regis_conflict">Корисничко име је већ у употреби</string>
     <string name="account_status_regis_success">Регистрација завршена</string>
@@ -366,17 +366,8 @@
     <string name="enable_all_accounts">Укључи све налоге</string>
     <string name="disable_all_accounts">Искључи све налоге</string>
     <string name="perform_action_with">Изврши радњу користећи</string>
-    <string name="no_affiliation">Без припадности</string>
-    <string name="no_role">Није на вези</string>
     <string name="outcast">Забрањен/а</string>
     <string name="member">Члан</string>
-    <string name="advanced_mode">Напредни режим</string>
-    <string name="grant_membership">Одобри чланске привилегије</string>
-    <string name="remove_membership">Укини чланске привилегије</string>
-    <string name="grant_admin_privileges">Одобри админ. привилегије</string>
-    <string name="remove_admin_privileges">Одобри админ. привилегије</string>
-    <string name="grant_owner_privileges">Одобри власничке привилегије</string>
-    <string name="remove_owner_privileges">Укини власничке привилегије</string>
     <string name="remove_from_room">Уклони из групне преписке</string>
     <string name="remove_from_channel">Уклони из канала</string>
     <string name="could_not_change_affiliation">Није могуће променити припадност за %s</string>
@@ -408,7 +399,7 @@
     <string name="avatar_has_been_published">Аватар је објављен!</string>
     <string name="sending_x_file">Шаљем %s</string>
     <string name="offering_x_file">Нудим %s</string>
-    <string name="hide_offline">Сакриј неповезане</string>
+    <string name="hide_offline">Сакриј ван мреже</string>
     <string name="contact_is_typing">%s куца…</string>
     <string name="contact_has_stopped_typing">%s је престао/ла да куца</string>
     <string name="contacts_are_typing">%s куцају…</string>
@@ -455,10 +446,6 @@
     <string name="pref_presence_settings">Присутност</string>
     <string name="pref_away_when_screen_off">Одсутан/на кад је уређај закључан</string>
     <string name="pref_away_when_screen_off_summary">Прикажи ме одсутним/ом када је уређај закључан</string>
-    <string name="pref_dnd_on_silent_mode">Заузет/а у нечујном режиму</string>
-    <string name="pref_dnd_on_silent_mode_summary">Прикажи ме заузетим/ом у нечујном режиму</string>
-    <string name="pref_treat_vibrate_as_silent">Третирај вибрацију као нечујни режим</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Прикажи ме заузетим/ом у режиму вибрације</string>
     <string name="pref_show_connection_options">Назив сервера и порт</string>
     <string name="pref_show_connection_options_summary">Прикажи додатна подешавања везе при отварању налога</string>
     <string name="hostname_example">xmpp.primer.com</string>
@@ -525,10 +512,10 @@
     <string name="pref_manually_change_presence_summary">Постави присутност при измени своје статусне поруке.</string>
     <string name="status_message">Статусна порука</string>
     <string name="presence_chat">Слободан/на за преписку</string>
-    <string name="presence_online">На вези</string>
+    <string name="presence_online">На мрежи</string>
     <string name="presence_away">Одсутан/на</string>
     <string name="presence_xa">Недоступан/на</string>
-    <string name="presence_dnd">Заузет/а</string>
+    <string name="presence_dnd">Не узнемиравај</string>
     <string name="secure_password_generated">Јака лозинка је направљена</string>
     <string name="device_does_not_support_battery_op">Твој уређај не подржава искључивање оптимизације батерије</string>
     <string name="registration_please_wait">Регистрација није успела: покушај поново касније</string>
@@ -578,9 +565,7 @@
     <string name="verified_fingerprints">Оверени отисци</string>
     <string name="use_camera_icon_to_scan_barcode">Употреби камеру да очиташ QR кôд контакта</string>
     <string name="please_wait_for_keys_to_be_fetched">Сачекај да се добаве кључеви</string>
-    <string name="share_as_barcode">Подели као QR кôд</string>
-    <string name="share_as_uri">Подели као XMPP линк</string>
-    <string name="share_as_http">Подели као HTTP линк</string>
+    <string name="share_as_uri">Подели XMPP линк</string>
     <string name="pref_blind_trust_before_verification">Слепо одобри пре овере</string>
     <string name="not_trusted">Неодобрен</string>
     <string name="invalid_barcode">Неисправан QR кôд</string>
@@ -628,7 +613,7 @@
     <string name="received_message_from_stranger">Примљена порука од непознате особе</string>
     <string name="block_stranger">Блокирај непознату особу</string>
     <string name="block_entire_domain">Блокирај читав домен</string>
-    <string name="online_right_now">на вези сада</string>
+    <string name="online_right_now">на мрежи сада</string>
     <string name="retry_decryption">Покушај дешифровање поново</string>
     <string name="session_failure">Неуспех сесије</string>
     <string name="account_status_regis_web">Сервер захтева регистрацију на сајту</string>
@@ -637,7 +622,7 @@
     <string name="yesterday">Јуче</string>
     <string name="server_info_partial">делимично</string>
     <string name="attach_record_video">Сними видео</string>
-    <string name="copy_to_clipboard">Копирај у клипборд</string>
+    <string name="copy_to_clipboard">Копирај</string>
     <string name="message_copied_to_clipboard">Порука копирана у клипборд</string>
     <string name="message">Порука</string>
     <string name="draft">Нацрт:</string>
@@ -738,7 +723,7 @@
         <item quantity="few">Поруке нису могле да се испоруче</item>
         <item quantity="other">Порука није могло да се испоручи</item>
     </plurals>
-    <string name="pref_backup_summary">Направи једну, Закажи аутоматске</string>
+    <string name="pref_backup_summary">Направи једну, Закажи аутоматске, Одреди локацију</string>
     <string name="pref_create_backup_one_off_summary">Направи једну резервну копију</string>
     <string name="pref_backup_recurring">Аутоматске резервне копије</string>
     <string name="pref_fullscreen_notification">Обавештења преко целог екрана</string>
@@ -1197,4 +1182,27 @@
     </plurals>
     <string name="server_info_stanzas_rx_tx">Станце (rx/tx)</string>
     <string name="server_info_stanzas_rx_tx_push">Станце (rx/tx/push)</string>
+    <string name="share_invitation">Подели позивницу</string>
+    <string name="publish_qr_code">Објави QR кôд</string>
+    <string name="give_membership">Додели чланство</string>
+    <string name="remove_membership">Одузми чланство</string>
+    <string name="make_admin">Додели админ привилегије</string>
+    <string name="dismiss_as_admin">Одузми админ привилегије</string>
+    <string name="make_owner">Додели привилегије власника</string>
+    <string name="dismiss_as_owner">Одузми привилегије власника</string>
+    <string name="account_status_airplane_mode">Авионски режим</string>
+    <string name="account_status_regis_invalid_captcha">Неисправан CAPTCHA</string>
+    <string name="its_time_for_contact">Сад је ^1 за ^2</string>
+    <string name="backup_and_restore">Резервна копија и Враћање</string>
+    <string name="pref_import_backup_summary">Одабери резервну копију да вратиш податке</string>
+    <string name="pref_category_backup_storage">Складиште</string>
+    <string name="pref_entity_time_summary">Подели своје тренутно време са контактима како би видео њихово локално време.</string>
+    <string name="pref_entity_time">Подели локално време</string>
+    <string name="contact_has_paused_their_notifications">%s је паузирао/ла своја обавештења</string>
+    <string name="pref_sync_system_dnd">Синхронизуј системски DND</string>
+    <string name="pref_sync_system_dnd_summary">Аутоматски подеси статус на \"Не узнемиравај\" када је Android DND режим активан.</string>
+    <string name="pref_include_silent_modes">Обухвати и нечујне режиме</string>
+    <string name="pref_include_silent_modes_summary">Такође шаљи \"Не узнемиравај\" и када су обавештења утишана или је телефон на вибрацији.</string>
+    <string name="presence_offline">Ван мреже</string>
+    <string name="rtp_state_no_internet">Нема интернета</string>
 </resources>

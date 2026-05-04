@@ -12,6 +12,5 @@
     <string name="improperly_formatted_provisioning">Código de abastecimiento formateado incorrectamente</string>
     <string name="tap_share_button_send_invite">Pulsa el botón de compartir para enviar a tu contacto una invitación a %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Si tu contacto está cerca, también puede escanear el código mostrado debajo para aceptar tu invitación.</string>
-    <string name="easy_invite_share_text">Únete a %1$s y chatea conmigo: %2$s</string>
     <string name="share_invite_with">Comparte la invitación con…</string>
 </resources>

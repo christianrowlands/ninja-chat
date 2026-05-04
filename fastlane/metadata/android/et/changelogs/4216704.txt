@@ -1,0 +1,4 @@
+* Kellegi keelamisel avalikust kanalit on nüüd võimalus kustutada tema sõnumid
+* QR-kood skaneerimine ja URI-de käsitlemise uus kood
+* Play Store'i variant: enam ei kasuta Google'i teeke ja liidest otse Google Play teenustega IPC abil
+* Pööramisega seotud vigade parandus tahvlites

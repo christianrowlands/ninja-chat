@@ -1,15 +1,10 @@
 package im.conversations.android.xmpp;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import eu.siacs.conversations.xml.Element;
 import im.conversations.android.xml.XmlElementReader;
 import im.conversations.android.xmpp.model.delay.Delay;
 import im.conversations.android.xmpp.model.stanza.Message;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,9 +24,7 @@ public class DateAndTimeProfilesTest {
      from='juliet@capulet.com/balcony'
      stamp='2002-09-10T23:41:07Z'/>
 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(Delay.class));
-        final var delay = (Delay) element;
+        final var delay = XmlElementReader.read(xml, Delay.class);
         Assert.assertEquals(Instant.ofEpochMilli(1031701267000L), delay.getStamp());
     }
 
@@ -43,9 +36,7 @@ public class DateAndTimeProfilesTest {
      from='juliet@capulet.com/balcony'
      stamp='2002-09-10T23:41:07.123Z'/>
 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(Delay.class));
-        final var delay = (Delay) element;
+        final var delay = XmlElementReader.read(xml, Delay.class);
         Assert.assertEquals(Instant.ofEpochMilli(1031701267123L), delay.getStamp());
     }
 
@@ -72,9 +63,7 @@ public class DateAndTimeProfilesTest {
      from='juliet@capulet.com/balcony'
      stamp='1969-07-21T02:56:15Z'/>
 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(Delay.class));
-        final var delay = (Delay) element;
+        final var delay = XmlElementReader.read(xml, Delay.class);
         Assert.assertEquals(Instant.ofEpochMilli(-14159025000L), delay.getStamp());
     }
 
@@ -86,9 +75,7 @@ public class DateAndTimeProfilesTest {
      from='juliet@capulet.com/balcony'
      stamp='1969-07-20T21:56:15-05:00'/>
 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(Delay.class));
-        final var delay = (Delay) element;
+        final var delay = XmlElementReader.read(xml, Delay.class);
         Assert.assertEquals(Instant.ofEpochMilli(-14159025000L), delay.getStamp());
     }
 }

@@ -355,17 +355,8 @@
     <string name="enable_all_accounts">Povolit všechny účty</string>
     <string name="disable_all_accounts">Vypnout všechny účty</string>
     <string name="perform_action_with">Provést akci s</string>
-    <string name="no_affiliation">Nepřidružený</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Vyloučený</string>
     <string name="member">Člen</string>
-    <string name="advanced_mode">Pokročilý mód</string>
-    <string name="grant_membership">Udělit oprávnění člena</string>
-    <string name="remove_membership">Odebrat oprávnění člena</string>
-    <string name="grant_admin_privileges">Povolit administrátorská oprávnění</string>
-    <string name="remove_admin_privileges">Odebrat administrátorská oprávnění</string>
-    <string name="grant_owner_privileges">Udělit práva vlastníka</string>
-    <string name="remove_owner_privileges">Odebrat práva vlastníka</string>
     <string name="remove_from_room">Odebrat ze skupinového chatu</string>
     <string name="remove_from_channel">Odebrat z kanálu</string>
     <string name="could_not_change_affiliation">Nelze změnit připojení uživatele %s</string>
@@ -446,10 +437,6 @@
     <string name="pref_presence_settings">Dostupnost</string>
     <string name="pref_away_when_screen_off">Pryč při uzamčení zařízení</string>
     <string name="pref_away_when_screen_off_summary">Při uzamčeném zařízení nastaví váš stav na \"pryč\"</string>
-    <string name="pref_dnd_on_silent_mode">Nedostupný při vypnutém zvuku</string>
-    <string name="pref_dnd_on_silent_mode_summary">Při ztišeném vyzvánění označí váš stav jako \"nedostupný\"</string>
-    <string name="pref_treat_vibrate_as_silent">Vibrační mód brát stejně jako tichý</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Při nastavení pouze na vibrace označí váš stav jako \"nedostupný\"</string>
     <string name="pref_show_connection_options">Jméno hostitele a port</string>
     <string name="pref_show_connection_options_summary">Zobrazit rozšířené možnosti připojení při nastavování účtu</string>
     <string name="hostname_example">xmpp.server.cz</string>
@@ -580,9 +567,7 @@
     <string name="verified_fingerprints">Ověřené otisky</string>
     <string name="use_camera_icon_to_scan_barcode">Naskenovat kód kontaktu pomocí fotoaparátu</string>
     <string name="please_wait_for_keys_to_be_fetched">Prosím, počkejte na získání klíčů</string>
-    <string name="share_as_barcode">Sdílet jako čárový kód</string>
     <string name="share_as_uri">Sdílet jako XMPP URI</string>
-    <string name="share_as_http">Sdílet jako HTTP odkaz</string>
     <string name="pref_blind_trust_before_verification">Slepě důvěřovat před ověřením</string>
     <string name="pref_blind_trust_before_verification_summary">Důvěřovat novým zařízením neověřených kontaktů, ale požadovat ruční potvrzení nových zařízení u ověřených kontaktů.</string>
     <string name="not_trusted">Nedůvěryhodný</string>
@@ -1150,4 +1135,5 @@
     <string name="copy_email_address">Kopírovat e-mailovou adresu</string>
     <string name="copied_email_address">E-mailová adresa zkopírována do schránky</string>
     <string name="welcome_header">Začněte používat Conversations</string>
+    <string name="server_invite">Pozvat na server</string>
 </resources>

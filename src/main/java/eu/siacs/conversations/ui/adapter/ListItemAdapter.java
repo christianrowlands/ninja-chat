@@ -1,7 +1,6 @@
 package eu.siacs.conversations.ui.adapter;
 
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,43 +12,41 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
-import com.google.android.material.color.MaterialColors;
-import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ItemContactBinding;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.ListItem;
+import eu.siacs.conversations.ui.BlocklistActivity;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.ui.util.AvatarWorkerTask;
 import eu.siacs.conversations.utils.IrregularUnicodeDetector;
-import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.utils.XEP0392Helper;
 import eu.siacs.conversations.xmpp.Jid;
-import im.conversations.android.xmpp.model.stanza.Presence;
+import im.conversations.android.model.DynamicTag;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
     protected XmppActivity activity;
     private boolean showDynamicTags = false;
-    private OnTagClickedListener mOnTagClickedListener = null;
-    private final View.OnClickListener onTagTvClick =
-            view -> {
-                if (view instanceof TextView tv && mOnTagClickedListener != null) {
-                    final String tag = tv.getText().toString();
-                    mOnTagClickedListener.onTagClicked(tag);
-                }
-            };
+    private final Consumer<DynamicTag> mOnTagClickedListener;
+    private final boolean isBlockNoteworthy;
 
-    public ListItemAdapter(XmppActivity activity, List<ListItem> objects) {
+    public ListItemAdapter(final XmppActivity activity, final List<ListItem> objects) {
+        this(activity, objects, null);
+    }
+
+    public ListItemAdapter(
+            final XmppActivity activity,
+            final List<ListItem> objects,
+            final Consumer<DynamicTag> onTagClickedListener) {
         super(activity, 0, objects);
         this.activity = activity;
+        this.mOnTagClickedListener = onTagClickedListener;
+        this.isBlockNoteworthy = !(activity instanceof BlocklistActivity);
     }
 
     public void refreshSettings() {
@@ -76,65 +73,10 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         }
         // view.setBackground(StyledAttributes.getDrawable(view.getContext(),R.attr.list_item_background));
         final var tags = item.getTags();
-        final boolean hasMetaTags;
-        if (item instanceof Contact contact) {
-            hasMetaTags =
-                    contact.isBlocked()
-                            || contact.getShownStatus() != Presence.Availability.OFFLINE;
+        if ((isBlockNoteworthy && Contact.isNoteworthy(tags)) || this.showDynamicTags) {
+            UserAdapter.setHats(viewHolder.tags, tags, mOnTagClickedListener);
         } else {
-            hasMetaTags = false;
-        }
-        if ((tags.isEmpty() && !hasMetaTags) || !this.showDynamicTags) {
             viewHolder.tags.setVisibility(View.GONE);
-        } else {
-            viewHolder.tags.setVisibility(View.VISIBLE);
-            viewHolder.tags.removeViews(1, viewHolder.tags.getChildCount() - 1);
-            final ImmutableList.Builder<Integer> viewIdBuilder = new ImmutableList.Builder<>();
-            for (final ListItem.Tag tag : tags) {
-                final String name = tag.getName();
-                final TextView tv =
-                        (TextView) inflater.inflate(R.layout.item_tag, viewHolder.tags, false);
-                tv.setText(name);
-                tv.setBackgroundTintList(
-                        ColorStateList.valueOf(
-                                MaterialColors.harmonizeWithPrimary(
-                                        getContext(), XEP0392Helper.rgbFromNick(name))));
-                tv.setOnClickListener(this.onTagTvClick);
-                final int id = ViewCompat.generateViewId();
-                tv.setId(id);
-                viewIdBuilder.add(id);
-                viewHolder.tags.addView(tv);
-            }
-            if (item instanceof Contact contact) {
-                if (contact.isBlocked()) {
-                    final TextView tv =
-                            (TextView) inflater.inflate(R.layout.item_tag, viewHolder.tags, false);
-                    tv.setText(R.string.blocked);
-                    tv.setBackgroundTintList(
-                            ColorStateList.valueOf(
-                                    MaterialColors.harmonizeWithPrimary(
-                                            tv.getContext(),
-                                            ContextCompat.getColor(
-                                                    tv.getContext(), R.color.gray_800))));
-                    final int id = ViewCompat.generateViewId();
-                    tv.setId(id);
-                    viewIdBuilder.add(id);
-                    viewHolder.tags.addView(tv);
-                } else {
-                    final Presence.Availability status = contact.getShownStatus();
-                    if (status != Presence.Availability.OFFLINE) {
-                        final TextView tv =
-                                (TextView)
-                                        inflater.inflate(R.layout.item_tag, viewHolder.tags, false);
-                        UIHelper.setStatus(tv, status);
-                        final int id = ViewCompat.generateViewId();
-                        tv.setId(id);
-                        viewIdBuilder.add(id);
-                        viewHolder.tags.addView(tv);
-                    }
-                }
-            }
-            viewHolder.flowWidget.setReferencedIds(Ints.toArray(viewIdBuilder.build()));
         }
         final Jid jid = item.getAddress();
         if (jid != null) {
@@ -146,14 +88,6 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         viewHolder.name.setText(item.getDisplayName());
         AvatarWorkerTask.loadAvatar(item, viewHolder.avatar, R.dimen.avatar);
         return view;
-    }
-
-    public void setOnTagClickedListener(OnTagClickedListener listener) {
-        this.mOnTagClickedListener = listener;
-    }
-
-    public interface OnTagClickedListener {
-        void onTagClicked(String tag);
     }
 
     private static class ViewHolder {

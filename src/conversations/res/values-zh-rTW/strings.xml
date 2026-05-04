@@ -15,6 +15,5 @@
     <string name="improperly_formatted_provisioning">佈建代碼格式不正確</string>
     <string name="tap_share_button_send_invite">輕觸分享按鍵以向您的聯絡人傳送加入 %1$s 的邀請。</string>
     <string name="if_contact_is_nearby_use_qr">如果您的聯絡人就在附近，他們也可以掃描下面的代碼以接受您的邀請。</string>
-    <string name="easy_invite_share_text">加入 %1$s 與我聊天：%2$s</string>
     <string name="share_invite_with">分享邀請至…</string>
 </resources>

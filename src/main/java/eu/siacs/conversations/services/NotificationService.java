@@ -45,6 +45,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.primitives.Ints;
@@ -80,8 +81,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1893,18 +1896,21 @@ public class NotificationService {
             cancel(ERROR_NOTIFICATION_ID);
             return;
         }
-        final boolean showAllErrors = QuickConversationsService.isConversations();
-        final List<Account> errors = new ArrayList<>();
-        boolean torNotAvailable = false;
-        for (final Account account : mXmppConnectionService.getAccounts()) {
+        final var showAllErrors = QuickConversationsService.isConversations();
+        final var errorBuilder = new ImmutableList.Builder<Account>();
+        final var torNotAvailable = new AtomicBoolean();
+        for (final var account : mXmppConnectionService.getAccounts()) {
             if (account.hasErrorStatus()
                     && account.showErrorNotification()
                     && (showAllErrors
                             || account.getLastErrorStatus() == Account.State.UNAUTHORIZED)) {
-                errors.add(account);
-                torNotAvailable |= account.getStatus() == Account.State.TOR_NOT_AVAILABLE;
+                errorBuilder.add(account);
+                if (account.getStatus() == Account.State.TOR_NOT_AVAILABLE) {
+                    torNotAvailable.set(true);
+                }
             }
         }
+        final var errors = errorBuilder.build();
         if (mXmppConnectionService.foregroundNotificationNeedsUpdatingWhenErrorStateChanges()) {
             try {
                 notify(FOREGROUND_NOTIFICATION_ID, createForegroundNotification());
@@ -1922,7 +1928,8 @@ public class NotificationService {
         } else if (errors.size() == 1) {
             mBuilder.setContentTitle(
                     mXmppConnectionService.getString(R.string.problem_connecting_to_account));
-            mBuilder.setContentText(errors.get(0).getJid().asBareJid().toString());
+            mBuilder.setContentText(
+                    Iterables.getOnlyElement(errors).getJid().asBareJid().toString());
         } else {
             mBuilder.setContentTitle(
                     mXmppConnectionService.getString(R.string.problem_connecting_to_accounts));
@@ -1945,7 +1952,7 @@ public class NotificationService {
                     "not including some actions in error notification because service has died",
                     e);
         }
-        if (torNotAvailable) {
+        if (torNotAvailable.get()) {
             if (TorServiceUtils.isOrbotInstalled(mXmppConnectionService)) {
                 mBuilder.addAction(
                         R.drawable.ic_play_circle_24dp,
@@ -1982,7 +1989,12 @@ public class NotificationService {
             intent = new Intent(mXmppConnectionService, AccountUtils.MANAGE_ACCOUNT_ACTIVITY);
         } else {
             intent = new Intent(mXmppConnectionService, EditAccountActivity.class);
-            intent.putExtra("jid", errors.get(0).getJid().asBareJid().toString());
+            intent.putExtra(
+                    "jid",
+                    Objects.requireNonNull(Iterables.getFirst(errors, null))
+                            .getJid()
+                            .asBareJid()
+                            .toString());
             intent.putExtra(EditAccountActivity.EXTRA_OPENED_FROM_NOTIFICATION, true);
         }
         mBuilder.setContentIntent(

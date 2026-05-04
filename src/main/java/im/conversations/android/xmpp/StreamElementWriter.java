@@ -37,21 +37,26 @@ public class StreamElementWriter extends BufferedWriter {
 
     public void write(final Tag tag, final String namespace) throws IOException {
         this.write('<');
-        if (tag.getType() == Tag.Type.END) {
+        if (tag instanceof Tag.End) {
             this.write('/');
         }
 
-        this.write(tag.getName());
+        if (tag instanceof Tag.IdentifiableTag identifiableTag) {
+            this.write(identifiableTag.getId().name());
+        } else if (tag instanceof Tag.No no) {
+            this.write(no.getText());
+        }
 
-        if (tag.getType() == Tag.Type.START || tag.getType() == Tag.Type.EMPTY) {
-            if (tag.getNamespace() != null && !Objects.equals(tag.getNamespace(), namespace)) {
+        if (tag instanceof Tag.StartOrEmpty startOrEmpty) {
+            if (startOrEmpty.getId().namespace() != null
+                    && !Objects.equals(startOrEmpty.getId().namespace(), namespace)) {
                 this.write(' ');
                 this.write("xmlns=");
                 this.write('"');
-                this.write(tag.getNamespace());
+                this.write(startOrEmpty.getId().namespace());
                 this.write('"');
             }
-            for (final var entry : tag.getAttributes().entrySet()) {
+            for (final var entry : startOrEmpty.getAttributes().entrySet()) {
                 this.write(' ');
                 this.write(entry.getKey());
                 this.write('=');
@@ -60,7 +65,7 @@ public class StreamElementWriter extends BufferedWriter {
                 this.write('"');
             }
         }
-        if (tag.getType() == Tag.Type.EMPTY) {
+        if (tag instanceof Tag.Empty) {
             this.write('/');
         }
         this.write('>');
@@ -78,12 +83,10 @@ public class StreamElementWriter extends BufferedWriter {
         final var content = element.getContent();
         final var children = element.getChildren();
         if (content == null && children.isEmpty()) {
-            final Tag emptyTag = Tag.empty(element.getName(), element.getNamespace());
-            emptyTag.setAttributes(element.getAttributes());
+            final Tag emptyTag = new Tag.Empty(id(element), element.getAttributes());
             this.write(emptyTag, namespace);
         } else {
-            final Tag startTag = Tag.start(element.getName(), element.getNamespace());
-            startTag.setAttributes(element.getAttributes());
+            final Tag startTag = new Tag.Start(id(element), element.getAttributes());
             this.write(startTag, namespace);
             if (content != null) {
                 this.writeEncoded(content);
@@ -92,9 +95,13 @@ public class StreamElementWriter extends BufferedWriter {
                     this.write(child, element.getNamespace());
                 }
             }
-            final Tag endTag = Tag.end(element.getName());
+            final Tag endTag = new Tag.End(id(element));
             this.write(endTag, namespace);
         }
+    }
+
+    private static ExtensionFactory.Id id(final Element element) {
+        return new ExtensionFactory.Id(element.getName(), element.getNamespace());
     }
 
     private void writeEncoded(final String text) throws IOException {

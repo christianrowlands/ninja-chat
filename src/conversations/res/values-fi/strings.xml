@@ -12,5 +12,4 @@
     <string name="if_contact_is_nearby_use_qr">Jos henkilö on lähellä, hän voi myös hyväksyä kutsun lukemalla allaolevan koodin.</string>
     <string name="share_invite_with">Jaa kutsu sovelluksella…</string>
     <string name="tap_share_button_send_invite">Napauta jakamispainiketta lähettääksesi kontaktillesi kutsun %1$s:een.</string>
-    <string name="easy_invite_share_text">Liity %1$s:hen ja pikakeskustele kanssani: %2$s</string>
 </resources>

@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.13.2'
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:8.2.1"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:8.4.0"
         classpath 'com.google.gms:google-services:4.4.2'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.sharetarget:sharetarget:1.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
     implementation 'androidx.viewpager:viewpager:1.1.0'
-    implementation 'androidx.work:work-runtime:2.11.1'
+    implementation 'androidx.work:work-runtime:2.11.2'
     implementation 'com.github.open-keychain.open-keychain:openpgp-api:v5.7.1'
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.google.guava:guava:33.5.0-android'
@@ -84,7 +84,7 @@ dependencies {
     implementation 'io.deepmedia.community:transcoder-android:0.11.2'
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
-    implementation 'net.fellbaum:jemoji:1.7.5'
+    implementation 'net.fellbaum:jemoji:1.7.6'
     implementation 'org.bouncycastle:bcmail-jdk18on:1.83'
     implementation 'org.conscrypt:conscrypt-android:2.5.3'
     implementation 'org.hsluv:hsluv:1.0'
@@ -95,7 +95,7 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     conversationsPlaystoreImplementation 'com.android.installreferrer:installreferrer:2.2'
-    quicksyImplementation 'io.michaelrocks:libphonenumber-android:9.0.22'
+    quicksyImplementation 'io.michaelrocks:libphonenumber-android:9.0.26'
     quicksyImplementation "dev.paseto:jpaseto-api:0.7.0"
     quicksyImplementation "dev.paseto:jpaseto-impl:0.7.0"
     quicksyImplementation "dev.paseto:jpaseto-gson:0.7.0"
@@ -128,8 +128,8 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 36
-        versionCode 42167
-        versionName "2.19.10"
+        versionCode 42173
+        versionName "2.19.15"
         archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
@@ -179,6 +179,19 @@ android {
             resValue "string", "app_name", appName
             buildConfigField "String", "APP_NAME", "\"$appName\""
             buildConfigField "String", "PRIVACY_POLICY", "\"https://quicksy.im/privacy.htm\""
+            def propsFile = rootProject.file('quicksy-auth-secret.properties')
+            if (propsFile.exists()) {
+                def props = new Properties()
+                props.load(new FileInputStream(propsFile))
+                def key = props.getProperty('QUICKSY_AUTHENTICATION_SECRET')
+                if (key != null) {
+                    buildConfigField "String", "QUICKSY_AUTHENTICATION_SECRET",  "\"${key}\""
+                } else {
+                    buildConfigField "String", "QUICKSY_AUTHENTICATION_SECRET", "null"
+                }
+            } else {
+                buildConfigField "String", "QUICKSY_AUTHENTICATION_SECRET", "null"
+            }
         }
 
         conversations {

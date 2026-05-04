@@ -11,6 +11,5 @@
     <string name="improperly_formatted_provisioning">Kode provisioning tidak diformat dengan benar</string>
     <string name="tap_share_button_send_invite">Klik tombol bagikan untuk mengirim undangan ke kontak Anda %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Jika kontak Anda di dekat Anda, mereka juga dapat memindai kode di bawah ini untuk menerima undangan Anda</string>
-    <string name="easy_invite_share_text">Bergabung %1$s dan mengobrol dengan saya: %2$s</string>
     <string name="share_invite_with">Bagikan undangan dengan...</string>
 </resources>

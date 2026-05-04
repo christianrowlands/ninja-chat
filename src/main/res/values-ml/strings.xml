@@ -193,9 +193,7 @@
     <string name="change_password">രഹസ്യവാക്ക് മാറ്റുക</string>
     <string name="current_password">നിലവിലെ രഹസ്യവാക്ക്</string>
     <string name="new_password">പുതിയ രഹസ്യവാക്ക്</string>
-    <string name="no_role">ഓഫ്‌ലൈൻ</string>
     <string name="member">അംഗം</string>
-    <string name="advanced_mode">വിപുലമായ മോഡ്</string>
     <string name="remove_from_room">ഗ്രൂപ്പ് ചാറ്റിൽ നിന്ന് മാറ്റുക</string>
     <string name="remove_from_channel">ചാനലിൽ നിന്ന് നീക്കം ചെയ്യുക</string>
     <string name="ban_now">ഇപ്പോൾ നിരോധിക്കൂ</string>

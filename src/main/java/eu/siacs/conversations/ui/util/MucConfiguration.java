@@ -22,7 +22,7 @@ public class MucConfiguration {
         this.options = options;
     }
 
-    public static MucConfiguration get(Context context, boolean advanced, MucOptions mucOptions) {
+    public static MucConfiguration get(final Context context, final MucOptions mucOptions) {
         if (mucOptions.isPrivateAndNonAnonymous()) {
             String[] names =
                     new String[] {
@@ -43,44 +43,27 @@ public class MucConfiguration {
             final String[] names;
             final boolean[] values;
             final Option[] options;
-            if (advanced) {
-                names =
-                        new String[] {
-                            context.getString(R.string.non_anonymous),
-                            context.getString(R.string.allow_participants_to_edit_subject),
-                            context.getString(R.string.moderated),
-                            context.getString(R.string.allow_private_messages)
-                        };
-                values =
-                        new boolean[] {
-                            mucOptions.nonanonymous(),
-                            mucOptions.participantsCanChangeSubject(),
-                            mucOptions.moderated(),
-                            mucOptions.allowPmRaw()
-                        };
-                options =
-                        new Option[] {
-                            new Option("muc#roomconfig_whois", "anyone", "moderators"),
-                            new Option("muc#roomconfig_changesubject"),
-                            new Option("muc#roomconfig_moderatedroom"),
-                            new Option("muc#roomconfig_allowpm", "anyone", "moderators"),
-                        };
-            } else {
-                names =
-                        new String[] {
-                            context.getString(R.string.non_anonymous),
-                            context.getString(R.string.allow_participants_to_edit_subject),
-                        };
-                values =
-                        new boolean[] {
-                            mucOptions.nonanonymous(), mucOptions.participantsCanChangeSubject()
-                        };
-                options =
-                        new Option[] {
-                            new Option("muc#roomconfig_whois", "anyone", "moderators"),
-                            new Option("muc#roomconfig_changesubject")
-                        };
-            }
+            names =
+                    new String[] {
+                        context.getString(R.string.non_anonymous),
+                        context.getString(R.string.allow_participants_to_edit_subject),
+                        context.getString(R.string.moderated),
+                        context.getString(R.string.allow_private_messages)
+                    };
+            values =
+                    new boolean[] {
+                        mucOptions.nonanonymous(),
+                        mucOptions.participantsCanChangeSubject(),
+                        mucOptions.moderated(),
+                        mucOptions.allowPmRaw()
+                    };
+            options =
+                    new Option[] {
+                        new Option("muc#roomconfig_whois", "anyone", "moderators"),
+                        new Option("muc#roomconfig_changesubject"),
+                        new Option("muc#roomconfig_moderatedroom"),
+                        new Option("muc#roomconfig_allowpm", "anyone", "moderators"),
+                    };
             return new MucConfiguration(R.string.channel_options, names, values, options);
         }
     }

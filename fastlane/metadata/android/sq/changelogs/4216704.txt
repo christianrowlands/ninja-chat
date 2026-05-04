@@ -1,0 +1,4 @@
+* Ofro të fshihen mesazhe, kur dëbohet dikush në një kanal publik
+* Ripunim skanimi kodi QR dhe trajtim URI-sh
+* Lloj “Play Store”: Resht së përdoruri bibliotekë dhe ndërfaqe Google drejtpërdrejt me Google Play Service përmes IPC-je
+* Ndreqje problemesh rrotullimi nën mënyrën tablet

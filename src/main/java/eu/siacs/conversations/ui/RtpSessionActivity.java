@@ -93,6 +93,7 @@ public class RtpSessionActivity extends XmppActivity
                     RtpEndUserState.DECLINED_OR_BUSY,
                     RtpEndUserState.CONTACT_OFFLINE,
                     RtpEndUserState.CONNECTIVITY_ERROR,
+                    RtpEndUserState.NO_INTERNET,
                     RtpEndUserState.CONNECTIVITY_LOST_ERROR,
                     RtpEndUserState.RETRACTED);
     private static final List<RtpEndUserState> STATES_SHOWING_HELP_BUTTON =
@@ -877,6 +878,7 @@ public class RtpSessionActivity extends XmppActivity
             case DECLINED_OR_BUSY -> setTitle(R.string.rtp_state_declined_or_busy);
             case CONTACT_OFFLINE -> setTitle(R.string.rtp_state_contact_offline);
             case CONNECTIVITY_ERROR -> setTitle(R.string.rtp_state_connectivity_error);
+            case NO_INTERNET -> setTitle(R.string.rtp_state_no_internet);
             case CONNECTIVITY_LOST_ERROR -> setTitle(R.string.rtp_state_connectivity_lost_error);
             case RETRACTED -> setTitle(R.string.rtp_state_retracted);
             case APPLICATION_ERROR -> setTitle(R.string.rtp_state_application_failure);
@@ -928,7 +930,8 @@ public class RtpSessionActivity extends XmppActivity
     }
 
     private void updateSupportWarning(final RtpEndUserState state, final Contact contact) {
-        if (state == RtpEndUserState.CONNECTIVITY_ERROR
+        if (Arrays.asList(RtpEndUserState.CONNECTIVITY_ERROR, RtpEndUserState.NO_INTERNET)
+                        .contains(state)
                 && getResources().getBoolean(R.bool.is_portrait_mode)) {
             binding.supportWarning.setVisibility(
                     RtpCapability.checkWithFallback(contact) == RtpCapability.Capability.NONE
@@ -996,6 +999,7 @@ public class RtpSessionActivity extends XmppActivity
             this.binding.acceptCall.setVisibility(View.VISIBLE);
         } else if (asList(
                         RtpEndUserState.CONNECTIVITY_ERROR,
+                        RtpEndUserState.NO_INTERNET,
                         RtpEndUserState.CONNECTIVITY_LOST_ERROR,
                         RtpEndUserState.APPLICATION_ERROR,
                         RtpEndUserState.RETRACTED,
@@ -1295,6 +1299,7 @@ public class RtpSessionActivity extends XmppActivity
                 if (Arrays.asList(
                                 RtpEndUserState.APPLICATION_ERROR,
                                 RtpEndUserState.CONNECTIVITY_ERROR,
+                                RtpEndUserState.NO_INTERNET,
                                 RtpEndUserState.SECURITY_ERROR)
                         .contains(state)) {
                     binding.pipWarning.setVisibility(View.VISIBLE);

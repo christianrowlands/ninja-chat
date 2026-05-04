@@ -4,23 +4,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.common.base.Strings;
+import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.xmpp.Jid;
 import okhttp3.HttpUrl;
 
 public class EasyOnboardingInvite implements Parcelable {
 
     private final Jid domain;
-    private final String uri;
+    private final MiniUri.Xmpp uri;
     private final HttpUrl landingUrl;
 
     protected EasyOnboardingInvite(final Parcel in) {
         this.domain = Jid.ofDomain(in.readString());
-        this.uri = in.readString();
+        if (MiniUri.tryParse(in.readString()) instanceof MiniUri.Xmpp xmpp) {
+            this.uri = xmpp;
+        } else {
+            throw new IllegalStateException("Illegal XMPP uri in parcel");
+        }
         final var landingUrl = in.readString();
         this.landingUrl = Strings.isNullOrEmpty(landingUrl) ? null : HttpUrl.parse(landingUrl);
     }
 
-    public EasyOnboardingInvite(@NonNull final Jid domain, @NonNull final String uri) {
+    public EasyOnboardingInvite(@NonNull final Jid domain, @NonNull final MiniUri.Xmpp uri) {
         this.domain = domain;
         this.uri = uri;
         this.landingUrl = null;
@@ -28,7 +33,7 @@ public class EasyOnboardingInvite implements Parcelable {
 
     public EasyOnboardingInvite(
             @NonNull final Jid domain,
-            @NonNull final String uri,
+            @NonNull final MiniUri.Xmpp uri,
             @NonNull final HttpUrl landingUrl) {
         this.domain = domain;
         this.uri = uri;
@@ -38,7 +43,7 @@ public class EasyOnboardingInvite implements Parcelable {
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(domain.toString());
-        dest.writeString(uri);
+        dest.writeString(uri.asUri().toString());
         dest.writeString(landingUrl == null ? null : landingUrl.toString());
     }
 
@@ -64,7 +69,10 @@ public class EasyOnboardingInvite implements Parcelable {
         return domain.toString();
     }
 
-    public String getShareableLink() {
-        return this.landingUrl != null ? this.landingUrl.toString() : this.uri;
+    public HttpUrl getShareableLink() {
+        if (this.landingUrl != null) {
+            return this.landingUrl;
+        }
+        return this.uri.asInvitationUri().asHttpUrl();
     }
 }

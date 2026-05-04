@@ -82,7 +82,7 @@ public class BackupFile implements Comparable<BackupFile> {
 
     private static List<BackupFile> list(final Context context) {
         final var database = DatabaseBackend.getInstance(context);
-        final var accounts = database.getAccountAddresses(false);
+        final var accounts = database.getAccountAddresses();
         final var backupFiles = new ImmutableList.Builder<BackupFile>();
         final var apps =
                 ImmutableSet.of("Conversations", "Quicksy", context.getString(R.string.app_name));

@@ -39,7 +39,7 @@ public abstract sealed class Condition extends Extension {
         super(clazz);
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class BadRequest extends Condition {
 
         public BadRequest() {
@@ -47,7 +47,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class Conflict extends Condition {
 
         public Conflict() {
@@ -55,7 +55,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class FeatureNotImplemented extends Condition {
 
         public FeatureNotImplemented() {
@@ -63,7 +63,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class Forbidden extends Condition {
 
         public Forbidden() {
@@ -71,7 +71,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class Gone extends Condition {
 
         public Gone() {
@@ -79,7 +79,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class InternalServerError extends Condition {
 
         public InternalServerError() {
@@ -87,7 +87,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class ItemNotFound extends Condition {
 
         public ItemNotFound() {
@@ -95,7 +95,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class JidMalformed extends Condition {
 
         public JidMalformed() {
@@ -103,7 +103,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class NotAcceptable extends Condition {
 
         public NotAcceptable() {
@@ -111,7 +111,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class NotAllowed extends Condition {
 
         public NotAllowed() {
@@ -119,7 +119,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class NotAuthorized extends Condition {
 
         public NotAuthorized() {
@@ -127,7 +127,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class PaymentRequired extends Condition {
 
         public PaymentRequired() {
@@ -135,7 +135,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class RecipientUnavailable extends Condition {
 
         public RecipientUnavailable() {
@@ -143,7 +143,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class Redirect extends Condition {
 
         public Redirect() {
@@ -151,7 +151,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class RegistrationRequired extends Condition {
 
         public RegistrationRequired() {
@@ -159,7 +159,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class RemoteServerNotFound extends Condition {
 
         public RemoteServerNotFound() {
@@ -167,7 +167,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class RemoteServerTimeout extends Condition {
 
         public RemoteServerTimeout() {
@@ -175,7 +175,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class ResourceConstraint extends Condition {
 
         public ResourceConstraint() {
@@ -183,7 +183,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class ServiceUnavailable extends Condition {
 
         public ServiceUnavailable() {
@@ -191,7 +191,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class SubscriptionRequired extends Condition {
 
         public SubscriptionRequired() {
@@ -199,7 +199,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class UndefinedCondition extends Condition {
 
         public UndefinedCondition() {
@@ -207,7 +207,7 @@ public abstract sealed class Condition extends Extension {
         }
     }
 
-    @XmlElement(namespace = Namespace.STANZAS)
+    @XmlElement(namespace = Namespace.XMPP_STANZAS)
     public static final class UnexpectedRequest extends Condition {
 
         public UnexpectedRequest() {

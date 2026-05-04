@@ -1,0 +1,3 @@
+* Avalike konverentside (jututubade) puhul näidatakse nüüd kübaraid, kui need on kasutusel
+* Veaparandus, mis parandas kokkujooksmise OMEMO võtmekomplekti muutmisel
+* Veaparandus, mis parandas kokkujooksmise Quicksy XMPP-aadresside jagamisel

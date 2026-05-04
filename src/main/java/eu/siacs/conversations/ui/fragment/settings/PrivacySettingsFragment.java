@@ -24,10 +24,9 @@ public class PrivacySettingsFragment extends XmppPreferenceFragment {
             case AppSettings.READ_RECEIPTS,
                     AppSettings.BROADCAST_LAST_ACTIVITY,
                     AppSettings.ALLOW_MESSAGE_CORRECTION,
-                    AppSettings.DND_ON_SILENT_MODE,
-                    AppSettings.TREAT_VIBRATE_AS_SILENT -> {
-                requireService().refreshAllPresences();
-            }
+                    AppSettings.DND_SYNC_SYSTEM,
+                    AppSettings.DND_INCLUDE_SILENT_MODES ->
+                    requireService().refreshAllPresences();
         }
     }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_never_send_crash_summary">Ang pagpasa ng mga stack trace ay malaking tulong sa sunod-sunod na pag-develop ng Quicksy</string>
+    <string name="huawei_protected_apps_summary">Para siguraduhing matanggap ang mga notification habang naka-off ang screen, kailangang idagdag ang Quicksy sa listahan ng mga protektadong app.</string>
+    <string name="not_available_in_your_country">Hindi magamit ang Quicksy sa inyong bansa.</string>
+    <string name="timeout_while_connecting_to_server">Nag-timeout habang nagkonekta sa server.</string>
+</resources>

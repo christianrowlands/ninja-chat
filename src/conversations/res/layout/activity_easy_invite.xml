@@ -79,7 +79,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="16dp"
-                android:text="@string/share" />
+                android:text="@string/share_invitation" />
 
         </RelativeLayout>
 

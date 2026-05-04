@@ -1,0 +1,5 @@
+* Implementar Perfil Extensible SASL, Bind 2.0 e Fast para reconexões mais rápidas
+* Implementar Junção de Canal
+* Adicionar a habilidade de trocar de uma chamada de áudio para uma chamada de vídeo
+* Adicionar a habilidade de deletar o próprio avatar
+* Adicionar notificação para chamadas perdidas

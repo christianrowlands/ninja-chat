@@ -23,7 +23,7 @@
         <menu>
             <item
                 android:id="@+id/give_membership"
-                android:title="@string/grant_membership"
+                android:title="@string/give_membership"
                 android:visible="false" />
             <item
                 android:id="@+id/remove_membership"
@@ -31,19 +31,19 @@
                 android:visible="false" />
             <item
                 android:id="@+id/give_admin_privileges"
-                android:title="@string/grant_admin_privileges"
+                android:title="@string/make_admin"
                 android:visible="false" />
             <item
                 android:id="@+id/remove_admin_privileges"
-                android:title="@string/remove_admin_privileges"
+                android:title="@string/dismiss_as_admin"
                 android:visible="false" />
             <item
                 android:id="@+id/give_owner_privileges"
-                android:title="@string/grant_owner_privileges"
+                android:title="@string/make_owner"
                 android:visible="false" />
             <item
                 android:id="@+id/revoke_owner_privileges"
-                android:title="@string/remove_owner_privileges"
+                android:title="@string/dismiss_as_owner"
                 android:visible="false" />
         </menu>
     </item>

@@ -42,25 +42,23 @@ public class PushManagementService {
     }
 
     public void registerPushTokenOnServer(final Account account) {
-        final var pushManager =
-                account.getXmppConnection().getManager(PushNotificationManager.class);
+        final var connection = account.getXmppConnection();
         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": has push support");
         final var fcmTokenFuture = retrieveFcmInstanceTokenTiny();
-        final var registrationFuture =
+        final var future =
                 Futures.transformAsync(
                         fcmTokenFuture,
                         fcmToken -> {
+                            final var pushManager =
+                                    connection.getManager(PushNotificationManager.class);
                             Log.d(Config.LOGTAG, "FCM Token: " + fcmToken);
                             final var androidId = PhoneHelper.getAndroidId(context);
                             final var appServer = getAppServer();
-                            return pushManager.register(appServer, fcmToken, androidId);
+                            return pushManager.registerAndEnable(appServer, fcmToken, androidId);
                         },
                         MoreExecutors.directExecutor());
-        final var enableFuture =
-                Futures.transformAsync(
-                        registrationFuture, pushManager::enable, MoreExecutors.directExecutor());
         Futures.addCallback(
-                enableFuture,
+                future,
                 new FutureCallback<>() {
                     @Override
                     public void onSuccess(Void result) {
@@ -90,7 +88,11 @@ public class PushManagementService {
                         context, 0, broadcastIntent, PendingIntent.FLAG_IMMUTABLE));
         final var handler = new RegistrationMessageHandler(Looper.getMainLooper());
         intent.putExtra("google.messenger", new Messenger(handler));
-        context.startService(intent);
+        try {
+            context.startService(intent);
+        } catch (final SecurityException | IllegalStateException e) {
+            return Futures.immediateFailedFuture(e);
+        }
         return handler.endpointFuture;
     }
 

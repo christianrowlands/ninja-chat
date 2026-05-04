@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Mga Setting</string>
+    <string name="action_contact_details">Mga detalye ng contact</string>
+    <string name="action_muc_details">Mga detalye ng group chat</string>
+    <string name="action_add_account">Magdagdag ng account</string>
+    <string name="action_edit_contact">Baguhin ang pangalan</string>
+    <string name="just_now">ngayon lang</string>
+    <string name="minute_ago">1 min ang nakalipas</string>
+    <string name="minutes_ago">%d (na) min ang nakalipas</string>
+</resources>

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.Patterns;
 import androidx.annotation.NonNull;
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.Futures;
@@ -28,7 +29,7 @@ import im.conversations.android.xmpp.model.register.Remove;
 import im.conversations.android.xmpp.model.register.Username;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import okhttp3.HttpUrl;
 
@@ -289,26 +290,36 @@ public class RegistrationManager extends AbstractManager {
 
     public static class RegistrationFailedException extends IqErrorException {
 
-        private final List<String> PASSWORD_TOO_WEAK_MESSAGES =
-                Arrays.asList("The password is too weak", "Please use a longer password.");
-
         public RegistrationFailedException(final Iq response) {
             super(response);
         }
 
         public Account.State asAccountState() {
             final var error = getError();
-            final var condition = error == null ? null : error.getCondition();
-            if (condition instanceof Condition.Conflict) {
-                return Account.State.REGISTRATION_CONFLICT;
-            } else if (condition instanceof Condition.ResourceConstraint) {
-                return Account.State.REGISTRATION_PLEASE_WAIT;
-            } else if (condition instanceof Condition.NotAcceptable
-                    && PASSWORD_TOO_WEAK_MESSAGES.contains(error.getTextAsString())) {
-                return Account.State.REGISTRATION_PASSWORD_TOO_WEAK;
-            } else {
+            if (error == null) {
                 return Account.State.REGISTRATION_FAILED;
             }
+            final var condition = error.getCondition();
+            final var text = Strings.nullToEmpty(error.getTextAsString());
+            // for captcha errors ejabberd seems to use notAllowed and prosody notAcceptable
+            return switch (condition) {
+                case Condition.Conflict conflict -> Account.State.REGISTRATION_CONFLICT;
+                case Condition.ResourceConstraint resourceConstraint ->
+                        Account.State.REGISTRATION_PLEASE_WAIT;
+                case Condition.NotAcceptable notAcceptable -> {
+                    if (text.toLowerCase(Locale.ROOT).contains("password")) {
+                        yield Account.State.REGISTRATION_PASSWORD_TOO_WEAK;
+                    } else if (text.toLowerCase(Locale.ROOT).contains("captcha")) {
+                        yield Account.State.REGISTRATION_INVALID_CAPTCHA;
+                    } else {
+                        yield Account.State.REGISTRATION_FAILED;
+                    }
+                }
+                case Condition.NotAllowed notAllowed
+                        when text.toLowerCase(Locale.ROOT).contains("captcha") ->
+                        Account.State.REGISTRATION_INVALID_CAPTCHA;
+                case null, default -> Account.State.REGISTRATION_FAILED;
+            };
         }
     }
 }

@@ -10,6 +10,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.OmemoSetting;
@@ -25,6 +26,7 @@ import eu.siacs.conversations.xmpp.mam.MamReference;
 import eu.siacs.conversations.xmpp.manager.BookmarkManager;
 import eu.siacs.conversations.xmpp.manager.MultiUserChatManager;
 import im.conversations.android.model.Bookmark;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -650,6 +652,16 @@ public class Conversation extends AbstractEntity
             } else {
                 return this.messages.get(this.messages.size() - 1);
             }
+        }
+    }
+
+    public Instant getLastReceived() {
+        synchronized (this.messages) {
+            return Iterables.tryFind(
+                            Lists.reverse(this.messages),
+                            m -> m.getStatus() == Message.STATUS_RECEIVED)
+                    .transform(m -> Instant.ofEpochMilli(m.timeSent))
+                    .or(Instant.MIN);
         }
     }
 

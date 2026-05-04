@@ -86,6 +86,13 @@
     </implements>
     <implements>
         <xmpp:SupportedXep>
+            <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0047.html"/>
+            <xmpp:status>complete</xmpp:status>
+            <xmpp:version>2.0.1</xmpp:version>
+        </xmpp:SupportedXep>
+    </implements>
+    <implements>
+        <xmpp:SupportedXep>
             <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0048.html"/>
             <xmpp:status>complete</xmpp:status>
             <xmpp:version>1.1</xmpp:version>
@@ -104,6 +111,13 @@
             <xmpp:status>partial</xmpp:status>
             <xmpp:version>1.2</xmpp:version>
             <xmpp:note xml:lang='en'>Avatars only</xmpp:note>
+        </xmpp:SupportedXep>
+    </implements>
+    <implements>
+        <xmpp:SupportedXep>
+            <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0065.html"/>
+            <xmpp:status>complete</xmpp:status>
+            <xmpp:version>1.8.2</xmpp:version>
         </xmpp:SupportedXep>
     </implements>
     <implements>
@@ -217,6 +231,14 @@
     </implements>
     <implements>
         <xmpp:SupportedXep>
+            <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0202.html"/>
+            <xmpp:status>complete</xmpp:status>
+            <xmpp:version>2.0</xmpp:version>
+            <xmpp:since>2.19.14</xmpp:since>
+        </xmpp:SupportedXep>
+    </implements>
+    <implements>
+        <xmpp:SupportedXep>
             <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0215.html"/>
             <xmpp:status>complete</xmpp:status>
             <xmpp:version>0.7</xmpp:version>
@@ -304,6 +326,15 @@
             <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0313.html"/>
             <xmpp:status>complete</xmpp:status>
             <xmpp:version>0.6.3</xmpp:version>
+        </xmpp:SupportedXep>
+    </implements>
+        <implements>
+        <xmpp:SupportedXep>
+            <xmpp:xep rdf:resource="https://xmpp.org/extensions/xep-0317.html"/>
+            <xmpp:status>partial</xmpp:status>
+            <xmpp:version>0.3.1</xmpp:version>
+            <xmpp:since>2.19.13</xmpp:since>
+            <xmpp:note>Read only. A management interface is currently not provided.</xmpp:note>
         </xmpp:SupportedXep>
     </implements>
     <implements>

@@ -334,13 +334,8 @@
     <string name="enable_all_accounts">Povoliť všetky účty</string>
     <string name="disable_all_accounts">Vypnúť všetky účty</string>
     <string name="perform_action_with">Uskutočniť akciu s</string>
-    <string name="no_affiliation">Nepridružený</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Vylúčený</string>
     <string name="member">Člen</string>
-    <string name="advanced_mode">Rozšírený režim</string>
-    <string name="grant_admin_privileges">Povoliť administrátorské výsady</string>
-    <string name="remove_admin_privileges">Odobrať administrátorské výsady</string>
     <string name="could_not_change_affiliation">Nepodarilo sa zmeniť pripojenie užívateľa %s</string>
     <string name="ban_now">Vylúčiť</string>
     <string name="could_not_change_role">Nepodarilo sa zmeniť úlohu %s</string>
@@ -425,9 +420,7 @@
     <string name="pref_delete_omemo_identities_summary">Re-generuje vaše kľúče OMEMO. Všetky vaše kontakty vás budú musieť znova overiť. Použite to ako poslednú možnosť.</string>
     <string name="delete_selected_keys">Odstrániť označené kľúče</string>
     <string name="all_omemo_keys_have_been_verified">Overili ste všetky kľúče OMEMO vo vašom vlastníctve.</string>
-    <string name="share_as_barcode">Zdieľať ako qr kód</string>
     <string name="share_as_uri">Zdieľať ako XMPP URI</string>
-    <string name="share_as_http">Zdieľať ako HTTP odkaz</string>
     <string name="verify_omemo_keys">Overiť kľúče OMEMO</string>
     <string name="pref_automatically_delete_messages_description">Automaticky vymazávať správy z tohto zariadenia, ktoré sú staršie ako nastavené časové obdobie.</string>
     <string name="online_right_now">online práve teraz</string>

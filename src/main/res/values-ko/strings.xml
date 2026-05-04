@@ -100,7 +100,7 @@
     <string name="account_status_offline">오프라인 </string>
     <string name="account_status_unauthorized">승인되지 않음 </string>
     <string name="account_status_not_found">서버를 찾을 수 없음 </string>
-    <string name="account_status_no_internet">접속할 수 없음 </string>
+    <string name="account_status_no_internet">접속할 수 없음</string>
     <string name="account_status_regis_fail">등록 실패 </string>
     <string name="account_status_regis_conflict">사용자 이름이 이미 사용중입니다 </string>
     <string name="account_status_regis_success">등록 성공 </string>
@@ -227,13 +227,8 @@
     <string name="enable_all_accounts">모든 계정 사용 </string>
     <string name="disable_all_accounts">모든 계정 해제 </string>
     <string name="perform_action_with">다음으로 동작을 수행 </string>
-    <string name="no_affiliation">관련 없음 </string>
-    <string name="no_role">오프라인</string>
     <string name="outcast">추방됨 </string>
     <string name="member">멤버 </string>
-    <string name="advanced_mode">고급 모드 </string>
-    <string name="grant_admin_privileges">관리자 특권 허가 </string>
-    <string name="remove_admin_privileges">관리자 특권 철회 </string>
     <string name="could_not_change_affiliation">%s 의 관련 여부를 변경할 수 없습니다 </string>
     <string name="ban_now">지금 금지 </string>
     <string name="could_not_change_role">%s 의 역할을 변경할 수 없습니다 </string>
@@ -289,7 +284,6 @@
     <string name="account_status_tor_unavailable">Tor 네트워크 사용할 수 없음</string>
     <string name="account_status_bind_failure">바인드 실패</string>
     <string name="server_info_broken">손상됨</string>
-    <string name="pref_treat_vibrate_as_silent">진동을 자동으로 처리</string>
     <string name="pref_show_connection_options">확장 연결 설정</string>
     <string name="pref_show_connection_options_summary">계정을 설정할 때 호스트 이름과 포트 설정을 표시합니다</string>
     <string name="hostname_example">xmpp.ninja.chat</string>
@@ -369,9 +363,7 @@
     <string name="this_device_has_been_verified">해당 장치가 인증되었습니다</string>
     <string name="copy_fingerprint">핑거프린트 복사</string>
     <string name="verified_fingerprints">인증된 핑거프린트</string>
-    <string name="share_as_barcode">바코드로 공유</string>
     <string name="share_as_uri">XMPP URI로 공유</string>
-    <string name="share_as_http">HTTP 링크로 공유</string>
     <string name="not_trusted">신뢰되지 않음</string>
     <string name="invalid_barcode">잘못된 2D 바코드</string>
     <string name="pref_clean_private_storage_summary">파일이 저장되어있는 개인 스토리지를 정리합니다 (서버에서 다시 다운로드 할 수 있습니다)</string>

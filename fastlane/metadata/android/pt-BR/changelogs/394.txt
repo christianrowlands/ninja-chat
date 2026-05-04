@@ -1,0 +1,2 @@
+* Notificações não aparecendo em certas condições foram corrigidas
+* Problemas de compatibilidade e travamentos relacionados a chamadas de Áudio/Vídeo foram corrigidos

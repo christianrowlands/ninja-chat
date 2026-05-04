@@ -4,13 +4,11 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
 
-import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.manager.DiscoManager;
 import im.conversations.android.xml.XmlElementReader;
 import im.conversations.android.xmpp.model.disco.info.InfoQuery;
 import im.conversations.android.xmpp.model.stanza.Iq;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +32,7 @@ public class EntityCapabilitiesTest {
                     <feature var='http://jabber.org/protocol/muc'/>
                   </query>\
                 """;
-        final Element element = XmlElementReader.read(xml);
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         final String var = EntityCapabilities.hash(info).encoded();
         Assert.assertEquals("QgayPKawpkPSDYmwT/WM94uAlu0=", var);
     }
@@ -76,9 +72,7 @@ public class EntityCapabilitiesTest {
                     </x>
                   </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         final String var = EntityCapabilities.hash(info).encoded();
         Assert.assertEquals("q07IKJEyjvHSyhy//CH0CxmKi8w=", var);
     }
@@ -102,9 +96,7 @@ public class EntityCapabilitiesTest {
                     </x>
                   </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         final String var = EntityCapabilities.hash(info).encoded();
         Assert.assertEquals("pKcpiYvQvaDlM/R7CTxhk3Ov8zM=", var);
     }
@@ -129,9 +121,7 @@ public class EntityCapabilitiesTest {
                     </x>
                   </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         EntityCapabilities2.hash(info).encoded();
     }
 
@@ -150,9 +140,7 @@ public class EntityCapabilitiesTest {
                     </x>
                   </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         EntityCapabilities2.hash(info).encoded();
     }
 
@@ -166,9 +154,7 @@ public class EntityCapabilitiesTest {
                     <test xmlns="https://conversations.im/invalid"/>
                   </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         EntityCapabilities2.hash(info).encoded();
     }
 
@@ -262,9 +248,7 @@ public class EntityCapabilitiesTest {
   </query>
 </iq>
 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(Iq.class));
-        final var iq = (Iq) element;
+        final var iq = XmlElementReader.read(xml, Iq.class);
         final InfoQuery info = iq.getExtension(InfoQuery.class);
         final String var = EntityCapabilities.hash(info).encoded();
         Assert.assertEquals("3wkXXN9QL/i/AyVoHaqaiTT8BFA=", var);
@@ -295,9 +279,7 @@ public class EntityCapabilitiesTest {
                   <feature var="jabber:iq:last"/>
                 </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         final String var = EntityCapabilities2.hash(info).encoded();
         Assert.assertEquals("kzBZbkqJ3ADrj7v08reD1qcWUwNGHaidNUgD7nHpiw8=", var);
     }
@@ -370,9 +352,7 @@ public class EntityCapabilitiesTest {
                   </x>
                 </query>\
                 """;
-        final Element element = XmlElementReader.read(xml.getBytes(StandardCharsets.UTF_8));
-        assertThat(element, instanceOf(InfoQuery.class));
-        final InfoQuery info = (InfoQuery) element;
+        final var info = XmlElementReader.read(xml, InfoQuery.class);
         final String var = EntityCapabilities2.hash(info).encoded();
         Assert.assertEquals("u79ZroNJbdSWhdSp311mddz44oHHPsEBntQ5b1jqBSY=", var);
     }

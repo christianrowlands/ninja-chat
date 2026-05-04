@@ -1,0 +1,3 @@
+* Mostrar advertencia en el chat si el contacto está en una zona horaria diferente y es de noche para ellos
+* Mostrar advertencia en el chat si el contacto es DND
+* Refactor manejo automático del DND (basado en el sistema DND)

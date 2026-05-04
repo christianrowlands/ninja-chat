@@ -1,0 +1,11 @@
+Versão 2.10.9
+* Pedir por permissões de Bluetooth quando chamadas de Áudio/Vídeo são criadas (Você pode rejeitar isso se você não usa fones de ouvido Bluetooth)
+* Corrigir erro quando chamando Movim
+* Corrigir avatar errado sendo exibido para conversas em grupo
+* Sempre pedir para exclusão de otimizações de bateria
+* Definir flag local em notificações de 'x contas conectadas'
+* Corrigir interação com o Plugin de Compartilhamento de Local do Google Maps
+* Remover nota de rodapé sobre tarifa de servidor
+* Guardar arquivos em um local adequado para Android 11
+* Tentar reconectar a chamada após uma troca de rede
+* Mostrar o JID do chamador e o JID da conta na tela de chamada recebida

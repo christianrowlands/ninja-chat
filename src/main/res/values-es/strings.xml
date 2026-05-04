@@ -139,7 +139,7 @@
     <string name="error_not_an_image_file">El archivo seleccionado no es una imagen</string>
     <string name="error_compressing_image">No se pudo comprimir el archivo de imagen</string>
     <string name="error_file_not_found">Archivo no encontrado</string>
-    <string name="error_io_exception">Error general. ¿Es posible que no tengas espacio en disco?</string>
+    <string name="error_io_exception">Error general de E/S. ¿Es posible que no tengas espacio de almacenamiento?</string>
     <string name="error_security_exception_during_image_copy">La aplicación que utilizó para seleccionar la imagen no tiene los permisos necesarios para ver la imagen.
 \n
 \n<small>Use otro administrador de archivos para seleccionar una imagen</small>.</string>
@@ -151,7 +151,7 @@
     <string name="account_status_offline">Desconectado</string>
     <string name="account_status_unauthorized">No autorizado</string>
     <string name="account_status_not_found">Servidor no encontrado</string>
-    <string name="account_status_no_internet">Sin conectividad</string>
+    <string name="account_status_no_internet">Sin internet</string>
     <string name="account_status_regis_fail">Error en el registro</string>
     <string name="account_status_regis_conflict">El identificador ya está en uso</string>
     <string name="account_status_regis_success">Registro completado</string>
@@ -360,17 +360,8 @@
     <string name="enable_all_accounts">Activar todas las cuentas</string>
     <string name="disable_all_accounts">Desactivar todas las cuentas</string>
     <string name="perform_action_with">Realizar acción con</string>
-    <string name="no_affiliation">Sin afiliación</string>
-    <string name="no_role">Desconectado</string>
     <string name="outcast">Rechazado</string>
     <string name="member">Miembro</string>
-    <string name="advanced_mode">Modo avanzado</string>
-    <string name="grant_membership">Conceder privilegios de miembro</string>
-    <string name="remove_membership">Revocar privilegios de miembro</string>
-    <string name="grant_admin_privileges">Conceder privilegios de administrador</string>
-    <string name="remove_admin_privileges">Revocar privilegios de administrador</string>
-    <string name="grant_owner_privileges">Conceder privilegios de propietario</string>
-    <string name="remove_owner_privileges">Revocar privilegios de propietario</string>
     <string name="remove_from_room">Expulsar de la conversación</string>
     <string name="remove_from_channel">Eliminar del canal</string>
     <string name="could_not_change_affiliation">No se puede cambiar la afiliación de %s</string>
@@ -453,10 +444,6 @@
     <string name="pref_presence_settings">Disponibilidad</string>
     <string name="pref_away_when_screen_off">Ausente cuando el dispositivo esté bloqueado</string>
     <string name="pref_away_when_screen_off_summary">Mostrar como Ausente cuando el dispositivo esté bloqueado</string>
-    <string name="pref_dnd_on_silent_mode">Ocupado en modo silencio</string>
-    <string name="pref_dnd_on_silent_mode_summary">Mostrar como Ocupado cuando el dispositivo esté en modo silencio</string>
-    <string name="pref_treat_vibrate_as_silent">Modo vibración como modo silencio</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Mostrar como Ocupado cuando el dispositivo esté en modo vibración</string>
     <string name="pref_show_connection_options">Nombre del host y puerto</string>
     <string name="pref_show_connection_options_summary">Mostrar la configuración de conexión extendida al configurar una cuenta</string>
     <string name="hostname_example">xmpp.ejemplo.com</string>
@@ -476,7 +463,7 @@
     <string name="device_does_not_support_certificates">Tu dispositivo no admite la selección de certificados de cliente!</string>
     <string name="pref_connection_options">Conexión</string>
     <string name="pref_use_tor">Conectar via Tor</string>
-    <string name="pref_use_tor_summary">Todas las conexiones se realizan a través de la red TOR. Requiere Orbot</string>
+    <string name="pref_use_tor_summary">Realizar todas las conexiones a través de la red Tor. Requiere Orbot</string>
     <string name="account_settings_hostname">Hostname</string>
     <string name="account_settings_port">Puerto</string>
     <string name="hostname_or_onion">Dirección del servidor o .onion</string>
@@ -534,7 +521,7 @@
     <string name="presence_online">Disponible</string>
     <string name="presence_away">Ausente</string>
     <string name="presence_xa">No disponible</string>
-    <string name="presence_dnd">Ocupado</string>
+    <string name="presence_dnd">No molestar</string>
     <string name="secure_password_generated">Se ha generado una contraseña segura</string>
     <string name="device_does_not_support_battery_op">Su dispositivo no admite desactivar la optimización de batería</string>
     <string name="registration_please_wait">El registro falló. Prueba de nuevo más tarde</string>
@@ -587,9 +574,7 @@
     <string name="verified_fingerprints">Huellas digitales verificadas</string>
     <string name="use_camera_icon_to_scan_barcode">Usa la cámara para escanear el código QR del contacto</string>
     <string name="please_wait_for_keys_to_be_fetched">Por favor, espera a que las claves sean recuperadas</string>
-    <string name="share_as_barcode">Compartir como código QR</string>
-    <string name="share_as_uri">Compartir como XMPP URI</string>
-    <string name="share_as_http">Compartir como link HTTP</string>
+    <string name="share_as_uri">Compartir XMPP URI</string>
     <string name="pref_blind_trust_before_verification">Confianza ciega antes de verificación</string>
     <string name="pref_blind_trust_before_verification_summary">Confiar en los nuevos dispositivos de tus contactos no verificados, pero solicitar confirmación manual para los nuevos dispositivos de tus contactos verificados. </string>
     <string name="blindly_trusted_omemo_keys">Confiar ciegamente en las claves OMEMO, lo que significa que tus contactos podrían ser otra persona o alguien podría haber intervenido.</string>
@@ -665,7 +650,7 @@
     <string name="certificate_does_not_contain_jid">El certificado no contiene una dirección XMPP completa </string>
     <string name="server_info_partial">Parcial</string>
     <string name="attach_record_video">Grabar video</string>
-    <string name="copy_to_clipboard">Copiar al portapapeles</string>
+    <string name="copy_to_clipboard">Copiar</string>
     <string name="message_copied_to_clipboard">Mensaje copiado en el portapapeles</string>
     <string name="message">Mensaje</string>
     <string name="private_messages_are_disabled">Los mensajes privados están desactivados</string>
@@ -822,7 +807,7 @@
     <string name="restore_warning">No restaures claves OMEMO en un intento de clonar (ejecutar simultáneamente) una instalación. La restauración de claves OMEMO solo está pensada para migraciones o en caso de que hayas perdido el dispositivo original.</string>
     <string name="unable_to_restore_backup">No se ha podido restaurar la copia de respaldo.</string>
     <string name="unable_to_decrypt_backup">No se ha podido descifrar la copia de respaldo. ¿Es la contraseña correcta?</string>
-    <string name="backup_channel_name">Respaldar &amp; Restaurar</string>
+    <string name="backup_channel_name">Respaldo y Restauración</string>
     <string name="enter_jabber_id">Introduce dirección XMPP</string>
     <string name="create_group_chat">Crear una conversación grupal</string>
     <string name="join_public_channel">Unirse a canal público</string>
@@ -1062,7 +1047,7 @@
     <string name="pref_allow_screenshots_summary">Mostrar el contenido de la aplicación en el conmutador de aplicaciones y permitir la realización de capturas de pantalla</string>
     <string name="pref_accept_invites_from_strangers">Invitaciones de extraños</string>
     <string name="pref_accept_invites_from_strangers_summary">Aceptar invitaciones a chats grupales de extraños</string>
-    <string name="pref_backup_summary">Crear una sola vez, Programar recurrentes</string>
+    <string name="pref_backup_summary">Crear una sola vez, Programar recurrentes, Ubicación</string>
     <string name="pref_create_backup_one_off_summary">Crear una copia de seguridad única</string>
     <string name="pref_backup_recurring">Copia de seguridad periódica</string>
     <string name="unsupported_operation">Operación no admitida</string>
@@ -1174,4 +1159,27 @@
     </plurals>
     <string name="server_info_stanzas_rx_tx_push">Estanzas (rx/tx/push)</string>
     <string name="server_info_stanzas_rx_tx">Estanzas (rx/tx)</string>
+    <string name="share_invitation">Compartir invitación</string>
+    <string name="publish_qr_code">Publicar código QR</string>
+    <string name="account_status_airplane_mode">Modo avión</string>
+    <string name="give_membership">Otorgar membresía</string>
+    <string name="remove_membership">Quitar membresía</string>
+    <string name="make_admin">Hacer admin</string>
+    <string name="dismiss_as_admin">Quitar rol de admin</string>
+    <string name="make_owner">Hacer propietario</string>
+    <string name="dismiss_as_owner">Quitar rol de propietario</string>
+    <string name="account_status_regis_invalid_captcha">CAPTCHA inválido</string>
+    <string name="backup_and_restore">Respaldo y Restauración</string>
+    <string name="pref_import_backup_summary">Selecciona un archivo de respaldo para restaurar tus datos</string>
+    <string name="pref_category_backup_storage">Almacenamiento</string>
+    <string name="its_time_for_contact">Hora para ^2: ^1</string>
+    <string name="pref_entity_time">Compartir hora local</string>
+    <string name="pref_entity_time_summary">Comparte tu hora actual con tus contactos para así ver la suya también.</string>
+    <string name="contact_has_paused_their_notifications">%s ha pausado sus notificaciones</string>
+    <string name="pref_include_silent_modes">Incluir modos silenciosos</string>
+    <string name="pref_include_silent_modes_summary">También indicar \"No interrumpir\" cuando las notificaciones están silenciadas o el teléfono, en vibrar.</string>
+    <string name="pref_sync_system_dnd">Sincronizar con \"No interrumpir\"</string>
+    <string name="pref_sync_system_dnd_summary">Establecer automáticamente tu estado a \"No interrumpir\" cuando el modo \"No interrumpir\" de Android esté activo.</string>
+    <string name="presence_offline">Sin conexión</string>
+    <string name="rtp_state_no_internet">Sin conexión a internet</string>
 </resources>

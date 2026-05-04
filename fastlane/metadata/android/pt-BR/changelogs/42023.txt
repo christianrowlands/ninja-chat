@@ -1,0 +1,2 @@
+* Corrigir travamento quando algumas citações são renderizadas
+* Corrigir travamento na tela de boas-vindas

@@ -1,0 +1,3 @@
+* IRC-kanalite kutsetes kasutavate URI-de parandus
+* Kui jututuba (MUC-i) pole ühildus, siis tema infovaates kuvatakse punane hoiatusikoon
+* Lennukirežiimi ja VPN-ide puhul tekkinud ühendusvigade ja ühenduse korduskatsete parandused

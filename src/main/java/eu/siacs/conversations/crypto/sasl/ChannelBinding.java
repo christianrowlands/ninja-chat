@@ -80,6 +80,23 @@ public enum ChannelBinding {
             return TLS_UNIQUE;
         } else if (bindings.contains(TLS_SERVER_END_POINT)) {
             return TLS_SERVER_END_POINT;
+        } else if (bindings.isEmpty()) {
+            Log.w(Config.LOGTAG, "no supported bindings. making a guess");
+            return fallback(sslVersion);
+        } else {
+            return NONE;
+        }
+    }
+
+    private static ChannelBinding fallback(SSLSockets.Version version) {
+        if (version == SSLSockets.Version.TLS_1_3) {
+            return TLS_EXPORTER;
+        } else if (Arrays.asList(
+                        SSLSockets.Version.TLS_1_0,
+                        SSLSockets.Version.TLS_1_1,
+                        SSLSockets.Version.TLS_1_2)
+                .contains(version)) {
+            return TLS_UNIQUE;
         } else {
             return NONE;
         }

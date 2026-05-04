@@ -1,0 +1,1 @@
+* Corretto l'accesso in Prosody 0.12

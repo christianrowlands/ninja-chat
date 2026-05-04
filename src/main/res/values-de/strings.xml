@@ -150,7 +150,7 @@
     <string name="account_status_offline">Offline</string>
     <string name="account_status_unauthorized">Ungültige Zugangsdaten</string>
     <string name="account_status_not_found">Server nicht gefunden</string>
-    <string name="account_status_no_internet">Keine Internetverbindung</string>
+    <string name="account_status_no_internet">Kein Internet</string>
     <string name="account_status_regis_fail">Registrierung fehlgeschlagen</string>
     <string name="account_status_regis_conflict">Benutzername wird bereits verwendet</string>
     <string name="account_status_regis_success">Registrierung abgeschlossen</string>
@@ -361,17 +361,8 @@
     <string name="enable_all_accounts">Alle Konten aktivieren</string>
     <string name="disable_all_accounts">Alle Konten abschalten</string>
     <string name="perform_action_with">Aktion durchführen mit</string>
-    <string name="no_affiliation">Keine Zugehörigkeit</string>
-    <string name="no_role">Offline</string>
     <string name="outcast">Ausgeschlossen</string>
     <string name="member">Mitglied</string>
-    <string name="advanced_mode">Erweiterter Modus</string>
-    <string name="grant_membership">Mitgliederrechte gewähren</string>
-    <string name="remove_membership">Mitgliederrechte entziehen</string>
-    <string name="grant_admin_privileges">Administratorrechte gewähren</string>
-    <string name="remove_admin_privileges">Administratorrechte entziehen</string>
-    <string name="grant_owner_privileges">Eigentümerrechte gewähren</string>
-    <string name="remove_owner_privileges">Eigentümerrechte entziehen</string>
     <string name="remove_from_room">Aus Gruppenchat entfernen</string>
     <string name="remove_from_channel">Aus Channel entfernen</string>
     <string name="could_not_change_affiliation">Zugehörigkeit von %s konnte nicht verändert werden</string>
@@ -453,10 +444,6 @@
     <string name="pref_presence_settings">Status</string>
     <string name="pref_away_when_screen_off">Abwesend bei gesperrtem Gerät</string>
     <string name="pref_away_when_screen_off_summary">Als abwesend anzeigen, wenn das Gerät gesperrt ist</string>
-    <string name="pref_dnd_on_silent_mode">Beschäftigt im lautlosen Modus</string>
-    <string name="pref_dnd_on_silent_mode_summary">Als beschäftigt anzeigen, wenn sich das Gerät im lautlosen Modus befindet</string>
-    <string name="pref_treat_vibrate_as_silent">Vibration als Lautlos behandeln</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Als beschäftigt anzeigen, wenn das Gerät auf Vibration eingestellt ist</string>
     <string name="pref_show_connection_options">Hostname &amp; Port</string>
     <string name="pref_show_connection_options_summary">Erweiterte Verbindungseinstellungen beim Einrichten eines Kontos anzeigen</string>
     <string name="hostname_example">xmpp.domain.de</string>
@@ -533,7 +520,7 @@
     <string name="presence_online">Online</string>
     <string name="presence_away">Weg</string>
     <string name="presence_xa">Nicht verfügbar</string>
-    <string name="presence_dnd">Beschäftigt</string>
+    <string name="presence_dnd">Nicht stören</string>
     <string name="secure_password_generated">Ein sicheres Passwort wurde erstellt</string>
     <string name="device_does_not_support_battery_op">Dein Gerät unterstützt nicht das Ausschalten der Akkuoptimierung</string>
     <string name="registration_please_wait">Registrierung fehlgeschlagen: Bitte später versuchen</string>
@@ -586,9 +573,7 @@
     <string name="verified_fingerprints">Überprüfte Fingerabdrücke</string>
     <string name="use_camera_icon_to_scan_barcode">Nutze die Kamera, um QR-Codes deiner Kontakte zu scannen</string>
     <string name="please_wait_for_keys_to_be_fetched">Bitte warten, bis die Schlüssel abgerufen werden</string>
-    <string name="share_as_barcode">Als QR-Code teilen</string>
-    <string name="share_as_uri">Als XMPP-URI teilen</string>
-    <string name="share_as_http">Als HTTP-Link teilen</string>
+    <string name="share_as_uri">XMPP-URI teilen</string>
     <string name="pref_blind_trust_before_verification">Blind vertrauen vor der Überprüfung</string>
     <string name="pref_blind_trust_before_verification_summary">Neuen Geräten von nicht verifizierten Kontakten vertrauen, aber bei verifizierten Kontakten eine manuelle Bestätigung der neuen Geräte verlangen.</string>
     <string name="blindly_trusted_omemo_keys">Blind vertraute OMEMO-Schlüssel bedeutet, dass es sich um eine andere Person handeln könnte oder dass jemand sie abgehört haben könnte.</string>
@@ -658,7 +643,7 @@
     <string name="certificate_does_not_contain_jid">Zertifikat enthält keine XMPP-Adresse</string>
     <string name="server_info_partial">teilweise</string>
     <string name="attach_record_video">Video aufnehmen</string>
-    <string name="copy_to_clipboard">In die Zwischenablage kopieren</string>
+    <string name="copy_to_clipboard">Kopieren</string>
     <string name="message_copied_to_clipboard">Nachricht in die Zwischenablage kopiert</string>
     <string name="message">Nachricht</string>
     <string name="private_messages_are_disabled">Private Nachrichten sind deaktiviert</string>
@@ -1050,7 +1035,7 @@
     <string name="pref_large_font">Große Schrift</string>
     <string name="pref_accept_invites_from_strangers">Einladungen von Unbekannten</string>
     <string name="pref_accept_invites_from_strangers_summary">Einladungen zu Gruppenchats von Unbekannten annehmen</string>
-    <string name="pref_backup_summary">Einmalig erstellen, wiederkehrend planen</string>
+    <string name="pref_backup_summary">Einmalig erstellen, wiederkehrend planen, Speicherort</string>
     <string name="pref_backup_recurring">Wiederkehrende Sicherung</string>
     <string name="pref_fullscreen_notification">Benachrichtigungen im Vollbildmodus</string>
     <string name="unsupported_operation">Nicht unterstützte Operation</string>
@@ -1158,4 +1143,29 @@
         <item quantity="one">%d Nachricht löschen</item>
         <item quantity="other">%d Nachrichten löschen</item>
     </plurals>
+    <string name="server_info_stanzas_rx_tx">Stanzas (Rx/Tx)</string>
+    <string name="server_info_stanzas_rx_tx_push">Stanzas (Rx/Tx/Push)</string>
+    <string name="share_invitation">Einladung teilen</string>
+    <string name="publish_qr_code">QR-Code veröffentlichen</string>
+    <string name="make_owner">Eigentümer festlegen</string>
+    <string name="dismiss_as_owner">Als Eigentümer entfernen</string>
+    <string name="remove_membership">Mitgliedschaft beenden</string>
+    <string name="give_membership">Mitgliedschaft gewähren</string>
+    <string name="make_admin">Administrator festlegen</string>
+    <string name="dismiss_as_admin">Als Administrator entfernen</string>
+    <string name="account_status_airplane_mode">Flugmodus</string>
+    <string name="account_status_regis_invalid_captcha">Ungültiges CAPTCHA</string>
+    <string name="backup_and_restore">Sicherung &amp; Wiederherstellung</string>
+    <string name="pref_import_backup_summary">Sicherungsdatei zur Wiederherstellung deiner Daten auswählen</string>
+    <string name="pref_category_backup_storage">Speicher</string>
+    <string name="its_time_for_contact">Es ist ^1 für ^2</string>
+    <string name="pref_entity_time_summary">Teile deine aktuelle Uhrzeit mit deinen Kontakten, um im Gegenzug ihre Ortszeit zu erfahren.</string>
+    <string name="pref_entity_time">Ortszeit teilen</string>
+    <string name="contact_has_paused_their_notifications">%s hat seine Benachrichtigungen pausiert</string>
+    <string name="pref_sync_system_dnd_summary">Deinen Status automatisch auf „Nicht stören“ setzen, wenn der „Bitte nicht stören“-Modus von Android aktiv ist.</string>
+    <string name="pref_sync_system_dnd">Synchronisieren des „Bitte nicht stören“-Modus</string>
+    <string name="pref_include_silent_modes">Lautlos-Modus einbeziehen</string>
+    <string name="pref_include_silent_modes_summary">Zusätzlich wird „Nicht stören“ angezeigt, wenn Benachrichtigungen stummgeschaltet sind oder das Telefon auf Vibration eingestellt ist.</string>
+    <string name="presence_offline">Offline</string>
+    <string name="rtp_state_no_internet">Keine Internetverbindung</string>
 </resources>

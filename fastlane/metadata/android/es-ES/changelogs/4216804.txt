@@ -1,0 +1,3 @@
+* Corregir URIs de invitación para canales IRC
+* Mostrar un icono de advertencia rojo en los detalles del canal para MUCs no compatibles
+* Corregir el funcionamiento de las conexiones y los reintentos de conexión en relación al Modo avión y las VPNs

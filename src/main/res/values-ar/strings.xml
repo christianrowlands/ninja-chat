@@ -282,13 +282,8 @@
     <string name="enable_all_accounts">تفعيل كل الحسابات</string>
     <string name="disable_all_accounts">تعطيل كل الحسابات</string>
     <string name="perform_action_with">تنفيذ الإجراء مع</string>
-    <string name="no_affiliation">زائر</string>
-    <string name="no_role">غير متصل</string>
     <string name="outcast">مفصول</string>
     <string name="member">عضو</string>
-    <string name="advanced_mode">الوضع المتقدم</string>
-    <string name="grant_admin_privileges">منح امتيازات الإداره</string>
-    <string name="remove_admin_privileges">إلغاء امتيازات الإدارة</string>
     <string name="remove_from_room">التنحية من مجموعة المحادثة</string>
     <string name="remove_from_channel">أزله مِن القناة</string>
     <string name="could_not_change_affiliation">لا يمكن تغيير انتساب %s</string>
@@ -436,9 +431,7 @@
     <string name="verified_fingerprints">البصمات المصادق عليها</string>
     <string name="use_camera_icon_to_scan_barcode">إستخدم آلة التصوير لمسح شفرة التعرف على مراسلك</string>
     <string name="please_wait_for_keys_to_be_fetched">الرجاء الإنتظار ريثما يتم جلب المفاتيح</string>
-    <string name="share_as_barcode">شاركه كشَفْرة خَيْطيّة</string>
     <string name="share_as_uri">شاركه كعنوان XMPP</string>
-    <string name="share_as_http">شاركه كرابط HTTP</string>
     <string name="pref_blind_trust_before_verification">الثقة العمياء قبل التحقق</string>
     <string name="not_trusted">غير موثوق بها</string>
     <string name="invalid_barcode">الشفْرة الخيْطيّة خاطئة</string>

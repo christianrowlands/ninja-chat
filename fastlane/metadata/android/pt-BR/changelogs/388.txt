@@ -1,0 +1,3 @@
+* Reduzir o eco durante chamadas em alguns dispositivos
+* Corrigir o login quando senhas contém caracteres especiais
+* Tocar tons de discar e ocupado no alto-falante durante chamadas de vídeo

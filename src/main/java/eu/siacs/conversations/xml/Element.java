@@ -11,8 +11,9 @@ import im.conversations.android.xmpp.model.stanza.Message;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Element {
@@ -22,7 +23,7 @@ public class Element {
     private final String name;
     private final String namespace;
 
-    protected Hashtable<String, String> attributes = new Hashtable<>();
+    protected Map<String, String> attributes = new HashMap<>();
     private String content;
     protected List<Element> children = new ArrayList<>();
 
@@ -150,7 +151,7 @@ public class Element {
         this.attributes.remove(name);
     }
 
-    public Element setAttributes(Hashtable<String, String> attributes) {
+    public Element setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
         return this;
     }
@@ -184,7 +185,7 @@ public class Element {
         return Jid.ofOrInvalid(jid, this instanceof Message);
     }
 
-    public Hashtable<String, String> getAttributes() {
+    public Map<String, String> getAttributes() {
         return this.attributes;
     }
 

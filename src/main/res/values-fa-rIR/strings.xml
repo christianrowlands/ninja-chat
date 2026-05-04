@@ -128,7 +128,6 @@
     <string name="unblock_contact">برداشتن مسدودسازی مخاطب</string>
     <string name="send_again">فرستادن دوباره</string>
     <string name="web_address">نشانی وب</string>
-    <string name="no_role">آفلاین</string>
     <string name="vcard">مخاطب</string>
     <string name="show_location">نمایش موقعیت مکانی</string>
     <string name="presence_online">آنلاین</string>
@@ -152,7 +151,6 @@
     <string name="log_in">ورود</string>
     <string name="not_connected_try_again">شما وصل نیستید. بعداً دوباره تلاش کنید</string>
     <string name="record_voice_mail">ضبط پیام صوتی</string>
-    <string name="remove_membership">گرفتن اجازه‌های عضویت</string>
     <string name="no_xmpp_adddress_found">هیچ نشانی XMPPای پیدا نشد</string>
     <string name="pref_expert_options_summary">لطفاً با احتیاط تغییر دهید</string>
     <string name="server_info_http_upload">XEP-0363: HTTP File Upload</string>
@@ -286,7 +284,6 @@
     <string name="server_info_external_service_discovery">XEP-0215: External Service Discovery</string>
     <string name="unpublish_pgp_message">آیا می‌خواهید کلید عمومی OpenPGP خود را از اعلان حضور خود بردارید؟
 \nمخاطبان شما نخواهند توانست پیام‌های رمزشده با OpenPGP بفرستند.</string>
-    <string name="advanced_mode">حالت پیشرفته</string>
     <string name="pref_chat_states_summary">بگذارید مخاطبانتان بدانند که دارید برای آن‌ها تایپ می‌کنید</string>
     <string name="clear_other_devices_desc">آیا می‌خواهید همهٔ دستگاه‌های دیگر را از اعلام OMEMO دربیاورید؟ دفعهٔ بعدی که آن دستگاه‌ها وصل شوند، دوباره خودشان را اعلام می‌کنند، ولی ممکن است پیغام‌هایی را که در این بین فرستاده می‌شود نگیرند.</string>
     <string name="pref_up_push_account_title">حساب XMPP</string>
@@ -324,7 +321,6 @@
     <string name="notification_create_backup_title">ساختن پرونده‌های پشتیبان</string>
     <string name="rtp_state_ending_call">تماس پایان می‌یابد</string>
     <string name="touch_to_fix">برای مدیریت حساب‌ها این‌جا بروید</string>
-    <string name="grant_membership">اعطای اجازه‌های عضویت</string>
     <string name="ban_now">ممنوع کن</string>
     <string name="reconnecting_call">تماس دوباره وصل می‌شود</string>
     <string name="download_failed_could_not_write_file">بارگیری شکست خورد: نوشتن پرونده ممکن نبود</string>
@@ -360,7 +356,6 @@
     <string name="download_failed_invalid_file">بارگیری شکست خورد: پروندهٔ نامعتبر</string>
     <string name="disable_all_accounts">غیرفعال‌سازی همهٔ حساب‌ها</string>
     <string name="pref_dont_trust_system_cas_title">به صادرکنندگان گواهینامه‌های امنیتی سیستم اعتماد نکن</string>
-    <string name="grant_owner_privileges">اعطای اجازه‌های مالکیت</string>
     <string name="avatar_for_x">تصویر نمایهٔ %s</string>
     <string name="openpgp_has_been_published">کلید عموم OpenPGP منتشر شد.</string>
     <string name="contact_has_stopped_typing">%s دیگر تایپ نمی‌کند</string>
@@ -396,7 +391,6 @@
 \n
 \n<small>لطفاً از مخاطب خود بخواهید تا OpenPGP را راه بیندازد.</small></string>
     <string name="rtp_state_connectivity_error">تماس وصل نشد</string>
-    <string name="grant_admin_privileges">اعطای اجازه‌های مدیریت</string>
     <string name="vector_graphic">تصویر برداری</string>
     <string name="microphone_unavailable">میکروفون شما دردسترس نیست</string>
     <string name="error_saving_avatar">ذخیرهٔ تصویر نمایه ممکن نبود</string>
@@ -441,7 +435,6 @@
     <string name="title_pref_quiet_hours_start_time">زمان آغاز</string>
     <string name="private_message_to">به %s</string>
     <string name="rtp_state_reconnecting">دوباره وصل می‌شود</string>
-    <string name="remove_admin_privileges">گرفتن اجازه‌های مدیریت</string>
     <string name="delete_file_dialog_msg">آیا می‌خواهید این پرونده را پاک کنید؟
 \n
 \n<b>هشدار:</b> با این کار نسخه‌های این پرونده که روی دستگاه‌ها یا سرورهای دیگر هستند پاک نمی‌شود. </string>
@@ -560,7 +553,6 @@
     <string name="toast_no_trusted_certs">هیچ گواهینامهٔ امنیتی‌ای مستقیماً تأیید نشده</string>
     <string name="rtp_state_content_add_video">تبدیل به تماس ویدیویی؟</string>
     <string name="mark_as_read">علامت‌گذاری به عنوان خوانده‌شده</string>
-    <string name="remove_owner_privileges">گرفتن اجازه‌های مالکیت</string>
     <string name="error_no_keys_to_trust_presence">هیچ کلید قابل استفاده‌ای برای این مخاطب وجود ندارد.
 \nمطمئن شوید که هر دوی شما به‌روزرسانی وصل‌شدن را می‌گیرید.</string>
     <string name="destroy_room_dialog">آیا می‌خواهید این گفتگوی گروهی را حذف کنید؟
@@ -572,7 +564,6 @@
         <item quantity="other">%d گفتگوی خوانده‌نشده</item>
     </plurals>
     <string name="audio">صدا</string>
-    <string name="no_affiliation">بدون نسبت</string>
     <string name="rtp_state_connecting">وصل می‌شود</string>
     <string name="crash_report_message">فرستادن اطلاعات مربوط به اشکال برنامه از راه حساب XMPP شما به توسعهٔ %1$s در آینده کمک می‌کند.</string>
     <string name="pref_keep_foreground_service">سرویس پیش‌زمینه</string>
@@ -745,7 +736,6 @@
     <string name="status_message">پیغام وضعیت</string>
     <string name="create_private_group_chat">گفتگوی گروهی خصوصی بسازید</string>
     <string name="feature_not_implemented">این ویژگی پیاده‌سازی نشده است</string>
-    <string name="share_as_barcode">هم‌رسانی به شکل بارکد</string>
     <string name="pref_blind_trust_before_verification_summary">به دستگاه‌های تازهٔ مخاطبان تأییدنشده آسان‌گیرانه اعتماد کن، ولی برای دستگاه‌های تازهٔ مخاطبان تأییدشده درخواست تأیید بفرست.</string>
     <string name="payment_required">پرداخت ضروری است</string>
     <string name="channel_already_exists">این کانال از قبل وجود دارد</string>
@@ -805,7 +795,6 @@
     <string name="xmpp_address">نشانی XMPP</string>
     <string name="i_followed_this_link_from_a_trusted_source">من این پیوند را از منبع مورد اعتمادی پی گرفته‌ام</string>
     <string name="reject_request">رد درخواست</string>
-    <string name="pref_dnd_on_silent_mode_summary">نمایش به عنوان مشغول اگر گوشی بی‌صدا شده باشد</string>
     <string name="channel_discovery_opt_in_title">نقض احتمالی حریم خصوصی!</string>
     <string name="please_enter_your_phone_number">لطفاً شمارهٔ تلفن خود را وارد کنید.</string>
     <string name="shared_text_with_x">نوشته با %s هم‌رسانی شد</string>
@@ -815,7 +804,6 @@
 \nهیچ اطلاعاتی دربارهٔ فهرست مخاطبان شما به جایی فرستاده نمی‌شود!</string>
     <string name="not_trusted">اعتمادنشده</string>
     <string name="hostname_example">‪xmpp.example.com‬</string>
-    <string name="pref_treat_vibrate_as_silent">لرزش معادل بی‌صدا</string>
     <string name="please_enter_pin_below">لطفاً کد ۶ رقمی را در زیر وارد کنید.</string>
     <string name="jabber_ids_are_visible_to_admins">نشانی‌های XMPP را مدیران می‌بینند.</string>
     <string name="please_enter_xmpp_address">لطفاً یک نشانی XMPP بدهید</string>
@@ -934,9 +922,7 @@
     <string name="view_media">دیدن رسانه</string>
     <string name="no_microphone_permission">به %1$s اجازهٔ دسترسی به میکروفن بده</string>
     <string name="providing_a_name_is_optional">ارائهٔ نام اختیاری است</string>
-    <string name="share_as_http">هم‌رسانی به شکل پیوند HTTP</string>
     <string name="account_status_host_unknown">این سرور مسئول این دامنه نیست</string>
-    <string name="pref_dnd_on_silent_mode">مشغول با گوشی بی‌صدا</string>
     <string name="allow">اجازه</string>
     <string name="pref_show_connection_options_summary">نمایش تنظیمات نام میزبان و پورت هنگام ساخت حساب</string>
     <string name="add_existing_account">افزودن حساب فعلی</string>
@@ -950,7 +936,6 @@
     <string name="phone_number">شماره تلفن</string>
     <string name="pref_theme_automatic">خودکار</string>
     <string name="silent_messages_channel_name">پیام‌های بی‌صدا</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">نمایش به عنوان مشغول اگر گوشی در حالت لرزش باشد</string>
     <string name="pref_privacy">محرمانگی</string>
     <plurals name="months">
         <item quantity="one">%d ماه</item>

@@ -1,0 +1,3 @@
+* Mover ícone de chamada à esquerda para manter os outros ícones da barra de ferramentas em um lugar consistente
+* Mostrar a duração da chamada durante chamadas de áudio
+* Quebra de nó para chamadas de Áudio/Vídeo (duas pessoas chamando uma a outra ao mesmo tempo)

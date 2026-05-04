@@ -1,0 +1,1 @@
+* corrigir up/download HTTP para usuários que não confiam em ACs de sistema

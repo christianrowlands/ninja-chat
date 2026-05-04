@@ -1,5 +1,31 @@
 # Changelog
 
+### Version 2.19.15
+
+* Fix Quicksy registration on older devices
+
+### Version 2.19.14
+
+* Show warning in chat if contact is in different time zone and it is night time for them
+* Show warning in chat if contact is DND
+* Refactor automatic DND handling (based on system DND)
+
+### Version 2.19.13
+
+* Show hats in public conferences that have them
+* Fix crash when changing OMEMO bundle access model
+* Fix crash when sharing Quicksy XMPP addresses
+
+### Version 2.19.12
+
+* Fix log in to Prosody 0.12
+
+### Version 2.19.11
+
+* Fix invite URIs for IRC channels
+* Show red warning icon in conference details of non compliant MUCs
+* Fix connection and retry behaviour around airplane mode and VPNs
+
 ### Version 2.19.10
 
 * Offer to delete messages when banning someone in a public channel

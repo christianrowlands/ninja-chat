@@ -174,7 +174,7 @@ public class ConversationsActivity extends QrCodeProcessingActivity
         if (binding.secondaryFragment != null
                 && ConversationFragment.getConversation(this) == null) {
             final var conversation = ConversationsOverviewFragment.getSuggestion(this);
-            openConversation(conversation, null);
+            openConversationOrCatch(conversation, null);
         }
         showDialogsIfMainIsOverview();
     }
@@ -487,6 +487,15 @@ public class ConversationsActivity extends QrCodeProcessingActivity
             refreshFragment(R.id.main_fragment);
         }
         invalidateActionBarTitle();
+    }
+
+    private void openConversationOrCatch(
+            @Nullable final Conversation conversation, final Bundle extras) {
+        try {
+            openConversation(conversation, extras);
+        } catch (final IllegalStateException e) {
+            Log.d(Config.LOGTAG, "could not open conversation", e);
+        }
     }
 
     private static void executePendingTransactions(final FragmentManager fragmentManager) {

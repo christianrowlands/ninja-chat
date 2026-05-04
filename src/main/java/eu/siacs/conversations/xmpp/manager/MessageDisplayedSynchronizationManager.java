@@ -88,7 +88,7 @@ public class MessageDisplayedSynchronizationManager extends AbstractManager {
     }
 
     public boolean hasServerAssist() {
-        return getManager(DiscoManager.class).hasAccountFeature(Namespace.MDS_DISPLAYED);
+        return getManager(DiscoManager.class).hasAccountFeature(Namespace.MDS_SERVER_ASSIST);
     }
 
     public static Displayed displayed(final String id, final Conversation conversation) {

@@ -30,7 +30,6 @@ import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.ui.adapter.AccountAdapter;
 import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.xmpp.Jid;
-import eu.siacs.conversations.xmpp.XmppConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -338,13 +337,11 @@ public class ManageAccountActivity extends XmppActivity
         }
     }
 
-    private void enableAccount(Account account) {
+    private void enableAccount(final Account account) {
         account.setOption(Account.OPTION_DISABLED, false);
         account.setOption(Account.OPTION_SOFT_DISABLED, false);
-        final XmppConnection connection = account.getXmppConnection();
-        if (connection != null) {
-            connection.resetEverything();
-        }
+        final var connection = account.getXmppConnection();
+        connection.resetEverything();
         if (!xmppConnectionService.updateAccount(account)) {
             Toast.makeText(this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
         }

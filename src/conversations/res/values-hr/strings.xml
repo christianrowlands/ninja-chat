@@ -12,6 +12,5 @@
     <string name="improperly_formatted_provisioning">Neispravno formatiran kod za dodjelu</string>
     <string name="tap_share_button_send_invite">Dodirnite gumb za dijeljenje kako biste svom kontaktu poslali pozivnicu na %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Ako je vaš kontakt u blizini, također može skenirati kod u nastavku kako bi prihvatio vašu pozivnicu.</string>
-    <string name="easy_invite_share_text">Pridružite se %1$s i razgovarajte sa mnom: %2$s</string>
     <string name="share_invite_with">Podijelite pozivnicu s...</string>
 </resources>

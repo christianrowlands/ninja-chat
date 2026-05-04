@@ -1,0 +1,3 @@
+* Show hats in public conferences that have them
+* Fix crash when changing OMEMO bundle access model
+* Fix crash when sharing Quicksy XMPP addresses

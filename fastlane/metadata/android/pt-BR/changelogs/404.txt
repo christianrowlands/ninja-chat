@@ -1,0 +1,1 @@
+* pequenas melhorias de estabilidade para chamadas de Áudio/Vídeo

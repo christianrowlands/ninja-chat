@@ -91,7 +91,7 @@ public class DiscoManager extends AbstractManager {
     // this is the runtime cache that stores disco information for all entities seen during a
     // session
 
-    // a caps cache will be build in the database
+    // a caps cache will be built in the database
 
     private final Map<Jid, InfoQuery> entityInformation = new HashMap<>();
     private final Map<Jid, ImmutableSet<Jid>> discoItems = new HashMap<>();

@@ -1,0 +1,2 @@
+* Oferecer previa de PDF no Android 5+
+* Usar 12 bytes IVs para OMEMO

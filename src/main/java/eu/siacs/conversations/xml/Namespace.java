@@ -25,7 +25,8 @@ public final class Namespace {
     public static final String DELAY = "urn:xmpp:delay";
     public static final String OCCUPANT_ID = "urn:xmpp:occupant-id:0";
     public static final String STREAMS = "http://etherx.jabber.org/streams";
-    public static final String STANZAS = "urn:ietf:params:xml:ns:xmpp-stanzas";
+    public static final String XMPP_STREAMS = "urn:ietf:params:xml:ns:xmpp-streams";
+    public static final String XMPP_STANZAS = "urn:ietf:params:xml:ns:xmpp-stanzas";
     public static final String JABBER_CLIENT = "jabber:client";
     public static final String FORWARD = "urn:xmpp:forward:0";
     public static final String DISCO_ITEMS = "http://jabber.org/protocol/disco#items";
@@ -34,6 +35,7 @@ public final class Namespace {
     public static final String BLOCKING = "urn:xmpp:blocking";
     public static final String ROSTER = "jabber:iq:roster";
     public static final String ROSTER_VERSIONING = "urn:xmpp:features:rosterver";
+    public static final String ROSTER_PRE_APPROVAL = "urn:xmpp:features:pre-approval";
     public static final String REGISTER = "jabber:iq:register";
     public static final String REGISTER_STREAM_FEATURE = "http://jabber.org/features/iq-register";
     public static final String BYTE_STREAMS = "http://jabber.org/protocol/bytestreams";
@@ -108,6 +110,7 @@ public final class Namespace {
     public static final String PRE_AUTHENTICATED_IN_BAND_REGISTRATION = "urn:xmpp:ibr-token:0";
     public static final String PARS = "urn:xmpp:pars:0";
     public static final String EASY_ONBOARDING_INVITE = "urn:xmpp:invite#invite";
+    public static final String EASY_ONBOARDING_CREATE_ACCOUNT = "urn:xmpp:invite#create-account";
     public static final String OMEMO_DTLS_SRTP_VERIFICATION =
             "http://gultsch.de/xmpp/drafts/omemo/dlts-srtp-verification";
     public static final String JINGLE_TRANSPORT_ICE_OPTION =
@@ -119,6 +122,7 @@ public final class Namespace {
     public static final String SDP_OFFER_ANSWER = "urn:ietf:rfc:3264";
     public static final String SESSION = "urn:ietf:params:xml:ns:xmpp-session";
     public static final String HASHES = "urn:xmpp:hashes:2";
+    public static final String HATS = "urn:xmpp:hats:0";
     public static final String MEDIA_ELEMENT = "urn:xmpp:media-element";
     public static final String MDS_DISPLAYED = "urn:xmpp:mds:displayed:0";
     public static final String MDS_SERVER_ASSIST = "urn:xmpp:mds:server-assist:0";

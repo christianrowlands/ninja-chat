@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import eu.siacs.conversations.Config;
@@ -22,6 +24,7 @@ import eu.siacs.conversations.xmpp.jingle.RtpCapability;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.DiscoManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
+import im.conversations.android.model.DynamicTag;
 import im.conversations.android.xmpp.model.disco.info.InfoQuery;
 import im.conversations.android.xmpp.model.idle.LastUserInteraction;
 import im.conversations.android.xmpp.model.stanza.Presence;
@@ -144,6 +147,10 @@ public class Contact implements ListItem, Blockable, MucOptions.IdentifiableUser
                         cursor.getString(cursor.getColumnIndexOrThrow(RTP_CAPABILITY))));
     }
 
+    public static boolean isNoteworthy(final Iterable<DynamicTag> tags) {
+        return Iterables.any(tags, t -> t instanceof DynamicTag.Blocked);
+    }
+
     @Override
     public String getDisplayName() {
         if (isSelf()) {
@@ -189,8 +196,18 @@ public class Contact implements ListItem, Blockable, MucOptions.IdentifiableUser
     }
 
     @Override
-    public Collection<Tag> getTags() {
-        return Tag.of(this.getGroups());
+    public List<DynamicTag> getTags() {
+        final var builder = new ImmutableList.Builder<DynamicTag>();
+        builder.addAll(DynamicTag.RosterGroup.of(this.getGroups()));
+        if (isBlocked()) {
+            builder.add(new DynamicTag.Blocked());
+        } else {
+            final var availability = getShownStatus();
+            if (availability != Presence.Availability.OFFLINE) {
+                builder.add(new DynamicTag.Status(availability));
+            }
+        }
+        return builder.build();
     }
 
     public ContentValues getContentValues() {

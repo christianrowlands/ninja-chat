@@ -1,0 +1,3 @@
+* Mostrar roles (hats) en conferencias públicas que los admitan
+* Corregir cuelgue al cambiar el modelo de acceso del paquete OMEMO
+* Corregir cuelgue al compartir direcciones XMPP de Quicksy

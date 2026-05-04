@@ -154,6 +154,7 @@
                     tools:ignore="BatteryLife" />
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.media.RINGER_MODE_CHANGED" />
+                <action android:name="android.intent.action.AIRPLANE_MODE_CHANGED" />
             </intent-filter>
         </receiver>
 

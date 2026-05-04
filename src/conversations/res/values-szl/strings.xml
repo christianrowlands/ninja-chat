@@ -12,6 +12,5 @@
     <string name="improperly_formatted_provisioning">Niynoleżnie sformatowany kod lifrowanio</string>
     <string name="tap_share_button_send_invite">Tyknij knefla dzielynio sie, żeby posłać kōntaktowi zaproszynie na %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">Jeźli kōntakt je blisko, to może tyż zeskanować kod niżyj, żeby zaakceptować twoje zaproszynie.</string>
-    <string name="easy_invite_share_text">Pōdź na %1$s i pogodej zy mnōm: %2$s</string>
     <string name="share_invite_with">Poślij zaproszynie do…</string>
 </resources>

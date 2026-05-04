@@ -1,0 +1,3 @@
+* Pokazywanie ostrzeżenia w rozmowie jeśli kontakt jest w innej strefie czasowej i aktualnie jest u niego noc
+* Pokazywanie ostrzeżenia w rozmowie jeśli kontakt jest w trybie „nie przeszkadzać”
+* Przebudowa automatycznej obsługi „nie przeszkadzać” (opartej o systemowe „nie przeszkadzać”)

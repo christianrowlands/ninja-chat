@@ -44,7 +44,8 @@ public final class Config {
     public static final int PING_MIN_INTERVAL = 30;
     public static final int LOW_PING_TIMEOUT = 1; // used after push received
     public static final int PING_TIMEOUT = 15;
-    public static final int SOCKET_TIMEOUT = 15;
+    public static final int SOCKET_TIMEOUT = 12_000;
+    public static final int SOCKET_TIMEOUT_LOW = 8_000;
     public static final int CONNECT_TIMEOUT = 90;
     public static final int POST_CONNECTIVITY_CHANGE_PING_INTERVAL = 30;
     public static final int CONNECT_DISCO_TIMEOUT = 20;

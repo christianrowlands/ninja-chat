@@ -147,7 +147,7 @@
     <string name="account_status_offline">Não conectada</string>
     <string name="account_status_unauthorized">Não autorizado</string>
     <string name="account_status_not_found">Servidor não encontrado</string>
-    <string name="account_status_no_internet">Sem conectividade</string>
+    <string name="account_status_no_internet">Sem internet</string>
     <string name="account_status_regis_fail">Falha ao cadastrar</string>
     <string name="account_status_regis_conflict">Este nome de usuário já está em uso</string>
     <string name="account_status_regis_success">Cadastro concluído</string>
@@ -356,17 +356,8 @@
     <string name="enable_all_accounts">Ativar todas as contas</string>
     <string name="disable_all_accounts">Desativar todas as contas</string>
     <string name="perform_action_with">Realizar a ação com</string>
-    <string name="no_affiliation">Sem afiliação</string>
-    <string name="no_role">Off-line</string>
     <string name="outcast">Excluído</string>
     <string name="member">Membro</string>
-    <string name="advanced_mode">Modo avançado</string>
-    <string name="grant_membership">Conceder privilégios de membro</string>
-    <string name="remove_membership">Revogar privilégios de membro</string>
-    <string name="grant_admin_privileges">Conceder privilégios de administrador</string>
-    <string name="remove_admin_privileges">Revogar privilégios de administrador</string>
-    <string name="grant_owner_privileges">Conceder privilégios de proprietário</string>
-    <string name="remove_owner_privileges">Revogar privilégios de proprietário</string>
     <string name="remove_from_room">Remover do grupo</string>
     <string name="remove_from_channel">Remover do canal</string>
     <string name="could_not_change_affiliation">Não foi possível alterar a filiação de %s</string>
@@ -449,10 +440,6 @@
     <string name="pref_presence_settings">Disponibilidade</string>
     <string name="pref_away_when_screen_off">\"Afastado\" no bloqueio</string>
     <string name="pref_away_when_screen_off_summary">Mostrar como Afastado quando o dispositivo estiver bloqueado</string>
-    <string name="pref_dnd_on_silent_mode">\"Ocupado\" no modo silencioso</string>
-    <string name="pref_dnd_on_silent_mode_summary">Mostrar como Ocupado quando o dispositivo estiver no modo silencioso</string>
-    <string name="pref_treat_vibrate_as_silent">Considerar o modo de vibração como silencioso</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Mostrar como Ocupado quando o dispositivo estiver no modo de vibração</string>
     <string name="pref_show_connection_options">Servidor e porta</string>
     <string name="pref_show_connection_options_summary">Mostrar configurações de conexão estendidas ao configurar uma conta</string>
     <string name="hostname_example">xmpp.exemplo.com</string>
@@ -528,7 +515,7 @@
     <string name="presence_online">On-line</string>
     <string name="presence_away">Afastado</string>
     <string name="presence_xa">Não disponível</string>
-    <string name="presence_dnd">Ocupado</string>
+    <string name="presence_dnd">Não Perturbe</string>
     <string name="secure_password_generated">Foi gerada uma senha segura</string>
     <string name="device_does_not_support_battery_op">Seu dispositivo não suporta a desativação da otimização de bateria</string>
     <string name="registration_please_wait">Falha ao cadastrar: Tente novamente mais tarde</string>
@@ -581,9 +568,7 @@
     <string name="verified_fingerprints">Impressões digitais verificadas</string>
     <string name="use_camera_icon_to_scan_barcode">Use a câmera para capturar o código QR de um contato</string>
     <string name="please_wait_for_keys_to_be_fetched">Aguarde o descarregamento das chaves</string>
-    <string name="share_as_barcode">Compartilhar como código QR</string>
-    <string name="share_as_uri">Compartilhar como URI XMPP</string>
-    <string name="share_as_http">Compartilhar como link HTTP</string>
+    <string name="share_as_uri">Compartilhar URI XMPP</string>
     <string name="pref_blind_trust_before_verification">Confiar cegamente antes de verificar</string>
     <string name="pref_blind_trust_before_verification_summary">Confie em dispositivos novos de contatos não verificados, mas solicitar confirmação manual de dispositivos novos de contatos verificados.</string>
     <string name="blindly_trusted_omemo_keys">Chaves OMEMO confiadas cegamente, o que significa que pode ser outra pessoa ou alguém pode estar no meio.</string>
@@ -1022,7 +1007,7 @@
     <string name="channel_discover_opt_in_message">A descoberta de canais usa um serviço de terceiros chamado &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Usar esta funcionalidade transmitirá seu endereço de IP e termos de pesquisa ao serviço. Leia sua &lt;a href=https://search.jabber.network/privacy&gt;Política de Privacidade&lt;/a&gt; para mais informações.</string>
     <string name="call_is_using_earpiece_tap_to_switch_to_speaker">A chamada está usando o falante de ouvido. Toque para alterar para o alto-falante.</string>
     <string name="call_is_using_speaker_tap_to_switch_to_earpiece">Chamada está usando alto-falante. Toque para alterar para o falante de ouvido.</string>
-    <string name="pref_backup_summary">Criar um só, cronograma</string>
+    <string name="pref_backup_summary">Criar um só, cronograma, localização no armazenamento</string>
     <string name="pref_create_backup_one_off_summary">Criar um único backup</string>
     <string name="audiobook">Audiobook</string>
     <string name="this_account_is_logged_out">Você se desconectou desta conta</string>
@@ -1156,4 +1141,36 @@
     <string name="emoji_reactions">Reações de emoji</string>
     <string name="open_keyboard">Abrir teclado</string>
     <string name="qr_code_actions">Ler QR, mostrar QR, convite do servidor</string>
+    <string name="account_status_airplane_mode">Modo avião</string>
+    <string name="account_status_regis_invalid_captcha">CAPTCHA inválido</string>
+    <string name="its_time_for_contact">É ^1 para ^2</string>
+    <string name="share_invitation">Compartilhar convite</string>
+    <string name="backup_and_restore">Backup e restauração</string>
+    <string name="qr_code_contains_link">Abrir link da web?</string>
+    <string name="qr_code_contains_link_text">Este código QR é para um site. Verifique o endereço abaixo antes de abri-lo em um navegador:</string>
+    <string name="open_browser">Abrir navegador</string>
+    <string name="muc_user_ban_explainer">O usuário não vai mais poder ver mensagens novas ou participar da conversa.</string>
+    <string name="publish_qr_code">Publicar código QR</string>
+    <string name="give_membership">Dar status de membro</string>
+    <string name="remove_membership">Remover status de membro</string>
+    <string name="make_admin">Tornar admin</string>
+    <string name="dismiss_as_admin">Remover admin</string>
+    <string name="make_owner">Tornar dono</string>
+    <string name="dismiss_as_owner">Remover dono</string>
+    <string name="pref_import_backup_summary">Selecione um arquivo de backup para restaurar seus dados</string>
+    <string name="pref_category_backup_storage">Armazenamento</string>
+    <string name="pref_entity_time_summary">Compartilhe o seu horário atual com os contatos para ver seus horários locais também.</string>
+    <string name="pref_entity_time">Compartilhar horário local</string>
+    <plurals name="delete_n_messages">
+        <item quantity="one">Apagar %d mensagem</item>
+        <item quantity="many">Apagar %d de mensagens</item>
+        <item quantity="other">Apagar %d mensagens</item>
+    </plurals>
+    <string name="contact_has_paused_their_notifications">%s pausou as notificações</string>
+    <string name="pref_sync_system_dnd">Sincronizar Não Perturbe do sistema</string>
+    <string name="pref_sync_system_dnd_summary">Configure seu status automaticamente para \"Não Perturbe\" quando o do dispositivo está ativo.</string>
+    <string name="pref_include_silent_modes">Incluir modos silenciosos</string>
+    <string name="pref_include_silent_modes_summary">Também indicar \"Não Perturbe\" quando as notificações forem silenciosas ou para vibrar.</string>
+    <string name="presence_offline">Off-line</string>
+    <string name="rtp_state_no_internet">Sem conexão à internet</string>
 </resources>

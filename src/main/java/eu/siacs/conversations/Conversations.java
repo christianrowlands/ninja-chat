@@ -7,15 +7,12 @@ import android.util.Log;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.Iterables;
-import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.persistance.DatabaseBackend;
 import eu.siacs.conversations.services.EmojiInitializationService;
 import eu.siacs.conversations.ui.util.SettingsUtils;
 import eu.siacs.conversations.utils.ExceptionHelper;
 import java.security.Security;
 import java.util.Collection;
-import java.util.Objects;
 import org.conscrypt.Conscrypt;
 
 public class Conversations extends Application {
@@ -76,10 +73,6 @@ public class Conversations extends Application {
     }
 
     public boolean hasEnabledAccount() {
-        return Iterables.any(
-                getAccounts(),
-                a ->
-                        !Objects.requireNonNull(a).isOptionSet(Account.OPTION_DISABLED)
-                                && !a.isOptionSet(Account.OPTION_SOFT_DISABLED));
+        return DatabaseBackend.AccountWithOptions.hasEnabledAccount(getAccounts());
     }
 }

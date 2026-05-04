@@ -11,12 +11,15 @@
         <menu>
             <item
                 android:id="@+id/action_share_uri"
+                android:icon="@drawable/ic_xmpp_24dp"
                 android:title="@string/share_as_uri" />
             <item
                 android:id="@+id/action_share_http"
-                android:title="@string/share_as_http" />
+                android:icon="@drawable/ic_join_24dp"
+                android:title="@string/share_invitation" />
             <item
                 android:id="@+id/action_show_qr_code"
+                android:icon="@drawable/ic_qr_code_24dp"
                 android:title="@string/show_qr_code" />
         </menu>
     </item>
@@ -32,11 +35,11 @@
         android:title="@string/destroy_room"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_advanced_mode"
+        android:id="@+id/action_server_info_show_more"
         android:checkable="true"
         android:checked="false"
         android:orderInCategory="85"
-        android:title="@string/advanced_mode"
+        android:title="@string/server_info_show_more"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_custom_notifications"

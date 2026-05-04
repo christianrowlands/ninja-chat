@@ -57,6 +57,10 @@ public class Field extends Extension {
         }
     }
 
+    public boolean isRequired() {
+        return this.hasExtension(Required.class);
+    }
+
     public enum Type {
         BOOLEAN,
         FIXED,

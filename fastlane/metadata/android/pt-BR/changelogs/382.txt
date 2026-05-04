@@ -1,0 +1,2 @@
+* Adicionar botão para trocar a camera durante uma chamada de vídeo
+* Corrigir chamadas de voz em tablets

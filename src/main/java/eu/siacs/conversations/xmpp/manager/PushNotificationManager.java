@@ -1,6 +1,7 @@
 package eu.siacs.conversations.xmpp.manager;
 
 import android.content.Context;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
@@ -9,14 +10,16 @@ import com.google.common.util.concurrent.MoreExecutors;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.XmppConnection;
-import im.conversations.android.xmpp.model.commands.Command;
 import im.conversations.android.xmpp.model.data.Data;
 import im.conversations.android.xmpp.model.push.Disable;
 import im.conversations.android.xmpp.model.push.Enable;
 import im.conversations.android.xmpp.model.stanza.Iq;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PushNotificationManager extends AbstractManager {
+
+    private static final String COMMAND_NODE = "register-push-fcm";
 
     private final AtomicInteger pushNotificationCounter = new AtomicInteger();
 
@@ -26,25 +29,17 @@ public class PushNotificationManager extends AbstractManager {
 
     public ListenableFuture<Registration> register(
             final Jid appServer, final String fcmToken, final String androidId) {
-        final var iq = new Iq(Iq.Type.SET);
-        iq.setTo(appServer);
-        final var command =
-                iq.addExtension(new Command("register-push-fcm", Command.Action.EXECUTE));
-        command.addExtension(
-                Data.of(ImmutableMap.of("token", fcmToken, "android-id", androidId), null));
+        final Map<String, Object> parameter =
+                ImmutableMap.of("token", fcmToken, "android-id", androidId);
+        final var future =
+                getManager(AdHocCommandsManager.class)
+                        .commandComplete(appServer, COMMAND_NODE, parameter);
         return Futures.transform(
-                connection.sendIqPacket(iq),
-                response -> {
-                    final var result = response.getExtension(Command.class);
-                    if (result == null) {
-                        throw new IllegalStateException("No command in response");
-                    }
-                    final var data = result.getData();
-                    if (data == null) {
-                        throw new IllegalStateException("No data in command");
-                    }
-                    final var node = data.getValue("node");
-                    final var secret = data.getValue("secret");
+                future,
+                result -> {
+                    Preconditions.checkNotNull(result);
+                    final var node = result.getValue("node");
+                    final var secret = result.getValue("secret");
                     if (Strings.isNullOrEmpty(node) || Strings.isNullOrEmpty(secret)) {
                         throw new IllegalStateException("Missing node or secret in response");
                     }
@@ -53,7 +48,19 @@ public class PushNotificationManager extends AbstractManager {
                 MoreExecutors.directExecutor());
     }
 
-    public ListenableFuture<Void> enable(final Registration registration) {
+    public ListenableFuture<Void> registerAndEnable(
+            final Jid appServer, final String fmcToken, final String androidId) {
+        final var future = register(appServer, fmcToken, androidId);
+        return Futures.transformAsync(
+                future,
+                registration -> {
+                    Preconditions.checkNotNull(registration);
+                    return enable(registration);
+                },
+                MoreExecutors.directExecutor());
+    }
+
+    private ListenableFuture<Void> enable(final Registration registration) {
         final var iq = new Iq(Iq.Type.SET);
         final var enable = iq.addExtension(new Enable());
         enable.setJid(registration.address);
@@ -87,15 +94,5 @@ public class PushNotificationManager extends AbstractManager {
         return this.pushNotificationCounter.get();
     }
 
-    public static class Registration {
-        public final Jid address;
-        public final String node;
-        public final String secret;
-
-        public Registration(Jid address, String node, String secret) {
-            this.address = address;
-            this.node = node;
-            this.secret = secret;
-        }
-    }
+    public record Registration(Jid address, String node, String secret) {}
 }

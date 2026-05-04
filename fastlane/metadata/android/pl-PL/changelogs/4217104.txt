@@ -1,0 +1,3 @@
+* Pokazywanie kapeluszy w publicznych konferencjach, w których są dostępne
+* Naprawienie awarii podczas zmieniania modelu dostępu do zbiorów OMEMO
+* Naprawienie awarii podczas udostępniania adresów XMPP Quicksy

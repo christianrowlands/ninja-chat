@@ -1,17 +1,11 @@
 package eu.siacs.conversations.utils;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Pair;
-import android.widget.TextView;
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
-import com.google.android.material.color.MaterialColors;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -31,7 +25,6 @@ import eu.siacs.conversations.ui.util.QuoteHelper;
 import eu.siacs.conversations.worker.ExportBackupWorker;
 import eu.siacs.conversations.xmpp.Jid;
 import im.conversations.android.xmpp.model.idle.LastUserInteraction;
-import im.conversations.android.xmpp.model.stanza.Presence;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -537,40 +530,6 @@ public class UIHelper {
                         .replace("?", "")
                         .replace("¿", "");
         return LOCATION_QUESTIONS.contains(body);
-    }
-
-    public static void setStatus(final TextView textView, Presence.Availability status) {
-        final @StringRes int text;
-        final @ColorRes int color =
-                switch (status) {
-                    case CHAT -> {
-                        text = R.string.presence_chat;
-                        yield R.color.green_800;
-                    }
-                    case ONLINE -> {
-                        text = R.string.presence_online;
-                        yield R.color.green_800;
-                    }
-                    case AWAY -> {
-                        text = R.string.presence_away;
-                        yield R.color.amber_800;
-                    }
-                    case XA -> {
-                        text = R.string.presence_xa;
-                        yield R.color.orange_800;
-                    }
-                    case DND -> {
-                        text = R.string.presence_dnd;
-                        yield R.color.red_800;
-                    }
-                    default -> throw new IllegalStateException();
-                };
-        textView.setText(text);
-        textView.setBackgroundTintList(
-                ColorStateList.valueOf(
-                        MaterialColors.harmonizeWithPrimary(
-                                textView.getContext(),
-                                ContextCompat.getColor(textView.getContext(), color))));
     }
 
     public static String filesizeToString(long size) {

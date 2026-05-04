@@ -1,0 +1,4 @@
+* Proponi l'eliminazione dei messaggi quando si bandisce qualcuno in un canale pubblico
+* Riscrittura della scansione dei codici QR e gestione degli URI
+* Versione del Play Store: libreria Google non più usata, interfacciamento diretto con Google Play Service via IPC
+* Corretti problemi di rotazione in modalità tablet

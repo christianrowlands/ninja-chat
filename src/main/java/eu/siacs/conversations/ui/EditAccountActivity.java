@@ -85,6 +85,7 @@ import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.XmppConnection.Features;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.CarbonsManager;
+import eu.siacs.conversations.xmpp.manager.ClientStateIndicationManager;
 import eu.siacs.conversations.xmpp.manager.ExternalServiceDiscoveryManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
@@ -92,6 +93,7 @@ import eu.siacs.conversations.xmpp.manager.PepManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
 import eu.siacs.conversations.xmpp.manager.PushNotificationManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
+import eu.siacs.conversations.xmpp.manager.RosterManager;
 import im.conversations.android.xmpp.model.data.Data;
 import im.conversations.android.xmpp.model.mam.Preferences;
 import im.conversations.android.xmpp.model.stanza.Presence;
@@ -512,7 +514,7 @@ public class EditAccountActivity extends OmemoActivity
             final Intent intent =
                     SignupUtils.getTokenRegistrationIntent(
                             this, preset, mAccount.getKey(Account.KEY_PRE_AUTH_REGISTRATION_TOKEN));
-            StartConversationActivity.addInviteUri(intent, getIntent());
+            StartConversationActivity.addInviteUri(intent, this);
             startActivity(intent);
             return;
         }
@@ -522,7 +524,7 @@ public class EditAccountActivity extends OmemoActivity
         if (accounts != null && accounts.isEmpty() && Config.MAGIC_CREATE_DOMAIN != null) {
             Intent intent =
                     SignupUtils.getSignUpIntent(this, mForceRegister != null && mForceRegister);
-            StartConversationActivity.addInviteUri(intent, getIntent());
+            StartConversationActivity.addInviteUri(intent, this);
             startActivity(intent);
         }
     }
@@ -555,7 +557,7 @@ public class EditAccountActivity extends OmemoActivity
                                         PublishProfilePictureActivity.class);
                         intent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().asBareJid().toString());
                         intent.putExtra("setup", true);
-                        StartConversationActivity.addInviteUri(intent, getIntent());
+                        StartConversationActivity.addInviteUri(intent, this);
                     }
                     if (wasFirstAccount) {
                         intent.setFlags(
@@ -1254,7 +1256,8 @@ public class EditAccountActivity extends OmemoActivity
             this.binding.sessionEst.setText(
                     UIHelper.readableTimeDifferenceFull(
                             this, this.mAccount.getXmppConnection().getLastSessionEstablished()));
-            if (features.rosterVersioning()) {
+            final var rosterManager = connection.getManager(RosterManager.class);
+            if (rosterManager.versioning()) {
                 this.binding.serverInfoRosterVersion.setText(R.string.server_info_available);
             } else {
                 this.binding.serverInfoRosterVersion.setText(R.string.server_info_unavailable);
@@ -1269,7 +1272,7 @@ public class EditAccountActivity extends OmemoActivity
             } else {
                 this.binding.serverInfoMam.setText(R.string.server_info_unavailable);
             }
-            if (features.csi()) {
+            if (connection.getManager(ClientStateIndicationManager.class).hasFeature()) {
                 this.binding.serverInfoCsi.setText(R.string.server_info_available);
             } else {
                 this.binding.serverInfoCsi.setText(R.string.server_info_unavailable);
@@ -1440,6 +1443,7 @@ public class EditAccountActivity extends OmemoActivity
             if (status.isError()
                     || Arrays.asList(
                                     Account.State.NO_INTERNET,
+                                    Account.State.AIRPLANE_MODE,
                                     Account.State.MISSING_INTERNET_PERMISSION)
                             .contains(status)) {
                 if (status == Account.State.UNAUTHORIZED

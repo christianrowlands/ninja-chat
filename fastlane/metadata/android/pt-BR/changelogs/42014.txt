@@ -1,0 +1,2 @@
+* Sempre verificar o nome do domínio. Sem substituição pelo usuário
+* Suportar preautenticação de roster

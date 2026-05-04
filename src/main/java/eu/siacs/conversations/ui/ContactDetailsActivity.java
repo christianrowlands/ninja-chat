@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,19 +27,15 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.primitives.Ints;
 import de.gultsch.common.MiniUri;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
@@ -51,12 +46,12 @@ import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
 import eu.siacs.conversations.databinding.ActivityContactDetailsBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
-import eu.siacs.conversations.entities.ListItem;
 import eu.siacs.conversations.services.AbstractQuickConversationsService;
 import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate;
 import eu.siacs.conversations.ui.adapter.MediaAdapter;
+import eu.siacs.conversations.ui.adapter.UserAdapter;
 import eu.siacs.conversations.ui.interfaces.OnMediaLoaded;
 import eu.siacs.conversations.ui.util.Attachment;
 import eu.siacs.conversations.ui.util.AvatarWorkerTask;
@@ -68,8 +63,6 @@ import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.Emoticons;
 import eu.siacs.conversations.utils.IrregularUnicodeDetector;
 import eu.siacs.conversations.utils.PhoneNumberUtilWrapper;
-import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.utils.XEP0392Helper;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
@@ -503,14 +496,6 @@ public class ContactDetailsActivity extends OmemoActivity
             binding.detailsReceivePresence.setVisibility(View.GONE);
             binding.statusMessage.setVisibility(View.GONE);
         }
-
-        if (contact.isBlocked() && !this.showDynamicTags) {
-            binding.detailsLastSeen.setVisibility(View.VISIBLE);
-            binding.detailsLastSeen.setText(R.string.contact_blocked);
-        } else {
-            binding.detailsLastSeen.setVisibility(View.GONE);
-        }
-
         binding.detailsContactXmppAddress.setText(
                 IrregularUnicodeDetector.style(this, contact.getAddress()));
         final String account = contact.getAccount().getJid().asBareJid().toString();
@@ -609,55 +594,10 @@ public class ContactDetailsActivity extends OmemoActivity
         binding.keysWrapper.setVisibility(hasKeys ? View.VISIBLE : View.GONE);
 
         final var tagList = contact.getTags();
-        final boolean hasMetaTags =
-                contact.isBlocked() || contact.getShownStatus() != Presence.Availability.OFFLINE;
-        if ((tagList.isEmpty() && !hasMetaTags) || !this.showDynamicTags) {
-            binding.tags.setVisibility(View.GONE);
+        if (Contact.isNoteworthy(tagList) || this.showDynamicTags) {
+            UserAdapter.setHats(binding.tags, tagList);
         } else {
-            binding.tags.setVisibility(View.VISIBLE);
-            binding.tags.removeViews(1, binding.tags.getChildCount() - 1);
-            final ImmutableList.Builder<Integer> viewIdBuilder = new ImmutableList.Builder<>();
-            for (final ListItem.Tag tag : tagList) {
-                final String name = tag.getName();
-                final TextView tv =
-                        (TextView) inflater.inflate(R.layout.item_tag, binding.tags, false);
-                tv.setText(name);
-                tv.setBackgroundTintList(
-                        ColorStateList.valueOf(
-                                MaterialColors.harmonizeWithPrimary(
-                                        this, XEP0392Helper.rgbFromNick(name))));
-                final int id = ViewCompat.generateViewId();
-                tv.setId(id);
-                viewIdBuilder.add(id);
-                binding.tags.addView(tv);
-            }
-            if (contact.isBlocked()) {
-                final TextView tv =
-                        (TextView) inflater.inflate(R.layout.item_tag, binding.tags, false);
-                tv.setText(R.string.blocked);
-                tv.setBackgroundTintList(
-                        ColorStateList.valueOf(
-                                MaterialColors.harmonizeWithPrimary(
-                                        tv.getContext(),
-                                        ContextCompat.getColor(
-                                                tv.getContext(), R.color.gray_800))));
-                final int id = ViewCompat.generateViewId();
-                tv.setId(id);
-                viewIdBuilder.add(id);
-                binding.tags.addView(tv);
-            } else {
-                final Presence.Availability status = contact.getShownStatus();
-                if (status != Presence.Availability.OFFLINE) {
-                    final TextView tv =
-                            (TextView) inflater.inflate(R.layout.item_tag, binding.tags, false);
-                    UIHelper.setStatus(tv, status);
-                    final int id = ViewCompat.generateViewId();
-                    tv.setId(id);
-                    viewIdBuilder.add(id);
-                    binding.tags.addView(tv);
-                }
-            }
-            binding.flowWidget.setReferencedIds(Ints.toArray(viewIdBuilder.build()));
+            this.binding.tags.setVisibility(View.GONE);
         }
     }
 

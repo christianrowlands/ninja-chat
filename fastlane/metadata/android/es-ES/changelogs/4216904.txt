@@ -1,0 +1,1 @@
+* Corregir inicio de sesión en Prosody 0.12

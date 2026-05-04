@@ -1,0 +1,4 @@
+* Habilidade de selecionar o toque de chamada
+* Corrigir a descoberta de id de chave OpenPGP para OpenKeychain 5.6+
+* Apropriadamente verificar certificados TLS punycode
+* Melhorar a estabilidade da criação de sessões RTP (chamadas)

@@ -15,6 +15,5 @@
     <string name="improperly_formatted_provisioning">لم يتم التقاط الكود بطريقة جيّدة</string>
     <string name="tap_share_button_send_invite">إضغط على زر مشاركة لترسل إلى المتصل بك دعوة إلى %1$s.</string>
     <string name="if_contact_is_nearby_use_qr">إذا كان المتصل بك قريبا منك، يمكنه فحص الكود بالأسفل ليقبل دعوتك.</string>
-    <string name="easy_invite_share_text">إنظم %1$s وتحدّث معي: %2$s</string>
     <string name="share_invite_with">شارك الدعوة مع…</string>
 </resources>

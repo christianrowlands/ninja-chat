@@ -1,0 +1,3 @@
+* Mostrar barras pretas quando o vídeo remoto não corresponde à proporção da tela
+* Melhorar o desempenho da busca
+* Adicionar configuração para prevenir capturas de tela
