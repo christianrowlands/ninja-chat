@@ -1,0 +1,4 @@
+* Navegador multimedia mejorado con la posibilidad de compartir y eliminar archivos multimedia
+* Almacenamiento interno de archivos multimedia por defecto (con la opción de guardarlos automáticamente en la galería)
+* Envío inmediato de grabaciones de audio en lugar de adjuntarlas (además de la opción de recuperar el comportamiento anterior)
+* La opción «Mostrar código QR» incluye el parámetro de preautenticación en servidores con invitaciones sencillas

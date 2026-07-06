@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Non se puido verificar a identidade do servidor.</string>
     <string name="unknown_security_error">Fallo de seguridade descoñecido.</string>
     <string name="timeout_while_connecting_to_server">Caducou a conexión mentras conectaba co servidor.</string>
+    <string name="use_physical_device">Por favor usa un dispositivo físico para rexistrar a túa conta.</string>
 </resources>

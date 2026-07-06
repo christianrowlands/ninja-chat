@@ -2,16 +2,22 @@ package eu.siacs.conversations.services;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Longs;
-import dev.paseto.jpaseto.Pasetos;
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.android.Device;
 import eu.siacs.conversations.android.PhoneNumberContact;
 import eu.siacs.conversations.crypto.sasl.Plain;
 import eu.siacs.conversations.entities.Account;
@@ -45,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -93,7 +100,7 @@ public class QuickConversationsService extends AbstractQuickConversationsService
     private final SerialSingleThreadExecutor mSerialSingleThreadExecutor =
             new SerialSingleThreadExecutor(QuickConversationsService.class.getSimpleName());
 
-    QuickConversationsService(XmppConnectionService xmppConnectionService) {
+    QuickConversationsService(final XmppConnectionService xmppConnectionService) {
         super(xmppConnectionService);
     }
 
@@ -135,74 +142,104 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         }
     }
 
-    public void requestVerification(final Phonenumber.PhoneNumber phoneNumber) {
-        final String e164 = PhoneNumberUtilWrapper.normalize(service, phoneNumber);
+    public void requestVerificationDebounce(final Phonenumber.PhoneNumber phoneNumber) {
         if (mVerificationRequestInProgress.compareAndSet(false, true)) {
-            SmsRetrieverWrapper.start(service);
-            final var okHttp = HttpConnectionManager.okHttpClient(service);
-            final var requestBuilder =
-                    new Request.Builder()
-                            .url(
-                                    BASE_URL.newBuilder()
-                                            .addPathSegment("authentication")
-                                            .addPathSegment(e164)
-                                            .build())
-                            .addHeader("Installation-Id", getInstallationId())
-                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
-                            .get();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                    && QuicksyAuthentication.hasSharedSecret()) {
-                final String token =
-                        Pasetos.V2
-                                .LOCAL
-                                .builder()
-                                .setSharedSecret(QuicksyAuthentication.getSharedSecret())
-                                .setSubject(e164)
-                                .claim("Installation-Id", getInstallationId())
-                                .claim("User-Agent", HttpConnectionManager.getUserAgent())
-                                .claim(
-                                        "Device",
-                                        String.format("%s %s", Build.MANUFACTURER, Build.MODEL))
-                                .compact();
-                requestBuilder.addHeader("Authorization", token);
-            }
-            okHttp.newCall(requestBuilder.build())
-                    .enqueue(
-                            new Callback() {
-                                @Override
-                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                    final int code = getApiErrorCode(e);
-                                    synchronized (mOnVerificationRequested) {
-                                        for (OnVerificationRequested onVerificationRequested :
-                                                mOnVerificationRequested) {
-                                            onVerificationRequested.onVerificationRequestFailed(
-                                                    code);
-                                        }
-                                    }
-                                    mVerificationRequestInProgress.set(false);
-                                }
-
-                                @Override
-                                public void onResponse(
-                                        @NonNull Call call, @NonNull Response response) {
-                                    final var code = response.code();
-                                    if (code == 200) {
-                                        createAccountAndWait(phoneNumber, 0L);
-                                    } else if (code == 429) {
-                                        createAccountAndWait(phoneNumber, retryAfter(response));
-                                    } else {
-                                        synchronized (mOnVerificationRequested) {
-                                            for (OnVerificationRequested onVerificationRequested :
-                                                    mOnVerificationRequested) {
-                                                onVerificationRequested.onVerificationRequestFailed(
-                                                        code);
-                                            }
-                                        }
-                                    }
-                                    mVerificationRequestInProgress.set(false);
-                                }
-                            });
+            this.requestVerification(phoneNumber);
+        } else {
+            Log.d(Config.LOGTAG, "verification request already in progress");
         }
+    }
+
+    private void requestVerification(final Phonenumber.PhoneNumber phoneNumber) {
+        final var deviceId =
+                new DeviceIdentification(
+                        getInstallationId(), HttpConnectionManager.getUserAgent(), getDevice());
+        requestVerification(phoneNumber, deviceId);
+    }
+
+    private String getDevice() {
+        final var device = new Device(this.service);
+        if (device.isPhysicalDevice()) {
+            return device.getDeviceName();
+        } else {
+            return "Emulator";
+        }
+    }
+
+    private void requestVerification(
+            final Phonenumber.PhoneNumber phoneNumber, final DeviceIdentification deviceId) {
+        SmsRetrieverWrapper.start(service);
+        final var e164 = PhoneNumberUtilWrapper.normalize(service, phoneNumber);
+        final var okHttp = HttpConnectionManager.okHttpClient(service);
+        final var requestBuilder =
+                new Request.Builder()
+                        .url(
+                                BASE_URL.newBuilder()
+                                        .addPathSegment("authentication")
+                                        .addPathSegment(e164)
+                                        .build())
+                        .addHeader("Installation-Id", deviceId.installationId)
+                        .addHeader("Device", deviceId.device)
+                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                        .get();
+        if (QuicksyAuthentication.hasSharedSecret()) {
+            final var token = BaseEncoding.base64().encode(asAuthentication(e164, deviceId));
+            requestBuilder.addHeader("Authorization", token);
+        }
+        okHttp.newCall(requestBuilder.build())
+                .enqueue(
+                        new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                final int code = getApiErrorCode(e);
+                                onVerificationRequestFailed(code);
+                                mVerificationRequestInProgress.set(false);
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                                final var code = response.code();
+                                if (code == 200) {
+                                    createAccountAndWait(phoneNumber, 0L);
+                                } else if (code == 429) {
+                                    createAccountAndWait(phoneNumber, retryAfter(response));
+                                } else {
+                                    onVerificationRequestFailed(code);
+                                }
+                                mVerificationRequestInProgress.set(false);
+                            }
+                        });
+    }
+
+    private void onVerificationRequestFailed(final int code) {
+        synchronized (mOnVerificationRequested) {
+            for (final var onVerificationRequested : mOnVerificationRequested) {
+                onVerificationRequested.onVerificationRequestFailed(code);
+            }
+        }
+    }
+
+    private static byte[] asAuthentication(final String e164, final DeviceIdentification deviceId) {
+        return Hashing.hmacSha256(QuicksyAuthentication.getSharedSecret())
+                .hashString(asAuthenticationString(e164, deviceId), Charsets.UTF_8)
+                .asBytes();
+    }
+
+    private static String asAuthenticationString(
+            final String e164, final DeviceIdentification deviceIdentification) {
+        return asAuthenticationString(
+                e164,
+                deviceIdentification.installationId,
+                deviceIdentification.userAgent,
+                deviceIdentification.device);
+    }
+
+    private static String asAuthenticationString(final String... parts) {
+        final var cleaned =
+                Collections2.transform(
+                        ImmutableList.copyOf(parts),
+                        p -> CharMatcher.anyOf("\0\n").removeFrom(Objects.requireNonNull(p)));
+        return Joiner.on('\0').join(cleaned);
     }
 
     public void signalAccountStateChange() {
@@ -214,25 +251,9 @@ public class QuickConversationsService extends AbstractQuickConversationsService
 
     private void createAccountAndWait(
             final Phonenumber.PhoneNumber phoneNumber, final long timestamp) {
-        String local = PhoneNumberUtilWrapper.normalize(service, phoneNumber);
-        Log.d(
-                Config.LOGTAG,
-                "requesting verification for "
-                        + PhoneNumberUtilWrapper.normalize(service, phoneNumber));
-        Jid jid = Jid.of(local, Config.QUICKSY_DOMAIN, null);
-        Account account = AccountUtils.getFirst(service);
-        if (account == null || !account.getJid().asBareJid().equals(jid.asBareJid())) {
-            if (account != null) {
-                service.deleteAccount(account);
-            }
-            account = new Account(jid, CryptoHelper.createPassword(new SecureRandom()));
-            account.setOption(Account.OPTION_DISABLED, true);
-            account.setOption(Account.OPTION_MAGIC_CREATE, true);
-            account.setOption(Account.OPTION_UNVERIFIED, true);
-            service.createAccount(account);
-        }
+        createAccount(phoneNumber);
         synchronized (mOnVerificationRequested) {
-            for (OnVerificationRequested onVerificationRequested : mOnVerificationRequested) {
+            for (final var onVerificationRequested : mOnVerificationRequested) {
                 if (timestamp <= 0) {
                     onVerificationRequested.onVerificationRequested();
                 } else {
@@ -242,85 +263,107 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         }
     }
 
-    public void verify(final Account account, final String pin) {
-        if (mVerificationInProgress.compareAndSet(false, true)) {
-            final var okHttp = HttpConnectionManager.okHttpClient(service);
-            final RequestBody body =
-                    RequestBody.create(
-                            account.getPassword(), MediaType.parse("text/plain; charset=utf-8"));
+    private void createAccount(final Phonenumber.PhoneNumber phoneNumber) {
+        final var local = PhoneNumberUtilWrapper.normalize(service, phoneNumber);
+        final var jid = Jid.of(local, Config.QUICKSY_DOMAIN, null);
+        final var existing = AccountUtils.getFirst(this.service);
+        Log.d(Config.LOGTAG, "creating account " + local);
+        if (existing != null) {
+            if (existing.getJid().asBareJid().equals(jid.asBareJid())) {
+                return;
+            }
+            this.service.deleteAccount(existing);
+        }
+        final var account = new Account(jid, CryptoHelper.createPassword(new SecureRandom()));
+        account.setOption(Account.OPTION_DISABLED, true);
+        account.setOption(Account.OPTION_MAGIC_CREATE, true);
+        account.setOption(Account.OPTION_UNVERIFIED, true);
+        this.service.createAccount(account);
+    }
 
-            final var request =
-                    new Request.Builder()
-                            .url(BASE_URL.newBuilder().addPathSegment("password").build())
-                            .addHeader(
-                                    "Authorization",
-                                    Plain.getAuthorization(account.getUsername(), pin))
-                            .addHeader("Installation-Id", getInstallationId())
-                            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
-                            .post(body)
-                            .build();
-            okHttp.newCall(request)
-                    .enqueue(
-                            new Callback() {
-                                @Override
-                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                    final int code = getApiErrorCode(e);
+    public void verifyDebounce(final Account account, final String pin) {
+        if (mVerificationInProgress.compareAndSet(false, true)) {
+            this.verify(account, pin);
+        } else {
+            Log.d(Config.LOGTAG, "verification already in progress");
+        }
+    }
+
+    private void verify(final Account account, final String pin) {
+        final var okHttp = HttpConnectionManager.okHttpClient(service);
+        final RequestBody body =
+                RequestBody.create(
+                        account.getPassword(), MediaType.parse("text/plain; charset=utf-8"));
+
+        final var request =
+                new Request.Builder()
+                        .url(BASE_URL.newBuilder().addPathSegment("password").build())
+                        .addHeader(
+                                "Authorization", Plain.getAuthorization(account.getUsername(), pin))
+                        .addHeader("Installation-Id", getInstallationId())
+                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                        .post(body)
+                        .build();
+        okHttp.newCall(request)
+                .enqueue(
+                        new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                final int code = getApiErrorCode(e);
+                                synchronized (mOnVerification) {
+                                    for (OnVerification onVerification : mOnVerification) {
+                                        onVerification.onVerificationFailed(code);
+                                    }
+                                }
+                                mVerificationInProgress.set(false);
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                                final var code = response.code();
+                                if (code == 200 || code == 201) {
+                                    account.setOption(Account.OPTION_UNVERIFIED, false);
+                                    account.setOption(Account.OPTION_DISABLED, false);
+                                    awaitingAccountStateChange = new CountDownLatch(1);
+                                    service.updateAccount(account);
+                                    try {
+                                        if (!awaitingAccountStateChange.await(
+                                                5, TimeUnit.SECONDS)) {
+                                            Log.d(
+                                                    Config.LOGTAG,
+                                                    account.getJid().asBareJid()
+                                                            + ": timer expired while waiting"
+                                                            + " for account to connect");
+                                        }
+                                    } catch (InterruptedException e) {
+                                        Log.d(
+                                                Config.LOGTAG,
+                                                account.getJid().asBareJid()
+                                                        + ":interrupted while waiting for"
+                                                        + " account to connect");
+                                    }
+                                    synchronized (mOnVerification) {
+                                        for (OnVerification onVerification : mOnVerification) {
+                                            onVerification.onVerificationSucceeded();
+                                        }
+                                    }
+                                } else if (code == 429) {
+                                    final long retryAfter = retryAfter(response);
+                                    synchronized (mOnVerification) {
+                                        for (OnVerification onVerification : mOnVerification) {
+                                            onVerification.onVerificationRetryAt(retryAfter);
+                                        }
+                                    }
+                                } else {
                                     synchronized (mOnVerification) {
                                         for (OnVerification onVerification : mOnVerification) {
                                             onVerification.onVerificationFailed(code);
                                         }
                                     }
-                                    mVerificationInProgress.set(false);
                                 }
-
-                                @Override
-                                public void onResponse(
-                                        @NonNull Call call, @NonNull Response response) {
-                                    final var code = response.code();
-                                    if (code == 200 || code == 201) {
-                                        account.setOption(Account.OPTION_UNVERIFIED, false);
-                                        account.setOption(Account.OPTION_DISABLED, false);
-                                        awaitingAccountStateChange = new CountDownLatch(1);
-                                        service.updateAccount(account);
-                                        try {
-                                            if (!awaitingAccountStateChange.await(
-                                                    5, TimeUnit.SECONDS)) {
-                                                Log.d(
-                                                        Config.LOGTAG,
-                                                        account.getJid().asBareJid()
-                                                                + ": timer expired while waiting"
-                                                                + " for account to connect");
-                                            }
-                                        } catch (InterruptedException e) {
-                                            Log.d(
-                                                    Config.LOGTAG,
-                                                    account.getJid().asBareJid()
-                                                            + ":interrupted while waiting for"
-                                                            + " account to connect");
-                                        }
-                                        synchronized (mOnVerification) {
-                                            for (OnVerification onVerification : mOnVerification) {
-                                                onVerification.onVerificationSucceeded();
-                                            }
-                                        }
-                                    } else if (code == 429) {
-                                        final long retryAfter = retryAfter(response);
-                                        synchronized (mOnVerification) {
-                                            for (OnVerification onVerification : mOnVerification) {
-                                                onVerification.onVerificationRetryAt(retryAfter);
-                                            }
-                                        }
-                                    } else {
-                                        synchronized (mOnVerification) {
-                                            for (OnVerification onVerification : mOnVerification) {
-                                                onVerification.onVerificationFailed(code);
-                                            }
-                                        }
-                                    }
-                                    mVerificationInProgress.set(false);
-                                }
-                            });
-        }
+                                mVerificationInProgress.set(false);
+                            }
+                        });
     }
 
     private String getInstallationId() {
@@ -429,7 +472,7 @@ public class QuickConversationsService extends AbstractQuickConversationsService
         return result;
     }
 
-    private void refresh(Account account, Collection<PhoneNumberContact> contacts) {
+    private void refresh(final Account account, final Collection<PhoneNumberContact> contacts) {
         for (final var contact :
                 account.getRoster().getWithSystemAccounts(PhoneNumberContact.class)) {
             final Uri uri = contact.getSystemAccount();
@@ -588,4 +631,6 @@ public class QuickConversationsService extends AbstractQuickConversationsService
                             >= Config.CONTACT_SYNC_RETRY_INTERVAL;
         }
     }
+
+    private record DeviceIdentification(String installationId, String userAgent, String device) {}
 }

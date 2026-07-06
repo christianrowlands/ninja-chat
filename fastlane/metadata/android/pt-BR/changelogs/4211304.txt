@@ -1,0 +1,1 @@
+* Executar Backup como serviço de primeiro plano para prevenir a parada do processo após 10 minutos

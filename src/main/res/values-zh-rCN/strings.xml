@@ -37,9 +37,9 @@
     <string name="moderator">主持人</string>
     <string name="participant">参与者</string>
     <string name="visitor">参观者</string>
-    <string name="remove_contact_text">是否从联系人列表移除 %s？将不会移除与对方的对话。</string>
-    <string name="block_contact_text">是否屏蔽 %s 向您发送消息？</string>
-    <string name="unblock_contact_text">是否取消屏蔽 %s 并允许对方向您发送消息？</string>
+    <string name="remove_contact_text">您要从您的联系人列表中移除 %s 吗？与该联系人的对话将不会被移除。</string>
+    <string name="block_contact_text">您要屏蔽 %s 向您发送消息吗？</string>
+    <string name="unblock_contact_text">您要取消屏蔽 %s 并允许对方向您发送消息吗？</string>
     <string name="block_domain_text">屏蔽来自 %s 的所有联系人？</string>
     <string name="unblock_domain_text">取消屏蔽来自 %s 的所有联系人？</string>
     <string name="contact_blocked">联系人已屏蔽</string>
@@ -68,7 +68,7 @@
     <string name="problem_connecting_to_accounts">无法连接到多个账号</string>
     <string name="touch_to_fix">点按即可管理账号</string>
     <string name="attach_file">附加文件</string>
-    <string name="not_in_roster">对方不在您的联系人列表中，是否添加？</string>
+    <string name="not_in_roster">此联系人不在您的联系人列表中，要添加吗？</string>
     <string name="add_contact">添加联系人</string>
     <string name="send_failed">发送失败</string>
     <string name="preparing_image">正在准备发送图片</string>
@@ -76,13 +76,8 @@
     <string name="sharing_files_please_wait">正在分享文件。请稍候…</string>
     <string name="action_clear_history">清除历史</string>
     <string name="clear_conversation_history">清除聊天记录</string>
-    <string name="clear_histor_msg">是否要删除此对话中的所有消息？
-\n
-\n<b>警告：</b>存储在其他设备或服务器上的消息将不受影响。</string>
+    <string name="clear_histor_msg">要删除此对话中的所有消息吗？\n\n<b>警告：</b>此操作不会影响存储在其他设备或服务器上的消息。</string>
     <string name="delete_file_dialog">删除文件</string>
-    <string name="delete_file_dialog_msg">是否确定要删除此文件？
-\n
-\n<b>警告：</b>存储在其他设备或服务器上此文件的副本将不会删除。 </string>
     <string name="choose_presence">选择设备</string>
     <string name="send_unencrypted_message">发送未加密消息</string>
     <string name="send_message">发送消息</string>
@@ -90,7 +85,7 @@
     <string name="send_omemo_x509_message">发送 v\\OMEMO 加密消息</string>
     <string name="your_nick_has_been_changed">您的昵称已更改</string>
     <string name="send_unencrypted">发送未加密</string>
-    <string name="decryption_failed">解密失败。也许您没有合适的私钥。</string>
+    <string name="decryption_failed">解密失败。可能是您没有正确的私钥。</string>
     <string name="openkeychain_required">OpenKeychain</string>
     <string name="openkeychain_required_long"><![CDATA[%1$s 使用 <b>OpenKeychain</b> 来加密和解密消息并管理公钥。<br><br>它采用 GPLv3+ 许可，可在 F-Droid 和 Google Play 上获取。<br><br><small>（之后请重启 %1$s。）</small>]]></string>
     <string name="restart">重启</string>
@@ -99,9 +94,9 @@
     <string name="offering">正在提供…</string>
     <string name="waiting">正在等待…</string>
     <string name="no_pgp_key">未找到 OpenPGP 密钥</string>
-    <string name="contact_has_no_pgp_key">无法加密您的消息，因为您的联系人未公布其公钥。\n\n<small>请让您的联系人设置 OpenPGP。</small></string>
+    <string name="contact_has_no_pgp_key">无法加密您的消息，因为您的联系人未发布其公钥。\n\n<small>请让您的联系人设置 OpenPGP。</small></string>
     <string name="no_pgp_keys">未找到 OpenPGP 密钥</string>
-    <string name="contacts_have_no_pgp_keys">无法加密您的消息，因为您的联系人未公布其公钥。\n\n<small>请让您的联系人设置 OpenPGP。</small></string>
+    <string name="contacts_have_no_pgp_keys">无法加密您的消息，因为您的联系人未发布其公钥。\n\n<small>请让您的联系人设置 OpenPGP。</small></string>
     <string name="pref_general">常规</string>
     <string name="pref_accept_files">接受文件</string>
     <string name="pref_accept_files_summary">自动接受小于此大小的文件…</string>
@@ -133,13 +128,11 @@
     <string name="send_presence_updates">发送在线状态更新</string>
     <string name="receive_presence_updates">接收在线状态更新</string>
     <string name="ask_for_presence_updates">请求在线状态更新</string>
-    <string name="attach_choose_picture">选择图片</string>
-    <string name="attach_take_picture">拍摄照片</string>
     <string name="preemptively_grant">预先同意订阅请求</string>
     <string name="error_not_an_image_file">您选择的文件不是图片</string>
     <string name="error_compressing_image">无法转换图片文件</string>
     <string name="error_file_not_found">未找到文件</string>
-    <string name="error_io_exception">常规 I/O 错误。也许存储空间已用完？</string>
+    <string name="error_io_exception">常规 I/O 错误。可能是您的存储空间不足？</string>
     <string name="error_security_exception_during_image_copy">您用于选择此图片的应用未提供足够的权限来读取文件。\n\n<small>请使用其他文件管理器选择图片</small>。</string>
     <string name="error_security_exception">您用于分享此文件的应用未提供足够的权限。</string>
     <string name="account_status_unknown">未知</string>
@@ -171,19 +164,17 @@
     <string name="mgmt_account_publish_avatar">发布头像</string>
     <string name="mgmt_account_publish_pgp">发布 OpenPGP 公钥</string>
     <string name="unpublish_pgp">移除 OpenPGP 公钥</string>
-    <string name="unpublish_pgp_message">是否确定要从在线状态公布中移除 OpenPGP 公钥？
-\n您的联系人将无法再向您发送 OpenPGP 加密消息。</string>
+    <string name="unpublish_pgp_message">您确定要从在线状态发布中移除您的 OpenPGP 公钥吗？\n您的联系人将无法再向您发送 OpenPGP 加密消息。</string>
     <string name="openpgp_has_been_published">OpenPGP 公钥已发布。</string>
     <string name="mgmt_account_enable">启用账号</string>
-    <string name="mgmt_account_delete_confirm_text">是否确定要删除账号？删除账号会清空全部聊天记录</string>
-    <string name="attach_record_voice">录制语音</string>
+    <string name="mgmt_account_delete_confirm_text">您确定要删除账号吗？删除您的账号会清空全部聊天记录</string>
     <string name="account_settings_jabber_id">XMPP 地址</string>
     <string name="block_jabber_id">屏蔽 XMPP 地址</string>
     <string name="account_settings_example_jabber_id">用户名@ninja.chat</string>
     <string name="password">密码</string>
     <string name="invalid_jid">此 XMPP 地址无效</string>
     <string name="error_out_of_memory">空间不足。图片太大</string>
-    <string name="add_phone_book_text">是否要将 %s 添加到您的通讯录？</string>
+    <string name="add_phone_book_text">要将 %s 添加到您的通讯录中吗？</string>
     <string name="server_info_show_more">服务器信息</string>
     <string name="server_info_mam">XEP-0313：消息归档管理</string>
     <string name="server_info_carbon_messages">XEP-0280：消息抄送</string>
@@ -197,8 +188,8 @@
     <string name="server_info_push">XEP-0357：推送</string>
     <string name="server_info_available">有效</string>
     <string name="server_info_unavailable">无效</string>
-    <string name="missing_public_keys">缺少公钥公布</string>
-    <string name="install_openkeychain">加密消息。请安装 OpenKeychain 解密。</string>
+    <string name="missing_public_keys">缺少公钥发布</string>
+    <string name="install_openkeychain">加密消息。请安装 OpenKeychain 进行解密。</string>
     <string name="openpgp_messages_found">发现新的 OpenPGP 加密消息</string>
     <string name="openpgp_key_id">OpenPGP 密钥 ID</string>
     <string name="omemo_fingerprint">OMEMO 指纹</string>
@@ -226,12 +217,8 @@
     <string name="delete_bookmark">删除书签</string>
     <string name="destroy_room">解散群聊</string>
     <string name="destroy_channel">解散频道</string>
-    <string name="destroy_room_dialog">是否确定要解散此群聊？
-\n
-\n<b>警告：</b>将在服务器上完全移除群聊。</string>
-    <string name="destroy_channel_dialog">是否确定要解散此公开频道？
-\n
-\n<b>警告：</b>将在服务器上完全移除频道。</string>
+    <string name="destroy_room_dialog">您确定要解散此群聊吗？\n\n<b>警告：</b>该群聊将在服务器上被彻底移除。</string>
+    <string name="destroy_channel_dialog">您确定要解散此公开频道吗？\n\n<b>警告：</b>该频道将在服务器上被彻底移除。</string>
     <string name="could_not_destroy_room">无法解散群聊</string>
     <string name="could_not_destroy_channel">无法解散频道</string>
     <string name="action_edit_subject">编辑群聊主题</string>
@@ -264,9 +251,7 @@
     <string name="enable">启用</string>
     <string name="conference_requires_password">进入群聊需要密码</string>
     <string name="enter_password">输入密码</string>
-    <string name="request_presence_updates">请先向您的联系人请求在线状态更新。
-\n
-\n<small>将用于确定对方正在使用的聊天应用</small>。</string>
+    <string name="request_presence_updates">请先向您的联系人请求在线状态更新。\n\n<small>此操作将用于确定您的联系人正在使用的聊天应用</small>。</string>
     <string name="request_now">立即请求</string>
     <string name="ignore">忽略</string>
     <string name="without_mutual_presence_updates"><b>警告：</b>在双方未更新在线状态的情况下发送此消息将会出现未知问题。
@@ -326,7 +311,6 @@
     <string name="restoring_backup">正在恢复备份</string>
     <string name="notification_restored_backup_title">您的备份已恢复</string>
     <string name="notification_restored_backup_subtitle">请勿忘记启用账号。</string>
-    <string name="choose_file">选择文件</string>
     <string name="receiving_x_file">正在接收 %1$s（%2$d%% 已完成）</string>
     <string name="download_x_file">下载 %s</string>
     <string name="delete_x_file">删除 %s</string>
@@ -348,12 +332,12 @@
     <string name="no_conference_server_found">未找到群聊服务器</string>
     <string name="conference_creation_failed">无法创建群聊</string>
     <string name="account_image_description">账号头像</string>
-    <string name="copy_omemo_clipboard_description">复制 OMEMO 指纹到剪贴板</string>
+    <string name="copy_omemo_clipboard_description">将 OMEMO 指纹复制到剪贴板</string>
     <string name="regenerate_omemo_key">重新生成 OMEMO 密钥</string>
     <string name="clear_other_devices">清除设备</string>
-    <string name="clear_other_devices_desc">是否确定要从 OMEMO 公布中清除所有其他设备？下次您的设备连接时将会重新公布自身，但可能无法接收在此期间发送的消息。</string>
-    <string name="error_no_keys_to_trust_server_error">此联系人没有可用密钥。 \n无法从服务器获取新密钥。也许是对方的服务器有问题？</string>
-    <string name="error_no_keys_to_trust_presence">此联系人没有可用密钥。 \n请确保双方都有在线状态订阅。</string>
+    <string name="clear_other_devices_desc">您确定要从 OMEMO 发布中清除所有其他设备吗？下次您的设备连接时将会重新发布自身信息，但可能无法接收在此期间发送的消息。</string>
+    <string name="error_no_keys_to_trust_server_error">此联系人没有可用的密钥。\n无法从服务器获取新密钥。可能是您的联系人的服务器出现了问题？</string>
+    <string name="error_no_keys_to_trust_presence">此联系人没有可用的密钥。\n请确保双方都有在线状态订阅。</string>
     <string name="error_trustkeys_title">出了点问题</string>
     <string name="fetching_history_from_server">正在从服务器获取历史记录</string>
     <string name="no_more_history_on_server">服务器上没有更多历史记录</string>
@@ -410,7 +394,6 @@
     <string name="contacts_have_stopped_typing">%s 已停止输入</string>
     <string name="pref_chat_states">输入通知</string>
     <string name="pref_chat_states_summary">让您的联系人知道您正在给他们写消息</string>
-    <string name="send_location">发送位置</string>
     <string name="show_location">显示位置</string>
     <string name="no_application_found_to_display_location">未找到可以显示位置的应用</string>
     <string name="location">位置</string>
@@ -426,10 +409,7 @@
     <plurals name="toast_delete_certificates">
         <item quantity="other">%d 个证书已删除</item>
     </plurals>
-    <string name="pref_quick_action_summary">将“发送”按钮替换为快捷操作</string>
     <string name="pref_quick_action">快捷操作</string>
-    <string name="none">无</string>
-    <string name="recently_used">最近用过</string>
     <string name="choose_quick_action">选择快捷操作</string>
     <string name="search_contacts">搜索联系人</string>
     <string name="send_private_message">发送私信</string>
@@ -484,7 +464,7 @@
     <string name="shared_images_with_x">图片已分享给 %s</string>
     <string name="shared_text_with_x">文本已分享给 %s</string>
     <string name="no_storage_permission">授予 %1$s 访问外部存储的权限</string>
-    <string name="no_camera_permission">授予 %1$s 相机使用权限</string>
+    <string name="no_camera_permission">授予 %1$s 摄像头使用权限</string>
     <string name="sync_with_contacts">联系人列表集成</string>
     <string name="sync_with_contacts_long">%1$s 在您的设备上本地处理您的联系人列表，以向您显示 XMPP 上匹配联系人的名称和个人资料照片。\n\n任何联系人列表数据都不会离开您的设备！</string>
     <string name="notify_on_all_messages">通知所有消息</string>
@@ -562,7 +542,7 @@
     <string name="pref_delete_omemo_identities">删除 OMEMO 身份</string>
     <string name="pref_delete_omemo_identities_summary">重新生成 OMEMO 密钥。您的所有联系人将必须再次验证您。仅将此作为最后的方法。</string>
     <string name="delete_selected_keys">删除所选密钥</string>
-    <string name="error_publish_avatar_offline">连接后才能发布头像。</string>
+    <string name="error_publish_avatar_offline">您必须处于连接状态才能发布您的头像。</string>
     <string name="show_error_message">显示错误消息</string>
     <string name="error_message">错误消息</string>
     <string name="data_saver_enabled">流量节省程序已启用</string>
@@ -593,7 +573,7 @@
     <string name="show_inactive_devices">显示非活动设备</string>
     <string name="hide_inactive_devices">隐藏非活动设备</string>
     <string name="distrust_omemo_key">不信任设备</string>
-    <string name="distrust_omemo_key_text">是否确定要移除此设备的验证状态？\n此设备及其消息将被标记为“不受信任”。</string>
+    <string name="distrust_omemo_key_text">您确定要移除此设备的验证状态吗？\n此设备及其发送的消息将被标记为“不受信任”。</string>
     <plurals name="seconds">
         <item quantity="other">%d 秒</item>
     </plurals>
@@ -638,7 +618,6 @@
     <string name="pref_validate_hostname_summary">包含已验证主机名的服务器证书视为已通过验证</string>
     <string name="certificate_does_not_contain_jid">证书不包含 XMPP 地址</string>
     <string name="server_info_partial">部分</string>
-    <string name="attach_record_video">录制视频</string>
     <string name="copy_to_clipboard">复制</string>
     <string name="message_copied_to_clipboard">消息已复制到剪贴板</string>
     <string name="message">消息</string>
@@ -647,7 +626,7 @@
     <string name="mtm_trust_anchor">服务器证书并非由已知的证书颁发机构签发。</string>
     <string name="mtm_accept_servername">接受不匹配的服务器名称？</string>
     <string name="mtm_hostname_mismatch">服务器无法以“%s”进行身份验证。证书仅对此有效：</string>
-    <string name="mtm_connect_anyway">是否仍要连接？</string>
+    <string name="mtm_connect_anyway">仍要连接吗？</string>
     <string name="mtm_cert_details">证书详情：</string>
     <string name="once">仅一次</string>
     <string name="qr_code_scanner_needs_access_to_camera">二维码扫描器需要摄像头使用权限</string>
@@ -656,11 +635,11 @@
     <string name="edit_status_message_title">编辑状态消息</string>
     <string name="edit_status_message">编辑状态消息</string>
     <string name="disable_encryption">禁用加密</string>
-    <string name="error_trustkey_general">%1$s 无法向 %2$s 发送加密消息。可能是由于联系人使用了无法处理 OMEMO 的过时服务器或客户端。</string>
+    <string name="error_trustkey_general">%1$s 无法向 %2$s 发送加密消息。这可能是由于您的联系人使用了过时的服务器或客户端，无法处理 OMEMO。</string>
     <string name="error_trustkey_device_list">无法获取设备列表</string>
     <string name="error_trustkey_bundle">无法获取密钥</string>
     <string name="error_trustkey_hint_mutual">提示：某些情况下，双方相互添加到联系人列表即可解决此问题。</string>
-    <string name="disable_encryption_message">是否确定要为此对话禁用 OMEMO 加密？\n这将允许服务器管理员读取您的消息，但这可能是与使用过时客户端的用户进行通信的唯一方式。</string>
+    <string name="disable_encryption_message">您确定要为此对话禁用 OMEMO 加密吗？\n此操作将允许您的服务器管理员读取您的消息，但这可能是与使用过时客户端的用户进行通信的唯一方式。</string>
     <string name="disable_now">立即禁用</string>
     <string name="draft">草稿：</string>
     <string name="pref_omemo_setting">OMEMO 加密</string>
@@ -704,7 +683,7 @@
     <string name="providing_a_name_is_optional">提供名称是可选的</string>
     <string name="create_dialog_group_chat_name">群聊名称</string>
     <string name="conference_destroyed">此群聊已解散</string>
-    <string name="unable_to_save_recording">无法保存录制</string>
+    <string name="unable_to_save_recording">无法保存录制内容</string>
     <string name="foreground_service_channel_name">前台服务</string>
     <string name="foreground_service_channel_description">此通知类别用于显示永久通知，表明 %1$s 正在运行。</string>
     <string name="notification_group_status_information">状态信息</string>
@@ -726,11 +705,11 @@
     <string name="view_media">查看媒体</string>
     <string name="group_chat_members">参与者</string>
     <string name="media_browser">媒体浏览器</string>
-    <string name="security_violation_not_attaching_file">由于违反安全规定，文件已删除。</string>
+    <string name="security_violation_not_attaching_file">由于违反安全规定，文件已被删除。</string>
     <string name="pref_video_compression">视频画质</string>
     <string name="pref_video_compression_summary">画质越低，文件越小</string>
-    <string name="video_360p">360p（中）</string>
-    <string name="video_720p">720p（高）</string>
+    <string name="video_360p">低（360p）</string>
+    <string name="video_720p">高（720p）</string>
     <string name="cancelled">已取消</string>
     <string name="already_drafting_message">您已经在起草消息了。</string>
     <string name="feature_not_implemented">功能未实现</string>
@@ -739,7 +718,7 @@
     <string name="phone_number">电话号码</string>
     <string name="verify_your_phone_number">验证您的电话号码</string>
     <string name="enter_country_code_and_phone_number">Quicksy 将发送短信（运营商可能收费）来验证电话号码。请输入您的国家/地区代码和电话号码：</string>
-    <string name="we_will_be_verifying"><![CDATA[我们将验证电话号码 <br/><br/><b>%s</b><br/><br/> 是否正确，或者编辑号码？]]></string>
+    <string name="we_will_be_verifying"><![CDATA[我们将对以下电话号码进行验证 <br><br><b>%s</b><br><br> 这个号码可以吗？还是您要编辑号码？]]></string>
     <string name="not_a_valid_phone_number">%s 不是有效的电话号码。</string>
     <string name="please_enter_your_phone_number">请输入您的电话号码。</string>
     <string name="search_countries">搜索国家/地区</string>
@@ -753,7 +732,7 @@
     <string name="back">返回</string>
     <string name="possible_pin">已自动从剪贴板粘贴可能的 PIN 码。</string>
     <string name="please_enter_pin">请输入六位数的 PIN 码。</string>
-    <string name="abort_registration_procedure">是否确定要中止注册流程？</string>
+    <string name="abort_registration_procedure">您确定要中止注册流程吗？</string>
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="verifying">正在验证…</string>
@@ -785,7 +764,7 @@
     <string name="no_market_app_installed">未安装应用商店。</string>
     <string name="group_chat_will_make_your_jabber_id_public">此频道将公开您的 XMPP 地址</string>
     <string name="ebook">电子书</string>
-    <string name="video_original">未压缩（原始）</string>
+    <string name="video_original">原始（未压缩）</string>
     <string name="open_with">打开方式…</string>
     <string name="set_profile_picture">头像</string>
     <string name="choose_account">选择账号</string>
@@ -794,7 +773,7 @@
     <string name="enter_password_to_restore">请输入账号 %s 的密码以恢复备份。</string>
     <string name="restore_warning">请勿通过恢复 OMEMO 密钥尝试克隆（同时运行）安装。恢复 OMEMO 密钥仅适用于迁移或您丢失原始设备的情况。</string>
     <string name="unable_to_restore_backup">无法恢复备份。</string>
-    <string name="unable_to_decrypt_backup">无法解密备份。密码是否正确？</string>
+    <string name="unable_to_decrypt_backup">无法解密备份。密码正确吗？</string>
     <string name="backup_channel_name">备份和恢复</string>
     <string name="enter_jabber_id">输入 XMPP 地址</string>
     <string name="create_group_chat">创建群聊</string>
@@ -843,7 +822,7 @@
     <string name="please_enter_password">请输入此账号的密码</string>
     <string name="unable_to_perform_this_action">无法执行此操作</string>
     <string name="open_join_dialog">加入公开频道…</string>
-    <string name="sharing_application_not_grant_permission">分享应用未授予访问此文件的权限。</string>
+    <string name="sharing_application_not_grant_permission">共享应用未授予访问此文件的权限。</string>
     <string name="group_chats_and_channels"><![CDATA[群聊和频道]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">本地服务器</string>
@@ -851,7 +830,6 @@
     <string name="pref_channel_discovery">频道发现方法</string>
     <string name="backup">备份</string>
     <string name="category_about">关于</string>
-    <string name="please_enable_an_account">请启用账号</string>
     <string name="make_call">发起通话</string>
     <string name="rtp_state_incoming_call">来电</string>
     <string name="rtp_state_incoming_video_call">视频通话来电</string>
@@ -894,16 +872,14 @@
     <string name="audio_call">音频通话</string>
     <string name="video_call">视频通话</string>
     <string name="help">帮助</string>
-    <string name="microphone_unavailable">麦克风无法使用</string>
-    <string name="only_one_call_at_a_time">每次只能有一个通话。</string>
+    <string name="microphone_unavailable">您的麦克风无法使用</string>
+    <string name="only_one_call_at_a_time">您一次只能进行一个通话。</string>
     <string name="return_to_ongoing_call">返回当前通话</string>
     <string name="could_not_switch_camera">无法切换摄像头</string>
     <string name="add_to_favorites">置顶</string>
     <string name="remove_from_favorites">取消置顶</string>
     <string name="gpx_track">GPX 轨迹</string>
     <string name="could_not_correct_message">无法编辑消息</string>
-    <string name="search_all_conversations">所有对话</string>
-    <string name="search_this_conversation">此对话</string>
     <string name="your_avatar">您的头像</string>
     <string name="avatar_for_x">%s 的头像</string>
     <string name="encrypted_with_omemo">使用 OMEMO 加密</string>
@@ -956,10 +932,10 @@
     <string name="this_account_is_logged_out">您已退出此账号的登录</string>
     <string name="log_in">登录</string>
     <string name="hide_notification">隐藏通知</string>
-    <string name="contact_uses_unverified_keys">联系人使用未经验证的设备。扫描其二维码进行验证并阻止主动式中间人攻击。</string>
+    <string name="contact_uses_unverified_keys">您的联系人正在使用未经验证的设备。请扫描其二维码进行验证以阻止主动式中间人攻击。</string>
     <string name="log_out">退出登录</string>
     <string name="account_state_logged_out">已退出登录</string>
-    <string name="unverified_devices">您正在使用未经验证的设备。扫描您其他设备的二维码进行验证并阻止主动式中间人攻击。</string>
+    <string name="unverified_devices">您正在使用未经验证的设备。请扫描您其他设备上的二维码进行验证以阻止主动式中间人攻击。</string>
     <string name="report_spam_and_block">举报垃圾信息并屏蔽垃圾信息发送者</string>
     <string name="report_spam">举报垃圾信息</string>
     <string name="welcome_header_quicksy">欢迎使用 Quicksy！</string>
@@ -969,8 +945,8 @@
     <string name="rtp_state_contact_offline">联系人已离线</string>
     <string name="no_permission_to_place_call">没有发起通话的权限</string>
     <string name="call_integration_not_available">无法使用通话集成功能！</string>
-    <string name="remove_bookmark_and_close">是否移除 %s 的书签并归档对话？</string>
-    <string name="remove_bookmark">是否移除 %s 的书签？</string>
+    <string name="remove_bookmark_and_close">您要移除 %s 的书签并将该对话归档吗？</string>
+    <string name="remove_bookmark">您要移除 %s 的书签吗？</string>
     <string name="delete_and_close">删除并归档对话</string>
     <string name="channel_discover_opt_in_message">频道发现使用称为 &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt; 的第三方服务。&lt;br&gt;&lt;br&gt;使用此功能会将您的 IP 地址和搜索词传输到此服务。如需更多信息，请参阅其&lt;a href=https://search.jabber.network/privacy&gt;隐私政策&lt;/a&gt;。</string>
     <string name="start_chat">开始对话</string>
@@ -1007,7 +983,7 @@
     <string name="pref_category_sending">发送</string>
     <string name="pref_category_receiving">接收</string>
     <string name="pref_connection_summary">主机名和端口、Tor</string>
-    <string name="pref_connection_summary_w_cd">主机名和端口、Tor、P2P、频道发现</string>
+    <string name="pref_connection_summary_w_cd">主机名和端口、Tor、频道发现</string>
     <string name="pref_keyboard_options">键盘</string>
     <string name="pref_category_application">应用程序</string>
     <string name="pref_category_interaction">互动</string>
@@ -1015,7 +991,7 @@
     <string name="pref_title_interface">界面</string>
     <string name="pref_category_operating_system">操作系统</string>
     <string name="pref_summary_security">端到端加密、验证前盲目信任、中间人攻击检测</string>
-    <string name="pref_privacy_summary">输入通知、最后上线、在线状态</string>
+    <string name="pref_privacy_summary">输入通知、最后上线、P2P 中继</string>
     <string name="pref_category_engagement_notifications">参与通知</string>
     <string name="pref_up_long_summary">在充当 UnifiedPush 分发程序时，将利用持久、可靠且省电的 XMPP 连接来唤醒其他兼容 UnifiedPush 的应用，如 Tusky、Ltt.rs、FluffyChat 等。</string>
     <string name="pref_allow_screenshots_summary">在切换应用时显示应用内容并允许截屏</string>
@@ -1056,17 +1032,17 @@
     <string name="more_reactions">更多回应</string>
     <string name="add_reaction_title">添加回应</string>
     <string name="could_not_modify_call">无法修改通话</string>
-    <string name="clients_may_not_support_av">联系人的 XMPP 客户端可能不支持音频/视频通话。</string>
+    <string name="clients_may_not_support_av">您的联系人的 XMPP 客户端可能不支持音频/视频通话。</string>
     <string name="pref_chat_bubbles_summary">背景颜色、字体大小、头像</string>
     <string name="pref_chat_bubbles">消息气泡</string>
     <string name="pref_title_bubbles">消息气泡</string>
     <string name="pref_call_integration">通话集成</string>
     <string name="custom_notifications">自定义通知</string>
-    <string name="custom_notifications_enable">是否为此对话启用自定义通知（重要程度、声音、振动）设置？</string>
+    <string name="custom_notifications_enable">要为此对话启用自定义通知（重要程度、声音、振动）设置吗？</string>
     <string name="pref_call_integration_summary">此应用的通话会与常规通话交互，例如新通话开始时自动结束当前通话。</string>
     <string name="pref_align_start_summary">在左侧显示所有消息，包括发送的消息，以实现统一的聊天布局。</string>
     <string name="pref_align_start">左对齐消息</string>
-    <string name="delete_avatar_message">是否删除头像？部分客户端可能会继续显示已缓存的头像副本。</string>
+    <string name="delete_avatar_message">您要删除您的头像吗？部分客户端可能会继续显示已缓存的头像副本。</string>
     <string name="show_to_contacts_only">仅对联系人显示</string>
     <string name="account_status_connection_timeout">连接超时</string>
     <string name="retry_with_p2p">使用 P2P 重试</string>
@@ -1156,4 +1132,46 @@
     <string name="pref_include_silent_modes_summary">当通知被静音或手机处于振动模式时，也将您的状态设置为忙碌。</string>
     <string name="presence_offline">离线</string>
     <string name="rtp_state_no_internet">未连接到互联网</string>
+    <string name="send">发送</string>
+    <string name="pref_auto_send_recording">自动发送录音</string>
+    <string name="pref_auto_send_recording_summary">录音完成后自动发送语音消息。</string>
+    <string name="pref_presence_settings_summary">设备锁定时离开、同步系统勿扰模式</string>
+    <string name="video_480p">中（480p）</string>
+    <string name="video_1080p">超高（1080p）</string>
+    <string name="pref_save_to_gallery">保存到媒体库</string>
+    <string name="pref_save_to_gallery_summary">自动将媒体文件存储在公共文件夹中，以便它们显示在您的图库和文件管理器中。</string>
+    <string name="could_not_save_files">无法保存文件</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="other">删除 %d 个文件</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="other">您确定要删除所选文件吗？</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="other">已保存 %d 个媒体文件</item>
+    </plurals>
+    <string name="filter_type_images">图片</string>
+    <string name="filter_type_videos">视频</string>
+    <string name="filter_type_audio">音频</string>
+    <string name="filter_type_documents">文档</string>
+    <string name="filter_type_other">其他</string>
+    <string name="filter_media">筛选媒体</string>
+    <string name="apply_filter">应用</string>
+    <string name="select_all">全选</string>
+    <string name="search_in_chats">在对话中搜索</string>
+    <string name="search_for_x_in_chats">在对话中搜索“%s”</string>
+    <string name="attachment_choice_gallery">图库</string>
+    <string name="attachment_choice_file">文件</string>
+    <string name="attachment_choice_location">位置</string>
+    <string name="attachment_choice_camera">相机</string>
+    <string name="attachment_choice_video">视频</string>
+    <string name="attachment_choice_recording">录音</string>
+    <string name="start_group_chat">开始群聊</string>
+    <string name="delete_file_dialog_shared">此文件已与其他对话共享。</string>
+    <string name="delete_file_dialog_confirm">您确定要删除此文件吗？</string>
+    <string name="delete_file_dialog_copies">此操作不会删除存储在其他设备或服务器上的该文件副本。</string>
+    <string name="sheet_music">乐谱</string>
+    <string name="attachment_choice_contact">联系人</string>
+    <string name="note_to_self">自我备注</string>
+    <string name="invalid_contact">无法解析联系人</string>
 </resources>

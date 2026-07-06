@@ -10,7 +10,6 @@ import com.google.common.primitives.Longs;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.persistance.FileBackend;
@@ -21,6 +20,8 @@ import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.FileWriterException;
 import eu.siacs.conversations.utils.MimeUtils;
+import im.conversations.android.model.TransportSecurity;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,7 +47,9 @@ public class HttpDownloadConnection implements Transferable {
     private final XmppConnectionService mXmppConnectionService;
     private final DebouncedInterfaceUpdater debouncedInterfaceUpdater;
     private HttpUrl mUrl;
-    private DownloadableFile file;
+    private File file;
+    private TransportSecurity transportSecurity;
+    private Long expectedSize = null;
     private int mStatus = Transferable.STATUS_UNKNOWN;
     private boolean acceptedAutomatically = false;
     private int mProgress = 0;
@@ -100,7 +103,7 @@ public class HttpDownloadConnection implements Transferable {
             mXmppConnectionService.getFileBackend().setupRelativeFilePath(message, filename);
             setupFile();
             if (this.message.getEncryption() == Message.ENCRYPTION_AXOLOTL
-                    && this.file.getKey() == null) {
+                    && this.transportSecurity == null) {
                 this.message.setEncryption(Message.ENCRYPTION_NONE);
             }
             final Long knownFileSize;
@@ -112,10 +115,10 @@ public class HttpDownloadConnection implements Transferable {
             }
             if (knownFileSize != null && interactive) {
                 if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL
-                        && this.file.getKey() != null) {
-                    this.file.setExpectedSize(knownFileSize + GCM_AUTHENTICATION_TAG_LENGTH);
+                        && this.transportSecurity != null) {
+                    this.expectedSize = knownFileSize + GCM_AUTHENTICATION_TAG_LENGTH;
                 } else {
-                    this.file.setExpectedSize(knownFileSize);
+                    this.expectedSize = knownFileSize;
                 }
                 download(true);
             } else {
@@ -129,9 +132,10 @@ public class HttpDownloadConnection implements Transferable {
     private void setupFile() {
         final String reference = mUrl.fragment();
         if (reference != null && AesGcmURL.IV_KEY.matcher(reference).matches()) {
-            this.file =
-                    new DownloadableFile(mXmppConnectionService.getCacheDir(), message.getUuid());
-            this.file.setKeyAndIv(CryptoHelper.hexToBytes(reference));
+            // TODO create a folder for partial downloads (because camera and recorder will also
+            // write to sub directories)
+            this.file = new File(mXmppConnectionService.getCacheDir(), message.getUuid());
+            this.transportSecurity = TransportSecurity.ofAnchor(CryptoHelper.hexToBytes(reference));
             Log.d(
                     Config.LOGTAG,
                     "create temporary OMEMO encrypted file: "
@@ -141,6 +145,7 @@ public class HttpDownloadConnection implements Transferable {
                             + ")");
         } else {
             this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
+            this.transportSecurity = null;
         }
     }
 
@@ -166,9 +171,8 @@ public class HttpDownloadConnection implements Transferable {
         this.mXmppConnectionService.updateConversationUi();
     }
 
-    private void decryptFile() throws IOException {
-        final DownloadableFile outputFile =
-                mXmppConnectionService.getFileBackend().getFile(message, true);
+    private void decryptFile(final TransportSecurity transportSecurity) throws IOException {
+        final var outputFile = mXmppConnectionService.getFileBackend().getFile(message);
 
         final var directory = outputFile.getParentFile();
         if (directory != null && directory.mkdirs()) {
@@ -180,7 +184,9 @@ public class HttpDownloadConnection implements Transferable {
         }
         final var cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
         cipher.init(
-                false, new AEADParameters(new KeyParameter(this.file.getKey()), 128, file.getIv()));
+                false,
+                new AEADParameters(
+                        new KeyParameter(transportSecurity.key()), 128, transportSecurity.iv()));
         try (final InputStream is = new FileInputStream(this.file);
                 final CipherOutputStream outputStream =
                         new CipherOutputStream(new FileOutputStream(outputFile), cipher)) {
@@ -207,8 +213,7 @@ public class HttpDownloadConnection implements Transferable {
         }
         this.mXmppConnectionService.updateConversationUi();
         final boolean notifyAfterScan = notify;
-        final DownloadableFile file =
-                mXmppConnectionService.getFileBackend().getFile(message, true);
+        final var file = mXmppConnectionService.getFileBackend().getFile(message);
         mXmppConnectionService
                 .getFileBackend()
                 .updateMediaScanner(
@@ -221,8 +226,9 @@ public class HttpDownloadConnection implements Transferable {
     }
 
     private void decryptIfNeeded() throws IOException {
-        if (file.getKey() != null && file.getIv() != null) {
-            decryptFile();
+        final var transportSecurity = this.transportSecurity;
+        if (transportSecurity != null) {
+            decryptFile(transportSecurity);
         }
     }
 
@@ -267,7 +273,7 @@ public class HttpDownloadConnection implements Transferable {
     @Override
     public Long getFileSize() {
         if (this.file != null) {
-            return this.file.getExpectedSize();
+            return this.expectedSize;
         } else {
             return null;
         }
@@ -321,7 +327,7 @@ public class HttpDownloadConnection implements Transferable {
             persistFileSize(size);
             message.setOob(true);
             mXmppConnectionService.databaseBackend.updateMessage(message, true);
-            file.setExpectedSize(size);
+            expectedSize = size;
             message.resetFileParams();
             final var autoAcceptFileSize =
                     new AppSettings(mXmppConnectionService).getAutoAcceptFileSize();
@@ -387,7 +393,7 @@ public class HttpDownloadConnection implements Transferable {
 
     private void persistFileSize(final long size) {
         final Message.FileParams fileParams = message.getFileParams();
-        if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL && file.getKey() != null) {
+        if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL && transportSecurity != null) {
             // store the file size of the clear text file. If we resume the download we will add the
             // auth tag size again
             // this is equivalent to use updating file params *after* download (which would take the
@@ -440,7 +446,7 @@ public class HttpDownloadConnection implements Transferable {
         }
 
         private void download() throws Exception {
-            final long expected = file.getExpectedSize();
+            final long expected = expectedSize;
             final var fileExists = file.exists();
             final var existingFileSize = fileExists ? file.length() : -1L;
 
@@ -486,7 +492,7 @@ public class HttpDownloadConnection implements Transferable {
                 final InputStream inputStream = body.byteStream();
                 if (tryResume && serverResumed) {
                     Log.d(Config.LOGTAG, "server resumed");
-                    final var offset = file.getSize();
+                    final var offset = file.length();
                     try (final OutputStream os = new FileOutputStream(file, true)) {
                         copy(inputStream, os, offset, expected);
                     }

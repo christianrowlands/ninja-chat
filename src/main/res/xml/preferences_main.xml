@@ -17,6 +17,11 @@
         app:summary="@string/pref_privacy_summary"
         app:title="@string/pref_privacy" />
     <Preference
+        android:icon="@drawable/ic_lightbulb_24dp"
+        android:summary="@string/pref_presence_settings_summary"
+        android:title="@string/pref_presence_settings"
+        app:fragment="eu.siacs.conversations.ui.fragment.settings.AvailabilitySettingsFragment" />
+    <Preference
         android:icon="@drawable/ic_notifications_24dp"
         android:summary="@string/pref_notifications_summary"
         android:title="@string/notifications"

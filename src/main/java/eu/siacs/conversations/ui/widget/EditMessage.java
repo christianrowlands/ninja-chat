@@ -1,11 +1,9 @@
 package eu.siacs.conversations.ui.widget;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -14,37 +12,38 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.core.view.inputmethod.InputConnectionCompat;
 import androidx.core.view.inputmethod.InputContentInfoCompat;
-
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.ui.ConversationFragment;
+import eu.siacs.conversations.ui.util.QuoteHelper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-import eu.siacs.conversations.ui.util.QuoteHelper;
-
 public class EditMessage extends AppCompatEditText {
 
-    private static final InputFilter SPAN_FILTER = (source, start, end, dest, dstart, dend) -> source instanceof Spanned ? source.toString() : source;
+    private static final InputFilter SPAN_FILTER =
+            (source, start, end, dest, dstart, dend) ->
+                    source instanceof Spanned ? source.toString() : source;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     protected Handler mTypingHandler = new Handler();
     protected KeyboardListener keyboardListener;
     private OnCommitContentListener mCommitContentListener = null;
     private String[] mimeTypes = null;
     private boolean isUserTyping = false;
-    private final Runnable mTypingTimeout = new Runnable() {
-        @Override
-        public void run() {
-            if (isUserTyping && keyboardListener != null) {
-                keyboardListener.onTypingStopped();
-                isUserTyping = false;
-            }
-        }
-    };
+    private final Runnable mTypingTimeout =
+            new Runnable() {
+                @Override
+                public void run() {
+                    if (isUserTyping && keyboardListener != null) {
+                        keyboardListener.onTypingStopped();
+                        isUserTyping = false;
+                    }
+                }
+            };
     private boolean lastInputWasTab = false;
 
     public EditMessage(Context context, AttributeSet attrs) {
@@ -78,7 +77,6 @@ public class EditMessage extends AppCompatEditText {
     public int getAutofillType() {
         return AUTOFILL_TYPE_NONE;
     }
-
 
     @Override
     public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
@@ -121,7 +119,8 @@ public class EditMessage extends AppCompatEditText {
             } else {
                 Editable editable = getEditableText();
                 InputFilter[] filters = editable.getFilters();
-                InputFilter[] tempFilters = new InputFilter[filters != null ? filters.length + 1 : 1];
+                InputFilter[] tempFilters =
+                        new InputFilter[filters != null ? filters.length + 1 : 1];
                 if (filters != null) {
                     System.arraycopy(filters, 0, tempFilters, 1, filters.length);
                 }
@@ -145,13 +144,14 @@ public class EditMessage extends AppCompatEditText {
 
     public void insertAsQuote(String text) {
         text = QuoteHelper.replaceAltQuoteCharsInText(text);
-        text = text
-                // first replace all '>' at the beginning of the line with nice and tidy '>>'
-                // for nested quoting
-                .replaceAll("(^|\n)(" + QuoteHelper.QUOTE_CHAR + ")", "$1$2$2")
-                // then find all other lines and have them start with a '> '
-                .replaceAll("(^|\n)(?!" + QuoteHelper.QUOTE_CHAR + ")(.*)", "$1> $2")
-        ;
+        text =
+                text
+                        // first replace all '>' at the beginning of the line with nice and tidy
+                        // '>>'
+                        // for nested quoting
+                        .replaceAll("(^|\n)(" + QuoteHelper.QUOTE_CHAR + ")", "$1$2$2")
+                        // then find all other lines and have them start with a '> '
+                        .replaceAll("(^|\n)(?!" + QuoteHelper.QUOTE_CHAR + ")(.*)", "$1> $2");
         Editable editable = getEditableText();
         int position = getSelectionEnd();
         if (position == -1) position = editable.length();
@@ -168,26 +168,27 @@ public class EditMessage extends AppCompatEditText {
     }
 
     @Override
-    public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
+    public InputConnection onCreateInputConnection(@NonNull EditorInfo editorInfo) {
         final InputConnection ic = super.onCreateInputConnection(editorInfo);
 
         if (mimeTypes != null && mCommitContentListener != null && ic != null) {
             EditorInfoCompat.setContentMimeTypes(editorInfo, mimeTypes);
-            return InputConnectionCompat.createWrapper(ic, editorInfo, (inputContentInfo, flags, opts) -> EditMessage.this.mCommitContentListener.onCommitContent(inputContentInfo, flags, opts, mimeTypes));
+            return InputConnectionCompat.createWrapper(
+                    ic,
+                    editorInfo,
+                    (inputContentInfo, flags, opts) ->
+                            EditMessage.this.mCommitContentListener.onCommitContent(
+                                    inputContentInfo, flags, opts, mimeTypes));
         } else {
             return ic;
         }
     }
 
-    public void refreshIme() {
-        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getContext());
-        final boolean usingEnterKey = p.getBoolean("display_enter_key", getResources().getBoolean(R.bool.display_enter_key));
-        final boolean enterIsSend = p.getBoolean("enter_is_send", getResources().getBoolean(R.bool.enter_is_send));
-
-        if (usingEnterKey && enterIsSend) {
+    public void refreshIme(final ConversationFragment.InputSettings inputSettings) {
+        if (inputSettings.displayEnterKey() && inputSettings.enterIsSend()) {
             setInputType(getInputType() & (~InputType.TYPE_TEXT_FLAG_MULTI_LINE));
             setInputType(getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
-        } else if (usingEnterKey) {
+        } else if (inputSettings.displayEnterKey()) {
             setInputType(getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             setInputType(getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
         } else {
@@ -197,7 +198,11 @@ public class EditMessage extends AppCompatEditText {
     }
 
     public interface OnCommitContentListener {
-        boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts, String[] mimeTypes);
+        boolean onCommitContent(
+                InputContentInfoCompat inputContentInfo,
+                int flags,
+                Bundle opts,
+                String[] mimeTypes);
     }
 
     public interface KeyboardListener {

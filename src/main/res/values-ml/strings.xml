@@ -89,8 +89,6 @@
     <string name="error">ഒരു പിശക് സംഭവിച്ചു</string>
     <string name="your_account">നിങ്ങളുടെ അക്കൗണ്ട്</string>
     <string name="send_presence_updates">സാന്നിധ്യ അപ്‌ഡേറ്റുകൾ അയയ്‌ക്കുക</string>
-    <string name="attach_choose_picture">ചിത്രം തിരഞ്ഞെടുക്കൂ</string>
-    <string name="attach_take_picture">ഫോട്ടോ എടുക്കൂ</string>
     <string name="error_not_an_image_file">നിങ്ങൾ തിരഞ്ഞെടുത്ത ഫയൽ ഒരു ചിത്രം അല്ല</string>
     <string name="error_file_not_found">ഫയൽ കണ്ടില്ല</string>
     <string name="account_status_unknown">അജ്ഞാതം</string>
@@ -110,7 +108,6 @@
     <string name="mgmt_account_publish_avatar">അവതാർ പ്രസിദ്ധീകരിക്കൂ</string>
     <string name="mgmt_account_publish_pgp">OpenPGP പബ്ലിക് കീ പ്രസിദ്ധീകരിക്കുക</string>
     <string name="unpublish_pgp">OpenPGP പബ്ലിക് കീ നീക്കം ചെയ്യുക</string>
-    <string name="attach_record_voice">ശബ്‌ദം റെക്കോർഡുചെയ്യൂ</string>
     <string name="account_settings_jabber_id">XMPP വിലാസം</string>
     <string name="block_jabber_id">XMPP വിലാസം തടയുക</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -177,7 +174,6 @@
     <string name="try_again">വീണ്ടും ശ്രമിക്കുക</string>
     <string name="pref_create_backup">ബാക്കപ്പ് സൃഷ്ടിക്കൂ</string>
     <string name="notification_create_backup_title">ബാക്കപ്പ് ഫയലുകൾ സൃഷ്ടിക്കുന്നു</string>
-    <string name="choose_file">ഫയൽ തിരഞ്ഞെടുക്കൂ</string>
     <string name="delete_x_file">%s ഇല്ലാതാക്കൂ</string>
     <string name="file">ഫയൽ</string>
     <string name="open_x_file">%s തുറക്കൂ</string>
@@ -208,10 +204,8 @@
     <string name="sending_x_file">%s അയയ്ക്കുന്നു</string>
     <string name="contact_is_typing">%s ടൈപ്പുചെയ്യുന്നു…</string>
     <string name="contacts_are_typing">%s ടൈപ്പുചെയ്യുന്നു…</string>
-    <string name="send_location">ലൊക്കേഷൻ അയയ്‌ക്കുക</string>
     <string name="show_location">ലൊക്കേഷൻ കാണിക്കൂ</string>
     <string name="location">ലൊക്കേഷൻ</string>
-    <string name="recently_used">സമീപകാലത്ത് ഉപയോഗിച്ചത്</string>
     <string name="search_contacts">കോൺ‌ടാക്റ്റുകൾ തിരയുക</string>
     <string name="send_private_message">സ്വകാര്യ സന്ദേശം അയയ്‌ക്കൂ</string>
     <string name="username">ഉപയോക്തൃനാമം</string>
@@ -301,8 +295,6 @@
     <string name="help">സഹായം</string>
     <string name="microphone_unavailable">നിങ്ങളുടെ മൈക്രോഫോൺ ലഭ്യമല്ല</string>
     <string name="gpx_track">GPX ട്രാക്ക്</string>
-    <string name="search_all_conversations">എല്ലാ സംഭാഷണങ്ങളും</string>
-    <string name="search_this_conversation">ഈ സംഭാഷണം</string>
     <string name="your_avatar">നിങ്ങളുടെ അവതാർ</string>
     <string name="more_options">കൂടുതൽ ഓപ്ഷനുകൾ</string>
     <string name="backup_started_message">ബാക്കപ്പ് ആരംഭിച്ചു. അത് പൂർത്തിയായിക്കഴിഞ്ഞാൽ നിങ്ങൾക്ക് ഒരു അറിയിപ്പ് ലഭിക്കും.</string>

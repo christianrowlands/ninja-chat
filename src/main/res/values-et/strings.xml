@@ -80,9 +80,6 @@
 \n
 \n<b>Hoiatus:</b> See ei mõjuta muudes seadmetes ja serverites salvestatud samade sõnumite koopiaid.</string>
     <string name="delete_file_dialog">Kustuta fail</string>
-    <string name="delete_file_dialog_msg">Kas sa soovid selle faili?
-\n
-\n<b>Hoiatus:</b> See ei mõjuta muudes seadmetes ja serverites salvestatud sama faili koopiaid. </string>
     <string name="archive_this_chat">Kustuta vestus hiljem</string>
     <string name="choose_presence">Vali seade</string>
     <string name="send_unencrypted_message">Saada sõnum krüptimata tekstina</string>
@@ -144,8 +141,6 @@
     <string name="send_presence_updates">Saada olekuteateid</string>
     <string name="receive_presence_updates">Luba vastu võtta teiste kasutajate olekuteateid</string>
     <string name="ask_for_presence_updates">Küsi olekuteateid</string>
-    <string name="attach_choose_picture">Vali pilt</string>
-    <string name="attach_take_picture">Tee foto</string>
     <string name="pref_notification_grace_period">Teavituste keelamise viiteaeg</string>
     <string name="pref_notification_grace_period_summary">Kui mõnes muus sinu seadmes tuvastatakse mõni tegevus, siis selle aja möödumisel enam siin seadmes ei kuvata teavitusi.</string>
     <string name="conference_unknown_error">Sa ei osale enam vestlusrühmas</string>
@@ -195,7 +190,6 @@
     <string name="mgmt_account_disable">Eemalda ajutiselt kasutusest</string>
     <string name="mgmt_account_enable">Võta konto kasutusele</string>
     <string name="mgmt_account_delete_confirm_text">Kas sa oled kindel, et soovid oma kasutajakonto kustutada? Sellega kustub ka kogu sinu vestluste ajalugu</string>
-    <string name="attach_record_voice">Salvesta häälsõnum</string>
     <string name="account_settings_jabber_id">XMPP aadress</string>
     <string name="block_jabber_id">Blokeeri XMPP aadress</string>
     <string name="account_settings_example_jabber_id">kasutajanimi@toredomeen.ee</string>
@@ -439,7 +433,6 @@
     <string name="restoring_backup">Taastame varukoopiast</string>
     <string name="notification_restored_backup_title">Andmed sinu varukoopiast on taastatud</string>
     <string name="notification_restored_backup_subtitle">Ära unusta seda kontot kasutusele võtta.</string>
-    <string name="choose_file">Vali fail</string>
     <string name="receiving_x_file">Laadime alla %1$s (%2$d%% valmis)</string>
     <string name="download_x_file">Laadi %s alla</string>
     <string name="delete_x_file">Kustuta %s</string>
@@ -534,7 +527,6 @@
     <string name="contacts_have_stopped_typing">%s on lõpetanud kirjutamise</string>
     <string name="pref_chat_states">Kirjutamise teavitused</string>
     <string name="pref_chat_states_summary">Luba teistel osapooltel teada saada, kui neile kirjutad</string>
-    <string name="send_location">Saada oma asukoht</string>
     <string name="show_location">Näita oma asukohta</string>
     <string name="no_application_found_to_display_location">Asukoha näitamiseks ei leidu ühtegi rakendust</string>
     <string name="location">Asukoht</string>
@@ -559,7 +551,7 @@
     <string name="security_violation_not_attaching_file">Fail on vahele jäetud turvareeglite rikkumise tõttu.</string>
     <string name="pref_video_compression">Video kvaliteet</string>
     <string name="pref_video_compression_summary">Madalam kvaliteet tähendab väiksemaid faile</string>
-    <string name="video_360p">Keskmine (360p)</string>
+    <string name="video_360p">Madal (360p)</string>
     <string name="video_720p">Kõrge (720p)</string>
     <string name="cancelled">katkestatud</string>
     <string name="already_drafting_message">Sa juba oled koostamas sõnumit.</string>
@@ -569,7 +561,6 @@
     <string name="phone_number">telefoninumber</string>
     <string name="backup_started_message">Varundamine on alanud. Saad teavituse, kui ta on lõppenud.</string>
     <string name="start_chat">Alusta vestlust</string>
-    <string name="pref_quick_action_summary">Asenda „Saada“ nupp kiirtoimingutega</string>
     <string name="download_failed_could_not_connect">Allalaadimine ei õnnestunud: ühendus serveriga ei õnnestunud</string>
     <string name="download_failed_could_not_write_file">Allalaadimine ei õnnestunud: faili salvestamine ei õnnestunud</string>
     <string name="download_failed_invalid_file">Allalaadimine ei õnnestunud: vigane fail</string>
@@ -610,8 +601,6 @@
     <string name="pref_input_options">Sisend</string>
     <string name="pref_enter_is_send">Sisestusklahv saadab</string>
     <string name="pref_enter_is_send_summary">Kasuta sisestusklahvi saatmiseks. Lisaks toimib saatmiseks ka Ctrl+Enter, ka siis kui see valik pole kasutusel.</string>
-    <string name="none">Määramata</string>
-    <string name="recently_used">Viimatikasutatu</string>
     <string name="choose_quick_action">Vali kiirtoiming</string>
     <string name="search_contacts">Otsi kontakte</string>
     <string name="pref_presence_settings">Kättesaadavus</string>
@@ -672,8 +661,6 @@
     <string name="remove_from_favorites">Eemalda esiletõstetute hulgast</string>
     <string name="gpx_track">GPX-rada</string>
     <string name="could_not_correct_message">Sõnumi muutmine ei õnnestunud</string>
-    <string name="search_all_conversations">Kõik vestlused</string>
-    <string name="search_this_conversation">See vestlus</string>
     <string name="pref_up_push_account_title">XMPP konto</string>
     <string name="hide_notification">Peida teavitus</string>
     <string name="no_storage_permission">Anna rakendusele %1$s õigus kasutada välist andmeruumi</string>
@@ -745,7 +732,6 @@
     <string name="today">Täna</string>
     <string name="yesterday">Eile</string>
     <string name="pref_validate_hostname">Kontrolli hosti nime DNSSECi abil</string>
-    <string name="attach_record_video">Salvesta video</string>
     <string name="copy_to_clipboard">Kopeeri</string>
     <string name="message_copied_to_clipboard">Sõnum on kopeeritud lõikelauale</string>
     <string name="message">Sõnum</string>
@@ -871,7 +857,6 @@
     <string name="pref_channel_discovery">Kanalite tuvastamise meetod</string>
     <string name="backup">Varukoopia</string>
     <string name="category_about">Rakenduse teave</string>
-    <string name="please_enable_an_account">Palun võta mõni kasutajakonto kasutusele</string>
     <string name="make_call">Helista</string>
     <string name="rtp_state_incoming_call">Saabuv kõne</string>
     <string name="rtp_state_incoming_video_call">Saabuv videokõne</string>
@@ -1060,9 +1045,9 @@
     <string name="detect_mim_summary">Edastuskanaliga sidumine võib aidata vahendusrünnete tuvastamisel</string>
     <string name="pref_category_server_connection">Ühendus serveriga</string>
     <string name="pref_category_operating_system">Operatsioonisüsteem</string>
-    <string name="pref_privacy_summary">Kirjutamisteatised, viimati nähtud, kättesaadavus</string>
+    <string name="pref_privacy_summary">Kirjutamisteatised, viimati nähtud, edastus võrdõogusvõrgus</string>
     <string name="pref_connection_summary">Hosti nimi ja port, ühendus Tori võrguga</string>
-    <string name="pref_connection_summary_w_cd">Hosti nimi ja port, ühendus Tori võrguga, võrdõigusvõrk, kanalite tuvastamine</string>
+    <string name="pref_connection_summary_w_cd">Hosti nimi ja port, ühendus Tori võrguga, kanalite tuvastamine</string>
     <string name="pref_keyboard_options">Klahvistik</string>
     <string name="unsupported_operation">Tegevus pole toetatud</string>
     <string name="pref_category_engagement_notifications">Osalusest teavitamine</string>
@@ -1189,4 +1174,49 @@
     <string name="pref_include_silent_modes">Kaasa seadme vaiksed olekud</string>
     <string name="pref_include_silent_modes_summary">Märgi olekuks „Ära sega mind“ ka siis, kui teavitused on summutatud või nutiseade kasutab teavituseks vaid värinat.</string>
     <string name="rtp_state_no_internet">Internetiühendus puudub</string>
+    <string name="send">Saada</string>
+    <string name="pref_auto_send_recording">Salvestiste automaatne saatmine</string>
+    <string name="pref_auto_send_recording_summary">Peale salvestamise lõppu saada häälsõnumid automaatselt ära.</string>
+    <string name="pref_presence_settings_summary">Olekud - „Olen ära“ lukustamisel ja süsteemne „Ära sega“</string>
+    <string name="video_480p">Keskmine (480p)</string>
+    <string name="video_1080p">Väga kõrge (1080p)</string>
+    <string name="pref_save_to_gallery">Salvesta galeriisse</string>
+    <string name="pref_save_to_gallery_summary">Salvesta meediafailid automaatselt avalikesse kaustadesse, et need kuvataks su galeriis ja failihalduris.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Kustuta fail</item>
+        <item quantity="other">Kustuta %d faili</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Kas oled kindel, et soovid selle faili kustutada?</item>
+        <item quantity="other">Kas oled kindel, et soovid need failid kustutada?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d multimeediafail on salvestatud</item>
+        <item quantity="other">%d multimeediafaili on salvestatud</item>
+    </plurals>
+    <string name="could_not_save_files">Failide salvestamine ei õnnestunud</string>
+    <string name="filter_type_images">Pildid</string>
+    <string name="filter_type_videos">Videod</string>
+    <string name="filter_type_audio">Helifailid</string>
+    <string name="filter_type_documents">Dokumendid</string>
+    <string name="filter_type_other">Muu</string>
+    <string name="filter_media">Filtreeri meediumi</string>
+    <string name="apply_filter">Rakenda</string>
+    <string name="select_all">Vali kõik</string>
+    <string name="search_in_chats">Otsi vestlustest</string>
+    <string name="search_for_x_in_chats">Otsi vestlustest „%s“ märksõna</string>
+    <string name="attachment_choice_gallery">Galerii</string>
+    <string name="attachment_choice_file">Fail</string>
+    <string name="attachment_choice_location">Asukoht</string>
+    <string name="attachment_choice_camera">Kaamera</string>
+    <string name="attachment_choice_video">Video</string>
+    <string name="attachment_choice_recording">Salvestis</string>
+    <string name="start_group_chat">Alusta vestlusrühma</string>
+    <string name="delete_file_dialog_shared">See fail on jagatud muude vestlustega.</string>
+    <string name="delete_file_dialog_confirm">Kas oled kindel, et soovid selle faili kustutada?</string>
+    <string name="delete_file_dialog_copies">Sellega ei kustutata faili koopiaid, mis võivad olla salvestatud teistes nutiseadmetes või serverites.</string>
+    <string name="sheet_music">Partituurifail</string>
+    <string name="attachment_choice_contact">Kontakt</string>
+    <string name="note_to_self">Märge iseendale</string>
+    <string name="invalid_contact">Kontaktandmete töötlemine ei õnnestunud</string>
 </resources>

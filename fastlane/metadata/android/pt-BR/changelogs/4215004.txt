@@ -1,0 +1,2 @@
+* Enviar e exibir avatares de alta resolução (imagens de perfil) em servidores que os suportam
+* Suportar 'XEP-0425: Retração de Mensagens Moderadas' em canais públicos

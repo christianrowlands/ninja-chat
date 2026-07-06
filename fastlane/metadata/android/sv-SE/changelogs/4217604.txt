@@ -1,0 +1,4 @@
+* Förbättrad mediebläddrare med möjlighet att dela och radera mediefiler
+* Lagra media internt som standard (med inställning att automatiskt spara i galleriet)
+* Skicka ljudinspelningar omedelbart istället för att bifoga dem (plus inställning för att återställa det gamla beteendet)
+* 'Visa QR-kod' inkluderar förautentisering-parameter på servrar med enkla inbjudningar

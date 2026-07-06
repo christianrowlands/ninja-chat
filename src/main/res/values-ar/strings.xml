@@ -109,8 +109,6 @@
     <string name="send_presence_updates">ارسال تحديثات الظهور</string>
     <string name="receive_presence_updates">تحصل على تحديثات حالة الحضور</string>
     <string name="ask_for_presence_updates">أطلب تحديثات حالة الحضور</string>
-    <string name="attach_choose_picture">اختيار صورة</string>
-    <string name="attach_take_picture">التقاط صورة</string>
     <string name="error_not_an_image_file">الملف الذي حددته ليس صورة</string>
     <string name="error_compressing_image">لا يمكن تحويل ملف الصورة</string>
     <string name="error_file_not_found">الملف غير موجود</string>
@@ -140,7 +138,6 @@
     <string name="mgmt_account_publish_pgp">أنشر المفتاح العمومي OpenPGP</string>
     <string name="unpublish_pgp">حذف مفتاح OpenPGP العمومي</string>
     <string name="mgmt_account_enable">تفعيل الحساب</string>
-    <string name="attach_record_voice">تسجيل صوت</string>
     <string name="account_settings_jabber_id">عنوان XMPP</string>
     <string name="block_jabber_id">احجب عنوان XMPP</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -253,7 +250,6 @@
     <string name="notification_backup_created_title">تم إنشاء نسختك الاحتياطية</string>
     <string name="notification_restored_backup_title">تم استرجاع نسختك الاحتياطية</string>
     <string name="notification_restored_backup_subtitle">لا تنسى تنشيط الحساب.</string>
-    <string name="choose_file">اختيار ملف</string>
     <string name="receiving_x_file">اكتمل الإستلام %1$s (%2$d%% بنسبة)</string>
     <string name="download_x_file">تنزيل %s</string>
     <string name="delete_x_file">إحذف %s</string>
@@ -319,7 +315,6 @@
     <string name="contacts_have_stopped_typing">%s توقفو عن الكتابة</string>
     <string name="pref_chat_states">إشعارات الكتابة</string>
     <string name="pref_chat_states_summary">إعلم جهات الاتصال الخاصة بك عندما تكتب رسائل لهم.</string>
-    <string name="send_location">إرسل موقعك</string>
     <string name="show_location">أظهر الموقع</string>
     <string name="location">الموقع</string>
     <string name="pref_dont_trust_system_cas_title">لا تثق في سلطات شهادات النظام</string>
@@ -329,8 +324,6 @@
     <string name="dialog_manage_certs_title">إحذف الشهادات</string>
     <string name="dialog_manage_certs_positivebutton">قم بحذف المختارة</string>
     <string name="pref_quick_action">حركة سريعة</string>
-    <string name="none">لا شيء</string>
-    <string name="recently_used">التي تم استعمالها كثيرا مؤخرا</string>
     <string name="choose_quick_action">إختر حركة سريعة</string>
     <string name="search_contacts">البحث في جهات الإتصال</string>
     <string name="send_private_message">إبعث برسالة على الخاص</string>
@@ -508,7 +501,6 @@
     <string name="pref_validate_hostname">التحقق من صحة إسم المضيف بواسطة DNSSEC</string>
     <string name="certificate_does_not_contain_jid">الشهادة لا تحتوي على عنوان XMPP</string>
     <string name="server_info_partial">جُزْئِيًّا</string>
-    <string name="attach_record_video">تسجيل فيديو</string>
     <string name="copy_to_clipboard">النسخ إلى الحافظة</string>
     <string name="message_copied_to_clipboard">تم نسخ الرسالة إلى الحافظة</string>
     <string name="message">رسالة</string>

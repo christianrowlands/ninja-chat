@@ -6,9 +6,10 @@
         android:title="@string/add_reaction"
         android:visible="false" />
 
-    <item android:id="@+id/moderation"
+    <item
+        android:id="@+id/moderation"
         android:title="@string/moderate_delete"
-        android:visible="false"/>
+        android:visible="false" />
 
     <item
         android:id="@+id/action_report_and_block"
@@ -70,6 +71,10 @@
     <item
         android:id="@+id/cancel_transmission"
         android:title="@string/cancel_transmission"
+        android:visible="false" />
+    <item
+        android:id="@+id/save_file"
+        android:title="@string/save"
         android:visible="false" />
     <item
         android:id="@+id/delete_file"

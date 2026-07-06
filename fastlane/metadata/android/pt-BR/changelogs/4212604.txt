@@ -1,0 +1,2 @@
+* Aproximar as bolhas de mensagens ao invés de uni-las
+* Adicionar a habilidade de esconder avatares nas vistas de conversa quando não forem estritamente necessários (Configurações -> Interface -> Bolhas de Conversa -> Mostrar avatares)

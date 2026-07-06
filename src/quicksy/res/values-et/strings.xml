@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Serveri identiteedi verifitseerimine ei õnnestu.</string>
     <string name="unknown_security_error">Tundmatu turvaviga.</string>
     <string name="timeout_while_connecting_to_server">Ühenduse loomisel serveriga päring aegus.</string>
+    <string name="use_physical_device">Oma kasutajakonto registreerimiseks palun kasuta füüsilist seadet.</string>
 </resources>

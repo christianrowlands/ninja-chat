@@ -103,8 +103,6 @@
     <string name="send_presence_updates">Dërgo përditësime pranie</string>
     <string name="receive_presence_updates">Merr përditësime pranie</string>
     <string name="ask_for_presence_updates">Pyet për përditësime pranie</string>
-    <string name="attach_choose_picture">Zgjidhni foto</string>
-    <string name="attach_take_picture">Bëni një foto</string>
     <string name="error_not_an_image_file">Kartela që përzgjodhët s’është figurë</string>
     <string name="error_file_not_found">S’u gjet kartelë</string>
     <string name="account_status_unknown">E panjohur</string>
@@ -138,7 +136,6 @@
     <string name="unpublish_pgp">Hiq kyç publik OpenPGP</string>
     <string name="openpgp_has_been_published">Kyçi publik OpenPGP u bë publik.</string>
     <string name="mgmt_account_enable">Aktivizoje llogarinë</string>
-    <string name="attach_record_voice">Incizoni zë</string>
     <string name="account_settings_jabber_id">Adresë XMPP</string>
     <string name="block_jabber_id">Bllokoj adresë XMPP</string>
     <string name="account_settings_example_jabber_id">username@example.com</string>
@@ -251,7 +248,6 @@
     <string name="restoring_backup">Po rikthehet kopjeruajtje</string>
     <string name="notification_restored_backup_title">Kopjeruajtja juaj u rikthye</string>
     <string name="notification_restored_backup_subtitle">Mos harroni të aktivizoni llogarinë.</string>
-    <string name="choose_file">Zgjidhni kartelë</string>
     <string name="receiving_x_file">Po merret %1$s (plotësuar %2$d%%)</string>
     <string name="download_x_file">Shkarkoni %s</string>
     <string name="delete_x_file">Fshije %s</string>
@@ -320,7 +316,6 @@
     <string name="contacts_are_typing">%s po shkruajnë…</string>
     <string name="contacts_have_stopped_typing">%s ka reshtur së shkruari</string>
     <string name="pref_chat_states">Njoftime shtypjesh</string>
-    <string name="send_location">Dërgo vendndodhjen</string>
     <string name="show_location">Shfaq vendndodhje</string>
     <string name="no_application_found_to_display_location">S’u gjet aplikacion për shfaqje të vendndodhjes</string>
     <string name="location">Vendndodhje</string>
@@ -333,8 +328,6 @@
     <string name="dialog_manage_certs_title">Hiqi dëshmitë</string>
     <string name="dialog_manage_certs_positivebutton">Fshije përzgjedhjen</string>
     <string name="pref_quick_action">Veprim i Shpejtë</string>
-    <string name="none">Asnjë</string>
-    <string name="recently_used">Më të përdorur së fundi</string>
     <string name="choose_quick_action">Zgjidhni veprim të shpejtë</string>
     <string name="search_contacts">Kërko te kontaktet</string>
     <string name="send_private_message">Dërgo mesazh privat</string>
@@ -486,7 +479,6 @@
     <string name="yesterday">Dje</string>
     <string name="pref_validate_hostname">Vlerësoj strehemër me DNSSEC</string>
     <string name="server_info_partial">të pjesshme</string>
-    <string name="attach_record_video">Regjistroni video</string>
     <string name="copy_to_clipboard">Kopjoje</string>
     <string name="message_copied_to_clipboard">Mesazhi u kopjua në të papastër</string>
     <string name="message">Mesazh</string>
@@ -560,7 +552,7 @@
     <string name="group_chat_members">Pjesëmarrës</string>
     <string name="media_browser">Shfletues mediash</string>
     <string name="pref_video_compression">Cilësi Video</string>
-    <string name="video_360p">Mesatare (360p)</string>
+    <string name="video_360p">E ulët (360p)</string>
     <string name="video_720p">E lartë (720p)</string>
     <string name="cancelled">anuluar</string>
     <string name="already_drafting_message">Po skiconi tashmë një mesazh.</string>
@@ -657,7 +649,6 @@
     <string name="pref_channel_discovery">Metodë zbulimi kanalesh</string>
     <string name="backup">Kopjeruajtje</string>
     <string name="category_about">Mbi</string>
-    <string name="please_enable_an_account">Ju lutemi, aktivizoni një llogari</string>
     <string name="make_call">Bëni thirrje</string>
     <string name="rtp_state_incoming_call">Thirrje ardhëse</string>
     <string name="rtp_state_incoming_video_call">Thirrje video ardhëse</string>
@@ -702,8 +693,6 @@
     <string name="remove_from_favorites">Shfiksoje prej kreut</string>
     <string name="gpx_track">Gjurmë GPX</string>
     <string name="could_not_correct_message">S’u përpunua dot mesazhi</string>
-    <string name="search_all_conversations">Krejt fjalosjet</string>
-    <string name="search_this_conversation">Këtë fjalosje</string>
     <string name="your_avatar">Avatari juaj</string>
     <string name="avatar_for_x">Avatar për %s</string>
     <string name="encrypted_with_omemo">Fshehtëzuar me OMEMO</string>
@@ -801,9 +790,6 @@
     <string name="clear_histor_msg">Doni të fshihen krejt mesazhet te kjo fjalosje?
 \n
 \n<b>Kujdes:</b> Kjo s’do të ndikojë mesazhet e depozituar në pajisje apo shërbyes të tjerë.</string>
-    <string name="delete_file_dialog_msg">Jeni i sigurt se doni të fshihet kjo kartelë\?
-\n
-\n<b>Kujdes:</b> Kjo s’do të fshijë kopje të kësaj kartele që janë depozituar në pajisje apo shërbyes të tjerë. </string>
     <string name="decryption_failed">Shfshehtëzimi dështoi. Ndoshta s’keni kyçin e duhur privat.</string>
     <string name="openkeychain_required">OpenKeychain</string>
     <string name="openkeychain_required_long"><![CDATA[%1$s përdor <b>OpenKeychain</b> që të fshehtëzojë dhe shfshehtëzojë mesazhe dhe të administrojë kyçet tuaj publikë.<br><br>Licensohet sipas kushteve të GPLv3+ dhe mund të merret në F-Droid dhe Google Play.<br><br><small>(Ju lutemi, riniseni %1$s më pas.)</small>]]></string>
@@ -866,7 +852,6 @@
     <string name="hide_offline">Fshih të shkëputurat</string>
     <string name="pref_chat_states_summary">Bëjuni të ditur kontakteve tuaj, kur shkruani mesazhe për ta</string>
     <string name="pref_dont_trust_system_cas_title">Mos beso DA sistemi</string>
-    <string name="pref_quick_action_summary">Zëvendëso butonin “Dërgoje” me veprim të shpejtë</string>
     <string name="pref_show_connection_options_summary">Kur ujdiset një llogari, shfaq rregullime të zgjeruara lidhjeje</string>
     <string name="hostname_example">xmpp.example.com</string>
     <string name="fetching_mam_prefs">Po sillen parapëlqime arkivimi. Ju lutemi, pritni…</string>
@@ -1033,9 +1018,9 @@
     <string name="detect_mim_summary">“Channel binding” mund të pikasë disa sulme “machine-in-the-middle”</string>
     <string name="pref_category_server_connection">Lidhje shërbyesi</string>
     <string name="pref_category_operating_system">Sistem Operativ</string>
-    <string name="pref_privacy_summary">Njoftime shtypjeje, Parë Së Fundi, I lirë/I zënë</string>
+    <string name="pref_privacy_summary">Njoftime shtypjeje, Parë Së Fundi, Rele P2P</string>
     <string name="pref_connection_summary">Strehëemër &amp; Portë, Tor</string>
-    <string name="pref_connection_summary_w_cd">Strehëemër &amp; Portë, Tor, P2P, Pikasje Kanalesh</string>
+    <string name="pref_connection_summary_w_cd">Strehëemër &amp; Portë, Tor, Pikasje Kanalesh</string>
     <string name="pref_keyboard_options">Tastierë</string>
     <string name="pref_category_engagement_notifications">Njoftime angazhimi</string>
     <string name="pref_category_application">Aplikacion</string>
@@ -1177,4 +1162,41 @@
     <string name="pref_include_silent_modes_summary">Sinjalizo gjithashtu “Mos më Shqetësoni”, kur njoftimet heshtohen, ose telefoni gjendet nën mënyrën dridhje.</string>
     <string name="presence_offline">Jashtë linje</string>
     <string name="rtp_state_no_internet">S’ka lidhje në internet</string>
+    <string name="video_480p">Mesatare (480p)</string>
+    <string name="video_1080p">Shumë e lartë (1080p)</string>
+    <string name="send">Dërgoje</string>
+    <string name="pref_auto_send_recording">Regjistrimet dërgoji vetvetiu</string>
+    <string name="pref_auto_send_recording_summary">Dërgoni mesazhe zanore automatikisht, kur përfundoni regjistrimin.</string>
+    <string name="pref_save_to_gallery">Ruaje në Galeri</string>
+    <string name="pref_save_to_gallery_summary">Depozito automatikisht media në dosje publike, që të shfaqen në galerinë tuaj dhe te përgjegjës kartelash.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Fshije kartelën</item>
+        <item quantity="other">Fshiji %d kartelat</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Jeni i sigurt se doni të fshihet kjo kartelë?</item>
+        <item quantity="other">Jeni i sigurt se doni të fshihen këto kartela?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">U ruajt %d kartelë media</item>
+        <item quantity="other">U ruajtën %d kartela media</item>
+    </plurals>
+    <string name="could_not_save_files">S’u ruajtën dot kartela</string>
+    <string name="filter_type_images">Figura</string>
+    <string name="filter_type_videos">Video</string>
+    <string name="filter_type_audio">Audio</string>
+    <string name="filter_type_documents">Dokumente</string>
+    <string name="filter_type_other">Tjetër</string>
+    <string name="filter_media">Filtroni media</string>
+    <string name="apply_filter">Aplikoje</string>
+    <string name="select_all">Përzgjidhe krejt</string>
+    <string name="search_in_chats">Kërko në fjalosje</string>
+    <string name="search_for_x_in_chats">Kërko për “%s” te fjalosjet</string>
+    <string name="attachment_choice_file">Kartelë</string>
+    <string name="attachment_choice_location">Vendndodhje</string>
+    <string name="attachment_choice_camera">Kamerë</string>
+    <string name="attachment_choice_video">Video</string>
+    <string name="attachment_choice_recording">Regjistrim</string>
+    <string name="attachment_choice_gallery">Galeri</string>
+    <string name="start_group_chat">Filloni fjalosje në grup</string>
 </resources>

@@ -55,6 +55,7 @@
     <string name="change_password_on_server">Change password on server</string>
     <string name="share_with">Share with…</string>
     <string name="invite_contact">Invite contact</string>
+    <string name="start_group_chat">Start group chat</string>
     <string name="invite">Invite</string>
     <string name="contacts">Contacts</string>
     <string name="contact">Contact</string>
@@ -85,7 +86,17 @@
     <string name="clear_conversation_history">Clear chat history</string>
     <string name="clear_histor_msg">Do you want to delete all messages in this chat?\n\n<b>Warning:</b> This will not influence messages stored on other devices or servers.</string>
     <string name="delete_file_dialog">Delete file</string>
-    <string name="delete_file_dialog_msg">Are you sure you want to delete this file?\n\n<b>Warning:</b> This will not delete copies of this file that are stored on other devices or servers. </string>
+    <string name="delete_file_dialog_shared">This file has been shared with other chats.</string>
+    <string name="delete_file_dialog_confirm">Are you sure you want to delete this file?</string>
+    <string name="delete_file_dialog_copies">This will not delete copies of this file that are stored on other devices or servers.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Delete file</item>
+        <item quantity="other">Delete %d files</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Are you sure you want to delete this file?</item>
+        <item quantity="other">Are you sure you want to delete these files?</item>
+    </plurals>
     <string name="archive_this_chat">Delete chat afterwards</string>
     <string name="choose_presence">Choose device</string>
     <string name="send_unencrypted_message">Send clear text message</string>
@@ -139,8 +150,6 @@
     <string name="send_presence_updates">Send presence updates</string>
     <string name="receive_presence_updates">Receive presence updates</string>
     <string name="ask_for_presence_updates">Ask for presence updates</string>
-    <string name="attach_choose_picture">Choose picture</string>
-    <string name="attach_take_picture">Take picture</string>
     <string name="preemptively_grant">Preemptively grant subscription request</string>
     <string name="error_not_an_image_file">The file you selected is not an image</string>
     <string name="error_compressing_image">Could not convert image file</string>
@@ -188,7 +197,6 @@
     <string name="openpgp_has_been_published">OpenPGP public key published.</string>
     <string name="mgmt_account_enable">Enable account</string>
     <string name="mgmt_account_delete_confirm_text">Are you sure you want to delete your account? Deleting your account erases your entire chat history</string>
-    <string name="attach_record_voice">Record voice</string>
     <string name="account_settings_jabber_id">XMPP address</string>
     <string name="block_jabber_id">Block XMPP address</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -338,7 +346,6 @@
     <string name="restoring_backup">Restoring backup</string>
     <string name="notification_restored_backup_title">Your backup has been restored</string>
     <string name="notification_restored_backup_subtitle">Do not forget to enable the account.</string>
-    <string name="choose_file">Choose file</string>
     <string name="receiving_x_file">Receiving %1$s (%2$d%% completed)</string>
     <string name="download_x_file">Download %s</string>
     <string name="delete_x_file">Delete %s</string>
@@ -411,6 +418,7 @@
     <string name="multimedia_file">multimedia file</string>
     <string name="pdf_document">PDF document</string>
     <string name="word_document">Word document</string>
+    <string name="sheet_music">sheet music</string>
     <string name="apk">Android App</string>
     <string name="audiobook">Audiobook</string>
     <string name="vcard">Contact</string>
@@ -426,7 +434,6 @@
     <string name="contacts_have_stopped_typing">%s have stopped typing</string>
     <string name="pref_chat_states">Typing notifications</string>
     <string name="pref_chat_states_summary">Let your contacts know when you are writing messages to them</string>
-    <string name="send_location">Send location</string>
     <string name="show_location">Show location</string>
     <string name="no_application_found_to_display_location">No app found to display location</string>
     <string name="location">Location</string>
@@ -444,10 +451,7 @@
         <item quantity="one">%d certificate deleted</item>
         <item quantity="other">%d certificates deleted</item>
     </plurals>
-    <string name="pref_quick_action_summary">Replace “Send” button with quick action</string>
     <string name="pref_quick_action">Quick Action</string>
-    <string name="none">None</string>
-    <string name="recently_used">Most recently used</string>
     <string name="choose_quick_action">Choose quick action</string>
     <string name="search_contacts">Search contacts</string>
     <string name="search_group_chats">Search group chats</string>
@@ -467,6 +471,7 @@
     <string name="account_status_host_unknown">Not responsible for domain</string>
     <string name="server_info_broken">Broken</string>
     <string name="pref_presence_settings">Availability</string>
+    <string name="pref_presence_settings_summary">Away on device lock, Sync system DND</string>
     <string name="pref_away_when_screen_off">Away when device is locked</string>
     <string name="pref_away_when_screen_off_summary">Show as Away when the device is locked</string>
     <string name="pref_show_connection_options">Hostname &amp; Port</string>
@@ -680,7 +685,6 @@
     <string name="pref_validate_hostname_summary">Server certificates that contain the validated hostname are considered verified</string>
     <string name="certificate_does_not_contain_jid">Certificate does not contain a XMPP address</string>
     <string name="server_info_partial">partial</string>
-    <string name="attach_record_video">Record video</string>
     <string name="copy_to_clipboard">Copy</string>
     <string name="message_copied_to_clipboard">Message copied to clipboard</string>
     <string name="message">Message</string>
@@ -779,8 +783,10 @@
     <string name="security_violation_not_attaching_file">File omitted due to security violation.</string>
     <string name="pref_video_compression">Video Quality</string>
     <string name="pref_video_compression_summary">Lower quality means smaller files</string>
-    <string name="video_360p">Medium (360p)</string>
+    <string name="video_360p">Low (360p)</string>
+    <string name="video_480p">Medium (480p)</string>
     <string name="video_720p">High (720p)</string>
+    <string name="video_1080p">Very high (1080p)</string>
     <string name="cancelled">cancelled</string>
     <string name="already_drafting_message">You are already drafting a message.</string>
     <string name="feature_not_implemented">Feature not implemented</string>
@@ -877,6 +883,7 @@
     <string name="search_participants">Search participants</string>
     <string name="file_too_large">File too large</string>
     <string name="attach">Attach</string>
+    <string name="send">Send</string>
     <string name="discover_channels">Discover channels</string>
     <string name="search_channels">Search channels</string>
     <string name="channel_discovery_opt_in_title">Possible privacy violation!</string>
@@ -906,7 +913,6 @@
     <string name="pref_channel_discovery">Channel discovery method</string>
     <string name="backup">Backup</string>
     <string name="category_about">About</string>
-    <string name="please_enable_an_account">Please enable an account</string>
     <string name="enable_account_to_delete">This account is disabled. Enable it to delete it from the server.</string>
     <string name="make_call">Make call</string>
     <string name="rtp_state_incoming_call">Incoming call</string>
@@ -967,8 +973,6 @@
     <string name="remove_from_favorites">Unpin from top</string>
     <string name="gpx_track">GPX track</string>
     <string name="could_not_correct_message">Could not edit message</string>
-    <string name="search_all_conversations">All chats</string>
-    <string name="search_this_conversation">This chat</string>
     <string name="your_avatar">Your avatar</string>
     <string name="your_avatar_tap_to_select_new_avatar">Your avatar. Tap to select new avatar from gallery.</string>
     <string name="avatar_for_x">Avatar for %s</string>
@@ -1053,9 +1057,9 @@
     <string name="detect_mim_summary">Channel binding can detect some machine-in-the-middle attacks</string>
     <string name="pref_category_server_connection">Server connection</string>
     <string name="pref_category_operating_system">Operating System</string>
-    <string name="pref_privacy_summary">Typing notifications, Last Seen, Availability</string>
+    <string name="pref_privacy_summary">Typing notifications, Last Seen, P2P Relays</string>
     <string name="pref_connection_summary">Hostname &amp; Port, Tor</string>
-    <string name="pref_connection_summary_w_cd">Hostname &amp; Port, Tor, P2P, Channel Discovery</string>
+    <string name="pref_connection_summary_w_cd">Hostname &amp; Port, Tor, Channel Discovery</string>
     <string name="pref_keyboard_options">Keyboard</string>
     <string name="pref_category_engagement_notifications">Engagement notifications</string>
     <string name="pref_category_application">Application</string>
@@ -1158,8 +1162,36 @@
     <string name="pref_sync_system_dnd_summary">Automatically set your status to \"Do Not Disturb\" when Android\'s DND mode is active.</string>
     <string name="pref_include_silent_modes">Include silent modes</string>
     <string name="pref_include_silent_modes_summary">Also signal \"Do Not Disturb\" when notifications are muted or the phone is on vibrate.</string>
+    <string name="pref_auto_send_recording">Auto-send recordings</string>
+    <string name="pref_auto_send_recording_summary">Send voice messages automatically when you finish recording.</string>
+    <string name="pref_save_to_gallery">Save to Gallery</string>
+    <string name="pref_save_to_gallery_summary">Automatically store media in public folders so they appear in your gallery and file manager.</string>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d media file saved</item>
+        <item quantity="other">%d media files saved</item>
+    </plurals>
+    <string name="could_not_save_files">Could not save files</string>
     <plurals name="delete_n_messages">
         <item quantity="one">Delete %d message</item>
         <item quantity="other">Delete %d messages</item>
     </plurals>
+    <string name="filter_type_images">Images</string>
+    <string name="filter_type_videos">Videos</string>
+    <string name="filter_type_audio">Audio</string>
+    <string name="filter_type_documents">Documents</string>
+    <string name="filter_type_other">Other</string>
+    <string name="filter_media">Filter media</string>
+    <string name="apply_filter">Apply</string>
+    <string name="select_all">Select all</string>
+    <string name="search_in_chats">Search in chats</string>
+    <string name="search_for_x_in_chats">Search for \"%s\" in chats</string>
+    <string name="attachment_choice_gallery">Gallery</string>
+    <string name="attachment_choice_file">File</string>
+    <string name="attachment_choice_location">Location</string>
+    <string name="attachment_choice_camera">Camera</string>
+    <string name="attachment_choice_video">Video</string>
+    <string name="attachment_choice_recording">Recording</string>
+    <string name="attachment_choice_contact">Contact</string>
+    <string name="note_to_self">Note to self</string>
+    <string name="invalid_contact">Could not parse contact</string>
 </resources>

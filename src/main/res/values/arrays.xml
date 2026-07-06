@@ -18,26 +18,6 @@
 		<item>-1</item>
 	</integer-array>
 
-	<string-array name="quick_actions">
-		<item>@string/none</item>
-		<item>@string/recently_used</item>
-		<item>@string/attach_take_picture</item>
-		<item>@string/attach_record_video</item>
-		<item>@string/attach_choose_picture</item>
-		<item>@string/attach_record_voice</item>
-		<item>@string/send_location</item>
-	</string-array>
-
-	<string-array name="quick_action_values">
-		<item>none</item>
-		<item>recent</item>
-		<item>TAKE_PHOTO</item>
-		<item>RECORD_VIDEO</item>
-		<item>CHOOSE_PICTURE</item>
-		<item>RECORD_VOICE</item>
-		<item>SEND_LOCATION</item>
-	</string-array>
-
 	<string-array name="picture_compression_values">
 		<item>never</item>
 		<item>auto</item>
@@ -95,13 +75,17 @@
 	</string-array>
 	<string-array name="video_compression_values">
 		<item>360</item>
+		<item>480</item>
 		<item>720</item>
+		<item>1080</item>
 		<item>uncompressed</item>
 	</string-array>
 
 	<string-array name="video_compression_entries">
 		<item>@string/video_360p</item>
+		<item>@string/video_480p</item>
 		<item>@string/video_720p</item>
+		<item>@string/video_1080p</item>
 		<item>@string/video_original</item>
 	</string-array>
 

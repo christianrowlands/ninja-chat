@@ -1,0 +1,2 @@
+* Avalehele lisandus otsinguriba mugavamaks ligipääsuks otsingule
+* Manuse lisamise nupp on nüüd sisendiväljale lähemal

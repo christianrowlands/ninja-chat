@@ -81,7 +81,6 @@
 \n
 \n<b>Внимание:</b> Това няма да изтрие съобщенията, които се съхраняват на други устройства или сървъри.</string>
     <string name="delete_file_dialog">Изтриване на файла</string>
-    <string name="delete_file_dialog_msg">Наистина ли искате да изтриете този файл?\n\n<b>Внимание:</b> Това няма да изтрие копията на файла, които се съхраняват на други устройства или сървъри.</string>
     <string name="choose_presence">Изберете устройство</string>
     <string name="send_unencrypted_message">Изпр. на нешифр. съобщение</string>
     <string name="send_message">Изпращане на съобщение</string>
@@ -132,8 +131,6 @@
     <string name="send_presence_updates">Изпращане на актуализации за присъствието</string>
     <string name="receive_presence_updates">Получаване на актуализации за присъствието</string>
     <string name="ask_for_presence_updates">Питане за актуализации за присъствието</string>
-    <string name="attach_choose_picture">Изберете снимка</string>
-    <string name="attach_take_picture">Заснемане</string>
     <string name="preemptively_grant">Предварително позволяване на абониране при заявка</string>
     <string name="error_not_an_image_file">Избраният файл не е изображение</string>
     <string name="error_compressing_image">Файлът с изображението не може да бъде преобразуван</string>
@@ -173,7 +170,6 @@
     <string name="openpgp_has_been_published">Публичният OpenPGP ключ е публикуван.</string>
     <string name="mgmt_account_enable">Активиране на профила</string>
     <string name="mgmt_account_delete_confirm_text">Изтриването на профила Ви ще изтрие и цялата история на разговорите Ви</string>
-    <string name="attach_record_voice">Запис на глас</string>
     <string name="account_settings_jabber_id">XMPP адрес</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="block_jabber_id">Блокиране на XMPP адрес</string>
@@ -311,7 +307,6 @@
     <string name="restoring_backup">Възстановяване от резервно копие</string>
     <string name="notification_restored_backup_title">Възстановяването от резервно копие е завършено</string>
     <string name="notification_restored_backup_subtitle">Не забравяйте да включите профила.</string>
-    <string name="choose_file">Изберете файл</string>
     <string name="receiving_x_file">Получаване на %1$s (%2$d%% завършено)</string>
     <string name="download_x_file">Сваляне на %s</string>
     <string name="delete_x_file">Изтриване на %s</string>
@@ -394,7 +389,6 @@
     <string name="contacts_have_stopped_typing">%s спряха да пишат</string>
     <string name="pref_chat_states">Известия за писането</string>
     <string name="pref_chat_states_summary">Така контактите Ви ще разбират, когато им пишете съобщения</string>
-    <string name="send_location">Изпращане на местоположението</string>
     <string name="show_location">Показване на местоположението</string>
     <string name="no_application_found_to_display_location">Няма намерено приложение за показване на местоположението</string>
     <string name="location">Местоположение</string>
@@ -411,10 +405,7 @@
         <item quantity="one">%d сертификат е изтрит</item>
         <item quantity="other">%d сертификата са изтрити</item>
     </plurals>
-    <string name="pref_quick_action_summary">Замяна на бутона „Изпращане“ с бързо действие</string>
     <string name="pref_quick_action">Бързо действие</string>
-    <string name="none">Нищо</string>
-    <string name="recently_used">Използвани наскоро</string>
     <string name="choose_quick_action">Изберете бързо действие</string>
     <string name="search_contacts">Търсене в контактите</string>
     <string name="send_private_message">Изпращане на лично съобщение</string>
@@ -632,7 +623,6 @@
     <string name="pref_validate_hostname_summary">Сървърните сертификати, които съдържат проверено име на сървъра, се смятат за потвърдени</string>
     <string name="certificate_does_not_contain_jid">Сертификатът не съдържа XMPP адрес</string>
     <string name="server_info_partial">частично</string>
-    <string name="attach_record_video">Запис на видео</string>
     <string name="copy_to_clipboard">Копиране в буфера</string>
     <string name="message_copied_to_clipboard">Съобщението е копирано</string>
     <string name="message">Съобщение</string>
@@ -845,7 +835,6 @@
     <string name="pref_channel_discovery">Метод за откриване на канали</string>
     <string name="backup">Резервно копие</string>
     <string name="category_about">Относно</string>
-    <string name="please_enable_an_account">Моля, активирайте профил</string>
     <string name="make_call">Направете обаждане</string>
     <string name="rtp_state_incoming_call">Входящо обаждане</string>
     <string name="rtp_state_incoming_video_call">Входящо видео-обаждане</string>
@@ -880,8 +869,6 @@
     <string name="add_to_favorites">Закачане горе</string>
     <string name="remove_from_favorites">Откачане от горе</string>
     <string name="could_not_correct_message">Съобщението не може да бъде поправено</string>
-    <string name="search_all_conversations">Всички разговори</string>
-    <string name="search_this_conversation">Този разговор</string>
     <string name="your_avatar">Вашият аватар</string>
     <string name="avatar_for_x">Аватар за %s</string>
     <string name="encrypted_with_omemo">Шифровано с OMEMO</string>

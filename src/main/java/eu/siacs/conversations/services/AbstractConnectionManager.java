@@ -2,10 +2,15 @@ package eu.siacs.conversations.services;
 
 import static eu.siacs.conversations.entities.Transferable.VALID_CRYPTO_EXTENSIONS;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import eu.siacs.conversations.entities.DownloadableFile;
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.http.HttpUploadConnection;
+import im.conversations.android.model.TransportSecurity;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import okhttp3.MediaType;
@@ -28,39 +33,30 @@ public class AbstractConnectionManager {
         this.mXmppConnectionService = service;
     }
 
-    public static InputStream upgrade(DownloadableFile file, InputStream is) {
-        if (file.getKey() != null && file.getIv() != null) {
-            AEADBlockCipher cipher = new GCMBlockCipher(new AESEngine());
-            cipher.init(
-                    true, new AEADParameters(new KeyParameter(file.getKey()), 128, file.getIv()));
-            return new CipherInputStream(is, cipher);
-        } else {
-            return is;
-        }
-    }
-
     // For progress tracking see:
     // https://github.com/square/okhttp/blob/master/samples/guide/src/main/java/okhttp3/recipes/Progress.java
 
     public static RequestBody requestBody(
-            final DownloadableFile file, final ProgressListener progressListener) {
+            final HttpUploadConnection.Upload upload, final ProgressListener progressListener) {
         return new RequestBody() {
 
             @Override
             public long contentLength() {
-                return file.getSize() + (file.getKey() != null ? 16 : 0);
+                return upload.totalSize();
             }
 
             @Nullable
             @Override
             public MediaType contentType() {
-                return MediaType.parse(file.getMimeType());
+                return MediaType.parse(upload.mime());
             }
 
             @Override
             public void writeTo(@NonNull final BufferedSink sink) throws IOException {
                 long transmitted = 0;
-                try (final Source source = Okio.source(upgrade(file, new FileInputStream(file)))) {
+                try (final Source source =
+                        Okio.source(
+                                openFileInputStream(upload.file(), upload.transportSecurity()))) {
                     long read;
                     while ((read = source.read(sink.buffer(), 8196)) != -1) {
                         transmitted += read;
@@ -70,6 +66,25 @@ public class AbstractConnectionManager {
                 }
             }
         };
+    }
+
+    private static InputStream openFileInputStream(
+            final File file, final TransportSecurity transportSecurity)
+            throws FileNotFoundException {
+        final var fileInputStream = new FileInputStream(file);
+        if (transportSecurity == null) {
+            return fileInputStream;
+        } else {
+            final AEADBlockCipher cipher = GCMBlockCipher.newInstance(AESEngine.newInstance());
+            cipher.init(
+                    true,
+                    new AEADParameters(
+                            new KeyParameter(transportSecurity.key()),
+                            128,
+                            transportSecurity.iv()));
+            Log.d(Config.LOGTAG, "setting up CipherInputStream");
+            return new CipherInputStream(fileInputStream, cipher);
+        }
     }
 
     public interface ProgressListener {

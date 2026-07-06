@@ -15,10 +15,15 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.widget.ImageViewCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.color.MaterialColors;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ItemMediaBinding;
 import eu.siacs.conversations.ui.XmppActivity;
@@ -27,12 +32,33 @@ import eu.siacs.conversations.ui.util.ViewUtil;
 import eu.siacs.conversations.utils.MimeUtils;
 import eu.siacs.conversations.worker.ExportBackupWorker;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
-public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHolder> {
+public class MediaAdapter extends ListAdapter<Attachment, MediaAdapter.MediaViewHolder> {
+
+    private static final DiffUtil.ItemCallback<Attachment> DIFF =
+            new DiffUtil.ItemCallback<>() {
+                @Override
+                public boolean areItemsTheSame(
+                        @NonNull Attachment oldItem, @NonNull Attachment newItem) {
+                    return Objects.equals(oldItem.getUuid(), newItem.getUuid());
+                }
+
+                @Override
+                public boolean areContentsTheSame(
+                        @NonNull Attachment oldItem, @NonNull Attachment newItem) {
+                    return Objects.equals(oldItem, newItem);
+                }
+            };
 
     public static final List<String> DOCUMENT_MIMES =
             new ImmutableList.Builder<String>()
@@ -41,6 +67,10 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
                     .add("text/plain")
                     .addAll(MimeUtils.WORD_DOCUMENT_MIMES)
                     .build();
+
+    public static final List<String> EBOOK_MIMES =
+            Arrays.asList("application/epub+zip", "application/vnd.amazon.mobi8-ebook");
+
     public static final List<String> SPREAD_SHEET_MIMES =
             Arrays.asList(
                     "text/comma-separated-values",
@@ -57,6 +87,18 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
                     "application/vnd.openxmlformats-officedocument.presentationml.presentation",
                     "application/vnd.openxmlformats-officedocument.presentationml.slideshow");
 
+    public static final Collection<String> ALL_DOCUMENT_MIMES =
+            new ImmutableSet.Builder<String>()
+                    .addAll(DOCUMENT_MIMES)
+                    .addAll(EBOOK_MIMES)
+                    .addAll(SPREAD_SHEET_MIMES)
+                    .addAll(SLIDE_SHOW_MIMES)
+                    .build();
+
+    public static final Collection<String> SHEET_MUSIC =
+            Arrays.asList(
+                    "application/vnd.recordare.musicxml", "application/vnd.recordare.musicxml+xml");
+
     private static final List<String> ARCHIVE_MIMES =
             Arrays.asList(
                     "application/x-7z-compressed",
@@ -66,15 +108,30 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
                     "application/x-tar");
     public static final List<String> CODE_MIMES = Arrays.asList("text/html", "text/xml");
 
-    private final ArrayList<Attachment> attachments = new ArrayList<>();
+    private final Set<UUID> selectedAttachments = new HashSet<>();
 
     private final XmppActivity activity;
 
+    private Consumer<Attachment> onAttachmentClicked = null;
+    private Function<Attachment, Boolean> onAttachmentLongClicked = attachment -> false;
+
     private int mediaSize = 0;
 
-    public MediaAdapter(XmppActivity activity, @DimenRes int mediaSize) {
+    public MediaAdapter(final XmppActivity activity, final @DimenRes int mediaSize) {
+        super(DIFF);
         this.activity = activity;
         this.mediaSize = Math.round(activity.getResources().getDimension(mediaSize));
+        this.onAttachmentClicked = attachment -> ViewUtil.view(activity, attachment);
+    }
+
+    public void setOnAttachmentClicked(final Consumer<Attachment> callback) {
+        Preconditions.checkNotNull(callback);
+        this.onAttachmentClicked = callback;
+    }
+
+    public void setOnAttachmentLongClicked(final Function<Attachment, Boolean> callback) {
+        Preconditions.checkNotNull(callback);
+        this.onAttachmentLongClicked = callback;
     }
 
     public static void setMediaSize(final RecyclerView recyclerView, final int mediaSize) {
@@ -94,12 +151,6 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
     }
 
     private static @DrawableRes int getImageDrawable(final String mime) {
-
-        // TODO ideas for more mime types: XML, HTML documents, GPG/PGP files, eml files,
-        // spreadsheets (table symbol)
-
-        // add bz2 and tar.gz to archive detection
-
         if (Strings.isNullOrEmpty(mime)) {
             return R.drawable.ic_help_center_48dp;
         } else if (mime.equals("audio/x-m4b")) {
@@ -116,8 +167,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
             return R.drawable.ic_mobile_ticket_48dp;
         } else if (ARCHIVE_MIMES.contains(mime)) {
             return R.drawable.ic_archive_48dp;
-        } else if (mime.equals("application/epub+zip")
-                || mime.equals("application/vnd.amazon.mobi8-ebook")) {
+        } else if (EBOOK_MIMES.contains(mime)) {
             return R.drawable.ic_book_48dp;
         } else if (mime.equals(ExportBackupWorker.MIME_TYPE)) {
             return R.drawable.ic_backup_48dp;
@@ -140,6 +190,9 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         } else if (Arrays.asList("application/x-pcapng", "application/vnd.tcpdump.pcap")
                 .contains(mime)) {
             return R.drawable.ic_lan_24dp;
+        } else if (SHEET_MUSIC.contains(mime)) {
+            return R.drawable.ic_audio_file_48dp;
+
         } else {
             return R.drawable.ic_help_center_48dp;
         }
@@ -154,8 +207,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         imageView.setImageResource(getImageDrawable(attachment));
         imageView.setBackgroundColor(
                 MaterialColors.getColor(
-                        imageView,
-                        com.google.android.material.R.attr.colorSurfaceContainerHighest));
+                        imageView, com.google.android.material.R.attr.colorSurfaceContainer));
     }
 
     private static boolean cancelPotentialWork(Attachment attachment, ImageView imageView) {
@@ -193,23 +245,85 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MediaViewHolder holder, int position) {
-        final Attachment attachment = attachments.get(position);
+        final var attachment = getItem(position);
         if (attachment.renderThumbnail()) {
             loadPreview(attachment, holder.binding.media);
         } else {
             cancelPotentialWork(attachment, holder.binding.media);
             renderPreview(attachment, holder.binding.media);
         }
-        holder.binding.getRoot().setOnClickListener(v -> ViewUtil.view(activity, attachment));
+        holder.binding.getRoot().setOnClickListener(v -> onAttachmentClicked.accept(attachment));
+        holder.binding
+                .getRoot()
+                .setOnLongClickListener(
+                        v -> {
+                            final var wrapper = v.findViewById(R.id.wrapper);
+                            if (wrapper != null
+                                    && wrapper.getBackground() instanceof Drawable drawable) {
+                                drawable.jumpToCurrentState();
+                            }
+                            return onAttachmentLongClicked.apply(attachment);
+                        });
+        if (selectedAttachments.contains(attachment.getUuid())) {
+            holder.binding.selectionIndicator.setVisibility(ImageView.VISIBLE);
+            holder.binding
+                    .getRoot()
+                    .setBackgroundColor(
+                            MaterialColors.getColor(
+                                    holder.binding.getRoot(),
+                                    com.google.android.material.R.attr
+                                            .colorSurfaceContainerHighest));
+        } else {
+            holder.binding.selectionIndicator.setVisibility(ImageView.INVISIBLE);
+            holder.binding.getRoot().setBackground(null);
+        }
     }
 
-    public void setAttachments(final List<Attachment> attachments) {
-        this.attachments.clear();
-        this.attachments.addAll(attachments);
-        notifyDataSetChanged();
+    public boolean toggleSelection(final Attachment attachment) {
+        final var attachments = getCurrentList();
+        final var position = attachments.indexOf(attachment);
+        final var uuid = attachment.getUuid();
+        final boolean hasSelections;
+        if (this.selectedAttachments.remove(uuid)) {
+            hasSelections = !this.selectedAttachments.isEmpty();
+        } else {
+            this.selectedAttachments.add(uuid);
+            hasSelections = true;
+        }
+        if (position >= 0) {
+            notifyItemChanged(position);
+        }
+        return hasSelections;
     }
 
-    private void setMediaSize(int mediaSize) {
+    public void clearSelection() {
+        synchronized (this.selectedAttachments) {
+            final var attachments = getCurrentList();
+            for (int i = 0; i < attachments.size(); ++i) {
+                final var attachment = attachments.get(i);
+                if (this.selectedAttachments.remove(attachment.getUuid())) {
+                    notifyItemChanged(i);
+                }
+            }
+        }
+    }
+
+    public void selectAll() {
+        synchronized (this.selectedAttachments) {
+            final var attachments = getCurrentList();
+            for (int i = 0; i < attachments.size(); ++i) {
+                final var attachment = attachments.get(i);
+                if (this.selectedAttachments.contains(attachment.getUuid())) {
+                    continue;
+                }
+                if (this.selectedAttachments.add(attachment.getUuid())) {
+                    notifyItemChanged(i);
+                }
+            }
+        }
+    }
+
+    private void setMediaSize(final int mediaSize) {
         this.mediaSize = mediaSize;
     }
 
@@ -221,8 +335,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
                             .getPreviewForUri(attachment, mediaSize, true);
             if (bm != null) {
                 cancelPotentialWork(attachment, imageView);
-                imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(Color.TRANSPARENT);
+                setImageBitmap(imageView, bm);
             } else {
                 // TODO consider if this is still a good, general purpose loading color
                 imageView.setBackgroundColor(0xff333333);
@@ -239,9 +352,30 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return attachments.size();
+    public static void setImageBitmap(final ImageView imageView, final Bitmap bitmap) {
+        imageView.setImageTintList(null);
+        imageView.setImageBitmap(bitmap);
+        imageView.invalidate();
+        imageView.setBackgroundColor(Color.TRANSPARENT);
+    }
+
+    public int countSelections() {
+        return this.selectedAttachments.size();
+    }
+
+    public List<Attachment> getSelectedAttachments() {
+        final var attachments = getCurrentList();
+        return ImmutableList.copyOf(
+                Collections2.filter(
+                        attachments,
+                        a ->
+                                this.selectedAttachments.contains(
+                                        Objects.requireNonNull(a).getUuid())));
+    }
+
+    public void setSelection(final Collection<UUID> selection) {
+        this.selectedAttachments.clear();
+        this.selectedAttachments.addAll(selection);
     }
 
     static class AsyncDrawable extends BitmapDrawable {
@@ -290,14 +424,15 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.MediaViewHol
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
-                }
+        protected void onPostExecute(final Bitmap bitmap) {
+            if (bitmap == null || isCancelled()) {
+                return;
             }
+            final var imageView = imageViewReference.get();
+            if (imageView == null) {
+                return;
+            }
+            setImageBitmap(imageView, bitmap);
         }
     }
 }

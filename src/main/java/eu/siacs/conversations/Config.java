@@ -106,9 +106,6 @@ public final class Config {
     public static final boolean JINGLE_MESSAGE_INIT_STRICT_DEVICE_TIMEOUT = false;
     public static final long DEVICE_DISCOVERY_TIMEOUT = 12_000; // in milliseconds
 
-    public static final boolean ONLY_INTERNAL_STORAGE =
-            true; // use internal storage instead of sdcard to save attachments
-
     public static final boolean IGNORE_ID_REWRITE_IN_MUC = true;
     public static final boolean MUC_LEAVE_BEFORE_JOIN = false;
     // if this is set to true messages that contain multiple bodies (per language) will be ignored

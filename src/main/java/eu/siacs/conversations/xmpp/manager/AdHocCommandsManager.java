@@ -71,6 +71,10 @@ public class AdHocCommandsManager extends AbstractManager {
                 MoreExecutors.directExecutor());
     }
 
+    public ListenableFuture<Data> commandComplete(final Jid address, final String node) {
+        return commandComplete(address, node, null);
+    }
+
     public ListenableFuture<Data> commandComplete(
             final Jid address, final String node, @Nullable final Map<String, Object> data) {
         final var future = command(address, node, Command.Action.COMPLETE, null, data);

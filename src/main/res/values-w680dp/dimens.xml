@@ -1,0 +1,3 @@
+<resources>
+    <integer name="attachment_choices_max_element_wrap">6</integer> <!-- a media choice item has a width of 108. 108*6+32dp padding is 680 -->
+</resources>

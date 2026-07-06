@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
+import com.google.common.base.Strings;
 import eu.siacs.conversations.Config;
 
 public class Device {
@@ -82,5 +83,12 @@ public class Device {
                 || Build.PRODUCT.contains("vbox86p")
                 || Build.PRODUCT.contains("emulator")
                 || Build.PRODUCT.contains("simulator");
+    }
+
+    public String getDeviceName() {
+        return String.format(
+                "%s %s",
+                Strings.nullToEmpty(Build.MANUFACTURER).trim(),
+                Strings.nullToEmpty(Build.MODEL).trim());
     }
 }

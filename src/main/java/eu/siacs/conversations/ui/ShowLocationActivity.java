@@ -14,13 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-
 import com.google.common.base.Strings;
 import com.google.common.primitives.Doubles;
-
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityShowLocationBinding;
@@ -30,12 +27,12 @@ import eu.siacs.conversations.ui.widget.Marker;
 import eu.siacs.conversations.ui.widget.MyLocation;
 import eu.siacs.conversations.utils.GeoHelper;
 import eu.siacs.conversations.utils.LocationProvider;
-
+import java.util.Map;
 import org.osmdroid.util.GeoPoint;
 
-import java.util.Map;
-
 public class ShowLocationActivity extends LocationActivity implements LocationListener {
+
+    public static final String ACTION_SHOW_LOCATION = "eu.siacs.conversations.location.show";
 
     private GeoPoint loc = LocationProvider.FALLBACK;
     private ActivityShowLocationBinding binding;
@@ -64,7 +61,7 @@ public class ShowLocationActivity extends LocationActivity implements LocationLi
         }
         final String action = intent.getAction();
         switch (Strings.nullToEmpty(action)) {
-            case "eu.siacs.conversations.location.show":
+            case ACTION_SHOW_LOCATION:
                 if (intent.hasExtra("longitude") && intent.hasExtra("latitude")) {
                     final double longitude = intent.getDoubleExtra("longitude", 0);
                     final double latitude = intent.getDoubleExtra("latitude", 0);

@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Überprüfung der Serveridentität ist nicht möglich.</string>
     <string name="unknown_security_error">Unbekannter Sicherheitsfehler.</string>
     <string name="timeout_while_connecting_to_server">Zeitüberschreitung bei der Verbindung zum Server.</string>
+    <string name="use_physical_device">Bitte verwende ein physisches Gerät, um dein Konto zu registrieren.</string>
 </resources>

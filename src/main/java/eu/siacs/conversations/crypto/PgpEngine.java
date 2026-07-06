@@ -13,7 +13,6 @@ import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.XmppConnectionService;
@@ -89,9 +88,8 @@ public class PgpEngine {
         }
 
         if (message.needsUploading()) {
-            final DownloadableFile inputFile =
-                    this.mXmppConnectionService.getFileBackend().getFile(message, true);
-            final DownloadableFile outputFile =
+            final var inputFile = this.mXmppConnectionService.getFileBackend().getFile(message);
+            final var outputFile =
                     this.mXmppConnectionService.getFileBackend().getFile(message, false);
             final InputStream is;
             final OutputStream os;

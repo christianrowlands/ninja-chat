@@ -1,0 +1,2 @@
+* Oferecer acesso mais fácil à 'Política de Privacidade' na versão da Play Store (Quicksy e Conversations)
+* Remover integração de livro de endereços da versão Play Store do Conversations

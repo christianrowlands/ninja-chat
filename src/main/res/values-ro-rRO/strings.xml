@@ -82,9 +82,6 @@
 \n
 \n<b>Atenție:</b> Această acțiune nu va afecta mesajele aflate pe alte dispozitive sau servere.</string>
     <string name="delete_file_dialog">Șterge fișierul</string>
-    <string name="delete_file_dialog_msg">Sigur doriți să ștergeți acest fișier\?
-\n
-\n<b>Atenție:</b> Această acțiune nu va șterge copiile acestui fișier care sunt stocate pe alte dispozitive sau servere. </string>
     <string name="choose_presence">Alege dispozitiv</string>
     <string name="send_unencrypted_message">Trimite mesaj necriptat</string>
     <string name="send_message">Trimite mesaj</string>
@@ -135,8 +132,6 @@
     <string name="send_presence_updates">Trimite actualizări de prezență</string>
     <string name="receive_presence_updates">Primește actualizări de prezență</string>
     <string name="ask_for_presence_updates">Cere actualizări de prezență</string>
-    <string name="attach_choose_picture">Alege imagine</string>
-    <string name="attach_take_picture">Fă o poză</string>
     <string name="preemptively_grant">Acordă anticipat cererea de abonare</string>
     <string name="error_not_an_image_file">Fișierul selectat nu este o imagine</string>
     <string name="error_compressing_image">Nu s-a putut face convertirea imaginii</string>
@@ -179,7 +174,6 @@
     <string name="openpgp_has_been_published">Cheia publică OpenPGP a fost publicată.</string>
     <string name="mgmt_account_enable">Activează cont</string>
     <string name="mgmt_account_delete_confirm_text">Sigur doriți să vă ștergeți contul? Dacă vă ștergeți contul, întregul istoric de discuții va fi pierdut</string>
-    <string name="attach_record_voice">Înregistrare voce</string>
     <string name="account_settings_jabber_id">Adresă XMPP</string>
     <string name="block_jabber_id">Blochează adresă XMPP</string>
     <string name="account_settings_example_jabber_id">numeutilizator@exemplu.ro</string>
@@ -321,7 +315,6 @@
     <string name="restoring_backup">Se restaurează din copia de siguranță</string>
     <string name="notification_restored_backup_title">Copia de siguranță a fost restaurată</string>
     <string name="notification_restored_backup_subtitle">Nu uitați să activați contul.</string>
-    <string name="choose_file">Alege un fișier</string>
     <string name="receiving_x_file">Primesc %1$s (%2$d%% complet)</string>
     <string name="download_x_file">Descarcă %s</string>
     <string name="delete_x_file">Șterge %s</string>
@@ -364,7 +357,7 @@
     <string name="perform_action_with">Efectuaza actiune cu</string>
     <string name="outcast">proscris</string>
     <string name="member">Membru</string>
-    <string name="remove_from_room">Înlătură din discuția de grup</string>
+    <string name="remove_from_room">Înlătură din grup</string>
     <string name="remove_from_channel">Înlătură din canal</string>
     <string name="could_not_change_affiliation">Nu s-a putut schimba afilierea lui %s</string>
     <string name="ban_now">Interzice accesul acum</string>
@@ -405,7 +398,6 @@
     <string name="contacts_have_stopped_typing">%s s-au oprit din scris</string>
     <string name="pref_chat_states">Notificare tastare</string>
     <string name="pref_chat_states_summary">Contactele sunt anunțate atunci când le scrieți un nou mesaj</string>
-    <string name="send_location">Trimite locația</string>
     <string name="show_location">Arată locația</string>
     <string name="no_application_found_to_display_location">Nu s-a găsit nici o aplicație care să afișeze locația</string>
     <string name="location">Locatie</string>
@@ -423,10 +415,7 @@
         <item quantity="few">%d certificate sterse</item>
         <item quantity="other">%d certificate șterse</item>
     </plurals>
-    <string name="pref_quick_action_summary">Înlocuiește butonul de trimitere cu o acțiune rapidă</string>
     <string name="pref_quick_action">Acțiune rapidă</string>
-    <string name="none">Nimic</string>
-    <string name="recently_used">Folosită recent</string>
     <string name="choose_quick_action">Alegeți acțiunea rapidă</string>
     <string name="search_contacts">Caută contacte</string>
     <string name="send_private_message">Trimite mesaj privat</string>
@@ -655,7 +644,6 @@
     <string name="pref_validate_hostname_summary">Certificatele serverelor care conțin nume de domenii validate sunt considerate verificate</string>
     <string name="certificate_does_not_contain_jid">Certificatul nu conține o adresă XMPP</string>
     <string name="server_info_partial">parțial</string>
-    <string name="attach_record_video">Înregistrare video</string>
     <string name="copy_to_clipboard">Copiază</string>
     <string name="message_copied_to_clipboard">Mesaj copiat în clipboard</string>
     <string name="message">Mesaj</string>
@@ -747,7 +735,7 @@
     <string name="security_violation_not_attaching_file">Fișier omis ca urmare a unei probleme de securitate.</string>
     <string name="pref_video_compression">Calitate video</string>
     <string name="pref_video_compression_summary">O calitate mai mică înseamnă fișiere mai mici</string>
-    <string name="video_360p">Medie (360p)</string>
+    <string name="video_360p">Joasă (360p)</string>
     <string name="video_720p">Mare (720p)</string>
     <string name="cancelled">anulat</string>
     <string name="already_drafting_message">Deja aveți ciorna unui mesaj.</string>
@@ -862,14 +850,13 @@
     <string name="unable_to_perform_this_action">Nu s-a putut realiza această acțiune</string>
     <string name="open_join_dialog">Alătură-te unui canal public…</string>
     <string name="sharing_application_not_grant_permission">Aplicația care a partajat nu a permis accesul la acest fișier.</string>
-    <string name="group_chats_and_channels"><![CDATA[Discuții de grup & Canale]]></string>
+    <string name="group_chats_and_channels"><![CDATA[Discuții de grup &amp; Canale]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Server local</string>
     <string name="pref_channel_discovery_summary">Cei mai mulți utilizatori ar trebui să aleagă \'jabber.network\' pentru a primi sugestii mai bune din întregul ecosistem XMPP.</string>
     <string name="pref_channel_discovery">Metoda de descoperire a canalelor</string>
     <string name="backup">Copie de siguranță</string>
     <string name="category_about">Despre</string>
-    <string name="please_enable_an_account">Va rugăm să activați un cont</string>
     <string name="make_call">Apelează</string>
     <string name="rtp_state_incoming_call">Apel primit</string>
     <string name="rtp_state_incoming_video_call">Apel video primit</string>
@@ -926,8 +913,6 @@
     <string name="remove_from_favorites">Anulează fixarea</string>
     <string name="gpx_track">Traseu GPX</string>
     <string name="could_not_correct_message">Nu s-a putut edita mesajul</string>
-    <string name="search_all_conversations">Toate discuțiile</string>
-    <string name="search_this_conversation">Această discuție</string>
     <string name="your_avatar">Poza dumneavoastră de profil</string>
     <string name="avatar_for_x">Poză de profil pentru %s</string>
     <string name="encrypted_with_omemo">Criptat cu OMEMO</string>
@@ -1035,8 +1020,8 @@
     <string name="detect_mim_summary">Channel binding poate detecta unele atacuri de tip machine-in-the-middle</string>
     <string name="pref_category_server_connection">Conexiune server</string>
     <string name="pref_category_operating_system">Sistem de operare</string>
-    <string name="pref_privacy_summary">Notificări de tastare, Văzut ultima dată, Disponibilitate</string>
-    <string name="pref_connection_summary_w_cd">Nume gazdă &amp; Port, Tor, P2P, Descoperire canale</string>
+    <string name="pref_privacy_summary">Notificări de tastare, Văzut(ă) ultima dată, Relee P2P</string>
+    <string name="pref_connection_summary_w_cd">Gazdă &amp; Port, Tor, Descoperire canale</string>
     <string name="pref_category_e2ee">Criptare de la un capăt-la-altul (E2E)</string>
     <string name="pref_keyboard_options">Tastatură</string>
     <string name="pref_category_engagement_notifications">Notificări de implicare</string>
@@ -1188,4 +1173,52 @@
     <string name="pref_include_silent_modes_summary">Semnalează \"Nu deranjați\" și atunci când notificările sunt dezactivate sau telefonul este pe vibrație.</string>
     <string name="presence_offline">Deconectat</string>
     <string name="rtp_state_no_internet">Fără conexiune Internet</string>
+    <string name="send">Trimite</string>
+    <string name="pref_auto_send_recording">Trimite automat înregistrările</string>
+    <string name="pref_auto_send_recording_summary">Mesajele vocale sunt trimise automat atunci când terminați înregistrarea.</string>
+    <string name="pref_presence_settings_summary">Plecat(ă) la blocare, Sincronizare Nu Deranja</string>
+    <string name="video_480p">Medie (480p)</string>
+    <string name="video_1080p">Foarte mare (1080p)</string>
+    <string name="pref_save_to_gallery">Salvează în galerie</string>
+    <string name="pref_save_to_gallery_summary">Stocați automat fișierele în dosare publice, astfel încât acestea să apară în galeria și managerul dvs. de fișiere.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Ștergere fișier</item>
+        <item quantity="few">Ștergere %d fișiere</item>
+        <item quantity="other">Ștergere %d de fișiere</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Sigur doriți să ștergeți acest fișier?</item>
+        <item quantity="few">Sigur doriți să ștergeți aceste fișiere?</item>
+        <item quantity="other">Sigur doriți să ștergeți aceste fișiere?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d fișier salvat</item>
+        <item quantity="few">%d fișiere salvate</item>
+        <item quantity="other">%d de fișiere salvate</item>
+    </plurals>
+    <string name="could_not_save_files">Nu s-au putut salva fișierele</string>
+    <string name="filter_type_images">Imagini</string>
+    <string name="filter_type_videos">Videoclipuri</string>
+    <string name="filter_type_audio">Fișiere audio</string>
+    <string name="filter_type_documents">Documente</string>
+    <string name="filter_type_other">Altele</string>
+    <string name="filter_media">Filtrare fișiere</string>
+    <string name="apply_filter">Aplică</string>
+    <string name="select_all">Selectează tot</string>
+    <string name="search_in_chats">Căutare în discuții</string>
+    <string name="search_for_x_in_chats">Caută \"%s\" în discuții</string>
+    <string name="attachment_choice_gallery">Galerie</string>
+    <string name="attachment_choice_file">Fișier</string>
+    <string name="attachment_choice_location">Locație</string>
+    <string name="attachment_choice_camera">Camera</string>
+    <string name="attachment_choice_video">Video</string>
+    <string name="attachment_choice_recording">Înregistrare voce</string>
+    <string name="start_group_chat">Discuție de grup</string>
+    <string name="delete_file_dialog_shared">Acest fișier a fost partajat în alte discuții.</string>
+    <string name="delete_file_dialog_confirm">Sigur doriți să ștergeți acest fișier?</string>
+    <string name="delete_file_dialog_copies">Nu se vor șterge copiile acestui fișier care sunt stocate pe alte dispozitive sau servere.</string>
+    <string name="sheet_music">partitură muzicală</string>
+    <string name="attachment_choice_contact">Contact</string>
+    <string name="note_to_self">Notă pentru sine</string>
+    <string name="invalid_contact">Nu s-a putut citii contactul</string>
 </resources>

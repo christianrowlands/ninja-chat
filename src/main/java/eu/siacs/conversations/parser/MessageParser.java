@@ -633,8 +633,9 @@ public class MessageParser extends AbstractParser
                 }
             }
 
-            long deletionDate = mXmppConnectionService.getAutomaticMessageDeletionDate();
-            if (deletionDate != 0 && message.getTimeSent() < deletionDate) {
+            final var deletion =
+                    new AppSettings(mXmppConnectionService).getAutomaticMessageDeletionInstant();
+            if (deletion.isPresent() && message.getTimeSent() < deletion.get().toEpochMilli()) {
                 Log.d(
                         Config.LOGTAG,
                         account.getJid().asBareJid()

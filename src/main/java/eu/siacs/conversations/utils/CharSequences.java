@@ -31,10 +31,16 @@ package eu.siacs.conversations.utils;
 
 import android.text.Spannable;
 import androidx.annotation.Nullable;
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CharSequences {
+
+    public static final String EMPTY_STRING = "";
 
     private static int getStartIndex(CharSequence input) {
         int length = input.length();
@@ -90,5 +96,21 @@ public class CharSequences {
 
     public static boolean isEmpty(final CharSequence charSequence) {
         return charSequence == null || charSequence.length() == 0;
+    }
+
+    public static boolean containsAll(final String haystack, final String needle) {
+        return containsAll(
+                haystack,
+                Iterables.transform(
+                        Splitter.on(CharMatcher.whitespace())
+                                .trimResults()
+                                .omitEmptyStrings()
+                                .split(needle),
+                        n -> n.toLowerCase(Locale.ROOT)));
+    }
+
+    public static boolean containsAll(final String haystack, final Iterable<String> needles) {
+        final var lower = haystack.toLowerCase(Locale.ROOT);
+        return Iterables.all(needles, s -> s != null && lower.contains(s));
     }
 }

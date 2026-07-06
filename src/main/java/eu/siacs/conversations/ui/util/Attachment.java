@@ -35,27 +35,40 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
 import com.google.common.base.MoreObjects;
-
+import com.google.common.base.Objects;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.utils.MimeUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class Attachment implements Parcelable {
+public final class Attachment implements Parcelable {
 
-    Attachment(Parcel in) {
-        uri = in.readParcelable(Uri.class.getClassLoader());
-        mime = in.readString();
-        uuid = UUID.fromString(in.readString());
-        type = Type.valueOf(in.readString());
+    private final Uri uri;
+    private final Type type;
+    private final UUID uuid;
+    private final String mime;
+
+    Attachment(final Parcel in) {
+        this.uri = in.readParcelable(Uri.class.getClassLoader());
+        this.mime = in.readString();
+        this.uuid = UUID.fromString(in.readString());
+        this.type = Type.valueOf(in.readString());
+    }
+
+    private Attachment(final UUID uuid, final Uri uri, final Type type, final String mime) {
+        this.uri = uri;
+        this.type = type;
+        this.mime = mime;
+        this.uuid = uuid;
+    }
+
+    private Attachment(final Uri uri, final Type type, final String mime) {
+        this(UUID.randomUUID(), uri, type, mime);
     }
 
     @Override
@@ -72,7 +85,7 @@ public class Attachment implements Parcelable {
     }
 
     public static final Creator<Attachment> CREATOR =
-            new Creator<Attachment>() {
+            new Creator<>() {
                 @Override
                 public Attachment createFromParcel(Parcel in) {
                     return new Attachment(in);
@@ -103,30 +116,25 @@ public class Attachment implements Parcelable {
                 .toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Attachment that)) return false;
+        return Objects.equal(uri, that.uri)
+                && type == that.type
+                && Objects.equal(uuid, that.uuid)
+                && Objects.equal(mime, that.mime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(uri, type, uuid, mime);
+    }
+
     public enum Type {
         FILE,
         IMAGE,
         LOCATION,
         RECORDING
-    }
-
-    private final Uri uri;
-    private final Type type;
-    private final UUID uuid;
-    private final String mime;
-
-    private Attachment(UUID uuid, Uri uri, Type type, String mime) {
-        this.uri = uri;
-        this.type = type;
-        this.mime = mime;
-        this.uuid = uuid;
-    }
-
-    private Attachment(Uri uri, Type type, String mime) {
-        this.uri = uri;
-        this.type = type;
-        this.mime = mime;
-        this.uuid = UUID.randomUUID();
     }
 
     public static boolean canBeSendInBand(final List<Attachment> attachments) {
@@ -185,6 +193,10 @@ public class Attachment implements Parcelable {
                         ? Type.IMAGE
                         : Type.FILE,
                 mime);
+    }
+
+    public static List<Attachment> of(final Uri uri, final String mime) {
+        return Collections.singletonList(new Attachment(UUID.randomUUID(), uri, Type.FILE, mime));
     }
 
     public static List<Attachment> extractAttachments(

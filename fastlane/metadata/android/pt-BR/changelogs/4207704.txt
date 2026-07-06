@@ -1,0 +1,3 @@
+* Suportar DNS Privado (DNS sobre TLS)
+* Suportar ícone de inicializador temático
+* Corrigir problema de permissão raro quando arquivos são compartilhados no Android 11+

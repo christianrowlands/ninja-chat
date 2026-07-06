@@ -121,8 +121,6 @@
     <string name="send_presence_updates">傳送線上狀態更新</string>
     <string name="receive_presence_updates">接收線上狀態更新</string>
     <string name="ask_for_presence_updates">要求線上狀態更新</string>
-    <string name="attach_choose_picture">選擇圖片</string>
-    <string name="attach_take_picture">拍攝圖片</string>
     <string name="preemptively_grant">預先授予訂閱要求</string>
     <string name="error_not_an_image_file">您選擇的檔案不是圖片</string>
     <string name="error_compressing_image">無法轉換圖片檔案</string>
@@ -161,8 +159,6 @@
     <string name="openpgp_has_been_published">OpenPGP 公開金鑰已發佈。</string>
     <string name="mgmt_account_enable">啟用帳戶</string>
     <string name="mgmt_account_delete_confirm_text">刪除帳戶將抹除您全部的會話記錄</string>
-    <string name="attach_record_voice">錄音</string>
-    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
     <string name="account_settings_jabber_id">XMPP 位址</string>
     <string name="block_jabber_id">封鎖 XMPP 位址</string>
     <string name="password">密碼</string>
@@ -298,7 +294,6 @@
     <string name="restoring_backup">正在還原備份</string>
     <string name="notification_restored_backup_title">你的備份已還原</string>
     <string name="notification_restored_backup_subtitle">不要忘記啟用帳戶。</string>
-    <string name="choose_file">選擇檔案</string>
     <string name="receiving_x_file">正在接收 %1$s (已完成 %2$d%%)</string>
     <string name="download_x_file">下載 %s</string>
     <string name="delete_x_file">刪除 %s</string>
@@ -378,7 +373,6 @@
     <string name="contacts_have_stopped_typing">%s 已停止輸入</string>
     <string name="pref_chat_states">輸入通知</string>
     <string name="pref_chat_states_summary">讓聯絡人知道您正在給他們寫訊息</string>
-    <string name="send_location">傳送位置</string>
     <string name="show_location">顯示位置</string>
     <string name="no_application_found_to_display_location">找不到可以顯示位置的應用程式</string>
     <string name="location">位置</string>
@@ -394,10 +388,7 @@
     <plurals name="toast_delete_certificates">
         <item quantity="other">%d 個憑證已刪除</item>
     </plurals>
-    <string name="pref_quick_action_summary">以快速動作取代「傳送」按鈕</string>
     <string name="pref_quick_action">快速動作</string>
-    <string name="none">無</string>
-    <string name="recently_used">最近使用</string>
     <string name="choose_quick_action">選擇快速動作</string>
     <string name="search_contacts">搜尋聯絡人</string>
     <string name="send_private_message">傳送私密訊息</string>
@@ -590,7 +581,6 @@
     <string name="pref_validate_hostname">以 DNSSEC 驗證主機名稱</string>
     <string name="certificate_does_not_contain_jid">憑證不包含 XMPP 位址</string>
     <string name="server_info_partial">部份</string>
-    <string name="attach_record_video">錄製影片</string>
     <string name="copy_to_clipboard">複製到剪貼簿</string>
     <string name="message_copied_to_clipboard">訊息已複製到剪貼簿</string>
     <string name="message">訊息</string>
@@ -791,13 +781,12 @@
     <string name="unable_to_perform_this_action">無法執行此動作</string>
     <string name="open_join_dialog">加入公用頻道…</string>
     <string name="sharing_application_not_grant_permission">分享應用程式未授予此檔案的存取權。</string>
-    <string name="group_chats_and_channels"><![CDATA[群組聊天 & 頻道]]> </string>
+    <string name="group_chats_and_channels"><![CDATA[群組聊天 & 頻道]]></string>
     <string name="local_server">本機伺服器</string>
     <string name="pref_channel_discovery_summary">大多數使用者應該選擇「jabber.network」以從整個公用 XMPP 生態系統中取得更好的建議。</string>
     <string name="pref_channel_discovery">頻道探索方法</string>
     <string name="backup">備份</string>
     <string name="category_about">關於</string>
-    <string name="please_enable_an_account">請啟用一個帳戶</string>
     <string name="make_call">進行通話</string>
     <string name="rtp_state_incoming_call">撥入電話</string>
     <string name="rtp_state_incoming_video_call">撥入的視訊通話</string>
@@ -846,8 +835,6 @@
     <string name="remove_from_favorites">取消釘選</string>
     <string name="gpx_track">GPX 追綜</string>
     <string name="could_not_correct_message">無法更正訊息</string>
-    <string name="search_all_conversations">所有會話</string>
-    <string name="search_this_conversation">此會話</string>
     <string name="your_avatar">您的頭像</string>
     <string name="avatar_for_x">%s 的頭像</string>
     <string name="encrypted_with_omemo">以 OMEMO 加密</string>
@@ -916,9 +903,6 @@
     <string name="data_saver_enabled_explained">您的作業系統正在限制 %1$s 在背景存取網際網路。若要接收新訊息的通知，您應該允許 %1$s 在「數據節省」開啟時無限制地存取。
 \n在可能的狀況下，%1$s 仍會努力地節省數據。</string>
     <string name="pref_broadcast_last_activity">最後在線</string>
-    <string name="delete_file_dialog_msg">您確定要刪除此檔案嗎？
-\n
-\n<b>警告：</b>這將不會影響儲存在其他裝置或伺服器上的檔案複本。 </string>
     <string name="contact_has_no_pgp_key">無法加密您的訊息，因為您的聯絡人並未宣布他們的公開金鑰。
 \n
 \n<small>請要求您的聯絡人設定 OpenPGP。</small></string>

@@ -1,0 +1,2 @@
+* Aumentar o SDK Alvo para 33 novamente
+* Corrigir problemas em servidores suportando SASL2 sem Stream Management em linha

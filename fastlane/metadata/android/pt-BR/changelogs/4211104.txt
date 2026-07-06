@@ -1,0 +1,3 @@
+* Agendar backups regulares
+* Excluir todos os dispositivos realme até o Android 11 da integração de chamada
+* Pequenas melhorias de Interface de Usuário (bolha de mensagem)

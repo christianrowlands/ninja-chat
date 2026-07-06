@@ -59,8 +59,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.zxing.WriterException;
 import de.gultsch.common.MiniUri;
-import eu.siacs.conversations.AppSettings;
-import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
@@ -86,9 +84,12 @@ import eu.siacs.conversations.utils.SignupUtils;
 import eu.siacs.conversations.xmpp.Jid;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
+import eu.siacs.conversations.xmpp.manager.EasyOnboardingManager;
 import eu.siacs.conversations.xmpp.manager.PresenceManager;
 import eu.siacs.conversations.xmpp.manager.ReactionManager;
 import eu.siacs.conversations.xmpp.manager.RegistrationManager;
+import im.conversations.android.model.Bookmark;
+import im.conversations.android.model.ImmutableBookmark;
 import im.conversations.android.xmpp.model.reactions.Restrictions;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -113,9 +114,6 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     private boolean isCameraFeatureAvailable = false;
 
-    protected boolean mUsingEnterKey = false;
-    protected boolean mUseTor = false;
-    protected boolean mShowLastUserInteraction = false;
     protected Toast mToast;
     public Runnable onOpenPGPKeyPublished =
             () ->
@@ -236,10 +234,6 @@ public abstract class XmppActivity extends ActionBarActivity {
             this.registerListeners();
             this.onBackendConnected();
         }
-        final var appSettings = new AppSettings(this);
-        this.mUsingEnterKey = appSettings.isDisplayEnterKey();
-        this.mUseTor = appSettings.isUseTor();
-        this.mShowLastUserInteraction = appSettings.isBroadcastLastActivity();
     }
 
     public void connectToBackend() {
@@ -567,9 +561,6 @@ public abstract class XmppActivity extends ActionBarActivity {
                         new Intent(
                                 this, eu.siacs.conversations.ui.activity.SettingsActivity.class));
                 break;
-            case R.id.action_privacy_policy:
-                openPrivacyPolicy();
-                break;
             case R.id.action_accounts:
                 AccountUtils.launchManageAccounts(this);
                 break;
@@ -584,20 +575,6 @@ public abstract class XmppActivity extends ActionBarActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void openPrivacyPolicy() {
-        if (BuildConfig.PRIVACY_POLICY == null) {
-            return;
-        }
-        final var viewPolicyIntent = new Intent(Intent.ACTION_VIEW);
-        viewPolicyIntent.setData(Uri.parse(BuildConfig.PRIVACY_POLICY));
-        try {
-            startActivity(viewPolicyIntent);
-        } catch (final ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.no_application_found_to_open_link, Toast.LENGTH_SHORT)
-                    .show();
-        }
     }
 
     public void selectPresence(
@@ -716,6 +693,24 @@ public abstract class XmppActivity extends ActionBarActivity {
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
+
+    protected void openConversationsForBookmark(final Bookmark existing) {
+        final var account = existing.getAccount();
+        final Jid jid = existing.getFullAddress();
+        if (jid == null) {
+            Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final Conversation conversation =
+                xmppConnectionService.findOrCreateConversation(account, jid, true, true, true);
+        if (!existing.isAutoJoin()) {
+            final var bookmark =
+                    ImmutableBookmark.builder().from(existing).isAutoJoin(true).build();
+            xmppConnectionService.createBookmark(bookmark.getAccount(), bookmark);
+        }
+        SoftKeyboardUtils.hideSoftKeyboard(this);
+        switchToConversation(conversation);
     }
 
     public void switchToContactDetails(Contact contact) {
@@ -1056,6 +1051,34 @@ public abstract class XmppActivity extends ActionBarActivity {
             MenuDoubleTabUtil.recordMenuOpen();
         }
         return super.onMenuOpened(id, menu);
+    }
+
+    public void showQrCode(final Account account) {
+        final var connection = account.getXmppConnection();
+        final var manager = connection.getManager(EasyOnboardingManager.class);
+        final var future = manager.inviteOrFallback();
+        final Toast toast;
+        if (future.isDone()) {
+            toast = null;
+        } else {
+            toast = Toast.makeText(this, R.string.please_wait, Toast.LENGTH_LONG);
+            toast.show();
+        }
+        Futures.addCallback(
+                future,
+                new FutureCallback<>() {
+                    @Override
+                    public void onSuccess(final MiniUri.Xmpp result) {
+                        Toasts.hide(toast);
+                        showQrCode(result);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Throwable t) {
+                        Log.e(Config.LOGTAG, "could not fetch invite uri", t);
+                    }
+                },
+                ContextCompat.getMainExecutor(this));
     }
 
     protected void showQrCode() {

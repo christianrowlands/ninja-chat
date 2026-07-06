@@ -1,0 +1,2 @@
+* Suchleiste zum leichteren Zugriff auf die Suchfunktion auf dem Startbildschirm hinzugefügt
+* Schaltfläche für Anhänge näher an das Eingabefeld verschoben

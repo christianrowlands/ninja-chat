@@ -49,6 +49,7 @@ public class ModerationManager extends AbstractManager {
                         c.remove(message);
                         if (getDatabase().deleteMessage(message.getUuid())) {
                             Log.d(Config.LOGTAG, "deleted local copy of moderated message");
+                            deleteAssociatedFile(message);
                         }
                         this.service.updateConversationUi();
                         return null;
@@ -105,7 +106,13 @@ public class ModerationManager extends AbstractManager {
             return;
         }
         final var conversation = mucOptions.getConversation();
-        final var retractedMessage = conversation.findMessageWithServerMsgId(stanzaId);
+        final eu.siacs.conversations.entities.Message retractedMessage;
+        final var inMemoryMessage = conversation.findMessageWithServerMsgId(stanzaId);
+        if (inMemoryMessage != null) {
+            retractedMessage = inMemoryMessage;
+        } else {
+            retractedMessage = getDatabase().getMessageWithServerMsgId(conversation, stanzaId);
+        }
         if (retractedMessage == null) {
             Log.d(Config.LOGTAG, "received retraction for " + stanzaId + ". Message not found.");
             return;
@@ -118,7 +125,29 @@ public class ModerationManager extends AbstractManager {
             Log.d(
                     Config.LOGTAG,
                     "received retraction for " + stanzaId + " in " + from + " by " + by);
+            deleteAssociatedFile(retractedMessage);
         }
         this.service.updateConversationUi();
+    }
+
+    private void deleteAssociatedFile(final eu.siacs.conversations.entities.Message message) {
+        if (message.isFileOrImage()) {
+            final var storageLocation = message.getRelativeFilePath();
+            if (storageLocation == null) {
+                return;
+            }
+            final var file = storageLocation.file();
+            // since the retracted message has already been deleted this should come up
+            // empty for files that are not used elsewhere
+            final var messagesWithFile = getDatabase().getMessagesWithFile(file);
+            if (messagesWithFile.isEmpty() && file.exists()) {
+                synchronized (service.FILENAMES_TO_IGNORE_DELETION) {
+                    service.FILENAMES_TO_IGNORE_DELETION.add(file.getAbsolutePath());
+                }
+                if (file.delete()) {
+                    Log.d(Config.LOGTAG, "deleted associated file");
+                }
+            }
+        }
     }
 }

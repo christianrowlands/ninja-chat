@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Nie udało się sprawdzić tożsamości serwera.</string>
     <string name="unknown_security_error">Nieznany błąd bezpieczeństwa.</string>
     <string name="timeout_while_connecting_to_server">Błąd czasu oczekiwania na połączenie z serwerem.</string>
+    <string name="use_physical_device">Proszę użyć fizycznego urządzenia do zarejestrowania Twojego konta.</string>
 </resources>

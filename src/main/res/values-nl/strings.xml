@@ -78,9 +78,6 @@
     <string name="action_clear_history">Geschiedenis wissen</string>
     <string name="clear_conversation_history">Gespreksgeschiedenis wissen</string>
     <string name="delete_file_dialog">Bestand verwijderen</string>
-    <string name="delete_file_dialog_msg">Weet je zeker dat je dit bestand wil verwijderen?
-\n
-\n<b>Waarschuwing:</b> Dit zal kopieën van dit bericht die opgeslagen zijn op andere apparaten of servers niet verwijderen. </string>
     <string name="choose_presence">Apparaat kiezen</string>
     <string name="send_unencrypted_message">Verstuur onversleuteld bericht</string>
     <string name="send_message">Verstuur bericht</string>
@@ -122,8 +119,6 @@
     <string name="send_presence_updates">Verstuur aanwezigheidsupdates</string>
     <string name="receive_presence_updates">Ontvang aanwezigheidsupdates</string>
     <string name="ask_for_presence_updates">Vraag naar aanwezigheidsupdates</string>
-    <string name="attach_choose_picture">Afbeelding kiezen</string>
-    <string name="attach_take_picture">Foto nemen</string>
     <string name="preemptively_grant">Op voorhand toestemming verlenen voor abonneren</string>
     <string name="error_not_an_image_file">Het bestand dat je gekozen hebt is geen afbeelding</string>
     <string name="error_compressing_image">Kan afbeeldingsbestand niet converteren</string>
@@ -160,7 +155,6 @@
 \nJouw contacten zullen je geen versleutelde OpenPGP-berichten meer kunnen sturen.</string>
     <string name="openpgp_has_been_published">OpenPGP-publieke sleutel gepubliceerd.</string>
     <string name="mgmt_account_enable">Account inschakelen</string>
-    <string name="attach_record_voice">Stem opnemen</string>
     <string name="account_settings_jabber_id">XMPP-adres</string>
     <string name="block_jabber_id">XMPP-adres blokkeren</string>
     <string name="account_settings_example_jabber_id">gebruikersnaam@voorbeeld.nl</string>
@@ -294,7 +288,6 @@
     <string name="restoring_backup">Back-up terugzetten</string>
     <string name="notification_restored_backup_title">Je back-up is hersteld</string>
     <string name="notification_restored_backup_subtitle">Vergeet niet om de account in te schakelen.</string>
-    <string name="choose_file">Bestand kiezen</string>
     <string name="receiving_x_file">Ontvangen van %1$s (%2$d%% voltooid)</string>
     <string name="download_x_file">%s downloaden</string>
     <string name="delete_x_file">%s verwijderen</string>
@@ -366,7 +359,6 @@
     <string name="contacts_have_stopped_typing">%s zijn gestopt met typen</string>
     <string name="pref_chat_states">Aan-het-typen-meldingen</string>
     <string name="pref_chat_states_summary">Laat je contacten weten wanneer je ze een nieuw bericht schrijft</string>
-    <string name="send_location">Locatie versturen</string>
     <string name="show_location">Locatie weergeven</string>
     <string name="no_application_found_to_display_location">Geen app om locatie weer te geven</string>
     <string name="location">Locatie</string>
@@ -384,8 +376,6 @@
         <item quantity="other">%d certificaten verwijderd</item>
     </plurals>
     <string name="pref_quick_action">Snelle actie</string>
-    <string name="none">Geen</string>
-    <string name="recently_used">Recent gebruikt</string>
     <string name="choose_quick_action">Snelle actie kiezen</string>
     <string name="search_contacts">Contacten zoeken</string>
     <string name="send_private_message">Privébericht sturen</string>
@@ -553,7 +543,6 @@
     <string name="pref_validate_hostname_summary">Servercertificaten die de gevalideerde hostnaam bevatten worden beschouwd als geverifieerd</string>
     <string name="certificate_does_not_contain_jid">Certificaat bevat geen XMPP-adres</string>
     <string name="server_info_partial">gedeeltelijk</string>
-    <string name="attach_record_video">Video opnemen</string>
     <string name="copy_to_clipboard">Kopiëren naar klembord</string>
     <string name="message_copied_to_clipboard">Bericht gekopieerd naar klembord</string>
     <string name="message">Bericht</string>
@@ -749,8 +738,6 @@
     <string name="add_to_favorites">Bovenaan vastzetten</string>
     <string name="remove_from_favorites">Bovenaan losmaken</string>
     <string name="could_not_correct_message">Kon bericht niet corrigeren</string>
-    <string name="search_all_conversations">Alle gesprekken</string>
-    <string name="search_this_conversation">Dit gesprek</string>
     <string name="your_avatar">Je avatar</string>
     <string name="avatar_for_x">Avatar voor %s</string>
     <string name="encrypted_with_omemo">Versleuteld met OMEMO</string>
@@ -845,7 +832,6 @@
     <string name="hosted_on">gehost op %s</string>
     <string name="unable_to_find_server">Kan server niet vinden.</string>
     <string name="unable_to_establish_secure_connection">Kan geen veilige verbinding tot stand brengen.</string>
-    <string name="pref_quick_action_summary">Knop “Verzenden” vervangen door snelle actie</string>
     <string name="user_has_left_conference">%1$s heeft de groepschat verlaten</string>
     <string name="search_group_chats">Groepschats doorzoeken</string>
     <string name="captcha_required">CAPTCHA vereist</string>
@@ -969,7 +955,6 @@
         <item quantity="other">%1$d gemiste oproepen van %2$s</item>
     </plurals>
     <string name="make_call">Oproepen</string>
-    <string name="please_enable_an_account">Schakel een account in</string>
     <string name="rtp_state_incoming_video_call">Inkomende video-oproep</string>
     <string name="rtp_state_content_add_video">Overschakelen naar videogesprek?</string>
     <string name="rtp_state_content_add">Extra sporen toevoegen?</string>

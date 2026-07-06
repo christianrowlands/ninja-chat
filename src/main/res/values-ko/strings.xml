@@ -87,8 +87,6 @@
     <string name="send_presence_updates">프레즌스 업데이트 보내기 </string>
     <string name="receive_presence_updates">프레즌스 업데이트 받기 </string>
     <string name="ask_for_presence_updates">프레즌스 업데이트 요청 </string>
-    <string name="attach_choose_picture">사진 선택 </string>
-    <string name="attach_take_picture">사진 찍기 </string>
     <string name="preemptively_grant">구독 요청을 선제적으로 허가 </string>
     <string name="error_not_an_image_file">선택한 파일은 이미지가 아닙니다 </string>
     <string name="error_file_not_found">파일을 찾을 수 없음 </string>
@@ -116,8 +114,7 @@
     <string name="mgmt_account_publish_avatar">아바타 공개 </string>
     <string name="mgmt_account_publish_pgp">OpenPGP 공개 키 공개 </string>
     <string name="mgmt_account_enable">계정 사용 </string>
-    <string name="attach_record_voice">녹음 </string>
-    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
+    <string name="account_settings_example_jabber_id">username@example.com</string>
     <string name="password">암호 </string>
     <string name="add_phone_book_text">주소록에 %s를 추가하시겠습니까?</string>
     <string name="server_info_show_more">서버 정보 </string>
@@ -201,7 +198,6 @@
     <string name="confirm">확인 </string>
     <string name="try_again">다시 시도하세요 </string>
     <string name="pref_keep_foreground_service_summary">운영체제가 접속을 해제하지 못하도록 예방합니다 </string>
-    <string name="choose_file">파일 선택 </string>
     <string name="receiving_x_file">수신중 %1$s (%2$d%% 완료) </string>
     <string name="download_x_file">%s 다운로드 </string>
     <string name="delete_x_file">%s 삭제</string>
@@ -256,7 +252,6 @@
     <string name="contacts_have_stopped_typing">%s 이(가) 입력을 중단했습니다 </string>
     <string name="pref_chat_states">입력 알림 </string>
     <string name="pref_chat_states_summary">메세지를 쓸 때 친구들이 알게 합니다</string>
-    <string name="send_location">위치 전송 </string>
     <string name="show_location">위치 표시 </string>
     <string name="location">위치 </string>
     <string name="pref_dont_trust_system_cas_title">시스템 CA를 신뢰하지 않음 </string>
@@ -270,8 +265,6 @@
         <item quantity="other">%d 인증서 삭제됨 </item>
     </plurals>
     <string name="pref_quick_action">빠른 동작</string>
-    <string name="none">없음</string>
-    <string name="recently_used">최근 사용된 항목</string>
     <string name="choose_quick_action">빠른 동작 선택</string>
     <string name="send_private_message">개인 메세지 전송</string>
     <string name="username">사용자 이름</string>

@@ -1,0 +1,3 @@
+* Aumentar a dependência libwebrtc para M117 e aumentar libvpx
+* Voltar a utilizar AAC para mensagens de voz
+* Suportar configurações de idioma por aplicativo

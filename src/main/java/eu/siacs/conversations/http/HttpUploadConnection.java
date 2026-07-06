@@ -11,17 +11,17 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.services.AbstractConnectionManager;
 import eu.siacs.conversations.services.DebouncedInterfaceUpdater;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
+import eu.siacs.conversations.utils.MimeUtils;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
+import im.conversations.android.model.TransportSecurity;
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Future;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,17 +33,13 @@ import okhttp3.Response;
 public class HttpUploadConnection
         implements Transferable, AbstractConnectionManager.ProgressListener {
 
-    static final List<String> WHITE_LISTED_HEADERS =
-            Arrays.asList("Authorization", "Cookie", "Expires");
-
     private final HttpConnectionManager mHttpConnectionManager;
     private final XmppConnectionService mXmppConnectionService;
     private final DebouncedInterfaceUpdater debouncedInterfaceUpdater;
     private boolean delayed = false;
-    private DownloadableFile file;
+    private Upload upload;
     private final Message message;
     private HttpUploadManager.Slot slot;
-    private byte[] key = null;
 
     private long transmitted = 0;
     private Call mostRecentCall;
@@ -69,15 +65,16 @@ public class HttpUploadConnection
 
     @Override
     public Long getFileSize() {
-        return file == null ? null : file.getExpectedSize();
+        return upload == null ? null : upload.totalSize();
     }
 
     @Override
     public int getProgress() {
-        if (file == null) {
+        final var upload = this.upload;
+        if (upload == null) {
             return 0;
         }
-        return (int) ((((double) transmitted) / file.getExpectedSize()) * 100);
+        return (int) ((((double) transmitted) / upload.totalSize()) * 100);
     }
 
     @Override
@@ -116,25 +113,32 @@ public class HttpUploadConnection
     public void init(final boolean delay) {
         final Account account = message.getConversation().getAccount();
         final var connection = account.getXmppConnection();
-        this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
+        final var file = mXmppConnectionService.getFileBackend().getFile(message, false);
         final String mime;
         if (message.getEncryption() == Message.ENCRYPTION_PGP
                 || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
             mime = "application/pgp-encrypted";
         } else {
-            mime = this.file.getMimeType();
+            mime = MimeUtils.getMimeType(file);
         }
-        final long originalFileSize = file.getSize();
+        final long originalFileSize = file.length();
+        final TransportSecurity transportSecurity;
         this.delayed = delay;
         if (Config.ENCRYPT_ON_HTTP_UPLOADED
                 || message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-            this.key = new byte[44];
-            SECURE_RANDOM.nextBytes(this.key);
-            this.file.setKeyAndIv(this.key);
+            final var keyIv = new byte[44];
+            SECURE_RANDOM.nextBytes(keyIv);
+            transportSecurity = TransportSecurity.ofKeyAndIv(keyIv);
+        } else {
+            transportSecurity = null;
         }
-        this.file.setExpectedSize(originalFileSize + (file.getKey() != null ? 16 : 0));
+        final long totalSize = originalFileSize + (transportSecurity != null ? 16 : 0);
+        this.upload = new Upload(file, totalSize, mime, transportSecurity);
         message.resetFileParams();
-        this.slotFuture = connection.getManager(HttpUploadManager.class).request(file, mime);
+        this.slotFuture =
+                connection
+                        .getManager(HttpUploadManager.class)
+                        .request(upload.file(), mime, upload.totalSize());
         Futures.addCallback(
                 this.slotFuture,
                 new FutureCallback<>() {
@@ -169,7 +173,7 @@ public class HttpUploadConnection
                 mHttpConnectionManager.buildHttpClient(
                         slot.put, message.getConversation().getAccount(), 0, true);
         // TODO progress Listener can be replaced with a callable
-        final RequestBody requestBody = AbstractConnectionManager.requestBody(file, this);
+        final RequestBody requestBody = AbstractConnectionManager.requestBody(this.upload, this);
         final Request request =
                 new Request.Builder().url(slot.put).put(requestBody).headers(slot.headers).build();
         Log.d(Config.LOGTAG, "uploading file to " + slot.put);
@@ -186,14 +190,19 @@ public class HttpUploadConnection
                     public void onResponse(@NonNull Call call, @NonNull Response response) {
                         final int code = response.code();
                         if (code == 200 || code == 201) {
+                            final var file = upload.file;
+                            final var transportSecurity = upload.transportSecurity();
                             Log.d(Config.LOGTAG, "finished uploading file");
                             final String get;
-                            if (key != null) {
+                            if (transportSecurity != null) {
                                 get =
                                         AesGcmURL.toAesGcmUrl(
                                                 slot.get
                                                         .newBuilder()
-                                                        .fragment(CryptoHelper.bytesToHex(key))
+                                                        .fragment(
+                                                                CryptoHelper.bytesToHex(
+                                                                        transportSecurity
+                                                                                .asBytes()))
                                                         .build());
                             } else {
                                 get = slot.get.toString();
@@ -226,4 +235,7 @@ public class HttpUploadConnection
         this.transmitted = progress;
         this.debouncedInterfaceUpdater.run();
     }
+
+    public record Upload(
+            File file, long totalSize, String mime, TransportSecurity transportSecurity) {}
 }

@@ -1,0 +1,1 @@
+* Corretta la registrazione di Quicksy su dispositivi vecchi

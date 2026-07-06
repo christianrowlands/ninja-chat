@@ -19,20 +19,15 @@ package eu.siacs.conversations.ui.util;
 import static java.util.Collections.max;
 import static java.util.Collections.min;
 
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.Toolbar;
-
 import com.google.android.material.appbar.MaterialToolbar;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -100,67 +95,27 @@ public class ToolbarUtils {
         return textViews;
     }
 
-    @Nullable
-    public static ImageView getLogoImageView(@NonNull Toolbar toolbar) {
-        return getImageView(toolbar, toolbar.getLogo());
-    }
+    public static void adjustToolbarHeight(
+            final MaterialToolbar toolbar, final boolean adjustToSearchBar) {
+        final var context = toolbar.getContext();
+        final ViewGroup.LayoutParams params = toolbar.getLayoutParams();
 
-    @Nullable
-    private static ImageView getImageView(@NonNull Toolbar toolbar, @Nullable Drawable content) {
-        if (content == null) {
-            return null;
-        }
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View child = toolbar.getChildAt(i);
-            if (child instanceof ImageView imageView) {
-                Drawable drawable = imageView.getDrawable();
-                if (drawable != null
-                        && drawable.getConstantState() != null
-                        && drawable.getConstantState().equals(content.getConstantState())) {
-                    return imageView;
-                }
+        if (adjustToSearchBar) {
+            params.height =
+                    (int)
+                            TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP,
+                                    88,
+                                    context.getResources().getDisplayMetrics());
+        } else {
+            final TypedValue tv = new TypedValue();
+            if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                params.height =
+                        TypedValue.complexToDimensionPixelSize(
+                                tv.data, context.getResources().getDisplayMetrics());
             }
         }
-        return null;
-    }
 
-    @Nullable
-    public static View getSecondaryActionMenuItemView(@NonNull Toolbar toolbar) {
-        ActionMenuView actionMenuView = getActionMenuView(toolbar);
-        if (actionMenuView != null) {
-            // Only return the first child of the ActionMenuView if there is more than one child
-            if (actionMenuView.getChildCount() > 1) {
-                return actionMenuView.getChildAt(0);
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static ActionMenuView getActionMenuView(@NonNull Toolbar toolbar) {
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View child = toolbar.getChildAt(i);
-            if (child instanceof ActionMenuView) {
-                return (ActionMenuView) child;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    public static ImageButton getNavigationIconButton(@NonNull Toolbar toolbar) {
-        Drawable navigationIcon = toolbar.getNavigationIcon();
-        if (navigationIcon == null) {
-            return null;
-        }
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View child = toolbar.getChildAt(i);
-            if (child instanceof ImageButton imageButton) {
-                if (imageButton.getDrawable() == navigationIcon) {
-                    return imageButton;
-                }
-            }
-        }
-        return null;
+        toolbar.setLayoutParams(params);
     }
 }

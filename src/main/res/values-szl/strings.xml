@@ -82,9 +82,6 @@
 \n 
 \n<b>Pozōr:</b> To niy wpływo na wiadōmości trzimane na inkszych maszinach abo serwerach.</string>
     <string name="delete_file_dialog">Wymaż zbiōr</string>
-    <string name="delete_file_dialog_msg">Na zicher wymazać tyn zbiōr\?
-\n
-\n<b>Pozōr:</b> To niy wpływo na kopije zbioru trzimane na inkszych maszinach abo serwerach. </string>
     <string name="choose_presence">Ôbier maszina</string>
     <string name="send_unencrypted_message">Wyślij wiadōmość bez szyfrowanio</string>
     <string name="send_message">Wyślij wiadōmość</string>
@@ -94,7 +91,7 @@
     <string name="send_unencrypted">Wyślij bez szyfrowanio</string>
     <string name="decryption_failed">Niy idzie ôdszyfrować. Możno niy mosz noleznego prywatnego klucza.</string>
     <string name="openkeychain_required">OpenKeychain</string>
-    <string name="openkeychain_required_long">%1$s używo &lt;b&gt;OpenKeychain&lt;/b&gt;, żeby szyfrować i ôdszyfrowować wiadōmości i zarzōndzać twojimi publicznymi kluczami.&lt;br&gt;&lt;br&gt;OpenKeychain je na licyncyji GPLv3+ i je dostympny we F-Droid abo Google Play.&lt;br&gt;&lt;br&gt;&lt;small&gt;(Puść %1$s na nowo po zainstalowaniu.)&lt;/small&gt;</string>
+    <string name="openkeychain_required_long"><![CDATA[%1$s używo <b>OpenKeychain</b>, żeby szyfrować i ôdszyfrowować wiadōmości i zarzōndzać twojimi publicznymi kluczami.<br><br>OpenKeychain je na licyncyji GPLv3+ i je dostympny we F-Droid abo Google Play.<br><br><small>(Puść %1$s na nowo po zainstalowaniu.)</small>]]></string>
     <string name="restart">Zresztartuj</string>
     <string name="install">Zainstaluj</string>
     <string name="openkeychain_not_installed">Zainstaluj OpenKeychain</string>
@@ -139,8 +136,6 @@
     <string name="send_presence_updates">Wysyłej powiadōmiynia ôbecności</string>
     <string name="receive_presence_updates">Dostowej powiadōmiynia ôbecności</string>
     <string name="ask_for_presence_updates">Poproś ô powiadōmiynia ôbecności</string>
-    <string name="attach_choose_picture">Ôbier ôbroz</string>
-    <string name="attach_take_picture">Zrōb fotografijo</string>
     <string name="preemptively_grant">Autōmatyczno zwolo na subskrypcyjo</string>
     <string name="error_not_an_image_file">Ôbrany zbiōr to niy ôbroz</string>
     <string name="error_compressing_image">Błōnd kōnwersyje ôbrazu</string>
@@ -183,7 +178,6 @@
     <string name="openpgp_has_been_published">Klucz publiczny OpenPGP ôstoł ôpublikowany.</string>
     <string name="mgmt_account_enable">Włōncz kōnto</string>
     <string name="mgmt_account_delete_confirm_text">Wymazanie kōnta wymazuje cołko historyjo godek</string>
-    <string name="attach_record_voice">Nagrej głos</string>
     <string name="account_settings_jabber_id">Adresa XMPP</string>
     <string name="block_jabber_id">Zablokuj adresa XMPP</string>
     <string name="account_settings_example_jabber_id">username@example.com</string>
@@ -330,7 +324,6 @@
     <string name="restoring_backup">Prziwrocanie ze kopije ibrycznyj</string>
     <string name="notification_restored_backup_title">Prziwrocanie ze kopije ibrycznyj gotowe</string>
     <string name="notification_restored_backup_subtitle">Niy zapōmnij ô aktywacyji tego kōnta.</string>
-    <string name="choose_file">Ôbier zbiōr</string>
     <string name="receiving_x_file">Ôdbiyranie %1$s (skōńczōne %2$d%%)</string>
     <string name="download_x_file">Pobier %s</string>
     <string name="delete_x_file">Wymaż %s</string>
@@ -415,7 +408,6 @@
     <string name="contacts_have_stopped_typing">%s niy piszōm</string>
     <string name="pref_chat_states">Powiadōmiynia pisanio</string>
     <string name="pref_chat_states_summary">Dowej znać kōntaktōm, jak dō nich piszesz</string>
-    <string name="send_location">Wyślij lokalizacyjo</string>
     <string name="show_location">Pokoż lokalizacyjo</string>
     <string name="no_application_found_to_display_location">Niy szło znojś aplikacyje do pokazowanio lokalizacyje</string>
     <string name="location">Lokalizacyjo</string>
@@ -433,10 +425,7 @@
         <item quantity="few">Wymazane %d certyfikaty</item>
         <item quantity="other">Wymazane %d certyfikatōw</item>
     </plurals>
-    <string name="pref_quick_action_summary">Zastōmp knefel wysyłanio gibkōm akcyjōm</string>
     <string name="pref_quick_action">Gibko akcyjo</string>
-    <string name="none">Brak</string>
-    <string name="recently_used">Ôstatnio używano</string>
     <string name="choose_quick_action">Ôbier gibko akcyjo</string>
     <string name="search_contacts">Przeszukej kōntakty</string>
     <string name="send_private_message">Wyślij wiadōmość prywatno</string>
@@ -668,7 +657,6 @@
     <string name="pref_validate_hostname_summary">Certyfikaty serwera, co posiadajōm noleżne miano ôd hosta, sōm uznowane za zweryfikowane</string>
     <string name="certificate_does_not_contain_jid">Certyfikat niy zawiyro adresy XMPP</string>
     <string name="server_info_partial">czyńściowo</string>
-    <string name="attach_record_video">Nagrej film</string>
     <string name="copy_to_clipboard">Skopiyruj do skrytki</string>
     <string name="message_copied_to_clipboard">Wiadōmość skopiyrowano do skrytki</string>
     <string name="message">Wiadōmość</string>
@@ -769,12 +757,12 @@
     <string name="phone_number">numer telefōnu</string>
     <string name="verify_your_phone_number">Zweryfikuj swōj numer telefōnu</string>
     <string name="enter_country_code_and_phone_number">Quicksy wyśle SMS (mogōm być naliczane płaty) coby zweryfikować numer telefōnu. Wpisz kod ôd kraju i numer telefōnu:</string>
-    <string name="we_will_be_verifying">Zweryfikujymy numer telefōnu <br/><br/><b>%s</b><br/><br/>Zgodzo sie wszysko, abo chcesz zmiynić numer?</string>
+    <string name="we_will_be_verifying"><![CDATA[Zweryfikujymy numer telefōnu <br/><br/><b>%s</b><br/><br/>Zgodzo sie wszysko, abo chcesz zmiynić numer?]]></string>
     <string name="not_a_valid_phone_number">%s to niy ma noleżny numer telefōnu.</string>
     <string name="please_enter_your_phone_number">Wkludź swōj numer telefōnu.</string>
     <string name="search_countries">Przeszukej kraje</string>
     <string name="verify_x">Zweryfikuj %s</string>
-    <string name="we_have_sent_you_an_sms_to_x">Wysłali my SMS do <b>%s</b>.</string>
+    <string name="we_have_sent_you_an_sms_to_x"><![CDATA[Wysłali my SMS do <b>%s</b>.]]></string>
     <string name="we_have_sent_you_another_sms">Wysłali my dalszy SMS z 6 cyfrowym kodym.</string>
     <string name="please_enter_pin_below">Wkludź 6-cyfrowy kod PIN niżyj.</string>
     <string name="resend_sms">Wyślij SMS zaś</string>
@@ -874,14 +862,13 @@
     <string name="unable_to_perform_this_action">Niy idzie wykōnać tyj akcyje</string>
     <string name="open_join_dialog">Przistōmp do publicznego kanału…</string>
     <string name="sharing_application_not_grant_permission">Aplikacyjo, co udostympnio, niy dała zwōle na dostymp do tego zbioru.</string>
-    <string name="group_chats_and_channels">Grupowe godki i kanały</string>
+    <string name="group_chats_and_channels"><![CDATA[Grupowe godki i kanały]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Serwer lokalny</string>
     <string name="pref_channel_discovery_summary">Wiynkszość używoczōw powinna ôbrać “jabber.network” dlo lepszych dorad ze cołkigo ekosystymu XMPP.</string>
     <string name="pref_channel_discovery">Metoda ôdkrywanio kanałōw</string>
     <string name="backup">Kopijo ibryczno</string>
     <string name="category_about">Ô aplikacyji</string>
-    <string name="please_enable_an_account">Włōncz kōnto</string>
     <string name="make_call">Zazwōń</string>
     <string name="rtp_state_incoming_call">Przichodzi połōnczynie</string>
     <string name="rtp_state_incoming_video_call">Przichodzi połōnczynie wideo</string>
@@ -921,8 +908,6 @@
     <string name="remove_from_favorites">Wymaż ze ôblubiōnych</string>
     <string name="gpx_track">Śledzynie GPX</string>
     <string name="could_not_correct_message">Niy szło skorygować wiadōmości</string>
-    <string name="search_all_conversations">Wszyske kōnwersacyje</string>
-    <string name="search_this_conversation">Ta kōnwersacyjo</string>
     <string name="your_avatar">Twōj awatar</string>
     <string name="avatar_for_x">Awatar ôd %s</string>
     <string name="encrypted_with_omemo">Zaszyfrowane bez OMEMO</string>

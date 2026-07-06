@@ -38,6 +38,7 @@ import eu.siacs.conversations.xmpp.jingle.transports.InbandBytestreamsTransport;
 import eu.siacs.conversations.xmpp.jingle.transports.SocksByteStreamsTransport;
 import eu.siacs.conversations.xmpp.jingle.transports.Transport;
 import eu.siacs.conversations.xmpp.jingle.transports.WebRTCDataChannelTransport;
+import im.conversations.android.model.TransportSecurity;
 import im.conversations.android.xmpp.model.jingle.Jingle;
 import im.conversations.android.xmpp.model.jingle.Reason;
 import im.conversations.android.xmpp.model.stanza.Iq;
@@ -592,15 +593,19 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         respondOk(jinglePacket);
         final var wrapper = jingle.getReason();
         final State previous = this.state;
-        Log.d(
-                Config.LOGTAG,
-                id.account.getJid().asBareJid()
-                        + ": received session terminate reason="
-                        + wrapper.reason()
-                        + "("
-                        + Strings.nullToEmpty(wrapper.text())
-                        + ") while in state "
-                        + previous);
+        if (wrapper != null) {
+            Log.d(
+                    Config.LOGTAG,
+                    id.account.getJid().asBareJid()
+                            + ": received session terminate reason="
+                            + wrapper.reason()
+                            + "("
+                            + Strings.nullToEmpty(wrapper.text())
+                            + ") while in state "
+                            + previous);
+        } else {
+            Log.d(Config.LOGTAG, id.account.getJid().asBareJid() + ": received session terminate");
+        }
         if (TERMINATED.contains(previous)) {
             Log.d(
                     Config.LOGTAG,
@@ -609,14 +614,19 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                             + previous);
             return;
         }
-        if (isInitiator()) {
+        if (isInitiator() && wrapper != null) {
             this.message.setErrorMessage(
                     Strings.isNullOrEmpty(wrapper.text())
                             ? wrapper.reason().getClass().getSimpleName()
                             : wrapper.text());
         }
         terminateTransport();
-        final State target = reasonToState(wrapper.reason());
+        final State target;
+        if (wrapper == null) {
+            target = State.TERMINATED_APPLICATION_FAILURE;
+        } else {
+            target = reasonToState(wrapper.reason());
+        }
         transitionOrThrow(target);
         finish();
     }
@@ -1399,9 +1409,9 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                 cipher.init(
                         true,
                         new AEADParameters(
-                                new KeyParameter(transportSecurity.key),
+                                new KeyParameter(transportSecurity.key()),
                                 128,
-                                transportSecurity.iv));
+                                transportSecurity.iv()));
                 Log.d(Config.LOGTAG, "setting up CipherInputStream");
                 return new CipherInputStream(fileInputStream, cipher);
             }
@@ -1469,7 +1479,9 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
         private OutputStream openFileOutputStream() throws FileNotFoundException {
             final var directory = this.file.getParentFile();
             if (directory != null && directory.mkdirs()) {
-                Log.d(Config.LOGTAG, "created directory " + directory.getAbsolutePath());
+                Log.d(Config.LOGTAG, "created parent directory: " + directory.getAbsolutePath());
+                // TODO technically this should restart the file observer. maybe do this when file
+                // receiver is initiated
             }
             final var fileOutputStream = new FileOutputStream(this.file);
             if (this.transportSecurity == null) {
@@ -1479,9 +1491,9 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
                 cipher.init(
                         false,
                         new AEADParameters(
-                                new KeyParameter(transportSecurity.key),
+                                new KeyParameter(transportSecurity.key()),
                                 128,
-                                transportSecurity.iv));
+                                transportSecurity.iv()));
                 Log.d(Config.LOGTAG, "setting up CipherOutputStream");
                 return new CipherOutputStream(fileOutputStream, cipher);
             }
@@ -1524,16 +1536,6 @@ public class JingleFileTransferConnection extends AbstractJingleConnection
             Log.d(Config.LOGTAG, "waiting for transport to terminate before stopping thread");
             awaitTransportTermination();
             closeTransport(inputStream);
-        }
-    }
-
-    private static final class TransportSecurity {
-        final byte[] key;
-        final byte[] iv;
-
-        private TransportSecurity(byte[] key, byte[] iv) {
-            this.key = key;
-            this.iv = iv;
         }
     }
 }

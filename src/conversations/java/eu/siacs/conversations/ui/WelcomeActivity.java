@@ -215,12 +215,18 @@ public class WelcomeActivity extends QrCodeProcessingActivity
                 }
             } else if (Arrays.asList(permissions)
                     .contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                                this,
+                                getString(
+                                        R.string.no_storage_permission,
+                                        getString(R.string.app_name)),
+                                Toast.LENGTH_SHORT)
+                        .show();
             }
         }
         if (writeGranted(grantResults, permissions)) {
             if (xmppConnectionService != null) {
-                xmppConnectionService.restartFileObserver();
+                xmppConnectionService.restartFileObserverAndCheckForDeletedFiles();
             }
         }
     }

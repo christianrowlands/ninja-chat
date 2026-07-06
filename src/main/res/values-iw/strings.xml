@@ -73,8 +73,6 @@
     <string name="send_presence_updates">שלח עדכוני נוכחות</string>
     <string name="receive_presence_updates">קבל עדכוני נוכחות</string>
     <string name="ask_for_presence_updates">בקש עדכוני נוכחות</string>
-    <string name="attach_choose_picture">בחר תמונה</string>
-    <string name="attach_take_picture">צלם תמונה</string>
     <string name="preemptively_grant">הענק מראש בקשת הרשמה</string>
     <string name="error_not_an_image_file">הקובץ שבחרת אינו תמונה</string>
     <string name="error_file_not_found">קובץ לא נמצא</string>
@@ -100,8 +98,7 @@
     <string name="mgmt_account_publish_avatar">פרסם תמונת פרופיל</string>
     <string name="mgmt_account_publish_pgp">פרסם מפתח ציבורי של OpenPGP</string>
     <string name="mgmt_account_enable">הפעל חשבון</string>
-    <string name="attach_record_voice">הקלט קול</string>
-    <string name="account_settings_example_jabber_id">username@ninja.chat</string>
+    <string name="account_settings_example_jabber_id">username@example.com</string>
     <string name="password">סיסמה</string>
     <string name="server_info_show_more">פרטי השרת</string>
     <string name="server_info_mam">XEP-0313: MAM - היסטוריית שרת</string>
@@ -169,7 +166,6 @@
     <string name="confirm">אמת</string>
     <string name="try_again">נסה שוב</string>
     <string name="pref_keep_foreground_service_summary">מונע ממערכת ההפעלה לנתק את החיבור לשרת</string>
-    <string name="choose_file">בחר קובץ</string>
     <string name="receiving_x_file">מקבל %1$s ( הושלם %2$d%% )</string>
     <string name="download_x_file">הורד %s</string>
     <string name="file">קובץ</string>
@@ -218,7 +214,6 @@
     <string name="contact_is_typing">%s מקליד/ה כעת…</string>
     <string name="contact_has_stopped_typing">%s הפסיק/ה להקליד</string>
     <string name="pref_chat_states">התראות הקלדה</string>
-    <string name="send_location">שלח מיקום</string>
     <string name="show_location">הראה מיקום</string>
     <string name="location">מיקום</string>
     <string name="pref_dont_trust_system_cas_title">אל תסמוך על ה- CAs של המערכת</string>
@@ -235,8 +230,6 @@
         <item quantity="other">%d חתימות נמחקו</item>
     </plurals>
     <string name="pref_quick_action">פעולה מהירה</string>
-    <string name="none">כלום</string>
-    <string name="recently_used">לפי השימוש האחרון</string>
     <string name="choose_quick_action">בחר פעולה מהירה</string>
     <string name="send_private_message">שלח הודעה פרטית</string>
     <string name="username">שם משתמש</string>
@@ -330,7 +323,6 @@
     <string name="openpgp_error">OpenKeychain יצר שגיאה.</string>
     <string name="pref_prevent_screenshots_summary">הסתר את תוכן האפליקציה במחליף האפליקציות וחסום צילומי מסך</string>
     <string name="openkeychain_required_long"><![CDATA[%1$s משתמש ב-<b>OpenKeychain</b> כדי להצפין ולפענח הודעות ולנהל את המפתחות הציבוריים שלך.<br><br>הוא מורשה תחת GPLv3+ וזמין ב-F-Droid וב-Google Play.<br><br><small>(אנא הפעל מחדש את %1$s לאחר מכן.)</small>]]></string>
-    <string name="delete_file_dialog_msg">האם אתה בטוח שברצונך למחוק את הקובץ הזה?\n\n<b>אזהרה:</b> פעולה זו לא תמחק עותקים של קובץ זה המאוחסנים במכשירים או שרתים אחרים.</string>
     <string name="pref_call_ringtone_summary">רינגטון לשיחות נכנסות</string>
     <string name="pref_notification_grace_period">תקופת החסד</string>
     <string name="account_status_regis_not_sup">הרישום אינו נתמך על ידי השרת</string>

@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Unable to verify server identity.</string>
     <string name="unknown_security_error">Unknown security error.</string>
     <string name="timeout_while_connecting_to_server">Timeout while connecting to server.</string>
+    <string name="use_physical_device">Please use a physical device to register your account.</string>
 </resources>

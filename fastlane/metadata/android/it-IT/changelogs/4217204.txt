@@ -1,0 +1,3 @@
+* Mostra un avviso in chat se il contatto ha un fuso orario diverso ed è notte dove si trova
+* Mostra un avviso in chat se il contatto ha "Non disturbare" attivo
+* Riscrittura della gestione di "Non disturbare" automatico (basata sul "Non disturbare" di sistema)

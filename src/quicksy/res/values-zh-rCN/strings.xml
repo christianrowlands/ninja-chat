@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">无法验证服务器身份。</string>
     <string name="unknown_security_error">安全错误未知。</string>
     <string name="timeout_while_connecting_to_server">连接到服务器时超时。</string>
+    <string name="use_physical_device">请使用实体设备注册您的账号。</string>
 </resources>

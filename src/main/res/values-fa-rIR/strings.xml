@@ -110,7 +110,6 @@
     <string name="mgmt_account_publish_pgp">انتشار کلید عمومی OpenPGP</string>
     <string name="unpublish_pgp">حذف کلید عمومی OpenPGP</string>
     <string name="mgmt_account_enable">فعال‌سازی حساب کاربری</string>
-    <string name="attach_record_voice">ضبط صدا</string>
     <string name="account_settings_example_jabber_id">‪username@example.com‬</string>
     <string name="password">رمز</string>
     <string name="add_phone_book_text">آیا می خواهید %s را به مخاطبان خود بیفزایید؟</string>
@@ -163,7 +162,6 @@
     <string name="sending_x_file">%s فرستاده می‌شود</string>
     <string name="message_options">گزینه‌های پیام</string>
     <string name="account_status_temporary_auth_failure">شکست موقتی برای تأیید هویت</string>
-    <string name="attach_take_picture">گرفتن عکس</string>
     <string name="fetching_history_from_server">تاریخچه از سرور دریافت می‌شود</string>
     <string name="remove_contact_text">آیا می‌خواهید %s را از فهرست مخاطبان خود پاک کنید؟ گفتگوها با این مخاطب پاک نخواهند شد.</string>
     <string name="set">تنظیم</string>
@@ -181,7 +179,6 @@
     <string name="contact_has_read_up_to_this_point">%s تا این‌جا خوانده است</string>
     <string name="omemo_fingerprint_x509_selected_message">v\\اثر انگشت OMEMO (منبع پیام)</string>
     <string name="video_call">تماس ویدیویی</string>
-    <string name="pref_quick_action_summary">جایگزینی دکمهٔ «ارسال» با کنش‌های سریع</string>
     <string name="file_transmission_cancelled">انتقال پرونده لغو شد</string>
     <string name="x_file_offered_for_download">%s برای بارگیری پیشنهاد شده</string>
     <string name="ongoing_video_call">تماس ویدیویی جاری</string>
@@ -234,7 +231,6 @@
     <string name="conference_technical_problems">شما از این گفتگوی گروهی به خاطر دلایل فنی خارج شده‌اید</string>
     <string name="new_password">رمز تازه</string>
     <string name="search_contacts">جستجوی مخاطبان</string>
-    <string name="recently_used">تازگی به‌کاررفته</string>
     <string name="regenerate_omemo_key">ساختن دوبارهٔ کلید OMEMO</string>
     <string name="open_x_file">گشودن %s</string>
     <string name="download_x_file">بارگیری %s</string>
@@ -249,7 +245,6 @@
         <item quantity="one">%1$d عضو را ببینید</item>
         <item quantity="other">%1$d عضو را ببینید</item>
     </plurals>
-    <string name="choose_file">برگزیدن پرونده</string>
     <string name="avatar_has_been_published">تصویر نمایه منتشر شد!</string>
     <string name="could_not_destroy_room">حذف گفتگوی گروهی ممکن نبود</string>
     <plurals name="toast_delete_certificates">
@@ -257,14 +252,12 @@
         <item quantity="other">%d گواهینامهٔ امنیتی حذف شد</item>
     </plurals>
     <string name="delete_x_file">حذف %s</string>
-    <string name="send_location">فرستادن موقعیت مکانی</string>
     <string name="receive_presence_updates">دریافت به‌روزرسانی وصل‌بودن</string>
     <string name="contacts_have_read_up_to_this_point">%s تا این‌جا خوانده‌اند</string>
     <string name="pref_allow_message_correction_summary">بگذارید مخاطبانتان پیام‌ها را پس از ارسال ویرایش کنند</string>
     <string name="only_one_call_at_a_time">تنها یک تماس در هر زمان ممکن است.</string>
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s +%2$d تا این‌جا خوانده‌اند</string>
     <string name="server_info_blocking">XEP-0191: Blocking Command</string>
-    <string name="none">هیچ</string>
     <string name="error_out_of_memory">حافظه کم آمد. تصویر خیلی بزرگ است</string>
     <string name="title_activity_about_x">دربارهٔ %s</string>
     <string name="contact_already_exists">این مخاطب از قبل وجود دارد</string>
@@ -305,7 +298,6 @@
     <string name="receiving_x_file">%1$s دریافت می‌شود (%2$d%% انجام شده)</string>
     <string name="action_edit_subject">ویرایش موضوع گفتگوی گروهی</string>
     <string name="help">راهنما</string>
-    <string name="attach_choose_picture">انتخاب عکس</string>
     <string name="server_info_pep">XEP-0163: PEP (Avatars / OMEMO)</string>
     <string name="account_status_incompatible_client">برنامهٔ ناسازگار</string>
     <string name="no_account_deactivated">هیچ (غیرفعال)</string>
@@ -435,9 +427,6 @@
     <string name="title_pref_quiet_hours_start_time">زمان آغاز</string>
     <string name="private_message_to">به %s</string>
     <string name="rtp_state_reconnecting">دوباره وصل می‌شود</string>
-    <string name="delete_file_dialog_msg">آیا می‌خواهید این پرونده را پاک کنید؟
-\n
-\n<b>هشدار:</b> با این کار نسخه‌های این پرونده که روی دستگاه‌ها یا سرورهای دیگر هستند پاک نمی‌شود. </string>
     <string name="outgoing_call_timestamp">تماس خروجی · %s</string>
     <string name="pref_up_push_server_title">سرور Push</string>
     <plurals name="n_missed_calls_from_x">
@@ -506,7 +495,7 @@
     <string name="url_copied_to_clipboard">نشانی کپی شد</string>
     <string name="never">هرگز</string>
     <string name="omemo_fingerprint_selected_message">اثر انگشت OMEMO (منبع پیام)</string>
-    <string name="openkeychain_required_long">%1$s برنامهٔ &lt;b&gt;OpenKeychain&lt;/b&gt; را به کار می‌برد تا پیام‌ها را رمزنگاری کند و کلید عمومی شما را مدیریت کند.&lt;br&gt;&lt;br&gt;با پروانهٔ ‪GPLv3+‬ منتشر شده است و روی اف-دروید و گوگل‌پلی در دسترس است.&lt;br&gt;&lt;br&gt;&lt;small&gt;(لطفاً پس از آن %1$s را دوباره اجرا کنید.)&lt;/small&gt;</string>
+    <string name="openkeychain_required_long"><![CDATA[%1$s برنامهٔ <b>OpenKeychain</b> را به کار می‌برد تا پیام‌ها را رمزنگاری کند و کلید عمومی شما را مدیریت کند.<br><br>با پروانهٔ ‪GPLv3+‬ منتشر شده است و روی اف-دروید و گوگل‌پلی در دسترس است.<br><br><small>(لطفاً پس از آن %1$s را دوباره اجرا کنید.)</small>]]></string>
     <string name="conference_options">پیکربندی گفتگوی گروهی خصوصی</string>
     <string name="contact_added_you">مخاطب به فهرست مخاطبان افزوده شد</string>
     <string name="destroy_room">حذف گفتگوی گروهی</string>
@@ -523,7 +512,6 @@
     <string name="pref_autojoin_summary">تنظیم ‪“autojoin”‬ را فعال کنید تا ورود و خروج در گفتگوهای گروهی از دستگاه‌های دیگر این‌جا هم اعمال شود.</string>
     <string name="could_not_change_password">تغییر رمز ممکن نبود</string>
     <string name="pref_show_dynamic_tags">برچسب‌های پویا</string>
-    <string name="search_this_conversation">این گفتگو</string>
     <string name="copy_original_url">کپی نشانی اصلی</string>
     <string name="no_application_found_to_display_location">برنامه‌ای برای نمایش موقعیت مکانی پیدا نشد</string>
     <string name="contacts_have_stopped_typing">%s دیگر تایپ نمی‌کنند</string>
@@ -546,7 +534,6 @@
     <string name="recording_error">خطا</string>
     <string name="download_failed_server_not_found">بارگیری شکست خورد: سرور پیدا نشد</string>
     <string name="server_info_stream_management">XEP-0198: Stream Management</string>
-    <string name="search_all_conversations">همهٔ گفتگوها</string>
     <string name="disable_notifications">قطع اعلان‌ها</string>
     <string name="return_to_ongoing_call">بازگشت به تماس جاری</string>
     <string name="could_not_change_affiliation">تغییر نسبت %s ممکن نبود</string>
@@ -747,7 +734,7 @@
         <item quantity="other">%d ثانیه</item>
     </plurals>
     <string name="abort_registration_procedure">آیا می‌خواهید فرایند ثبت‌نام را متوقف کنید؟</string>
-    <string name="we_have_sent_you_an_sms_to_x">ما به شما پیامکی به <b>%s</b> فرستاده‌ایم.</string>
+    <string name="we_have_sent_you_an_sms_to_x"><![CDATA[ما به شما پیامکی به <b>%s</b> فرستاده‌ایم.]]></string>
     <string name="outdated_backup_file_format">شما دارید یک قالب قدیمی نسخهٔ پشتیبان را وارد می‌کنید</string>
     <string name="creating_channel">کانال عمومی ساخته می‌شود…</string>
     <string name="location_disabled">هم‌رسانی موقعیت مکانی غیرفعال است</string>
@@ -786,7 +773,6 @@
     <string name="pref_omemo_setting_summary_default_on">برای گفتگوهای تازه OMEMO به کار برود.</string>
     <string name="encrypting_message">رمزگذاری پیام‌ها</string>
     <string name="contact_name">نام مخاطب</string>
-    <string name="attach_record_video">ضبط ویدیو</string>
     <string name="unable_to_restore_backup">بازیابی پشتیبان ممکن نبود.</string>
     <string name="this_looks_like_a_domain">این شبیه یک نشانی دامنه است</string>
     <string name="fetching_mam_prefs">دریافت ترجیحات آرشیوگیری. لطفاً صبر کنید…</string>
@@ -842,7 +828,7 @@
     <string name="send_corrected_message">فرستادن پیام ویرایش‌شده</string>
     <string name="session_failure">خطای نشست</string>
     <string name="message_copied_to_clipboard">پیام کپی شد</string>
-    <string name="group_chats_and_channels">گفتگوهای گروهی و کانال‌ها</string>
+    <string name="group_chats_and_channels"><![CDATA[گفتگوهای گروهی و کانال‌ها]]></string>
     <string name="start_orbot">اجرای Orbot</string>
     <string name="invalid_country_code">کد کشور نامعتبر</string>
     <string name="create_group_chat">گفتگوی گروهی بسازید</string>
@@ -900,7 +886,6 @@
     <string name="delete_selected_keys">حذف کلیدهای انتخاب‌شده</string>
     <string name="security_error_invalid_file_access">خطای امنیتی: دسترسی نامعتبر به پرونده!</string>
     <string name="rate_limited">شمار تلاش‌های شما محدود شده است</string>
-    <string name="please_enable_an_account">لطفاً حسابی را فعال کنید</string>
     <string name="verified_omemo_key_with_certificate">کلید OMEMO با تأییدیهٔ امنیتی تأیید شد!</string>
     <string name="pref_notifications_from_strangers">اعلان‌ها از غریبه‌ها</string>
     <string name="invalid_user_input">ورودی نامعتبر از کاربر</string>
@@ -927,7 +912,7 @@
     <string name="pref_show_connection_options_summary">نمایش تنظیمات نام میزبان و پورت هنگام ساخت حساب</string>
     <string name="add_existing_account">افزودن حساب فعلی</string>
     <string name="unable_to_decrypt_backup">رمزگشایی از پشتیبان ممکن نبود. رمز درست است؟</string>
-    <string name="we_will_be_verifying">ما این شماره را تأیید خواهیم کرد<br/><br/><b>%s</b><br/><br/>. آیا درست است یا می‌خواهید شماره را ویرایش کنید؟</string>
+    <string name="we_will_be_verifying"><![CDATA[ما این شماره را تأیید خواهیم کرد<br/><br/><b>%s</b><br/><br/>. آیا درست است یا می‌خواهید شماره را ویرایش کنید؟]]></string>
     <string name="unknown_api_error_network">خطای ناشناخته در شبکه.</string>
     <string name="this_account_is_disabled">شما این حساب را غیرفعال کرده‌اید</string>
     <string name="pref_connection_options">اتصال</string>

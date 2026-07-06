@@ -125,6 +125,8 @@ public final class MimeUtils {
         add("application/vnd.openxmlformats-officedocument.presentationml.presentation", "pptx");
         add("application/vnd.openxmlformats-officedocument.presentationml.template", "potx");
         add("application/vnd.openxmlformats-officedocument.presentationml.slideshow", "ppsx");
+        add("application/vnd.recordare.musicxml", "mxl");
+        add("application/vnd.recordare.musicxml+xml", "musicxml");
         add("application/vnd.rim.cod", "cod");
         add("application/vnd.smaf", "mmf");
         add("application/vnd.stardivision.calc", "sdc");
@@ -528,6 +530,16 @@ public final class MimeUtils {
             return null;
         }
         return extensionToMimeTypeMap.get(extension.toLowerCase());
+    }
+
+    public static String getMimeType(final File file) {
+        final var path = file.getAbsolutePath();
+        final int start = path.lastIndexOf('.') + 1;
+        if (start < path.length()) {
+            return Strings.nullToEmpty(MimeUtils.guessMimeTypeFromExtension(path.substring(start)));
+        } else {
+            return CharSequences.EMPTY_STRING;
+        }
     }
 
     /**

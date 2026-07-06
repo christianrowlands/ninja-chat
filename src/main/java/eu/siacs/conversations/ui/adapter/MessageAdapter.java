@@ -2,6 +2,7 @@ package eu.siacs.conversations.ui.adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -60,7 +61,6 @@ import eu.siacs.conversations.databinding.ItemMessageStatusBinding;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Message.FileParams;
 import eu.siacs.conversations.entities.RtpSessionStatus;
@@ -1379,7 +1379,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         audioPlayer.startStopPending();
     }
 
-    public void openDownloadable(Message message) {
+    public void openDownloadable(final Message message) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                 && ContextCompat.checkSelfPermission(
                                 activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -1391,23 +1391,26 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     ConversationsActivity.REQUEST_OPEN_MESSAGE);
             return;
         }
-        final DownloadableFile file =
-                activity.xmppConnectionService.getFileBackend().getFile(message);
-        ViewUtil.view(activity, file);
+        final var file = activity.xmppConnectionService.getFileBackend().getFile(message);
+        ViewUtil.view(activity, file, message.getUuid());
     }
 
-    private void showLocation(Message message) {
-        for (Intent intent : GeoHelper.createGeoIntentsFromMessage(activity, message)) {
-            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                getContext().startActivity(intent);
-                return;
-            }
+    private void showLocation(final Message message) {
+        final Intent intent;
+        try {
+            intent = GeoHelper.showLocationIntent(getContext(), message);
+        } catch (final IllegalArgumentException e) {
+            return;
         }
-        Toast.makeText(
-                        activity,
-                        R.string.no_application_found_to_display_location,
-                        Toast.LENGTH_SHORT)
-                .show();
+        try {
+            getContext().startActivity(intent);
+        } catch (final ActivityNotFoundException e) {
+            Toast.makeText(
+                            getContext(),
+                            R.string.no_application_found_to_display_location,
+                            Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     public void updatePreferences() {
@@ -1433,7 +1436,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         void onContactPictureLongClicked(View v, Message message);
     }
 
-    private static void setBackgroundTint(final LinearLayout view, final BubbleColor bubbleColor) {
+    public static void setBackgroundTint(final ViewGroup view, final BubbleColor bubbleColor) {
         view.setBackgroundTintList(bubbleToColorStateList(view, bubbleColor));
     }
 
@@ -1502,7 +1505,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         return MaterialColors.getColor(view, colorAttributeResId);
     }
 
-    private static @ColorInt int bubbleToOnSurfaceColor(
+    public static @ColorInt int bubbleToOnSurfaceColor(
             final View view, final BubbleColor bubbleColor) {
         return MaterialColors.getColor(view, bubbleToOnSurface(bubbleColor));
     }

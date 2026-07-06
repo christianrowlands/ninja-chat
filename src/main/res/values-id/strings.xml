@@ -78,7 +78,6 @@
 \n
 \n<b>Peringatan:</b> Ini tidak akan mempengaruhi pesan yang tersimpan di perangkat atau server lain.</string>
     <string name="delete_file_dialog">Hapus file</string>
-    <string name="delete_file_dialog_msg">Anda yakin ingin menghapus file ini?\n\n<b>Peringatan:</b> Ini tidak akan menghapus salinan dari file ini yang disimpan di perangkat atau server lain.</string>
     <string name="choose_presence">Pilih perangkat</string>
     <string name="send_unencrypted_message">Kirim pesan tak-terenkripsi</string>
     <string name="send_message">Kirim pesan</string>
@@ -125,8 +124,6 @@
     <string name="send_presence_updates">Kirim pembaruan kehadiran</string>
     <string name="receive_presence_updates">Terima pembaruan kehadiran</string>
     <string name="ask_for_presence_updates">Tanya untuk pembaruan kehadiran</string>
-    <string name="attach_choose_picture">Pilih gambar</string>
-    <string name="attach_take_picture">Ambil gambar</string>
     <string name="preemptively_grant">Ijinkan permintaan berlangganan</string>
     <string name="error_not_an_image_file">Berkas yang anda pilih bukan gambar</string>
     <string name="error_compressing_image">Tidak bisa mengkonversi file gambar</string>
@@ -164,7 +161,6 @@
     <string name="openpgp_has_been_published">Kunci publik OpenPGP diumumkan</string>
     <string name="mgmt_account_enable">Aktifkan Akun</string>
     <string name="mgmt_account_delete_confirm_text">Menghapus akun akan menghilangkan semua riwayat percakapan</string>
-    <string name="attach_record_voice">Rekam suara</string>
     <string name="account_settings_jabber_id">alamat XMPP</string>
     <string name="block_jabber_id">Blok alamat XMPP</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -280,7 +276,6 @@
     <string name="notification_create_backup_title">Membuat file backup</string>
     <string name="notification_backup_created_title">File backup sudah dibuat</string>
     <string name="notification_backup_created_subtitle">File backup sudah disimpan di %s</string>
-    <string name="choose_file">Pilih berkas</string>
     <string name="receiving_x_file">Menerima %1$s (%2$d%% terselesaikan)</string>
     <string name="download_x_file">Mengunduh %s</string>
     <string name="delete_x_file">Hapus %s</string>
@@ -331,7 +326,6 @@
     <string name="contact_is_typing">%s sedang mengetik…</string>
     <string name="contact_has_stopped_typing">%s telah berhenti mengetik</string>
     <string name="pref_chat_states">Notifikasi ketik pesan</string>
-    <string name="send_location">Kirim lokasi</string>
     <string name="show_location">Tampilkan lokasi</string>
     <string name="location">Lokasi</string>
     <string name="pref_dont_trust_system_cas_title">Jangan percaya sistem CA</string>
@@ -345,8 +339,6 @@
         <item quantity="other">%d sertifikat dihapus</item>
     </plurals>
     <string name="pref_quick_action">Aksi Cepat</string>
-    <string name="none">Tak satupun</string>
-    <string name="recently_used">Maling sering digunakan</string>
     <string name="choose_quick_action">Pilih aksi cepat</string>
     <string name="send_private_message">Kirim pesan pribadi</string>
     <string name="username">Username</string>

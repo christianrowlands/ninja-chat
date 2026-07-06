@@ -38,7 +38,7 @@
     <string name="moderator">Moderator</string>
     <string name="participant">Teilnehmer</string>
     <string name="visitor">Besucher</string>
-    <string name="remove_contact_text">Möchtest du %s von deiner Kontaktliste entfernen? Der Chat mit diesem Kontakt werden dabei nicht entfernt.</string>
+    <string name="remove_contact_text">Möchtest du %s von deiner Kontaktliste entfernen? Der Chat mit diesem Kontakt wird dabei nicht entfernt.</string>
     <string name="block_contact_text">Möchtest du %s sperren und keine Nachrichten mehr erhalten?</string>
     <string name="unblock_contact_text">Möchtest du %s entsperren und wieder Nachrichten empfangen?</string>
     <string name="block_domain_text">Alle Kontakte von %s sperren?</string>
@@ -81,9 +81,6 @@
 \n
 \n<b>Achtung:</b> Dies beeinflusst nicht Nachrichten, die auf anderen Geräten oder Servern gespeichert sind.</string>
     <string name="delete_file_dialog">Datei löschen</string>
-    <string name="delete_file_dialog_msg">Bist du sicher, dass du diese Datei löschen möchtest\?
-\n
-\n<b>Achtung:</b> Dies löscht keine Kopien dieser Datei, die auf anderen Geräten oder Servern gespeichert sind. </string>
     <string name="choose_presence">Gerät auswählen</string>
     <string name="send_unencrypted_message">Unverschlüsselt schreiben…</string>
     <string name="send_message">Nachricht senden</string>
@@ -134,8 +131,6 @@
     <string name="send_presence_updates">Online-Status senden</string>
     <string name="receive_presence_updates">Online-Status empfangen</string>
     <string name="ask_for_presence_updates">Online-Status anfragen</string>
-    <string name="attach_choose_picture">Bild auswählen</string>
-    <string name="attach_take_picture">Bild aufnehmen</string>
     <string name="preemptively_grant">Statusanfragen vorab erlauben</string>
     <string name="error_not_an_image_file">Die ausgewählte Datei ist kein Bild</string>
     <string name="error_compressing_image">Bilddatei konnte nicht konvertiert werden</string>
@@ -175,8 +170,7 @@
     <string name="unpublish_pgp_message">Bist du sicher, dass du deinen öffentlichen OpenPGP-Schlüssel aus deiner Anwesenheitsmitteilung entfernen möchtest?\nDeine Kontakte können dir dann keine OpenPGP-verschlüsselten Nachrichten senden.</string>
     <string name="openpgp_has_been_published">Öffentlicher OpenPGP-Schlüssel veröffentlicht.</string>
     <string name="mgmt_account_enable">Konto aktivieren </string>
-    <string name="mgmt_account_delete_confirm_text">Bist du sicher, dass du dein Konto möchtest? Dies wird deinen gesamten Chatverlauf entfernen</string>
-    <string name="attach_record_voice">Sprache aufzeichnen</string>
+    <string name="mgmt_account_delete_confirm_text">Bist du sicher, dass du dein Konto löschen möchtest? Dies wird deinen gesamten Chatverlauf entfernen</string>
     <string name="account_settings_jabber_id">XMPP-Adresse</string>
     <string name="block_jabber_id">XMPP-Adresse sperren</string>
     <string name="account_settings_example_jabber_id">benutzer@domain.de</string>
@@ -295,7 +289,7 @@
     <string name="check_x_filesize">%sgröße prüfen</string>
     <string name="check_x_filesize_on_host">%1$sgröße auf %2$s prüfen</string>
     <string name="message_options">Nachrichtenoptionen</string>
-    <string name="quote">Zitat</string>
+    <string name="quote">Zitieren</string>
     <string name="paste_as_quote">Als Zitat einfügen</string>
     <string name="copy_original_url">Original-URL kopieren</string>
     <string name="send_again">Erneut senden</string>
@@ -320,7 +314,6 @@
     <string name="restoring_backup">Stelle Sicherung wieder her</string>
     <string name="notification_restored_backup_title">Deine Sicherung wurde wiederhergestellt</string>
     <string name="notification_restored_backup_subtitle">Vergiss nicht, das Konto zu aktivieren.</string>
-    <string name="choose_file">Datei auswählen</string>
     <string name="receiving_x_file">Empfange %1$s (%2$d%% abgeschlossen)</string>
     <string name="download_x_file">%s herunterladen</string>
     <string name="delete_x_file">%s löschen</string>
@@ -404,7 +397,6 @@
     <string name="contacts_have_stopped_typing">%s schreiben nicht mehr</string>
     <string name="pref_chat_states">Tipp-Benachrichtigung</string>
     <string name="pref_chat_states_summary">Informiere deine Kontakte, wenn du eine Nachricht schreibst</string>
-    <string name="send_location">Standort senden</string>
     <string name="show_location">Standort anzeigen</string>
     <string name="no_application_found_to_display_location">Keine App für die Standortanzeige gefunden</string>
     <string name="location">Standort</string>
@@ -421,10 +413,7 @@
         <item quantity="one">%d Zertifikat gelöscht</item>
         <item quantity="other">%d Zertifikate gelöscht</item>
     </plurals>
-    <string name="pref_quick_action_summary">\"Senden\"-Schaltfläche durch Schnell-Tasten ersetzen</string>
     <string name="pref_quick_action">Schnell-Tasten</string>
-    <string name="none">Keine</string>
-    <string name="recently_used">Zuletzt verwendet</string>
     <string name="choose_quick_action">Schnell-Taste auswählen</string>
     <string name="search_contacts">Kontakte durchsuchen</string>
     <string name="send_private_message">Private Nachricht senden</string>
@@ -500,7 +489,7 @@
     <string name="selection_too_large">Der ausgewählte Bereich ist zu groß</string>
     <string name="no_accounts">(Keine aktivierten Konten)</string>
     <string name="this_field_is_required">Dieses Feld ist erforderlich</string>
-    <string name="correct_message">Ändern</string>
+    <string name="correct_message">Bearbeiten</string>
     <string name="send_corrected_message">Geänderte Nachricht senden</string>
     <string name="no_keys_just_confirm">Du hast den Fingerabdruck dieser Person bereits verifiziert. Durch Auswählen von \"Fertig\" bestätigst du nur, dass %s Teil dieses Gruppenchats ist.</string>
     <string name="this_account_is_disabled">Du hast dieses Konto deaktiviert</string>
@@ -642,7 +631,6 @@
     <string name="pref_validate_hostname_summary">Serverzertifikate, die den überprüften Hostnamen enthalten, werden als verifiziert betrachtet</string>
     <string name="certificate_does_not_contain_jid">Zertifikat enthält keine XMPP-Adresse</string>
     <string name="server_info_partial">teilweise</string>
-    <string name="attach_record_video">Video aufnehmen</string>
     <string name="copy_to_clipboard">Kopieren</string>
     <string name="message_copied_to_clipboard">Nachricht in die Zwischenablage kopiert</string>
     <string name="message">Nachricht</string>
@@ -734,7 +722,7 @@
     <string name="security_violation_not_attaching_file">Datei wurde aufgrund von Sicherheitsverletzungen ausgelassen.</string>
     <string name="pref_video_compression">Videoqualität</string>
     <string name="pref_video_compression_summary">Geringere Qualität ermöglicht kleinere Dateien</string>
-    <string name="video_360p">Mittel (360p)</string>
+    <string name="video_360p">Niedrig (360p)</string>
     <string name="video_720p">Hoch (720p)</string>
     <string name="cancelled">abgebrochen</string>
     <string name="already_drafting_message">Du bist bereits dabei, eine Nachricht zu verfassen.</string>
@@ -744,7 +732,7 @@
     <string name="phone_number">Telefonnummer</string>
     <string name="verify_your_phone_number">Telefonnummer überprüfen</string>
     <string name="enter_country_code_and_phone_number">Quicksy sendet eine SMS-Nachricht (es können Gebühren anfallen), um deine Telefonnummer zu überprüfen. Gib deine Landesvorwahl und Telefonnummer ein:</string>
-    <string name="we_will_be_verifying"><![CDATA[Wir werden die Telefonnummer <br/><br/><b>%s</b><br/><br/>überprüfen. Ist diese in Ordnung oder möchtest du die Nummer bearbeiten?]]></string>
+    <string name="we_will_be_verifying"><![CDATA[Wir werden die Telefonnummer <br><br><b>%s</b><br><br>überprüfen. Ist diese in Ordnung oder möchtest du die Nummer bearbeiten?]]></string>
     <string name="not_a_valid_phone_number">%s ist keine gültige Telefonnummer.</string>
     <string name="please_enter_your_phone_number">Gib bitte deine Telefonnummer ein.</string>
     <string name="search_countries">Land suchen</string>
@@ -849,14 +837,13 @@
     <string name="unable_to_perform_this_action">Diese Aktion konnte nicht durchgeführt werden</string>
     <string name="open_join_dialog">Öffentlichen Channel beitreten…</string>
     <string name="sharing_application_not_grant_permission">Die teilende App hat keine Berechtigung für den Zugriff auf diese Datei erteilt.</string>
-    <string name="group_chats_and_channels"><![CDATA[Gruppenchats & Channels]]></string>
+    <string name="group_chats_and_channels"><![CDATA[Gruppenchats &amp; Channels]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Lokaler Server</string>
     <string name="pref_channel_discovery_summary">Die meisten Benutzer sollten hier ‘jabber.network’ auswählen, um bessere Vorschläge aus dem gesamten, öffentlichen XMPP-Ökosystem zu bekommen.</string>
     <string name="pref_channel_discovery">Channelsuchmethode</string>
     <string name="backup">Sicherung</string>
     <string name="category_about">Über</string>
-    <string name="please_enable_an_account">Bitte aktiviere ein Konto</string>
     <string name="make_call">Anrufen</string>
     <string name="rtp_state_incoming_call">Eingehender Anruf</string>
     <string name="rtp_state_incoming_video_call">Eingehender Videoanruf</string>
@@ -910,8 +897,6 @@
     <string name="remove_from_favorites">Von oben ablösen</string>
     <string name="gpx_track">GPX-Strecke</string>
     <string name="could_not_correct_message">Nachricht konnte nicht geändert werden</string>
-    <string name="search_all_conversations">Alle Chats</string>
-    <string name="search_this_conversation">Dieser Chat</string>
     <string name="your_avatar">Dein Profilbild</string>
     <string name="avatar_for_x">Profilbild für %s</string>
     <string name="encrypted_with_omemo">Verschlüsselt mit OMEMO</string>
@@ -990,7 +975,7 @@
     <string name="start_chat">Chat starten</string>
     <string name="no_certificate_selected">Kein Client-Zertifikat ausgewählt!</string>
     <string name="title_activity_new_chat">Neuer Chat</string>
-    <string name="archive_this_chat">Chat anschließend löschen</string>
+    <string name="archive_this_chat">Chat anschließend archivieren</string>
     <string name="corresponding_chats_closed">Entsprechende Chats werden archiviert.</string>
     <string name="switch_to_chat">Zum Chat wechseln</string>
     <string name="action_archive_chat">Chat archivieren</string>
@@ -1024,9 +1009,9 @@
     <string name="detect_mim_summary">Kanalbindung kann einige Machine-in-the-Middle-Angriffe erkennen</string>
     <string name="detect_mim">Kanalbindung erfordern</string>
     <string name="pref_category_server_connection">Serververbindung</string>
-    <string name="pref_privacy_summary">Tipp-Benachrichtigung, Zuletzt genutzt, Status</string>
+    <string name="pref_privacy_summary">Tipp-Benachrichtigung, Zuletzt genutzt, P2P-Verbindungen</string>
     <string name="pref_connection_summary">Hostname &amp; Port, Tor</string>
-    <string name="pref_connection_summary_w_cd">Hostname &amp; Port, Tor, P2P, Channelsuche</string>
+    <string name="pref_connection_summary_w_cd">Hostname &amp; Port, Tor, Channelsuche</string>
     <string name="pref_category_application">Anwendung</string>
     <string name="pref_category_interaction">Interaktion</string>
     <string name="pref_up_long_summary">Beim Einsatz als UnifiedPush-Verteiler wird die dauerhafte, zuverlässige und akkuschonende XMPP-Verbindung genutzt, um andere UnifiedPush-kompatible Apps wie Tusky, Ltt.rs, FluffyChat und andere aufzuwecken.</string>
@@ -1161,11 +1146,56 @@
     <string name="its_time_for_contact">Es ist ^1 für ^2</string>
     <string name="pref_entity_time_summary">Teile deine aktuelle Uhrzeit mit deinen Kontakten, um im Gegenzug ihre Ortszeit zu erfahren.</string>
     <string name="pref_entity_time">Ortszeit teilen</string>
-    <string name="contact_has_paused_their_notifications">%s hat seine Benachrichtigungen pausiert</string>
+    <string name="contact_has_paused_their_notifications">%s hat die Benachrichtigungen pausiert</string>
     <string name="pref_sync_system_dnd_summary">Deinen Status automatisch auf „Nicht stören“ setzen, wenn der „Bitte nicht stören“-Modus von Android aktiv ist.</string>
     <string name="pref_sync_system_dnd">Synchronisieren des „Bitte nicht stören“-Modus</string>
     <string name="pref_include_silent_modes">Lautlos-Modus einbeziehen</string>
     <string name="pref_include_silent_modes_summary">Zusätzlich wird „Nicht stören“ angezeigt, wenn Benachrichtigungen stummgeschaltet sind oder das Telefon auf Vibration eingestellt ist.</string>
     <string name="presence_offline">Offline</string>
     <string name="rtp_state_no_internet">Keine Internetverbindung</string>
+    <string name="send">Senden</string>
+    <string name="pref_auto_send_recording">Sprachnachrichten direkt senden</string>
+    <string name="pref_auto_send_recording_summary">Sprachnachrichten nach dem Abschluss der Aufnahme direkt versenden.</string>
+    <string name="pref_presence_settings_summary">Abwesend bei gesperrtem Gerät, Systemsynchronisierung von „Bitte nicht stören“</string>
+    <string name="video_1080p">Sehr hoch (1080p)</string>
+    <string name="video_480p">Mittel (480p)</string>
+    <string name="pref_save_to_gallery">In Galerie speichern</string>
+    <string name="pref_save_to_gallery_summary">Medien werden automatisch in öffentlichen Ordnern gespeichert, sodass sie in deiner Galerie und deinem Dateimanager angezeigt werden.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Datei löschen</item>
+        <item quantity="other">%d Dateien löschen</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Willst du diese Datei wirklich löschen?</item>
+        <item quantity="other">Willst du diese Dateien wirklich löschen?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d Datei gespeichert</item>
+        <item quantity="other">%d Dateien gespeichert</item>
+    </plurals>
+    <string name="could_not_save_files">Dateien konnten nicht gespeichert werden</string>
+    <string name="filter_type_images">Bilder</string>
+    <string name="filter_type_videos">Videos</string>
+    <string name="filter_type_audio">Audio</string>
+    <string name="filter_type_documents">Dokumente</string>
+    <string name="filter_type_other">Andere</string>
+    <string name="filter_media">Medien filtern</string>
+    <string name="apply_filter">Anwenden</string>
+    <string name="select_all">Alle auswählen</string>
+    <string name="search_in_chats">Chats durchsuchen</string>
+    <string name="search_for_x_in_chats">In Chats nach \"%s\" suchen</string>
+    <string name="attachment_choice_gallery">Galerie</string>
+    <string name="attachment_choice_file">Datei</string>
+    <string name="attachment_choice_location">Standort</string>
+    <string name="attachment_choice_camera">Kamera</string>
+    <string name="attachment_choice_video">Video</string>
+    <string name="attachment_choice_recording">Sprachnachricht</string>
+    <string name="start_group_chat">Gruppenchat starten</string>
+    <string name="attachment_choice_contact">Kontakt</string>
+    <string name="note_to_self">Notiz für mich selbst</string>
+    <string name="invalid_contact">Kontakt konnte nicht verarbeitet werden</string>
+    <string name="sheet_music">Noten</string>
+    <string name="delete_file_dialog_copies">Dadurch werden keine Kopien dieser Datei gelöscht, die auf anderen Geräten oder Servern gespeichert sind.</string>
+    <string name="delete_file_dialog_confirm">Möchtest du diese Datei wirklich löschen?</string>
+    <string name="delete_file_dialog_shared">Diese Datei wurde in anderen Chats geteilt.</string>
 </resources>

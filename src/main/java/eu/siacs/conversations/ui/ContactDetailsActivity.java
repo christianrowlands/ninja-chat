@@ -279,7 +279,7 @@ public class ContactDetailsActivity extends OmemoActivity
         this.showLastSeen = preferences.getBoolean("last_activity", false);
         binding.mediaWrapper.setVisibility(
                 Compatibility.hasStoragePermission(this) ? View.VISIBLE : View.GONE);
-        mMediaAdapter.setAttachments(Collections.emptyList());
+        mMediaAdapter.submitList(Collections.emptyList());
     }
 
     @Override
@@ -697,7 +697,7 @@ public class ContactDetailsActivity extends OmemoActivity
         runOnUiThread(
                 () -> {
                     int limit = GridManager.getCurrentColumnCount(binding.media);
-                    mMediaAdapter.setAttachments(
+                    mMediaAdapter.submitList(
                             attachments.subList(0, Math.min(limit, attachments.size())));
                     binding.mediaWrapper.setVisibility(
                             attachments.size() > 0 ? View.VISIBLE : View.GONE);

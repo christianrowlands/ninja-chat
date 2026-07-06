@@ -83,9 +83,6 @@
 \n 
 \n<b>Внимание:</b> данная операция не повлияет на сообщения, хранящиеся на других устройствах или серверах.</string>
     <string name="delete_file_dialog">Удалить файл</string>
-    <string name="delete_file_dialog_msg">Удалить этот файл? 
-\n 
-\n<b>Предупреждение:</b> данная операция не удалит копии файла, хранящиеся на других устройствах или серверах. </string>
     <string name="choose_presence">Выберите устройство</string>
     <string name="send_unencrypted_message">Отправить незашифрованное сообщение</string>
     <string name="send_message">Сообщение</string>
@@ -140,8 +137,6 @@
     <string name="send_presence_updates">Отправлять присутствие</string>
     <string name="receive_presence_updates">Получать присутствие</string>
     <string name="ask_for_presence_updates">Запрашивать присутствие</string>
-    <string name="attach_choose_picture">Выбрать изображение</string>
-    <string name="attach_take_picture">Сделать снимок</string>
     <string name="preemptively_grant">Удовлетворять запросы на подписки</string>
     <string name="error_not_an_image_file">Выбранный файл не является изображением</string>
     <string name="error_compressing_image">Невозможно преобразовать изображение</string>
@@ -184,7 +179,6 @@
     <string name="openpgp_has_been_published">Публичный ключ OpenPGP опубликован.</string>
     <string name="mgmt_account_enable">Включить аккаунт</string>
     <string name="mgmt_account_delete_confirm_text">Удалить свой аккаунт? Удаление аккаунта также сотрёт всю историю бесед.</string>
-    <string name="attach_record_voice">Записать голос</string>
     <string name="account_settings_jabber_id">XMPP-адрес</string>
     <string name="block_jabber_id">Заблокировать XMPP-адрес</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -331,7 +325,6 @@
     <string name="restoring_backup">Восстановление из резервной копии</string>
     <string name="notification_restored_backup_title">Восстановление из резервной копии выполнено</string>
     <string name="notification_restored_backup_subtitle">Не забудьте включить аккаунт.</string>
-    <string name="choose_file">Выбрать файл</string>
     <string name="receiving_x_file">%1$s загружается (%2$d%% выполнено)</string>
     <string name="download_x_file">Загрузить %s</string>
     <string name="delete_x_file">Удалить %s</string>
@@ -402,9 +395,9 @@
     <string name="video">видео</string>
     <string name="image">изображение</string>
     <string name="vector_graphic">векторная графика</string>
-    <string name="pdf_document">Документ PDF</string>
-    <string name="apk">Приложение Android</string>
-    <string name="vcard">Контакт</string>
+    <string name="pdf_document">документ PDF</string>
+    <string name="apk">приложение Android</string>
+    <string name="vcard">контакт</string>
     <string name="avatar_has_been_published">Аватар загружен!</string>
     <string name="sending_x_file">Отправляется %s</string>
     <string name="offering_x_file">Предложен %s</string>
@@ -415,7 +408,6 @@
     <string name="contacts_have_stopped_typing">%s перестали печатать</string>
     <string name="pref_chat_states">Оповещения о наборе</string>
     <string name="pref_chat_states_summary">Позволяет вашим контактам видеть, когда вы пишете им новое сообщение</string>
-    <string name="send_location">Отправить местоположение</string>
     <string name="show_location">Показать местоположение</string>
     <string name="no_application_found_to_display_location">Не найдено приложения для отображения местоположения</string>
     <string name="location">Местоположение</string>
@@ -434,10 +426,7 @@
         <item quantity="many">Удалено %d сертификатов</item>
         <item quantity="other">Удалено %d сертификатов</item>
     </plurals>
-    <string name="pref_quick_action_summary">Заменить кнопку \"Отправить\" кнопкой быстрого действия</string>
     <string name="pref_quick_action">Быстрое действие</string>
-    <string name="none">Нет</string>
-    <string name="recently_used">Последнее выбранное</string>
     <string name="choose_quick_action">Выбрать быстрое действие</string>
     <string name="search_contacts">Поиск контактов</string>
     <string name="send_private_message">Отправить личное сообщение</string>
@@ -672,7 +661,6 @@
     <string name="pref_validate_hostname_summary">Серверные сертификаты, содержащие проверенное имя хоста, считаются проверенными</string>
     <string name="certificate_does_not_contain_jid">Сертификат не содержит XMPP-адрес</string>
     <string name="server_info_partial">частичный</string>
-    <string name="attach_record_video">Записать видео</string>
     <string name="copy_to_clipboard">Копировать</string>
     <string name="message_copied_to_clipboard">Сообщение скопировано в буфер обмена</string>
     <string name="message">Сообщение</string>
@@ -763,7 +751,7 @@
     <string name="security_violation_not_attaching_file">Файл не прикреплён из соображений безопасности.</string>
     <string name="pref_video_compression">Качество видео</string>
     <string name="pref_video_compression_summary">Чем ниже качество, тем меньше размер файлов</string>
-    <string name="video_360p">Среднее (360p)</string>
+    <string name="video_360p">Низкое (360p)</string>
     <string name="video_720p">Высокое (720р)</string>
     <string name="cancelled">отменено</string>
     <string name="already_drafting_message">Вы уже пишите черновик сообщения.</string>
@@ -885,7 +873,6 @@
     <string name="pref_channel_discovery">Способ поиска каналов</string>
     <string name="backup">Резервное копирование</string>
     <string name="category_about">О приложении</string>
-    <string name="please_enable_an_account">Активируйте аккаунт</string>
     <string name="make_call">Позвонить</string>
     <string name="rtp_state_incoming_call">Входящий вызов</string>
     <string name="rtp_state_incoming_video_call">Входящий видеовызов</string>
@@ -921,8 +908,6 @@
     <string name="remove_from_favorites">Открепить</string>
     <string name="gpx_track">GPX-трек</string>
     <string name="could_not_correct_message">Невозможно изменить сообщение</string>
-    <string name="search_all_conversations">Все беседы</string>
-    <string name="search_this_conversation">Эта беседа</string>
     <string name="your_avatar">Ваш аватар</string>
     <string name="avatar_for_x">Аватар для %s</string>
     <string name="encrypted_with_omemo">Зашифровано с помощью OMEMO</string>
@@ -1010,7 +995,7 @@
         <item quantity="many">%1$d пропущенных вызовов от %2$d контактов</item>
         <item quantity="other">%1$d пропущенных вызовов от %2$d контактов</item>
     </plurals>
-    <string name="audiobook">Аудиокнига</string>
+    <string name="audiobook">аудиокнига</string>
     <string name="this_account_is_logged_out">Вы вышли из этого аккаунта</string>
     <string name="log_in">Войти</string>
     <string name="hide_notification">Скрыть уведомление</string>
@@ -1063,7 +1048,7 @@
     <string name="pref_category_e2ee">Сквозное шифрование</string>
     <string name="pref_title_trust_system_ca_store">Удостоверяющие центры</string>
     <string name="pref_category_operating_system">Операционная система</string>
-    <string name="pref_privacy_summary">Индикация ввода, последняя активность, доступность</string>
+    <string name="pref_privacy_summary">Индикация ввода, последняя активность, P2P</string>
     <string name="pref_connection_summary">Имя хоста и порт, Tor</string>
     <string name="pref_category_application">Приложение</string>
     <string name="pref_category_interaction">Взаимодействие</string>
@@ -1074,7 +1059,7 @@
     <string name="send_encrypted_message">Отправить зашифрованное сообщение</string>
     <string name="corresponding_chats_closed">Соответствующие беседы архивированы.</string>
     <string name="pref_title_trust_system_ca_store_summary">Доверять сертификатам системных УЦ</string>
-    <string name="pref_connection_summary_w_cd">Имя хоста и порт, Tor, P2P, обзор каналов</string>
+    <string name="pref_connection_summary_w_cd">Имя хоста и порт, Tor, обзор каналов</string>
     <string name="allow_private_messages">Разрешить личные сообщения</string>
     <string name="pref_accept_invites_from_strangers_summary">Принимать приглашения в конференции от неизвестных</string>
     <string name="unsupported_operation">Операция не поддерживается</string>
@@ -1129,7 +1114,7 @@
     <string name="account_status_connection_timeout">Истекло время ожидания подключения</string>
     <string name="retry_with_p2p">Повторить через P2P</string>
     <string name="account_status_channel_binding">Нет привязки канала</string>
-    <string name="word_document">Документ Word</string>
+    <string name="word_document">документ Word</string>
     <string name="restore_omemo_key">Восстановить ключи OMEMO</string>
     <string name="non_quicksy_backup">Quicksy может восстанавливать резервные копии только для аккаунтов quicksy.im</string>
     <string name="pref_backup_location">Расположение резервной копии</string>
@@ -1220,4 +1205,55 @@
     <string name="pref_include_silent_modes_summary">Также устанавливать статус \"Не беспокоить\" в приложении, когда на устройстве отключены уведомления или оно находится в режиме вибрации</string>
     <string name="presence_offline">Не в сети</string>
     <string name="rtp_state_no_internet">Нет подключения к интернету</string>
+    <string name="send">Отправить</string>
+    <string name="pref_auto_send_recording_summary">Автоматически отправлять голосовые сообщения после завершения записи</string>
+    <string name="pref_auto_send_recording">Автоматическая отправка записей</string>
+    <string name="pref_presence_settings_summary">\"Отошёл\" при блокировке экрана, синхронизация с системным режимом DND</string>
+    <string name="video_480p">Среднее (480p)</string>
+    <string name="video_1080p">Очень высокое (1080p)</string>
+    <string name="pref_save_to_gallery">Сохранять в галерею</string>
+    <string name="pref_save_to_gallery_summary">Автоматически сохранять медиафайлы в общедоступных папках, чтобы они отображались в галерее и файловом менеджере</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Удалить %d файл</item>
+        <item quantity="few">Удалить %d файла</item>
+        <item quantity="many">Удалить %d файлов</item>
+        <item quantity="other">Удалить %d файлов</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Удалить этот файл?</item>
+        <item quantity="few">Удалить эти файлы?</item>
+        <item quantity="many">Удалить эти файлы?</item>
+        <item quantity="other">Удалить эти файлы?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d медиафайл сохранён</item>
+        <item quantity="few">%d медиафайла сохранены</item>
+        <item quantity="many">%d медиафайлов сохранено</item>
+        <item quantity="other">%d медиафайлов сохранено</item>
+    </plurals>
+    <string name="could_not_save_files">Невозможно сохранить файлы</string>
+    <string name="filter_type_images">Изображения</string>
+    <string name="filter_type_videos">Видео</string>
+    <string name="filter_type_audio">Аудио</string>
+    <string name="filter_type_documents">Документы</string>
+    <string name="filter_type_other">Другое</string>
+    <string name="filter_media">Фильтр медиа</string>
+    <string name="apply_filter">Применить</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="search_in_chats">Поиск в беседах</string>
+    <string name="search_for_x_in_chats">Поиск \"%s\" в беседах</string>
+    <string name="start_group_chat">Начать конференцию</string>
+    <string name="delete_file_dialog_shared">Этот файл был опубликован в других беседах.</string>
+    <string name="delete_file_dialog_confirm">Удалить этот файл?</string>
+    <string name="delete_file_dialog_copies">Это действие не удалит копии данного файла, которые хранятся на других устройствах или серверах.</string>
+    <string name="sheet_music">ноты</string>
+    <string name="attachment_choice_gallery">Галерея</string>
+    <string name="attachment_choice_file">Файл</string>
+    <string name="attachment_choice_location">Местоположение</string>
+    <string name="attachment_choice_camera">Камера</string>
+    <string name="attachment_choice_video">Видео</string>
+    <string name="attachment_choice_recording">Аудиозапись</string>
+    <string name="attachment_choice_contact">Контакт</string>
+    <string name="note_to_self">Заметка себе</string>
+    <string name="invalid_contact">Невозможно разобрать контакт</string>
 </resources>

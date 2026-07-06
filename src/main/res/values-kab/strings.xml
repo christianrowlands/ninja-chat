@@ -58,8 +58,6 @@
     <string name="accept">Qbel</string>
     <string name="recording_error">Tuccḍa</string>
     <string name="your_account">Amiḍan-inek·inem</string>
-    <string name="attach_choose_picture">Fren tugna</string>
-    <string name="attach_take_picture">Ṭṭef tawlaft</string>
     <string name="account_status_unknown">D arussin</string>
     <string name="account_status_online">Uqqin</string>
     <string name="account_status_connecting">Tuqqna…</string>
@@ -99,7 +97,6 @@
     <string name="account_details">Talqayt n umiḍan</string>
     <string name="try_again">Ɛreḍ tikkelt nniḍen</string>
     <string name="file">afaylu</string>
-    <string name="choose_file">Fren afaylu</string>
     <string name="download_x_file">Sader %s</string>
     <string name="delete_x_file">Kkes %s</string>
     <string name="open_x_file">Ldi %s</string>
@@ -119,7 +116,6 @@
     <string name="word_document">Isemli Word</string>
     <string name="apk">Asnas Android</string>
     <string name="sending_x_file">Tuzzna n %s</string>
-    <string name="none">Ula d yiwen</string>
     <string name="pref_quick_action">Tigawt taruradt</string>
     <string name="username">Isem n useqdac</string>
     <string name="username_hint">Isem n useqdac</string>
@@ -146,7 +142,6 @@
     <string name="yesterday">Iḍelli</string>
     <string name="message">Izen</string>
     <string name="open_website">Ldi asmel web</string>
-    <string name="attach_record_video">Sekles tavidyutt</string>
     <string name="once">Tikkelt</string>
     <string name="draft">Arewway:</string>
     <string name="share">Bḍu</string>
@@ -188,7 +183,6 @@
     <string name="incoming_call">Asiwel i ikcem-d</string>
     <string name="video_call">Asiwel s uvidyu</string>
     <string name="exit">Ffeɣ</string>
-    <string name="search_this_conversation">Asqerdec-a</string>
     <string name="pref_up_push_account_title">Amiḍan XMPP</string>
     <string name="decline">Agi</string>
     <string name="pref_up_push_server_title">Aqeddac Push</string>
@@ -292,7 +286,6 @@
     <string name="not_in_roster">Rnu anermis-agi ixuṣṣen ɣer tebdart inermisen-ik·im?</string>
     <string name="send_failed">asiweḍ ur yeddi ara</string>
     <string name="preparing_image">Heggi iman-ik·im i tuzzna n tugna</string>
-    <string name="delete_file_dialog_msg">D tidet tebɣiḍ ad tekkseḍ afaylu-agi?\n\n<b>Ɣur-k·m:</b> Ayagi ur itekkes ara ineɣlan n ufaylu-agi ikelsen deg yibenkan neɣ iqeddacen nniḍen.</string>
     <string name="send_unencrypted_message">Azen izen s wudem n uḍris ibanen</string>
     <string name="send_message_to_x">Azen izen ɣer %s</string>
     <string name="send_encrypted_message">Azen izen awgelhan</string>
@@ -403,7 +396,6 @@
     <string name="contacts_have_stopped_typing">%s yeḥbes tira</string>
     <string name="pref_chat_states">Alɣuten n tira</string>
     <string name="pref_chat_states_summary">Eǧǧ inermisen-ik·im ad ẓren melmi ara tettaruḍ iznan i nutni</string>
-    <string name="send_location">Azen ideg</string>
     <string name="show_location">Sken ideg</string>
     <string name="no_application_found_to_display_location">Ulac asnas yettwafen i uskan n wadig</string>
     <string name="title_undo_swipe_out_chat">Yettwaɣbaṛ usqerdec</string>
@@ -419,8 +411,6 @@
         <item quantity="one">%d n uselkin yettwakkes</item>
         <item quantity="other">%d n iselkinen ttwakksen</item>
     </plurals>
-    <string name="pref_quick_action_summary">Semselsi taqeffalt \"Azen\" s tigawt taruradt</string>
-    <string name="recently_used">Ttwasqedcen ugar melmi kan</string>
     <string name="choose_quick_action">Fren tigawt taruradt</string>
     <string name="search_group_chats">Nadi deg idiwenniyen n ugraw</string>
     <string name="send_private_message">Azen izen uslig</string>
@@ -558,7 +548,6 @@
     </plurals>
     <string name="conversations_backup">Aḥraz n idiwenniyen</string>
     <string name="not_a_backup_file">Afaylu yettwafernen mačči d afaylu n weḥraz n Useqerdec</string>
-    <string name="search_all_conversations">Akk idiwenniyen</string>
     <string name="empty_conversations_list_hint">Mi ara tebduḍ adiwenni amaynut, ad t-twaliḍ dagi</string>
     <string name="create_private_group_chat">Snulfu-d agraw udiwenni uslig</string>
     <string name="join_public_channel">Ddu ɣer ubadu azayez</string>

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/use_shared_storage"
+        android:icon="@drawable/ic_save_24dp"
+        android:key="use_shared_storage"
+        android:summary="@string/pref_save_to_gallery_summary"
+        android:title="@string/pref_save_to_gallery" />
+    <PreferenceCategory android:title="@string/pref_category_receiving">
+        <ListPreference
+            android:defaultValue="@integer/auto_accept_filesize"
+            android:icon="@drawable/ic_download_24dp"
+            android:key="auto_accept_file_size"
+            android:title="@string/pref_automatic_download"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_sending">
         <ListPreference
             android:defaultValue="@string/picture_compression"
@@ -18,13 +32,11 @@
             android:key="video_compression"
             android:title="@string/pref_video_compression"
             app:useSimpleSummaryProvider="true" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_category_receiving">
-        <ListPreference
-            android:defaultValue="@integer/auto_accept_filesize"
-            android:icon="@drawable/ic_download_24dp"
-            android:key="auto_accept_file_size"
-            android:title="@string/pref_automatic_download"
-            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/auto_send_recording"
+            android:icon="@drawable/ic_mic_24dp"
+            android:key="auto_send_recording"
+            android:summary="@string/pref_auto_send_recording_summary"
+            android:title="@string/pref_auto_send_recording" />
     </PreferenceCategory>
 </PreferenceScreen>

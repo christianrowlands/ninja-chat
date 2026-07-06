@@ -81,7 +81,6 @@
 \n
 \n<b>Προσοχή:</b> Αυτή η ενέργεια δεν θα επηρεάσει μηνύματα που είναι αποθηκευμένα σε άλλες συσκευές ή εξυπηρετητές.</string>
     <string name="delete_file_dialog">Διαγραφή αρχείου</string>
-    <string name="delete_file_dialog_msg">Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το αρχείο;\n\n<b>Προειδοποίηση:</b> Αυτό δεν θα διαγράψει τα αντίγραφα αυτού του αρχείου που είναι αποθηκευμένα σε άλλες συσκευές ή διακομιστές.</string>
     <string name="choose_presence">Επιλογή συσκευής</string>
     <string name="send_unencrypted_message">Αποστολή μη κρυπτογραφημένου μηνύματος</string>
     <string name="send_message">Αποστολή μηνύματος</string>
@@ -132,8 +131,6 @@
     <string name="send_presence_updates">Αποστολή ενημερώσεων παρουσίας</string>
     <string name="receive_presence_updates">Λήψη ενημερώσεων παρουσίας</string>
     <string name="ask_for_presence_updates">Παράκληση για ενημερώσεις παρουσίας</string>
-    <string name="attach_choose_picture">Επιλογή εικόνας</string>
-    <string name="attach_take_picture">Λήψη εικόνας</string>
     <string name="preemptively_grant">Ερήμην χορήγηση αίτησης συνδρομής</string>
     <string name="error_not_an_image_file">Το αρχείο που επιλέξατε δεν είναι εικόνα</string>
     <string name="error_compressing_image">Σφάλμα κατά τη μετατροπή του αρχείου εικόνας</string>
@@ -148,7 +145,7 @@
     <string name="account_status_offline">Εκτός σύνδεσης</string>
     <string name="account_status_unauthorized">Χωρίς εξουσιοδότηση</string>
     <string name="account_status_not_found">Δεν βρέθηκε ο διακομιστής</string>
-    <string name="account_status_no_internet">Χωρίς σύνδεση</string>
+    <string name="account_status_no_internet">Χωρίς σύνδεση στο διαδίκτυο</string>
     <string name="account_status_regis_fail">Η εγγραφή απέτυχε</string>
     <string name="account_status_regis_conflict">Το όνομα χρησιμοποιείται ήδη</string>
     <string name="account_status_regis_success">Ολοκλήρωση εγγραφής</string>
@@ -173,7 +170,6 @@
     <string name="openpgp_has_been_published">Το δημόσιο κλειδί OpenPGP έχει δημοσιευτεί.</string>
     <string name="mgmt_account_enable">Ενεργοποίηση λογαριασμού</string>
     <string name="mgmt_account_delete_confirm_text">Είστε σίγουροι ότι θέλετε να διαγράψετε τον λογαριασμό σας; Η διαγραφή του λογαριασμού σας θα διαγράψει όλο το ιστορικό συνομιλιών σας</string>
-    <string name="attach_record_voice">Εγγραφή φωνής</string>
     <string name="account_settings_jabber_id">Διεύθυνση XMPP</string>
     <string name="block_jabber_id">Αποκλεισμός διεύθυνσης XMPP</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -312,7 +308,6 @@
     <string name="restoring_backup">Γίνεται επαναφορά αντιγράφου ασφαλείας</string>
     <string name="notification_restored_backup_title">Έχει γίνει επαναφορά του αντιγράφου ασφαλείας σας</string>
     <string name="notification_restored_backup_subtitle">Μην παραλείψετε να ενεργοποιήσετε τον λογαριασμό.</string>
-    <string name="choose_file">Επιλογή αρχείου</string>
     <string name="receiving_x_file">Λήψη %1$s (ολοκληρώθηκε %2$d%%)</string>
     <string name="download_x_file">Μεταφόρτωση του %s</string>
     <string name="delete_x_file">Διαγραφή του %s</string>
@@ -395,7 +390,6 @@
     <string name="contacts_have_stopped_typing">Οι %s σταμάτησαν να πληκτρολογούν</string>
     <string name="pref_chat_states">Ειδοποιήσεις πληκτρολόγησης</string>
     <string name="pref_chat_states_summary">Επιτρέψτε στις επαφές σας να γνωρίζουν πότε γράφετε μηνύματα προς αυτές</string>
-    <string name="send_location">Αποστολή τοποθεσίας</string>
     <string name="show_location">Εμφάνιση τοποθεσίας</string>
     <string name="no_application_found_to_display_location">Δεν βρέθηκε εφαρμογή για την απεικόνιση τοποθεσίας</string>
     <string name="location">Τοποθεσία</string>
@@ -412,10 +406,7 @@
         <item quantity="one">%d πιστοποιητικό διαγράφηκε</item>
         <item quantity="other">%d πιστοποιητικά διαγράφηκαν</item>
     </plurals>
-    <string name="pref_quick_action_summary">Αντικατάσταση του κουμπιού \"Αποστολή\" με γρήγορη ενέργεια</string>
     <string name="pref_quick_action">Γρήγορη Ενέργεια</string>
-    <string name="none">Κανένα</string>
-    <string name="recently_used">Πιο πρόσφατα χρησιμοποιημένη</string>
     <string name="choose_quick_action">Επιλογή γρήγορης ενέργειας</string>
     <string name="search_contacts">Αναζήτηση επαφών</string>
     <string name="send_private_message">Αποστολή ιδιωτικού μηνύματος</string>
@@ -511,7 +502,7 @@
     <string name="presence_online">Σε σύνδεση</string>
     <string name="presence_away">Εκτός χρήσης</string>
     <string name="presence_xa">Μη διαθέσιμος</string>
-    <string name="presence_dnd">Απασχολημένος</string>
+    <string name="presence_dnd">Μην ενοχλείτε</string>
     <string name="secure_password_generated">Ένα ασφαλές συνθηματικό έχει δημιουργηθεί</string>
     <string name="device_does_not_support_battery_op">Η συσκευή σας δεν υποστηρίζει την απενεργοποίηση βελτιστοποίησης χρήσης μπαταρίας</string>
     <string name="registration_please_wait">Η εγγραφή απέτυχε: Προσπαθήστε αργότερα</string>
@@ -564,7 +555,7 @@
     <string name="verified_fingerprints">Επαληθευμένα αποτυπώματα</string>
     <string name="use_camera_icon_to_scan_barcode">Χρησιμοποιήστε την κάμερα για να σαρώσετε τον κωδικό QR μιας επαφής</string>
     <string name="please_wait_for_keys_to_be_fetched">Παρακαλώ περιμένετε την μεταφόρτωση των κλειδιών</string>
-    <string name="share_as_uri">Διαμοιρασμός ως διεύθυνση URI XMPP</string>
+    <string name="share_as_uri">Διαμοιρασμός διεύθυνσης URI XMPP</string>
     <string name="pref_blind_trust_before_verification">Τυφλή εμπιστοσύνη πριν την επαλήθευση</string>
     <string name="pref_blind_trust_before_verification_summary">Αυτόματη εμπιστοσύνη σε όλες τις νέες συσκευές επαφών που δεν έχουν επαληθευτεί παλιότερα, και παροχή χειροκίνητης επιβεβαίωσης κάθε φορά που μια επαληθευμένη επαφή προσθέτει μια νέα συσκευή.</string>
     <string name="blindly_trusted_omemo_keys">Κλειδιά OMEMO με τυφλή εμπιστοσύνη, που σημαίνει ότι μπορεί να είναι κάποιος άλλος ή κάποιος τρίτος μπορεί να έχει αποκτήσει πρόσβαση. </string>
@@ -633,8 +624,7 @@
     <string name="pref_validate_hostname_summary">Τα πιστοποιητικά διακομιστή που περιέχουν το επικυρωμένο όνομα μηχανήματος θεωρούνται επαληθευμένα</string>
     <string name="certificate_does_not_contain_jid">Το πιστοποιητικό δεν περιέχει ταυτότητα XMPP</string>
     <string name="server_info_partial">μερικώς</string>
-    <string name="attach_record_video">Εγγραφή βίντεο</string>
-    <string name="copy_to_clipboard">Αντιγραφή στο πρόχειρο</string>
+    <string name="copy_to_clipboard">Αντιγραφή</string>
     <string name="message_copied_to_clipboard">Το μήνυμα αντιγράφηκε στο πρόχειρο</string>
     <string name="message">Μήνυμα</string>
     <string name="private_messages_are_disabled">Τα ιδιωτικά μηνύματα είναι απενεργοποιημένα</string>
@@ -846,7 +836,6 @@
     <string name="pref_channel_discovery">Μέθοδος εύρεσης καναλιού</string>
     <string name="backup">Αντίγραφο ασφαλείας</string>
     <string name="category_about">Σχετικά με</string>
-    <string name="please_enable_an_account">Παρακαλώ ενεργοποιήστε έναν λογαριασμό</string>
     <string name="make_call">Νέα κλήση</string>
     <string name="rtp_state_incoming_call">Εισερχόμενη κλήση</string>
     <string name="rtp_state_incoming_video_call">Εισερχόμενη βιντεοκλήση</string>
@@ -886,8 +875,6 @@
     <string name="remove_from_favorites">Ξεκαρφίτσωμα από την κορυφή</string>
     <string name="gpx_track">Ίχνος GPX</string>
     <string name="could_not_correct_message">Αδυναμία επεξεργασίας μηνύματος</string>
-    <string name="search_all_conversations">Όλες οι συνομιλίες</string>
-    <string name="search_this_conversation">Αυτή η συνομιλία</string>
     <string name="your_avatar">Η φωτογραφία προφίλ σας</string>
     <string name="avatar_for_x">Φωτογραφία προφίλ του/της %s</string>
     <string name="encrypted_with_omemo">Κρυπτογραφημένη με OMEMO</string>
@@ -929,7 +916,7 @@
     <string name="account_status_connection_timeout">Χρονικό όριο σύνδεσης</string>
     <string name="account_status_tls_error_protocol">Αδύναμη ασφάλεια μεταφοράς (χωρίς TLS 1.3)</string>
     <string name="account_status_tls_error_untrusted">Μη αξιόπιστο πιστοποιητικό</string>
-    <string name="account_status_incompatible_client">Ασύμβατος πελάτης</string>
+    <string name="account_status_incompatible_client">Μη συμβατή έκδοση πελάτη</string>
     <string name="account_status_channel_binding">Χωρίς δέσμευση καναλιού</string>
     <string name="server_info_occupant_id">XEP-0421: Αναγνωριστικά χρήστη</string>
     <string name="server_info_moderated_message_retraction">XEP-0425: Μετριοπαθής ανάκληση μηνυμάτων</string>
@@ -958,7 +945,7 @@
     <string name="reconnect_on_other_host">Επανασύνδεση σε άλλο κεντρικό υπολογιστή</string>
     <string name="no_permission_to_place_call">Δεν υπάρχει δικαίωμα για τηλεφωνική κλήση</string>
     <string name="barcode_does_not_contain_fingerprints_for_this_chat">Ο κωδικός QR δεν περιέχει fingerprints για αυτήν τη συνομιλία.</string>
-    <string name="corresponding_chats_closed">Αντίστοιχες συνομιλίες αρχειοθετημένες.</string>
+    <string name="corresponding_chats_closed">Οι αντίστοιχες συνομιλίες αρχειοθετήθηκαν.</string>
     <string name="pref_dynamic_colors">Δυναμικά χρώματα</string>
     <string name="pref_dynamic_colors_summary">Χρώματα συστήματος (Material You)</string>
     <string name="copy_URI">Αντιγραφή URI</string>
@@ -967,7 +954,7 @@
     <string name="copy_email_address">Αντιγραφή διεύθυνσης ηλεκτρονικού ταχυδρομείου</string>
     <string name="copied_email_address">Αντιγραφή διεύθυνσης ηλεκτρονικού ταχυδρομείου στο πρόχειρο</string>
     <string name="copied_phone_number">Αντιγραφή αριθμού τηλεφώνου στο πρόχειρο</string>
-    <string name="missed_calls_channel_name">Ανεπιτυχές κλήσεις</string>
+    <string name="missed_calls_channel_name">Αναπάντητες κλήσεις</string>
     <string name="restore_omemo_key">Επαναφορά κλειδιών OMEMO</string>
     <string name="restore_warning_continued">Επαναφέρετε μόνο τα αντίγραφα ασφαλείας που έχετε δημιουργήσει προσωπικά.</string>
     <string name="channel_discover_opt_in_message">Η αναζήτηση καναλιών χρησιμοποιεί μια υπηρεσία τρίτου μέρους που ονομάζεται &lt;a href=https://search.jabber.network&gt;search.jabber.network&lt;/a&gt;.&lt;br&gt;&lt;br&gt;Η χρήση αυτής της λειτουργίας θα μεταδώσει τη διεύθυνση IP και τους όρους αναζήτησης σε αυτήν την υπηρεσία. Για περισσότερες πληροφορίες, ανατρέξτε στην &lt;a href=https://search.jabber.network/privacy&gt;Πολιτική απορρήτου&lt;/a&gt; της υπηρεσίας.</string>
@@ -1058,6 +1045,48 @@
     <string name="pref_large_font_summary">Αύξηση μεγέθους γραμματοσειράς στα μπαλόνια μηνυμάτων</string>
     <string name="pref_accept_invites_from_strangers">Προσκλήσεις από άγνωστους</string>
     <string name="pref_accept_invites_from_strangers_summary">Αποδοχή προσκλήσεων σε ομαδικές συνομιλίες από άγνωστους</string>
-    <string name="pref_backup_summary">Δημιουργία μεμονωμένων, Προγραμματισμός επαναλαμβανόμενων</string>
+    <string name="pref_backup_summary">Δημιουργία μεμονωμένων, Προγραμματισμός επαναλαμβανόμενων, Τοποθεσία αποθήκευσης</string>
     <string name="pref_create_backup_one_off_summary">Δημιουργία εφάπαξ αντιγράφου ασφαλείας</string>
+    <string name="account_status_airplane_mode">Λειτουργία πτήσης</string>
+    <string name="contact_has_paused_their_notifications">Ο χρήστης %s έχει παύσει τις ειδοποιήσεις του</string>
+    <string name="presence_offline">Εκτός σύνδεσης</string>
+    <string name="share_invitation">Διαμοιρασμός πρόσκλησης</string>
+    <string name="send">Αποστολή</string>
+    <string name="rtp_state_no_internet">Χωρίς σύνδεση στο διαδίκτυο</string>
+    <string name="delete_avatar">Διαγραφή εικόνας χρήστη</string>
+    <string name="pref_category_on_this_device">Στην συσκευή</string>
+    <string name="backup_and_restore">Αρχειοθέτηση &amp; Επαναφορά</string>
+    <string name="pref_backup_recurring">Επαναλαμβανόμενη αρχειοθέτηση</string>
+    <string name="pref_fullscreen_notification">Ειδοποιήσεις πλήρης οθόνης</string>
+    <string name="pref_fullscreen_notification_summary">Επιτρέψτε στην εφαρμογή αυτή να δείχνει ειδοποιήσεις εισερχόμενων κλήσεων που καταλαμβάνουν όλη την οθόνη όταν η συσκευή είναι κλειδωμένη.</string>
+    <string name="unsupported_operation">Μη υποστηριζόμενη λειτουργεία</string>
+    <string name="allow_private_messages">Να επιτρέπονται τα προσωπικά μηνύματα</string>
+    <string name="edit_nick">Επεξεργασία ψευδωνύμου</string>
+    <string name="delete_pgp_key">Διαγραφή κλειδιού OpenPGP</string>
+    <string name="edit_name_and_topic">Επεξεργασία ονόματος και θέματος</string>
+    <string name="edit_configuration">Αλλαγή ρυθμίσεων</string>
+    <string name="change_notification_settings">Αλλαγή ρυθμίσεων ειδοποίησης</string>
+    <string name="remove_membership">Αφαίρεση μέλους</string>
+    <string name="call_is_using_bluetooth">Η κλήση χρησιμοποιεί bluetooth.</string>
+    <string name="flip_camera">Αλλαγή κάμερας</string>
+    <string name="could_not_add_reaction">Αποτυχία προσθήκης αντίδρασης</string>
+    <string name="add_reaction">Προσθήκη αντίδρασης…</string>
+    <string name="add_reaction_title">Προσθήκη αντίδρασης</string>
+    <string name="more_reactions">Επιπλέον αντιδράσεις</string>
+    <string name="could_not_modify_call">Αδυναμία τροποποίησης κλήσης</string>
+    <string name="clients_may_not_support_av">Η έκδοση XMPP της επαφής σας ίσως να μην υποστηρίζει κλήσεις ήχου/βίντεο</string>
+    <string name="pref_chat_bubbles_summary">Χρώμα υποβάθρου, Μέγεθος γραμματοσειράς, Εικόνες χρηστών</string>
+    <string name="pref_align_start">Αριστερή στοίχιση μηνυμάτων</string>
+    <string name="pref_align_start_summary">Εμφάνιση όλων των μυνημάτων, και των απεσταλμένων, στην αριστερή μεριά μιας ομοιόμορφης διάταξης συνομιλίας.</string>
+    <string name="custom_notifications">Προσαρμοσμένες ειδοποιήσεις</string>
+    <string name="delete_avatar_message">Θα θέλατε να διαγράψετε την εικόνα χρήστη σας; Κάποιοι χρήστες μπορεί να συνεχίσουν να δείχνουν ένα αποθηκευμένο αντίγραφο της εικόνας χρήστη σας.</string>
+    <string name="show_to_contacts_only">Εμφάνιση μονό στις επαφές</string>
+    <string name="pref_backup_location">Τοποθεσία αρχειοθέτησης</string>
+    <string name="save_to_contact">Αποθήκευση στις Επαφές</string>
+    <string name="show_in_contacts">Προβολή στις Επαφές</string>
+    <string name="pref_account_avatar">Λογαριασμοί</string>
+    <string name="pref_account_avatar_summary">Απεικόνιση εικόνων λογαριασμών στα εξερχόμενα μηνύματα για εύκολη ταυτοποίηση και διαχείρηση.</string>
+    <string name="pref_category_avatars">Εικόνες χρηστών</string>
+    <string name="pref_show_11_chats">Συνομιλίες 1:1</string>
+    <string name="pref_show_11_chats_summary">Απεικόνιση εικόνων χρήστη στις συνομιλίες 1:1. (Οι εικόνες χρήστη στις ομαδικές συνομιλίες θα φαίνονται πάντα.)</string>
 </resources>

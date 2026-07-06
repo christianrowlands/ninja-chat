@@ -45,56 +45,6 @@
         </menu>
     </item>
     <item
-        android:id="@+id/action_attach_file"
-        android:icon="@drawable/ic_attach_file_24dp"
-        android:orderInCategory="30"
-        android:title="@string/attach_file"
-        app:showAsAction="always">
-        <menu>
-
-            <item
-                android:id="@+id/attach_choose_file"
-                android:icon="@drawable/ic_description_24dp"
-                android:title="@string/choose_file" />
-
-            <item
-                android:id="@+id/attach_choose_picture"
-                android:icon="@drawable/ic_image_24dp"
-                android:title="@string/attach_choose_picture" />
-
-            <item
-                android:id="@+id/attach_take_picture"
-                android:icon="@drawable/ic_camera_alt_24dp"
-                android:title="@string/attach_take_picture" />
-
-            <item
-                android:id="@+id/attach_record_video"
-                android:icon="@drawable/ic_videocam_24dp"
-                android:title="@string/attach_record_video" />
-
-            <item
-                android:id="@+id/attach_record_voice"
-                android:icon="@drawable/ic_mic_24dp"
-                android:title="@string/attach_record_voice" />
-
-            <item
-                android:id="@+id/attach_location"
-                android:icon="@drawable/ic_location_pin_24dp"
-                android:title="@string/send_location" />
-        </menu>
-    </item>
-    <item
-        android:id="@+id/action_contact_details"
-        android:orderInCategory="40"
-        android:title="@string/action_contact_details"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_muc_details"
-        android:icon="@drawable/ic_group_24dp"
-        android:orderInCategory="40"
-        android:title="@string/action_muc_details"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_invite"
         android:orderInCategory="45"
         android:title="@string/invite_contact"
@@ -103,7 +53,6 @@
         android:id="@+id/action_search"
         android:orderInCategory="48"
         android:title="@string/search_messages"
-        android:visible="@bool/show_individual_search_options"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_clear_history"

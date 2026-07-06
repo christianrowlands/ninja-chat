@@ -49,4 +49,5 @@
 
     <!-- will get overwritten with 'true' on screens larger than w384dp -->
     <bool name="last_seen_full_text">false</bool>
+    <integer name="attachment_choices_max_element_wrap">3</integer>
 </resources>

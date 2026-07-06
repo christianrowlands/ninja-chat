@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.pdf.PdfRenderer;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -24,22 +25,26 @@ import android.system.StructStat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
+import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteStreams;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.adapter.MediaAdapter;
 import eu.siacs.conversations.ui.util.Attachment;
-import eu.siacs.conversations.utils.FileUtils;
 import eu.siacs.conversations.utils.FileWriterException;
 import eu.siacs.conversations.utils.MimeUtils;
 import java.io.Closeable;
@@ -53,38 +58,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class FileBackend {
 
     private static final Object THUMBNAIL_LOCK = new Object();
 
-    private static final SimpleDateFormat IMAGE_DATE_FORMAT =
-            new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-
     private static final String FILE_PROVIDER = ".files";
     private static final float IGNORE_PADDING = 0.15f;
     private final XmppConnectionService mXmppConnectionService;
-
-    private static final List<String> STORAGE_TYPES;
-
-    static {
-        final ImmutableList.Builder<String> builder =
-                new ImmutableList.Builder<String>()
-                        .add(
-                                Environment.DIRECTORY_DOWNLOADS,
-                                Environment.DIRECTORY_PICTURES,
-                                Environment.DIRECTORY_MOVIES,
-                                Environment.DIRECTORY_DOCUMENTS);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            builder.add(Environment.DIRECTORY_RECORDINGS);
-        }
-        STORAGE_TYPES = builder.build();
-    }
 
     public FileBackend(XmppConnectionService service) {
         this.mXmppConnectionService = service;
@@ -175,12 +165,6 @@ public class FileBackend {
         return result;
     }
 
-    public static boolean isPathBlacklisted(String path) {
-        final String androidDataPath =
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/";
-        return path.startsWith(androidDataPath);
-    }
-
     private static Paint createAntiAliasingPaint() {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -189,31 +173,51 @@ public class FileBackend {
         return paint;
     }
 
-    public static Uri getUriForUri(Context context, Uri uri) {
-        if ("file".equals(uri.getScheme())) {
-            return getUriForFile(context, new File(uri.getPath()));
+    public static Optional<File> getFile(final Uri uri) {
+        final var path = uri.getPath();
+        if ("file".equals(uri.getScheme()) && path != null) {
+            return Optional.of(new File(path));
+        } else {
+            return Optional.absent();
+        }
+    }
+
+    public static Uri getUriForUri(final Context context, final Uri uri) {
+        final var file = getFile(uri);
+        if (file.isPresent()) {
+            return getUriForFile(context, file.get());
         } else {
             return uri;
         }
     }
 
-    public static Uri getUriForFile(Context context, File file) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N || Config.ONLY_INTERNAL_STORAGE) {
-            try {
-                return FileProvider.getUriForFile(context, getAuthority(context), file);
-            } catch (IllegalArgumentException e) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    throw new SecurityException(e);
-                } else {
-                    return Uri.fromFile(file);
-                }
-            }
-        } else {
-            return Uri.fromFile(file);
+    public static Uri getUriForFile(final Context context, final File file) {
+        try {
+            return FileProvider.getUriForFile(context, getAuthority(context), file);
+        } catch (final IllegalArgumentException e) {
+            throw new SecurityException(e);
         }
     }
 
-    public static String getAuthority(Context context) {
+    public static Optional<String> getMessageUuid(final Context context, final Uri uri) {
+        final var scheme = uri.getScheme();
+        final var authority = uri.getAuthority();
+        if (Strings.isNullOrEmpty(authority) || Strings.isNullOrEmpty(scheme)) {
+            return Optional.absent();
+        }
+        if (scheme.equals("content") && getAuthority(context).equals(authority)) {
+            final var uuid = uri.getQueryParameter("uuid");
+            if (Strings.isNullOrEmpty(uuid)) {
+                return Optional.absent();
+            } else {
+                return Optional.of(uuid);
+            }
+        } else {
+            return Optional.absent();
+        }
+    }
+
+    private static String getAuthority(final Context context) {
         return context.getPackageName() + FILE_PROVIDER;
     }
 
@@ -465,11 +469,11 @@ public class FileBackend {
         return bitmap;
     }
 
-    public void updateMediaScanner(File file) {
+    public void updateMediaScanner(final File file) {
         updateMediaScanner(file, null);
     }
 
-    public void updateMediaScanner(File file, final Runnable callback) {
+    public void updateMediaScanner(final File file, final Runnable callback) {
         MediaScannerConnection.scanFile(
                 mXmppConnectionService,
                 new String[] {file.getAbsolutePath()},
@@ -479,14 +483,12 @@ public class FileBackend {
                     public void onMediaScannerConnected() {}
 
                     @Override
-                    public void onScanCompleted(String path, Uri uri) {
-                        if (callback != null && file.getAbsolutePath().equals(path)) {
+                    public void onScanCompleted(final String path, final Uri uri) {
+                        if (!file.getAbsolutePath().equals(path)) {
+                            Log.w(Config.LOGTAG, "media scanner scanned wrong file");
+                        }
+                        if (callback != null) {
                             callback.run();
-                        } else {
-                            Log.d(Config.LOGTAG, "media scanner scanned wrong file");
-                            if (callback != null) {
-                                callback.run();
-                            }
                         }
                     }
                 });
@@ -502,53 +504,46 @@ public class FileBackend {
         }
     }
 
-    public DownloadableFile getFile(Message message) {
+    public static File getLegacyFileForFilename(final Context context, final String filename) {
+        final var mime =
+                MimeUtils.guessMimeTypeFromExtension(MimeUtils.extractRelevantExtension(filename));
+        return getLegacyFileForFilename(context, filename, mime);
+    }
+
+    public static File getLegacyFileForFilename(
+            final Context context, final String filename, final String mime) {
+        if (Strings.isNullOrEmpty(mime)) {
+            return new File(getLegacyStorageLocation(context, "Files"), filename);
+        } else if (mime.startsWith("image/")) {
+            return new File(getLegacyStorageLocation(context, "Images"), filename);
+        } else if (mime.startsWith("video/")) {
+            return new File(getLegacyStorageLocation(context, "Videos"), filename);
+        } else {
+            return new File(getLegacyStorageLocation(context, "Files"), filename);
+        }
+    }
+
+    public File getFile(final Message message) {
         return getFile(message, true);
     }
 
-    public DownloadableFile getFileForPath(String path) {
-        return getFileForPath(
-                path,
-                MimeUtils.guessMimeTypeFromExtension(MimeUtils.extractRelevantExtension(path)));
-    }
-
-    private DownloadableFile getFileForPath(final String path, final String mime) {
-        if (path.startsWith("/")) {
-            return new DownloadableFile(path);
-        } else {
-            return getLegacyFileForFilename(path, mime);
-        }
-    }
-
-    public DownloadableFile getLegacyFileForFilename(final String filename, final String mime) {
-        if (Strings.isNullOrEmpty(mime)) {
-            return new DownloadableFile(getLegacyStorageLocation("Files"), filename);
-        } else if (mime.startsWith("image/")) {
-            return new DownloadableFile(getLegacyStorageLocation("Images"), filename);
-        } else if (mime.startsWith("video/")) {
-            return new DownloadableFile(getLegacyStorageLocation("Videos"), filename);
-        } else {
-            return new DownloadableFile(getLegacyStorageLocation("Files"), filename);
-        }
-    }
-
-    public boolean isInternalFile(final File file) {
-        final File internalFile = getFileForPath(file.getName());
-        return file.getAbsolutePath().equals(internalFile.getAbsolutePath());
-    }
-
-    public DownloadableFile getFile(Message message, boolean decrypted) {
+    public File getFile(final Message message, final boolean cleartext) {
         final boolean encrypted =
-                !decrypted
+                !cleartext
                         && (message.getEncryption() == Message.ENCRYPTION_PGP
                                 || message.getEncryption() == Message.ENCRYPTION_DECRYPTED);
-        String path = message.getRelativeFilePath();
-        if (path == null) {
-            path = message.getUuid();
+        final var storageLocation = message.getRelativeFilePath();
+        final File file;
+        if (storageLocation != null) {
+            file = storageLocation.file();
+        } else {
+            Log.w(Config.LOGTAG, "accessing old file w/o storage location. inferring from UUID");
+            file =
+                    getLegacyFileForFilename(
+                            mXmppConnectionService, message.getUuid(), message.getMimeType());
         }
-        final DownloadableFile file = getFileForPath(path, message.getMimeType());
         if (encrypted) {
-            return new DownloadableFile(
+            return new File(
                     mXmppConnectionService.getCacheDir(),
                     String.format("%s.%s", file.getName(), "pgp"));
         } else {
@@ -562,26 +557,29 @@ public class FileBackend {
             final String mime =
                     MimeUtils.guessMimeTypeFromExtension(
                             MimeUtils.extractRelevantExtension(relativeFilePath.path));
-            final File file = getFileForPath(relativeFilePath.path, mime);
+            final File file;
+            if (relativeFilePath.path != null
+                    && !relativeFilePath.path.isEmpty()
+                    && relativeFilePath.path.charAt(0) == '/') {
+                file = new File(relativeFilePath.path);
+            } else {
+                file =
+                        getLegacyFileForFilename(
+                                mXmppConnectionService, relativeFilePath.path, mime);
+            }
             attachments.add(Attachment.of(relativeFilePath.uuid, file, mime));
         }
         return attachments;
     }
 
-    private File getLegacyStorageLocation(final String type) {
-        if (Config.ONLY_INTERNAL_STORAGE) {
-            return new File(mXmppConnectionService.getFilesDir(), type);
-        } else {
-            final File appDirectory =
-                    new File(
-                            Environment.getExternalStorageDirectory(),
-                            mXmppConnectionService.getString(R.string.app_name));
-            final File appMediaDirectory = new File(appDirectory, "Media");
-            final String locationName =
-                    String.format(
-                            "%s %s", mXmppConnectionService.getString(R.string.app_name), type);
-            return new File(appMediaDirectory, locationName);
-        }
+    private static File getLegacyStorageLocation(final Context context, final String type) {
+        final var appDirectory =
+                new File(
+                        Environment.getExternalStorageDirectory(),
+                        context.getString(R.string.app_name));
+        final var appMediaDirectory = new File(appDirectory, "Media");
+        final var locationName = String.format("%s %s", context.getString(R.string.app_name), type);
+        return new File(appMediaDirectory, locationName);
     }
 
     private Bitmap resize(final Bitmap originalBitmap, int size) throws IOException {
@@ -610,52 +608,11 @@ public class FileBackend {
         }
     }
 
-    public boolean useImageAsIs(final Uri uri) {
-        final String path = getOriginalPath(uri);
-        if (path == null || isPathBlacklisted(path)) {
-            return false;
-        }
-        final File file = new File(path);
-        long size = file.length();
-        if (size == 0
-                || size
-                        >= mXmppConnectionService
-                                .getResources()
-                                .getInteger(R.integer.auto_accept_filesize)) {
-            return false;
-        }
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        try {
-            final InputStream inputStream =
-                    mXmppConnectionService.getContentResolver().openInputStream(uri);
-            BitmapFactory.decodeStream(inputStream, null, options);
-            close(inputStream);
-            if (options.outMimeType == null || options.outHeight <= 0 || options.outWidth <= 0) {
-                return false;
-            }
-            return (options.outWidth <= Config.IMAGE_SIZE
-                    && options.outHeight <= Config.IMAGE_SIZE
-                    && options.outMimeType.contains(Config.IMAGE_FORMAT.name().toLowerCase()));
-        } catch (FileNotFoundException e) {
-            Log.d(Config.LOGTAG, "unable to get image dimensions", e);
-            return false;
-        }
-    }
-
-    public String getOriginalPath(final Uri uri) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // On Android 11+ we don’t have access to the original file
-            return null;
-        } else {
-            return FileUtils.getPath(mXmppConnectionService, uri);
-        }
-    }
-
     private void copyFileToPrivateStorage(final File file, final Uri uri) throws FileCopyException {
-        final var parentDirectory = file.getParentFile();
-        if (parentDirectory != null && parentDirectory.mkdirs()) {
-            Log.d(Config.LOGTAG, "created directory " + parentDirectory.getAbsolutePath());
+        final var parent = file.getParentFile();
+        if (parent != null && parent.mkdirs()) {
+            Log.d(Config.LOGTAG, "created parent directory: " + parent.getAbsolutePath());
+            mXmppConnectionService.restartFileObserver();
         }
         try {
             if (file.createNewFile()) {
@@ -693,6 +650,15 @@ public class FileBackend {
             cleanup(file);
             throw new FileCopyException(R.string.error_io_exception);
         }
+        final var originalFile = getFile(uri);
+        if (originalFile.isPresent()
+                && new Cache(mXmppConnectionService).isCachedFile(originalFile.get())) {
+            if (originalFile.get().delete()) {
+                Log.d(
+                        Config.LOGTAG,
+                        "deleted temporary file: " + originalFile.get().getAbsolutePath());
+            }
+        }
     }
 
     public void copyFileToPrivateStorage(final Message message, final Uri uri, final String type)
@@ -700,46 +666,56 @@ public class FileBackend {
         final String mime =
                 MimeUtils.guessMimeTypeFromUriAndMime(mXmppConnectionService, uri, type);
         Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime=" + mime + ")");
-        String extension = MimeUtils.guessExtensionFromMimeType(mime);
-        if (extension == null) {
-            Log.d(Config.LOGTAG, "extension from mime type was null");
-            extension = getExtensionFromUri(uri);
+        final var file = getFile(uri);
+        if (file.isPresent()
+                && new FileBackend.Cache(mXmppConnectionService).isCachedFile(file.get())) {
+            // These are files we created ourselves like recordings and photos
+            setupRelativeFilePath(message, file.get().getName());
+        } else {
+            final String extension;
+            final var extensionForType = MimeUtils.guessExtensionFromMimeType(mime);
+            if (extensionForType != null) {
+                extension = extensionForType;
+            } else {
+                final var extensionFromUri = getExtensionFromUri(uri);
+                if ("ogg".equals(extensionFromUri) && type != null && type.startsWith("audio")) {
+                    extension = "oga";
+                } else {
+                    extension = extensionFromUri;
+                }
+            }
+            setupRelativeFilePath(message, String.format("%s.%s", message.getUuid(), extension));
         }
-        if ("ogg".equals(extension) && type != null && type.startsWith("audio/")) {
-            extension = "oga";
-        }
-        setupRelativeFilePath(message, String.format("%s.%s", message.getUuid(), extension));
         copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
     }
 
     private String getExtensionFromUri(final Uri uri) {
+        final String filename = getFilenameFromUri(uri);
+        return Iterables.getLast(Splitter.on('.').split(filename), null);
+    }
+
+    private String getFilenameFromUri(final Uri uri) {
         final String[] projection = {MediaStore.MediaColumns.DATA};
-        String filename = null;
         try (final Cursor cursor =
                 mXmppConnectionService
                         .getContentResolver()
                         .query(uri, projection, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
-                filename = cursor.getString(0);
+                return Strings.emptyToNull(cursor.getString(0));
+            } else {
+                return Iterables.getLast(uri.getPathSegments(), null);
             }
         } catch (final Exception e) {
-            filename = null;
+            return Iterables.getLast(uri.getPathSegments(), null);
         }
-        if (filename == null) {
-            final List<String> segments = uri.getPathSegments();
-            if (segments.size() > 0) {
-                filename = segments.get(segments.size() - 1);
-            }
-        }
-        final int pos = filename == null ? -1 : filename.lastIndexOf('.');
-        return pos > 0 ? filename.substring(pos + 1) : null;
     }
 
     private void copyImageToPrivateStorage(final File file, final Uri image, int sampleSize)
             throws FileCopyException, ImageCompressionException {
         final File parent = file.getParentFile();
         if (parent != null && parent.mkdirs()) {
-            Log.d(Config.LOGTAG, "created parent directory");
+            Log.d(Config.LOGTAG, "created parent directory: " + parent.getAbsolutePath());
+            mXmppConnectionService.restartFileObserver();
         }
         InputStream is = null;
         OutputStream os = null;
@@ -808,6 +784,15 @@ public class FileBackend {
             close(os);
             close(is);
         }
+        final var originalFile = getFile(image);
+        if (originalFile.isPresent()
+                && new Cache(mXmppConnectionService).isCachedFile(originalFile.get())) {
+            if (originalFile.get().delete()) {
+                Log.d(
+                        Config.LOGTAG,
+                        "deleted temporary file: " + originalFile.get().getAbsolutePath());
+            }
+        }
     }
 
     private static void cleanup(final File file) {
@@ -831,14 +816,21 @@ public class FileBackend {
 
     public void copyImageToPrivateStorage(final Message message, final Uri image)
             throws FileCopyException, ImageCompressionException {
-        final String filename =
-                switch (Config.IMAGE_FORMAT) {
-                    case JPEG -> String.format("%s.%s", message.getUuid(), "jpg");
-                    case PNG -> String.format("%s.%s", message.getUuid(), "png");
-                    case WEBP -> String.format("%s.%s", message.getUuid(), "webp");
-                    default -> throw new IllegalStateException("Unknown image format");
-                };
-        setupRelativeFilePath(message, filename);
+        final var file = getFile(image);
+        if (Config.IMAGE_FORMAT == Bitmap.CompressFormat.JPEG
+                && file.isPresent()
+                && new Cache(mXmppConnectionService).isCachedFile(file.get())) {
+            setupRelativeFilePath(message, file.get().getName());
+        } else {
+            final String filename =
+                    switch (Config.IMAGE_FORMAT) {
+                        case JPEG -> String.format("%s.%s", message.getUuid(), "jpg");
+                        case PNG -> String.format("%s.%s", message.getUuid(), "png");
+                        case WEBP -> String.format("%s.%s", message.getUuid(), "webp");
+                        default -> throw new IllegalStateException("Unknown image format");
+                    };
+            setupRelativeFilePath(message, filename);
+        }
         copyImageToPrivateStorage(getFile(message), image);
         updateFileParams(message);
     }
@@ -849,20 +841,46 @@ public class FileBackend {
         setupRelativeFilePath(message, filename, mime);
     }
 
-    public File getStorageLocation(final String filename, final String mime) {
+    public Message.StorageLocation getStorageLocation(final String filename, final String mime) {
+        final var appSettings = new AppSettings(mXmppConnectionService.getApplicationContext());
+        if (appSettings.isUseSharedStorage()) {
+            final var file = getSharedStorageLocation(filename, mime);
+            return new Message.StorageLocation(file, true);
+        } else {
+            final var file = getInternalStorageLocation(filename);
+            return new Message.StorageLocation(file, false);
+        }
+    }
+
+    private File getSharedStorageLocation(final String filename, final String mime) {
         final File parentDirectory;
         if (Strings.isNullOrEmpty(mime)) {
             parentDirectory =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         } else if (mime.startsWith("image/")) {
-            parentDirectory =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            if (Cache.isImageFilenamePattern(filename)) {
+                parentDirectory =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            } else {
+                parentDirectory =
+                        Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES);
+            }
         } else if (mime.startsWith("video/")) {
             parentDirectory =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
         } else if (MediaAdapter.DOCUMENT_MIMES.contains(mime)) {
             parentDirectory =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        } else if (mime.equals("audio/x-m4b") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            parentDirectory =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_AUDIOBOOKS);
+        } else if (mime.startsWith("audio/")
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                && Cache.isRecordingFilenamePattern(filename)) {
+
+            parentDirectory =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RECORDINGS);
         } else {
             parentDirectory =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
@@ -872,24 +890,33 @@ public class FileBackend {
         return new File(appDirectory, filename);
     }
 
-    public static boolean inConversationsDirectory(final Context context, String path) {
-        final File fileDirectory = new File(path).getParentFile();
-        for (final String type : STORAGE_TYPES) {
-            final File typeDirectory =
-                    new File(
-                            Environment.getExternalStoragePublicDirectory(type),
-                            context.getString(R.string.app_name));
-            if (typeDirectory.equals(fileDirectory)) {
-                return true;
+    private File getInternalStorageLocation(final String filename) {
+        final var filesDir = mXmppConnectionService.getFilesDir();
+        final var attachments = new File(filesDir, "attachments");
+        return new File(attachments, filename);
+    }
+
+    public List<Message.StorageLocation> inferStorageLocation(
+            final Collection<Attachment> attachments) {
+        final var filesDir = mXmppConnectionService.getFilesDir();
+        final var attachmentsDir = new File(filesDir, "attachments");
+        final var builder = new ImmutableList.Builder<Message.StorageLocation>();
+        for (final var attachment : attachments) {
+            final var file = getFile(attachment.getUri());
+            if (file.isPresent()) {
+                final var parent = file.get().getParentFile();
+                final var sharedStorage = parent == null || !parent.equals(attachmentsDir);
+                builder.add(new Message.StorageLocation(file.get(), sharedStorage));
             }
         }
-        return false;
+        return builder.build();
     }
 
     public void setupRelativeFilePath(
             final Message message, final String filename, final String mime) {
-        final File file = getStorageLocation(filename, mime);
-        message.setRelativeFilePath(file.getAbsolutePath());
+        final var storageLocation = getStorageLocation(filename, mime);
+        Log.d(Config.LOGTAG, storageLocation.toString());
+        message.setRelativeFilePath(storageLocation);
     }
 
     public boolean unusualBounds(final Uri image) {
@@ -951,8 +978,8 @@ public class FileBackend {
                 if (thumbnail != null) {
                     return thumbnail;
                 }
-                DownloadableFile file = getFile(message);
-                final String mime = file.getMimeType();
+                final var file = getFile(message);
+                final String mime = MimeUtils.getMimeType(file);
                 if ("application/pdf".equals(mime)) {
                     thumbnail = getPdfDocumentPreview(file, size);
                 } else if (mime.startsWith("video/")) {
@@ -1087,7 +1114,6 @@ public class FileBackend {
         return frame;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private Bitmap getPdfDocumentPreview(final File file, final int size) {
         try {
             final ParcelFileDescriptor fileDescriptor =
@@ -1138,24 +1164,6 @@ public class FileBackend {
         return rendered;
     }
 
-    public Uri getTakePhotoUri() {
-        final String filename =
-                String.format("IMG_%s.%s", IMAGE_DATE_FORMAT.format(new Date()), "jpg");
-        final File directory;
-        if (Config.ONLY_INTERNAL_STORAGE) {
-            directory = new File(mXmppConnectionService.getCacheDir(), "Camera");
-        } else {
-            directory =
-                    new File(
-                            Environment.getExternalStoragePublicDirectory(
-                                    Environment.DIRECTORY_DCIM),
-                            "Camera");
-        }
-        final File file = new File(directory, filename);
-        file.getParentFile().mkdirs();
-        return getUriForFile(mXmppConnectionService, file);
-    }
-
     public void deleteHistoricAvatarPath() {
         delete(getHistoricAvatarPath());
     }
@@ -1201,7 +1209,7 @@ public class FileBackend {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         try {
             options.inSampleSize = calcSampleSize(context, image, size);
-        } catch (final IOException | SecurityException e) {
+        } catch (final Exception e) {
             Log.d(Config.LOGTAG, "unable to calculate sample size for " + image, e);
             return null;
         }
@@ -1216,7 +1224,7 @@ public class FileBackend {
                 final var bitmap = rotate(originalBitmap, getRotation(context, image));
                 return cropCenterSquare(bitmap, size);
             }
-        } catch (final SecurityException | IOException e) {
+        } catch (final Exception e) {
             Log.d(Config.LOGTAG, "unable to open file " + image, e);
             return null;
         }
@@ -1316,8 +1324,8 @@ public class FileBackend {
         final boolean encrypted =
                 message.getEncryption() == Message.ENCRYPTION_PGP
                         || message.getEncryption() == Message.ENCRYPTION_DECRYPTED;
-        final DownloadableFile file = getFile(message);
-        final String mime = file.getMimeType();
+        final var file = getFile(message);
+        final String mime = MimeUtils.getMimeType(file);
         final boolean image =
                 message.getType() == Message.TYPE_IMAGE
                         || (mime != null && mime.startsWith("image/"));
@@ -1328,15 +1336,15 @@ public class FileBackend {
         }
         if (encrypted && !file.exists()) {
             Log.d(Config.LOGTAG, "skipping updateFileParams because file is encrypted");
-            final DownloadableFile encryptedFile = getFile(message, false);
-            body.append('|').append(encryptedFile.getSize());
+            final var encryptedFile = getFile(message, false);
+            body.append('|').append(encryptedFile.length());
         } else {
             Log.d(Config.LOGTAG, "running updateFileParams");
             final boolean ambiguous = MimeUtils.AMBIGUOUS_CONTAINER_FORMATS.contains(mime);
             final boolean video = mime != null && mime.startsWith("video/");
             final boolean audio = mime != null && mime.startsWith("audio/");
             final boolean pdf = "application/pdf".equals(mime);
-            body.append('|').append(file.getSize());
+            body.append('|').append(file.length());
             if (ambiguous) {
                 try {
                     final Dimensions dimensions = getVideoDimensions(file);
@@ -1373,7 +1381,9 @@ public class FileBackend {
                 } catch (final IOException | NotAVideoFile notAVideoFile) {
                     Log.d(
                             Config.LOGTAG,
-                            "file with mime type " + file.getMimeType() + " was not a video file");
+                            "file with mime type "
+                                    + MimeUtils.getMimeType(file)
+                                    + " was not a video file");
                     // fall threw
                 }
             } else if (audio) {
@@ -1474,6 +1484,134 @@ public class FileBackend {
             return null;
         }
         return cropCenterSquare(mXmppConnectionService, getAvatarUri(avatar), size);
+    }
+
+    public ListenableFuture<List<Void>> saveInternalToExternal(
+            final Collection<Message.StorageLocation> storageLocations) {
+        final var internalOnly =
+                Collections2.filter(storageLocations, sl -> sl != null && !sl.sharedStorage());
+        final var futures =
+                Collections2.transform(
+                        internalOnly, sl -> saveInternalToExternal(Objects.requireNonNull(sl)));
+        return Futures.successfulAsList(futures);
+    }
+
+    public ListenableFuture<Void> saveInternalToExternal(
+            final Message.StorageLocation storageLocation) {
+        Preconditions.checkArgument(!storageLocation.sharedStorage());
+        final var internal = storageLocation.file();
+        final var external =
+                getSharedStorageLocation(internal.getName(), MimeUtils.getMimeType(internal));
+        if (external.exists() && internal.length() == external.length()) {
+            Log.i(Config.LOGTAG, "file is already available on shared storage");
+            updateMediaScanner(external);
+            return Futures.immediateVoidFuture();
+        }
+        final var parent = external.getParentFile();
+        if (parent != null && parent.mkdirs()) {
+            Log.d(Config.LOGTAG, "created parent directory: " + parent.getAbsolutePath());
+            mXmppConnectionService.restartFileObserver();
+        }
+        return Futures.submit(
+                () -> {
+                    try {
+                        if (external.createNewFile()) {
+                            Log.d(
+                                    Config.LOGTAG,
+                                    "created empty file " + external.getAbsolutePath());
+                        }
+                    } catch (final IOException e) {
+                        throw new IllegalStateException(e);
+                    }
+                    try (final var is = new FileInputStream(internal);
+                            final var os = new FileOutputStream(external)) {
+                        ByteStreams.copy(is, os);
+                    } catch (final IOException e) {
+                        throw new IllegalStateException(e);
+                    }
+                    updateMediaScanner(external);
+                },
+                XmppConnectionService.FILE_ATTACHMENT_EXECUTOR);
+    }
+
+    public static class Cache {
+
+        private static final DateTimeFormatter TIMESTAMP_FORMATTER =
+                DateTimeFormatter.ofPattern("yyyyMMdd_HHmmssSSS").withZone(ZoneId.systemDefault());
+
+        private static final Pattern RECORDING_FILENAME_PATTERN =
+                Pattern.compile(
+                        "^RECORDING_\\d{4}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])_([01]\\d|2[0-3])([0-5]\\d)([0-5]\\d)(\\d{3})\\.(mp4|m4a|oga)$");
+
+        private static final Pattern IMAGE_FILENAME_PATTERN =
+                Pattern.compile(
+                        "^IMG_\\d{4}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])_([01]\\d|2[0-3])([0-5]\\d)([0-5]\\d)(\\d{3})\\.jpg$");
+
+        private static final String DIRECTORY_CAMERA = "Camera";
+        private static final String DIRECTORY_RECORDINGS = "Recordings";
+
+        private final Context context;
+
+        public Cache(final Context context) {
+            this.context = context;
+        }
+
+        public File takePicture() {
+            final String filename =
+                    String.format("IMG_%s.%s", TIMESTAMP_FORMATTER.format(Instant.now()), "jpg");
+            final var cameraDirectory = new File(context.getCacheDir(), DIRECTORY_CAMERA);
+            final var file = new File(cameraDirectory, filename);
+            if (cameraDirectory.mkdirs()) {
+                Log.d(Config.LOGTAG, "create directory " + cameraDirectory.getAbsolutePath());
+            }
+            return file;
+        }
+
+        public File recording(final int outputFormat) {
+            final String extension;
+            if (outputFormat == MediaRecorder.OutputFormat.MPEG_4) {
+                extension = "m4a";
+            } else if (outputFormat == MediaRecorder.OutputFormat.OGG) {
+                extension = "oga";
+            } else {
+                throw new IllegalStateException("Unrecognized output format");
+            }
+            final String filename =
+                    String.format(
+                            "RECORDING_%s.%s",
+                            TIMESTAMP_FORMATTER.format(Instant.now()), extension);
+            final var recordingsDirectory = new File(context.getCacheDir(), DIRECTORY_RECORDINGS);
+            final var file = new File(recordingsDirectory, filename);
+            if (recordingsDirectory.mkdirs()) {
+                Log.d(Config.LOGTAG, "create directory " + recordingsDirectory.getAbsolutePath());
+            }
+            return file;
+        }
+
+        public boolean isCachedFile(final File file) {
+            final var directory = file.getParentFile();
+            if (directory == null) {
+                return false;
+            }
+            final var parent = directory.getParentFile();
+            if (parent == null) {
+                return false;
+            }
+            if (Arrays.asList(DIRECTORY_CAMERA, DIRECTORY_RECORDINGS)
+                    .contains(directory.getName())) {
+                return parent.equals(context.getCacheDir());
+            } else {
+                return false;
+            }
+        }
+
+        public static boolean isRecordingFilenamePattern(final String filename) {
+            return RECORDING_FILENAME_PATTERN.matcher(filename).matches();
+        }
+
+        public static boolean isImageFilenamePattern(final String filename) {
+            return IMAGE_FILENAME_PATTERN.matcher(filename).matches();
+        }
     }
 
     private record Dimensions(int height, int width) {

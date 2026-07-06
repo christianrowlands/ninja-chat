@@ -1,138 +1,132 @@
 package eu.siacs.conversations.utils;
 
-
+import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
 import android.os.FileObserver;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.common.base.Strings;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Stack;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
-import eu.siacs.conversations.Config;
-
-/**
- * Copyright (C) 2012 Bartek Przybylski
- * Copyright (C) 2015 ownCloud Inc.
- * Copyright (C) 2016 Daniel Gultsch
- */
-
-public abstract class ConversationsFileObserver {
+public final class ConversationsFileObserver {
     private static final Executor EVENT_EXECUTOR = Executors.newSingleThreadExecutor();
-    private static final int MASK = FileObserver.DELETE | FileObserver.MOVED_FROM | FileObserver.CREATE;
+    private static final int MASK = FileObserver.DELETE | FileObserver.MOVED_FROM;
 
+    private static final List<String> STORAGE_TYPES;
 
-    private final String path;
-    private final List<SingleFileObserver> mObservers = new ArrayList<>();
-    private final AtomicBoolean shouldStop = new AtomicBoolean(true);
-
-    protected ConversationsFileObserver(String path) {
-        this.path = path;
+    static {
+        final ImmutableList.Builder<String> builder =
+                new ImmutableList.Builder<String>()
+                        .add(
+                                Environment.DIRECTORY_DOWNLOADS,
+                                Environment.DIRECTORY_PICTURES,
+                                Environment.DIRECTORY_MOVIES,
+                                Environment.DIRECTORY_DOCUMENTS,
+                                Environment.DIRECTORY_DCIM);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            builder.add(Environment.DIRECTORY_RECORDINGS);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            builder.add(Environment.DIRECTORY_AUDIOBOOKS);
+        }
+        STORAGE_TYPES = builder.build();
     }
 
-    public void startWatching() {
-        shouldStop.set(false);
-        startWatchingInternal();
+    private final Context context;
+    private final Consumer<File> onFileDeleted;
+    private final ArrayList<FileObserver> fileObservers = new ArrayList<>();
+
+    public ConversationsFileObserver(final Context context, final Consumer<File> onFileDeleted) {
+        this.context = context;
+        this.onFileDeleted = onFileDeleted;
     }
 
-    private synchronized void startWatchingInternal() {
-        final Stack<String> stack = new Stack<>();
-        stack.push(path);
-
-        while (!stack.empty()) {
-            if (shouldStop.get()) {
-                Log.d(Config.LOGTAG, "file observer received command to stop");
-                return;
+    public void restartWatching() {
+        synchronized (this.fileObservers) {
+            for (final var observer : this.fileObservers) {
+                observer.stopWatching();
             }
-            final String parent = stack.pop();
-            final File path = new File(parent);
-            mObservers.add(new SingleFileObserver(path, MASK));
-            final File[] files = path.listFiles();
-            for (final File file : (files == null ? new File[0] : files)) {
-                if (shouldStop.get()) {
-                    Log.d(Config.LOGTAG, "file observer received command to stop");
-                    return;
-                }
-                if (file.isDirectory() && file.getName().charAt(0) != '.') {
-                    final String currentPath = file.getAbsolutePath();
-                    if (depth(file) <= 8 && !stack.contains(currentPath) && !observing(file)) {
-                        stack.push(currentPath);
-                    }
-                }
-            }
-        }
-        for (FileObserver observer : mObservers) {
-            observer.startWatching();
-        }
-    }
-
-    private static int depth(File file) {
-        int depth = 0;
-        while ((file = file.getParentFile()) != null) {
-            depth++;
-        }
-        return depth;
-    }
-
-    private boolean observing(final File path) {
-        for (final SingleFileObserver observer : mObservers) {
-            if (path.equals(observer.path)) {
-                return true;
+            this.fileObservers.clear();
+            for (final var observer : getFileObservers()) {
+                this.fileObservers.add(observer);
+                observer.startWatching();
             }
         }
-        return false;
     }
 
     public void stopWatching() {
-        shouldStop.set(true);
-        stopWatchingInternal();
-    }
-
-    private synchronized void stopWatchingInternal() {
-        for (FileObserver observer : mObservers) {
-            observer.stopWatching();
+        synchronized (this.fileObservers) {
+            for (final var observer : this.fileObservers) {
+                observer.stopWatching();
+            }
         }
-        mObservers.clear();
     }
 
-    abstract public void onEvent(final int event, File path);
-
-    public void restartWatching() {
-        stopWatching();
-        startWatching();
+    private File getInternalStorageLocation() {
+        return new File(context.getFilesDir(), "attachments");
     }
 
-    private class SingleFileObserver extends FileObserver {
-        private final File path;
+    private Collection<FileObserver> getFileObservers() {
+        final var locations =
+                new ImmutableList.Builder<File>()
+                        .add(getInternalStorageLocation())
+                        .addAll(getSharedStorageLocations())
+                        .build();
+        final var existing =
+                Collections2.filter(
+                        locations, location -> location.exists() && location.isDirectory());
+        return Collections2.transform(
+                existing, location -> new SingleDirectoryObserver(location, onFileDeleted));
+    }
 
-        SingleFileObserver(final File path, final int mask) {
-            super(path.getAbsolutePath(), mask);
-            this.path = path;
+    private List<File> getSharedStorageLocations() {
+        return Lists.transform(
+                STORAGE_TYPES,
+                type -> {
+                    final var parent = Environment.getExternalStoragePublicDirectory(type);
+                    return new File(parent, context.getString(R.string.app_name));
+                });
+    }
+
+    private static final class SingleDirectoryObserver extends FileObserver {
+
+        private final File directory;
+        private final Consumer<File> onFileDeleted;
+
+        public SingleDirectoryObserver(
+                @NonNull File directory, final Consumer<File> onFileDeleted) {
+            super(directory.getAbsolutePath(), MASK);
+            this.directory = directory;
+            this.onFileDeleted = onFileDeleted;
         }
 
         @Override
-        public void onEvent(final int event, final String filename) {
-            if (filename == null) {
-                Log.d(Config.LOGTAG, "ignored file event with NULL filename (event=" + event + ")");
+        public void onEvent(int event, @Nullable String path) {
+            if (Strings.isNullOrEmpty(path)) {
                 return;
             }
-            EVENT_EXECUTOR.execute(() -> {
-                final File file = new File(this.path, filename);
-                if ((event & FileObserver.ALL_EVENTS) == FileObserver.CREATE) {
-                    if (file.isDirectory()) {
-                        Log.d(Config.LOGTAG, "file observer observed new directory creation " + file);
-                        if (!observing(file)) {
-                            final SingleFileObserver observer = new SingleFileObserver(file, MASK);
-                            observer.startWatching();
-                        }
-                    }
-                    return;
-                }
-                ConversationsFileObserver.this.onEvent(event, file);
-            });
+            onFileDeleted.accept(new File(directory, path));
+        }
+
+        @Override
+        public void startWatching() {
+            super.startWatching();
+            if (directory.exists() && directory.isDirectory()) {
+                Log.d(Config.LOGTAG, "started to watch " + directory.getAbsolutePath());
+            }
         }
     }
 }

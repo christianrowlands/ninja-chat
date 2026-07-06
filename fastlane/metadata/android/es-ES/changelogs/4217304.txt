@@ -1,0 +1,1 @@
+* Solucionar el problema de registro de Quicksy en dispositivos antiguos

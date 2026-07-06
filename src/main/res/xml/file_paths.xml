@@ -2,23 +2,20 @@
 <paths>
     <external-path
         name="external"
-        path="/"/>
-    <root-path
-        name="storage"
-        path="/storage/"/>
+        path="/" />
     <files-path
-        name="pictures"
-        path="Images/"/>
-    <files-path
-        name="videos"
-        path="Videos"/>
-    <files-path
-        name="files"
-        path="Files/"/>
-    <files-path
-        name="recordings"
-        path="Recordings/"/>
+        name="attachments"
+        path="attachments/" />
+
+    <!-- When we call the camera app to take a picture it will be stored in this directory.
+    Upon sending the picture it will be copied over to internal or external storage -->
     <cache-path
         name="camera"
-        path="Camera/"/>
+        path="Camera/" />
+    <!-- Voice recordings will initially be stored in this cache directory.
+    When sending it will be copied over.
+    Exposing this path via file provider is only necessary for playing the preview. -->
+    <cache-path
+        name="recordings"
+        path="Recordings" />
 </paths>

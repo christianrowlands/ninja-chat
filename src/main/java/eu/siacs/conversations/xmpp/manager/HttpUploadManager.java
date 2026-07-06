@@ -12,7 +12,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xml.Namespace;
 import eu.siacs.conversations.xmpp.Jid;
@@ -45,8 +44,8 @@ public class HttpUploadManager extends AbstractManager {
         this.service = service;
     }
 
-    public ListenableFuture<Slot> request(final DownloadableFile file, final String mime) {
-        return request(file.getName(), mime, file.getExpectedSize(), null);
+    public ListenableFuture<Slot> request(final File file, final String mime, final long size) {
+        return request(file.getName(), mime, size, null);
     }
 
     public ListenableFuture<Slot> request(

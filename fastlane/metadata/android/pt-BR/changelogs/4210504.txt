@@ -1,0 +1,2 @@
+* Restaurar acesso a Descoberta de Canais para Android 6+7
+* Melhorar a registração de falhas na integração de chamadas

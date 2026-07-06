@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Html;
 import android.view.View;
+import android.widget.Toast;
 import androidx.databinding.DataBindingUtil;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -156,34 +157,35 @@ public class VerifyActivity extends XmppActivity
         }
     }
 
-    private void onNextButton(View view) {
+    private void onNextButton(final View view) {
         final String pin = pinEntryWrapper.getPin();
         if (PinEntryWrapper.isValidPin(pin)) {
             if (account != null && xmppConnectionService != null) {
                 setVerifyingState(true);
-                xmppConnectionService.getQuickConversationsService().verify(account, pin);
+                xmppConnectionService.getQuickConversationsService().verifyDebounce(account, pin);
             }
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final var builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.please_enter_pin);
             builder.setPositiveButton(R.string.ok, null);
             builder.create().show();
         }
     }
 
-    private void onResendSmsButton(View view) {
+    private void onResendSmsButton(final View view) {
         try {
             xmppConnectionService
                     .getQuickConversationsService()
-                    .requestVerification(
+                    .requestVerificationDebounce(
                             PhoneNumberUtilWrapper.toPhoneNumber(this, account.getJid()));
             setRequestingVerificationState(true);
-        } catch (NumberParseException e) {
-
+        } catch (final NumberParseException e) {
+            Toast.makeText(view.getContext(), R.string.not_a_valid_phone_number, Toast.LENGTH_LONG)
+                    .show();
         }
     }
 
-    private void setVerifyingState(boolean verifying) {
+    private void setVerifyingState(final boolean verifying) {
         this.verifying = verifying;
         this.binding.back.setText(verifying ? R.string.cancel : R.string.back);
         this.binding.next.setEnabled(!verifying);
@@ -194,7 +196,7 @@ public class VerifyActivity extends XmppActivity
         this.binding.progressBar.setIndeterminate(verifying);
     }
 
-    private void setRequestingVerificationState(boolean requesting) {
+    private void setRequestingVerificationState(final boolean requesting) {
         this.requestingVerification = requesting;
         if (requesting) {
             this.binding.resendSms.setEnabled(false);

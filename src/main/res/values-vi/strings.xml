@@ -80,9 +80,6 @@
 \n
 \n<b>Cảnh báo:</b> Việc này sẽ không ảnh hưởng đến các tin nhắn được lưu trữ trên các thiết bị hoặc máy chủ khác.</string>
     <string name="delete_file_dialog">Xoá tệp</string>
-    <string name="delete_file_dialog_msg">Bạn có chắc bạn muốn xoá tệp này không\?
-\n
-\n<b>Cảnh báo:</b> Việc này sẽ không xoá các bản sao được lưu trữ trên các thiết bị hoặc máy chủ khác của tệp này. </string>
     <string name="choose_presence">Chọn thiết bị</string>
     <string name="send_unencrypted_message">Gửi tin nhắn không mã hoá</string>
     <string name="send_message">Gửi tin nhắn</string>
@@ -133,8 +130,6 @@
     <string name="send_presence_updates">Gửi cập nhật hiện diện</string>
     <string name="receive_presence_updates">Nhận cập nhật hiện diện</string>
     <string name="ask_for_presence_updates">Hỏi cập nhật hiện diện</string>
-    <string name="attach_choose_picture">Chọn hình</string>
-    <string name="attach_take_picture">Chụp hình</string>
     <string name="preemptively_grant">Ưu tiên trao quyền yêu cầu đăng ký</string>
     <string name="error_not_an_image_file">Tập tin bạn chọn không phải là hình ảnh</string>
     <string name="error_compressing_image">Không thể chuyển đổi tệp hình ảnh</string>
@@ -176,7 +171,6 @@
     <string name="openpgp_has_been_published">Đã xuất bản mã khoá OpenPGP công khai.</string>
     <string name="mgmt_account_enable">Bật tài khoản</string>
     <string name="mgmt_account_delete_confirm_text">Bạn có chắc chắn muốn xóa tài khoản chứ? Việc xoá tài khoản sẽ xoá toàn bộ lịch sử cuộc hội thoại của bạn</string>
-    <string name="attach_record_voice">Ghi âm</string>
     <string name="account_settings_jabber_id">Địa chỉ XMPP</string>
     <string name="block_jabber_id">Chặn địa chỉ XMPP</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -315,7 +309,6 @@
     <string name="restoring_backup">Đang khôi phục bản sao lưu</string>
     <string name="notification_restored_backup_title">Đã khôi phục bản sao lưu</string>
     <string name="notification_restored_backup_subtitle">Đừng quên bật tài khoản.</string>
-    <string name="choose_file">Chọn tập tin</string>
     <string name="receiving_x_file">Đang nhận %1$s (đã hoàn tất %2$d%%)</string>
     <string name="download_x_file">Tải về %s</string>
     <string name="delete_x_file">Xoá %s</string>
@@ -398,7 +391,6 @@
     <string name="contacts_have_stopped_typing">%s đã ngừng gõ</string>
     <string name="pref_chat_states">Thông báo đang gõ</string>
     <string name="pref_chat_states_summary">Để cho các liên hệ của bạn biết khi bạn đang viết tin nhắn cho họ</string>
-    <string name="send_location">Gửi vị trí</string>
     <string name="show_location">Hiện vị trí</string>
     <string name="no_application_found_to_display_location">Không tìm thấy ứng dụng nào để hiển thị vị trí</string>
     <string name="location">Vị trí</string>
@@ -414,10 +406,7 @@
     <plurals name="toast_delete_certificates">
         <item quantity="other">Đã xoá %d chứng nhận</item>
     </plurals>
-    <string name="pref_quick_action_summary">Thay thế nút \"Gửi\" bằng hành động nhanh</string>
     <string name="pref_quick_action">Thao tác nhanh</string>
-    <string name="none">Không có</string>
-    <string name="recently_used">Dùng gần đây nhất</string>
     <string name="choose_quick_action">Chọn thao tác nhanh</string>
     <string name="search_contacts">Tìm kiếm liên hệ</string>
     <string name="send_private_message">Gửi tin nhắn cá nhân</string>
@@ -629,7 +618,6 @@
     <string name="pref_validate_hostname_summary">Các chứng chỉ máy chủ chứa tên miền được xác thực được coi là đã xác minh</string>
     <string name="certificate_does_not_contain_jid">Chứng chỉ không chứa địa chỉ XMPP hợp lệ</string>
     <string name="server_info_partial">một phần</string>
-    <string name="attach_record_video">Ghi video</string>
     <string name="copy_to_clipboard">Sao chép vào bộ nhớ tạm</string>
     <string name="message_copied_to_clipboard">Đã chép tin nhắn vào clipboard</string>
     <string name="message">Tin nhắn</string>
@@ -842,7 +830,6 @@
     <string name="pref_channel_discovery">Phương pháp khám phá kênh</string>
     <string name="backup">Sao lưu</string>
     <string name="category_about">Giới thiệu</string>
-    <string name="please_enable_an_account">Vui lòng bật một tài khoản</string>
     <string name="make_call">Tạo cuộc gọi</string>
     <string name="rtp_state_incoming_call">Cuộc gọi đến</string>
     <string name="rtp_state_incoming_video_call">Cuộc gọi video đến</string>
@@ -879,8 +866,6 @@
     <string name="remove_from_favorites">Bỏ ghim khỏi đầu</string>
     <string name="gpx_track">Tuyến đường GPS</string>
     <string name="could_not_correct_message">Không thể sửa tin nhắn</string>
-    <string name="search_all_conversations">Tất cả cuộc hội thoại</string>
-    <string name="search_this_conversation">Cuộc hội thoại này</string>
     <string name="your_avatar">Ảnh đại diện của bạn</string>
     <string name="avatar_for_x">Ảnh đại diện cho %s</string>
     <string name="encrypted_with_omemo">Được mã hoá bằng OMEMO</string>

@@ -6,8 +6,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.13.2'
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:8.4.0"
+        classpath 'com.android.tools.build:gradle:9.0.1'
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:8.6.0"
         classpath 'com.google.gms:google-services:4.4.2'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
     }
@@ -53,8 +53,8 @@ configurations.configureEach {
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
-    annotationProcessor 'org.immutables:value:2.12.1'
-    implementation 'org.immutables:value-annotations:2.12.1'
+    annotationProcessor 'org.immutables:value:2.12.2'
+    implementation 'org.immutables:value-annotations:2.12.2'
     annotationProcessor project(':libs:annotation-processor')
     implementation project(':libs:annotation')
     implementation 'androidx.appcompat:appcompat:1.7.1'
@@ -72,8 +72,8 @@ dependencies {
     implementation 'androidx.viewpager:viewpager:1.1.0'
     implementation 'androidx.work:work-runtime:2.11.2'
     implementation 'com.github.open-keychain.open-keychain:openpgp-api:v5.7.1'
-    implementation 'com.google.android.material:material:1.13.0'
-    implementation 'com.google.guava:guava:33.5.0-android'
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation 'com.google.guava:guava:33.6.0-android'
     implementation 'com.google.zxing:core:3.5.4'
     implementation 'com.leinardi.android:speed-dial:3.3.0'
     implementation 'com.squareup.okhttp3:okhttp:5.3.2'
@@ -82,10 +82,10 @@ dependencies {
     implementation 'com.vanniktech:android-image-cropper:4.7.0'
     implementation 'im.conversations.webrtc:webrtc-android:129.0.0'
     implementation 'io.deepmedia.community:transcoder-android:0.11.2'
-    implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
-    implementation 'net.fellbaum:jemoji:1.7.6'
-    implementation 'org.bouncycastle:bcmail-jdk18on:1.83'
+    //noinspection NewerVersionAvailable
+    implementation 'net.fellbaum:jemoji:1.7.6' //1.7.6 is the latest with Java 8 support
+    implementation 'org.bouncycastle:bcmail-jdk18on:1.84'
     implementation 'org.conscrypt:conscrypt-android:2.5.3'
     implementation 'org.hsluv:hsluv:1.0'
     implementation 'org.jxmpp:jxmpp-jid:1.1.0'
@@ -95,13 +95,7 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.1.20'
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     conversationsPlaystoreImplementation 'com.android.installreferrer:installreferrer:2.2'
-    quicksyImplementation 'io.michaelrocks:libphonenumber-android:9.0.26'
-    quicksyImplementation "dev.paseto:jpaseto-api:0.7.0"
-    quicksyImplementation "dev.paseto:jpaseto-impl:0.7.0"
-    quicksyImplementation "dev.paseto:jpaseto-gson:0.7.0"
-    quicksyImplementation ("dev.paseto:jpaseto-bouncy-castle:0.7.0")  {
-        exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'
-    }
+    quicksyImplementation 'io.michaelrocks:libphonenumber-android:9.0.31'
 
     quicksyPlaystoreImplementation 'com.google.android.gms:play-services-auth-api-phone:18.3.0'
 
@@ -123,19 +117,20 @@ ext {
 
 android {
     namespace 'eu.siacs.conversations'
-    compileSdk 36
+    compileSdk = 36
 
     defaultConfig {
         minSdkVersion 23
-        targetSdkVersion 36
         versionCode 42175
         versionName "2.19.15"
-        archivesBaseName += "-$versionName"
         applicationId "com.ninja.chat"
         resValue "string", "applicationId", applicationId
         def appName = "Ninja Chat"
         resValue "string", "app_name", appName
         buildConfigField "String", "APP_NAME", "\"$appName\""
+        base {
+            archivesName = "${android.defaultConfig.applicationId}-${android.defaultConfig.versionName}"
+        }
     }
 
     splits {
@@ -242,7 +237,7 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -286,6 +281,7 @@ android {
     }
     buildFeatures {
         buildConfig true
+        resValues = true
     }
 
     android.applicationVariants.configureEach { variant ->

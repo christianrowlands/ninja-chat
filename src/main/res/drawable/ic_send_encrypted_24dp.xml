@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:autoMirrored="true"
+    android:tint="?colorControlNormal"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- The Send Icon (slightly shortened to make room for the lock) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M2.01,21L23,12 2.01,3 2,10l15,2 -15,2z" />
+
+    <!-- The Lock Icon (positioned in the bottom-right corner) -->
+    <!-- Path data derived from standard Material Lock @gist.github.com/solkin/51a2c444d92d98b23260be170d28cca7 -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M22,17h-1v-2c0-1.66-1.34-3-3-3s-3,1.34-3,3v2h-1c-0.55,0-1,0.45-1,1v4c0,0.55,0.45,1,1,1h8c0.55,0,1-0.45,1-1v-4C23,17.45,22.55,17,22,17z M18,14c0.55,0,1,0.45,1,1v2h-2v-2C17,14.45,17.45,14,18,14z" />
+
+</vector>

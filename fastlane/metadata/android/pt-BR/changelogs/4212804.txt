@@ -1,0 +1,3 @@
+* Acesso mais fácil a customização de sons de notificação (Detalhes de contato -> Menu de overflow -> Notificações customizadas)
+* Corrigir alvos do compartilhamento direto nas versões novas do Android
+* Habilidade de limitar a visibilidade do avatar para contatos

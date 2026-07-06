@@ -65,7 +65,6 @@
     <string name="action_clear_history">Historia garbitu</string>
     <string name="clear_conversation_history">Elkarrizketa historia garbitu</string>
     <string name="delete_file_dialog">Fitxategia ezabatu</string>
-    <string name="delete_file_dialog_msg">Fitxategi hau ezabatu nahi al duzu?\n\n<b>Abisua:</b> Honek ez du beste gailu edo zerbitzarietan gordetako fitxategi honen kopiak ezabatuko.</string>
     <string name="choose_presence">Gailua aukeratu</string>
     <string name="send_unencrypted_message">Enkriptatu gabeko mezua bidali</string>
     <string name="send_message">Mezua bidali</string>
@@ -104,8 +103,6 @@
     <string name="send_presence_updates">Presentzia eguneraketak bidali</string>
     <string name="receive_presence_updates">Presentzia eguneraketak jaso</string>
     <string name="ask_for_presence_updates">Presentzia eguneraketak eskatu</string>
-    <string name="attach_choose_picture">Argazkia aukeratu</string>
-    <string name="attach_take_picture">Argazkia egin</string>
     <string name="preemptively_grant">Prebentiboki harpidetza eskaera eman</string>
     <string name="error_not_an_image_file">Aukeratu duzun fitxategia ez da irudi bat</string>
     <string name="error_file_not_found">Fitxategia ez da aurkitu</string>
@@ -137,7 +134,6 @@
     <string name="unpublish_pgp">OpenPGP gako publikoa kendu</string>
     <string name="unpublish_pgp_message">Ziur zure OpenPGP gako publikoa zure presentzia eguneraketetatik kendu nahi duzula?\nZure kontaktuek ezin dizute gehiago OpenPGPz enkriptatutako mezuak bidali.</string>
     <string name="mgmt_account_enable">Kontua gaitu</string>
-    <string name="attach_record_voice">Ahotsa grabatu</string>
     <string name="account_settings_jabber_id">XMPP helbidea</string>
     <string name="block_jabber_id">XMPP helbidea blokeatu</string>
     <string name="account_settings_example_jabber_id">erabiltzailea@adibidea.com</string>
@@ -261,7 +257,6 @@
     <string name="restoring_backup">Babes-kopia berrezartzen</string>
     <string name="notification_restored_backup_title">Zure babes-kopia berrezarri da</string>
     <string name="notification_restored_backup_subtitle">Ez ahaztu kontua gaitzeaz.</string>
-    <string name="choose_file">Fitxategia aukeratu</string>
     <string name="receiving_x_file">%1$s jasotzen (%2$d%% osatua)</string>
     <string name="download_x_file">%s deskargatu</string>
     <string name="delete_x_file">Ezabatu %s</string>
@@ -331,7 +326,6 @@
     <string name="contacts_have_stopped_typing">%s idazteari utzi diote</string>
     <string name="pref_chat_states">Idazketa jakinarazpenak</string>
     <string name="pref_chat_states_summary">Zure kontaktuak mezu berri bat noiz idazten ari zaren jakin dezaten baimendu</string>
-    <string name="send_location">Kokapena partekatu</string>
     <string name="show_location">Kokapena erakutsi</string>
     <string name="location">Kokapena</string>
     <string name="title_undo_swipe_out_group_chat">Talde pribatua utzi da</string>
@@ -348,8 +342,6 @@
         <item quantity="other">%d ziurtagiri ezabatuak</item>
     </plurals>
     <string name="pref_quick_action">Ekintza azkarra</string>
-    <string name="none">Bat ere ez</string>
-    <string name="recently_used">Azkenengo aldiz erabilitakoa</string>
     <string name="choose_quick_action">Ekintza azkarra aukeratu</string>
     <string name="search_contacts">Kontaktuak bilatu</string>
     <string name="send_private_message">Mezu pribatua bidali</string>
@@ -517,7 +509,6 @@
     <string name="pref_validate_hostname_summary">Ostalariaren izena balioztatuta daukaten zerbitzarien ziurtagiriak egiaztatutzat hartzen dira</string>
     <string name="certificate_does_not_contain_jid">Ziurtagiriak ez du XMPP helbide bat</string>
     <string name="server_info_partial">partziala</string>
-    <string name="attach_record_video">Bideoa grabatu</string>
     <string name="copy_to_clipboard">Arbelera kopiatu</string>
     <string name="message_copied_to_clipboard">Mezua arbelera kopiatu da</string>
     <string name="message">Mezua</string>
@@ -707,7 +698,6 @@
     <string name="pref_channel_discovery">Kanalak aurkitzeko modua</string>
     <string name="backup">Babeskopia</string>
     <string name="category_about">Honi buruz</string>
-    <string name="please_enable_an_account">Mesedez kontu bat gaitu</string>
     <string name="rtp_state_declined_or_busy">Lanpetuta</string>
     <plurals name="view_users">
         <item quantity="one">Parte-hartzaile %1$d ikusi</item>

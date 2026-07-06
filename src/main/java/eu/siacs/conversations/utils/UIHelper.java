@@ -21,6 +21,7 @@ import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.RtpSessionStatus;
 import eu.siacs.conversations.entities.Transferable;
+import eu.siacs.conversations.ui.adapter.MediaAdapter;
 import eu.siacs.conversations.ui.util.QuoteHelper;
 import eu.siacs.conversations.worker.ExportBackupWorker;
 import eu.siacs.conversations.xmpp.Jid;
@@ -30,34 +31,11 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import org.jspecify.annotations.Nullable;
 
 public class UIHelper {
 
-    private static final List<String> LOCATION_QUESTIONS =
-            Arrays.asList(
-                    "where are you", // en
-                    "where are you now", // en
-                    "where are you right now", // en
-                    "whats your 20", // en
-                    "what is your 20", // en
-                    "what's your 20", // en
-                    "whats your twenty", // en
-                    "what is your twenty", // en
-                    "what's your twenty", // en
-                    "wo bist du", // de
-                    "wo bist du jetzt", // de
-                    "wo bist du gerade", // de
-                    "wo seid ihr", // de
-                    "wo seid ihr jetzt", // de
-                    "wo seid ihr gerade", // de
-                    "dónde estás", // es
-                    "donde estas" // es
-                    );
-
-    private static final List<Character> PUNCTIONATION =
-            Arrays.asList('.', ',', '?', '!', ';', ':');
+    private static final List<Character> PUNCTUATION = Arrays.asList('.', ',', '?', '!', ';', ':');
 
     private static final int SHORT_DATE_FLAGS =
             DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_ABBREV_ALL;
@@ -307,7 +285,7 @@ public class UIHelper {
                 builder.append(' ');
             }
             builder.append(trimmed);
-            if (!PUNCTIONATION.contains(last)) {
+            if (!PUNCTUATION.contains(last)) {
                 break;
             }
         }
@@ -448,6 +426,8 @@ public class UIHelper {
             return context.getString(R.string.pdf_document);
         } else if (MimeUtils.WORD_DOCUMENT_MIMES.contains(mime)) {
             return context.getString(R.string.word_document);
+        } else if (MediaAdapter.SHEET_MUSIC.contains(mime)) {
+            return context.getString(R.string.sheet_music);
         } else if (mime.equals("application/vnd.android.package-archive")) {
             return context.getString(R.string.apk);
         } else if (mime.equals(ExportBackupWorker.MIME_TYPE)) {
@@ -515,21 +495,6 @@ public class UIHelper {
             }
             default -> context.getString(R.string.send_encrypted_message);
         };
-    }
-
-    public static boolean receivedLocationQuestion(final Message message) {
-        if (message == null
-                || message.getStatus() != Message.STATUS_RECEIVED
-                || message.getType() != Message.TYPE_TEXT) {
-            return false;
-        }
-        final String body =
-                Strings.nullToEmpty(message.getBody())
-                        .trim()
-                        .toLowerCase(Locale.getDefault())
-                        .replace("?", "")
-                        .replace("¿", "");
-        return LOCATION_QUESTIONS.contains(body);
     }
 
     public static String filesizeToString(long size) {

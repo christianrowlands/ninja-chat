@@ -3,7 +3,6 @@ package eu.siacs.conversations.xmpp;
 import static eu.siacs.conversations.utils.Random.SECURE_RANDOM;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.SystemClock;
 import android.security.KeyChain;
 import android.util.Base64;
@@ -1906,8 +1905,9 @@ public class XmppConnection implements Runnable {
                                         account, appSettings.getInstallationId())));
         userAgent.setSoftware(
                 String.format("%s %s", BuildConfig.APP_NAME, BuildConfig.VERSION_NAME));
-        if (new Device(mXmppConnectionService).isPhysicalDevice()) {
-            userAgent.setDevice(String.format("%s %s", Build.MANUFACTURER, Build.MODEL));
+        final var device = new Device(mXmppConnectionService);
+        if (device.isPhysicalDevice()) {
+            userAgent.setDevice(device.getDeviceName());
         }
         // do not include bind if 'inlineStreamManagement' is missing and we have a streamId
         // (because we would rather just do a normal SM/resume)

@@ -3,6 +3,13 @@ package eu.siacs.conversations.http;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.SettableFuture;
 import de.gultsch.common.TrustManagers;
 import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
@@ -21,16 +28,24 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class HttpConnectionManager extends AbstractConnectionManager {
@@ -145,6 +160,57 @@ public class HttpConnectionManager extends AbstractConnectionManager {
             builder.proxy(HttpConnectionManager.getProxy()).build();
         }
         return builder.build();
+    }
+
+    public ListenableFuture<Set<String>> checkAvailability(
+            final Account account, final Collection<String> urls) {
+        final var futures = Collections2.transform(urls, url -> checkAvailability(account, url));
+        final var availableUrlsFuture = Futures.successfulAsList(futures);
+        return Futures.transform(
+                availableUrlsFuture,
+                available -> ImmutableSet.copyOf(Collections2.filter(available, Objects::nonNull)),
+                MoreExecutors.directExecutor());
+    }
+
+    private ListenableFuture<String> checkAvailability(final Account account, final String url) {
+        final SettableFuture<String> future = SettableFuture.create();
+        final var httpUrl = AesGcmURL.of(url);
+        final var okHttp =
+                buildHttpClient(httpUrl, account, false)
+                        .newBuilder()
+                        .callTimeout(Duration.ofSeconds(5))
+                        .build();
+        final var request =
+                new Request.Builder()
+                        .head()
+                        .url(URL.stripFragment(httpUrl))
+                        .addHeader("Accept-Encoding", "identity")
+                        .build();
+        okHttp.newCall(request)
+                .enqueue(
+                        new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                future.setException(e);
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                                if (response.isSuccessful()) {
+                                    // TODO check 'Sunset' HTTP response Header (rfc8594) to see if
+                                    // it is at least ~24 hours in the future
+                                    future.set(url);
+                                } else {
+                                    future.setException(
+                                            new IllegalStateException(
+                                                    String.format(
+                                                            Locale.US,
+                                                            "HTTP response code is %d",
+                                                            response.code())));
+                                }
+                            }
+                        });
+        return future;
     }
 
     private void setupTrustManager(final OkHttpClient.Builder builder, final boolean interactive) {

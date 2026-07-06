@@ -1,0 +1,4 @@
+* Acesso mais fácil para 'Mostrar QR code'
+* Suportar Marcadores Nativos PEP
+* Adicionar suporte para Oferta SDP / Modelo de Resposta (Utilizado por gateways SIP)
+* Aumentar o API alvo para Android 14

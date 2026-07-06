@@ -81,7 +81,6 @@
 \n 
 \n<b>Uyarı:</b> Bu eylem, diğer aygıt ve sunucularda kayıtlı mesajları etkilemeyecektir.</string>
     <string name="delete_file_dialog">Dosyayı sil</string>
-    <string name="delete_file_dialog_msg">Bu dosyayı silmek istediğinizden emin misiniz? \n\n<b>Uyarı:</b> Bu eylem, bu dosyanın diğer aygıt ve sunucularda kayıtlı kopyalarını silmeyecektir.</string>
     <string name="choose_presence">Aygıt seç</string>
     <string name="send_unencrypted_message">Açık metin olarak ileti gönder</string>
     <string name="send_message">Mesajı gönder</string>
@@ -91,7 +90,7 @@
     <string name="send_unencrypted">Açık metin olarak gönder</string>
     <string name="decryption_failed">Deşifre edilemedi. Uygun bir özel anahtarınız olmayabilir.</string>
     <string name="openkeychain_required">OpenKeychain</string>
-    <string name="openkeychain_required_long">%1$s mesajları şifrelemek, deşifre etmek ve genel anahtarlarınızı yönetmek için &lt;b&gt;OpenKeychain&lt;/b&gt; kullanmaktadır.&lt;br&gt;&lt;br&gt;lt GPLv3+ altında lisanslıdır ve F-Droid ve Google Play\'de mevcuttur.&lt;br&gt;&lt;br&gt;&lt;small&gt;(Lütfen devamında %1$s\'ı yeniden başlatın.)&lt;/small&gt;</string>
+    <string name="openkeychain_required_long"><![CDATA[%1$s mesajları şifrelemek, deşifre etmek ve genel anahtarlarınızı yönetmek için <b>OpenKeychain</b> kullanmaktadır.<br><br>lt GPLv3+ altında lisanslıdır ve F-Droid ve Google Play\'de mevcuttur.<br><br><small>(Lütfen devamında %1$s\'ı yeniden başlatın.)</small>]]></string>
     <string name="restart">Yeniden başlat</string>
     <string name="install">Kur</string>
     <string name="openkeychain_not_installed">Lütfen OpenKeychain’i kur</string>
@@ -132,8 +131,6 @@
     <string name="send_presence_updates">Çevrim içi durum bildirimi gönder</string>
     <string name="receive_presence_updates">Çevrim içi durum bildirimi al</string>
     <string name="ask_for_presence_updates">Çevrim içi durum bildirimi iste</string>
-    <string name="attach_choose_picture">Resim seç</string>
-    <string name="attach_take_picture">Resim çek</string>
     <string name="preemptively_grant">Abonelik isteğini peşinen kabul et</string>
     <string name="error_not_an_image_file">Seçtiğiniz dosya bir görüntü dosyası değil</string>
     <string name="error_compressing_image">Görüntü dosyası dönüştürülemedi</string>
@@ -176,7 +173,6 @@
     <string name="openpgp_has_been_published">OpenPGP genel anahtarı yayınlandı.</string>
     <string name="mgmt_account_enable">Hesabı etkinleştir</string>
     <string name="mgmt_account_delete_confirm_text">Hesabınızı silmek istediğinizden emin misiniz? Bütün sohbetleriniz silinecektir</string>
-    <string name="attach_record_voice">Ses kaydet</string>
     <string name="account_settings_jabber_id">XMPP adresi</string>
     <string name="block_jabber_id">XMPP adresini engelle</string>
     <string name="account_settings_example_jabber_id">kullanıcıadı@ornek.com</string>
@@ -321,7 +317,6 @@
     <string name="restoring_backup">Yedekleme yükleniyor</string>
     <string name="notification_restored_backup_title">Yedekleminiz yüklendi</string>
     <string name="notification_restored_backup_subtitle">Hesabı etkinleştirmeyi unutmayın.</string>
-    <string name="choose_file">Dosya seç</string>
     <string name="receiving_x_file">%1$s alıyor/(%2$d%% tamamlandı)</string>
     <string name="download_x_file">%s indir</string>
     <string name="delete_x_file">Sil %s</string>
@@ -406,7 +401,6 @@
     <string name="contacts_have_stopped_typing">%s yazmayı bıraktı</string>
     <string name="pref_chat_states">Yazma bildirimleri</string>
     <string name="pref_chat_states_summary">Siz onlara ileti yazarken kişilerinizin bunu bilmesini sağlayın</string>
-    <string name="send_location">Yer bildirimi gönder</string>
     <string name="show_location">Yer bildirimi göster</string>
     <string name="no_application_found_to_display_location">Konum göstermek için uygulama bulunamadı</string>
     <string name="location">Yer</string>
@@ -423,10 +417,7 @@
         <item quantity="one">%d sertifikaları silindi</item>
         <item quantity="other">%d sertifikaları silindi</item>
     </plurals>
-    <string name="pref_quick_action_summary">\"Gönder\" tuşunu kısayol ile değiştir</string>
     <string name="pref_quick_action">Kısayol</string>
-    <string name="none">Hiçbiri</string>
-    <string name="recently_used">En son kullanılanlar</string>
     <string name="choose_quick_action">Kısayolu seç</string>
     <string name="search_contacts">Kişilerde ara</string>
     <string name="send_private_message">Özel ileti gönder</string>
@@ -646,7 +637,6 @@
     <string name="pref_validate_hostname_summary">Doğrulanmış sunucu adına sahip sunucu sertifikaları onaylanmış kabul edilir</string>
     <string name="certificate_does_not_contain_jid">Sertifika bir XMPP adresi içermiyor</string>
     <string name="server_info_partial">kısmi</string>
-    <string name="attach_record_video">Video kaydet</string>
     <string name="copy_to_clipboard">Panoya kopyala</string>
     <string name="message_copied_to_clipboard">İleti panoya kopyalandı</string>
     <string name="message">İleti</string>
@@ -860,7 +850,6 @@
     <string name="pref_channel_discovery">Kanal keşif yöntemi</string>
     <string name="backup">Yedekle</string>
     <string name="category_about">Hakkında</string>
-    <string name="please_enable_an_account">Lütfen bir hesabı etkinleştirin</string>
     <string name="make_call">Arama yap</string>
     <string name="rtp_state_incoming_call">Gelen arama</string>
     <string name="rtp_state_incoming_video_call">Gelen görüntülü arama</string>
@@ -912,8 +901,6 @@
     <string name="remove_from_favorites">En baştan kaldır</string>
     <string name="gpx_track">GPX izi</string>
     <string name="could_not_correct_message">İleti düzeltilemedi</string>
-    <string name="search_all_conversations">Tüm sohbetler</string>
-    <string name="search_this_conversation">Bu sohbet</string>
     <string name="your_avatar">Avatarınız</string>
     <string name="avatar_for_x">%s avatarı</string>
     <string name="encrypted_with_omemo">OMEMO ile şifrelendi</string>

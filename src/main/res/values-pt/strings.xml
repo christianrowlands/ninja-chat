@@ -92,8 +92,6 @@
     <string name="send_presence_updates">Enviar presença</string>
     <string name="receive_presence_updates">Receber presença</string>
     <string name="ask_for_presence_updates">Pedir atualizações de presença</string>
-    <string name="attach_choose_picture">Escolher imagem</string>
-    <string name="attach_take_picture">Tirar foto</string>
     <string name="preemptively_grant">Conceder pedido de subscrição antecipadamente</string>
     <string name="error_not_an_image_file">O arquivo selecionado não é uma imagem</string>
     <string name="error_file_not_found">Ficheiro não encontrado</string>
@@ -120,7 +118,6 @@
     <string name="mgmt_account_publish_pgp">Publicar chave pública OpenPGP</string>
     <string name="unpublish_pgp">Remover chave pública OpenPGP</string>
     <string name="mgmt_account_enable">Ativar conta</string>
-    <string name="attach_record_voice">Gravar voz</string>
     <string name="account_settings_example_jabber_id">nomedeutilizador@exemplo.com</string>
     <string name="password">Palavra-passe</string>
     <string name="add_phone_book_text">Deseja adicionar %s aos seus contactos?</string>
@@ -215,7 +212,6 @@
     <string name="confirm">Confirmar</string>
     <string name="try_again">Tentar novamente</string>
     <string name="pref_keep_foreground_service_summary">Previne o sistema operativo de terminar a sua conexão</string>
-    <string name="choose_file">Escolher ficheiro</string>
     <string name="receiving_x_file">A receber %1$s (%2$d%% concluído)</string>
     <string name="download_x_file">Transferir %s</string>
     <string name="delete_x_file">Remover %s</string>
@@ -276,7 +272,6 @@
     <string name="contacts_have_stopped_typing">%s pararam de escrever</string>
     <string name="pref_chat_states">Notificações de escrita</string>
     <string name="pref_chat_states_summary">Permitir que um contacto saiba quando está a escrever uma nova mensagem</string>
-    <string name="send_location">Enviar localização</string>
     <string name="show_location">Exibir localização</string>
     <string name="location">Localização</string>
     <string name="pref_dont_trust_system_cas_title">Não confiar nas CAs do sistema</string>
@@ -292,8 +287,6 @@
         <item quantity="other">%d certificados apagados</item>
     </plurals>
     <string name="pref_quick_action">Ação rápida</string>
-    <string name="none">Nenhum</string>
-    <string name="recently_used">Usados mais recentemente</string>
     <string name="choose_quick_action">Escolher ação rápida</string>
     <string name="search_contacts">Procurar contactos</string>
     <string name="send_private_message">Enviar mensagem privada</string>
@@ -319,7 +312,7 @@
     <string name="verified_omemo_key_with_certificate">A chave OMEMO foi verificada com o certificado!</string>
     <string name="device_does_not_support_certificates">O seu dispositivo não suporta a seleção de certificados de cliente!</string>
     <string name="pref_connection_options">Conexão</string>
-    <string name="pref_use_tor">Conectar via TOR</string>
+    <string name="pref_use_tor">Conectar via Tor</string>
     <string name="pref_use_tor_summary">Usar a rede Tor para todas as conexões. Requer a aplicação Orbot</string>
     <string name="account_settings_hostname">Hostname</string>
     <string name="account_settings_port">Porto</string>
@@ -441,7 +434,6 @@
     <string name="account_status_stream_error">Erro de stream</string>
     <string name="account_status_stream_opening_error">Erro na abertura da stream</string>
     <string name="openpgp_has_been_published">Chave pública OpenPGP publicada.</string>
-    <string name="delete_file_dialog_msg">Tem a certeza que quer apagar este ficheiro?\n\n<b>Aviso:</b> Isto não irá apagar cópias deste ficheiro que estão guardadas noutros dispositivos ou servidores.</string>
     <string name="preparing_image">Preparando para enviar a imagem</string>
     <string name="your_nick_has_been_changed">O seu nickname foi alterado</string>
     <string name="contacts_have_no_pgp_keys">Não foi possível encriptar a sua mensagem porque os contactos não estão a anunciar a sua chave pública.\n\n<small>Por favor peça-lhes para configurarem o OpenPGP.</small></string>
@@ -527,7 +519,6 @@
     <string name="non_anonymous">Fazer endereços XMPP visíveis para todos</string>
     <string name="word_document">documento de Word</string>
     <string name="audiobook">Audiobook</string>
-    <string name="pref_quick_action_summary">Troca o botão \"Enviar\" pela ação rápida</string>
     <string name="search_group_chats">Pesquisar conversas em grupo</string>
     <string name="pref_away_when_screen_off_summary">Mostra como Ausente quando o dispositivo está bloqueado</string>
     <string name="moderated">Tornar o canal moderado</string>
@@ -674,7 +665,6 @@
     <string name="mtm_accept_cert">Aceitar Certificado Desconhecido?</string>
     <string name="account_status_regis_web">O servidor exige registo no website</string>
     <string name="pref_validate_hostname_summary">Certificados do servidor que contém um hostname válido são considerados verificados</string>
-    <string name="attach_record_video">Gravar vídeo</string>
     <string name="message">Mensagem</string>
     <string name="sasl_downgrade">Mecanismo SASL downgraded</string>
     <string name="application_found_to_open_website">Nenhuma aplicação para abrir website</string>
@@ -756,7 +746,7 @@
     <string name="pref_video_compression">Qualidade de Vídeo</string>
     <string name="already_drafting_message">Já está a rascunhar uma mensagem.</string>
     <string name="feature_not_implemented">Funcionalidade não implementada</string>
-    <string name="we_will_be_verifying"><![CDATA[Iremos verificar o número de telefone<br/><br/><b>%s</b><br/><br/>Quer continuar, ou gostaria de editar o número?]]></string>
+    <string name="we_will_be_verifying"><![CDATA[Iremos verificar o número de telefone<br><br><b>%s</b><br><br>Quer continuar, ou gostaria de editar o número?]]></string>
     <string name="please_enter_your_phone_number">Por favor digite o seu número de telefone.</string>
     <string name="search_countries">Pesquisar países</string>
     <string name="wait_x">Por favor espere (%s)</string>
@@ -773,7 +763,7 @@
     <string name="media_browser">Galeria</string>
     <string name="security_violation_not_attaching_file">Ficheiro omitido devido a violação de segurança.</string>
     <string name="pref_video_compression_summary">Qualidade baixa significa ficheiros mais pequenos</string>
-    <string name="video_360p">Média (360p)</string>
+    <string name="video_360p">Baixa (360p)</string>
     <string name="video_720p">Alta (720p)</string>
     <string name="messages_channel_name">Mensagens</string>
     <string name="incoming_calls_channel_name">Chamadas recebidas</string>
@@ -889,7 +879,7 @@
     <string name="conversations_backup">Backup de Conversations</string>
     <string name="register_new_account">Registar nova conta</string>
     <string name="unable_to_perform_this_action">Não foi possível executar esta ação</string>
-    <string name="group_chats_and_channels"><![CDATA[Conversas de Grupo & Canais]]></string>
+    <string name="group_chats_and_channels"><![CDATA[Conversas de Grupo &amp; Canais]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Servidor local</string>
     <string name="event">Evento</string>
@@ -914,7 +904,6 @@
     <string name="make_call">Fazer chamada</string>
     <string name="rtp_state_application_failure">Falha na aplicação</string>
     <string name="download_failed_could_not_establish_tls">Não foi possível estabelecer conexão TLS</string>
-    <string name="please_enable_an_account">Por favor ative uma conta</string>
     <string name="rtp_state_incoming_video_call">Videochamada recebida</string>
     <string name="rtp_state_connecting">Conectando</string>
     <string name="rtp_state_connected">Conectado</string>
@@ -968,8 +957,6 @@
     <string name="no_application_found">Nenhuma aplicação encontrada</string>
     <string name="unable_to_parse_invite">Impossível processar o convite</string>
     <string name="server_does_not_support_easy_onboarding_invites">O servidor não suporta geração de convites</string>
-    <string name="search_all_conversations">Todas as conversas</string>
-    <string name="search_this_conversation">Esta conversa</string>
     <string name="encrypted_with_omemo">Encriptado com OMEMO</string>
     <string name="encrypted_with_openpgp">Encriptado com OpenPGP</string>
     <string name="not_encrypted">Não encriptado</string>
@@ -1081,9 +1068,9 @@
     <string name="pref_chat_bubbles_summary">Cor de fundo, Tamanho do texto, Avatares</string>
     <string name="empty_conversations_list_hint">Quando começar uma nova conversa, ela estará aqui</string>
     <string name="pref_category_operating_system">Sistema Operativo</string>
-    <string name="pref_privacy_summary">Notificações de escrita, Última vez visto, Disponibilidade</string>
+    <string name="pref_privacy_summary">Notificações de escrita, Última vez visto, Relays P2P</string>
     <string name="pref_connection_summary">Nome do Host &amp; Porta, Tor</string>
-    <string name="pref_connection_summary_w_cd">Nome do Host &amp; Porta, Tor, P2P, Descoberta de Canais</string>
+    <string name="pref_connection_summary_w_cd">Nome do Host &amp; Porta, Tor, Descoberta de Canais</string>
     <string name="pref_category_engagement_notifications">Notificações de participação</string>
     <string name="pref_category_on_this_device">No dispositivo</string>
     <string name="pref_large_font">Fonte grande</string>
@@ -1175,4 +1162,52 @@
     <string name="pref_include_silent_modes_summary">Também definir \"Não Perturbar\" quando as notificações estão silenciadas ou o telemóvel está em modo vibrar.</string>
     <string name="presence_offline">Offline</string>
     <string name="rtp_state_no_internet">Sem conexão à internet</string>
+    <string name="send">Enviar</string>
+    <string name="pref_auto_send_recording">Auto enviar gravações</string>
+    <string name="pref_auto_send_recording_summary">Envia mensagens de voz automaticamente quando acaba de gravar.</string>
+    <string name="pref_presence_settings_summary">Ausente ao bloquear o dispositivo, Sincronizar DND do sistema</string>
+    <string name="video_480p">Média (480p)</string>
+    <string name="video_1080p">Muito alta (1080p)</string>
+    <string name="pref_save_to_gallery">Salvar para a Galeria</string>
+    <string name="pref_save_to_gallery_summary">Automaticamente armazenar media em pastas públicas para aparecerem na sua galeria e gestor de ficheiros.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Apagar ficheiro</item>
+        <item quantity="many">Apagar %d de ficheiros</item>
+        <item quantity="other">Apagar %d ficheiros</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Tem a certeza que quer apagar este ficheiro?</item>
+        <item quantity="many">Tem a certeza que quer apagar estes ficheiros?</item>
+        <item quantity="other">Tem a certeza que quer apagar estes ficheiros?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d ficheiros média guardado</item>
+        <item quantity="many">%d de ficheiros média guardados</item>
+        <item quantity="other">%d ficheiros média guardados</item>
+    </plurals>
+    <string name="could_not_save_files">Não foi possível guardar ficheiros</string>
+    <string name="filter_type_images">Imagens</string>
+    <string name="filter_type_videos">Vídeos</string>
+    <string name="filter_type_audio">Áudios</string>
+    <string name="filter_type_documents">Documentos</string>
+    <string name="filter_type_other">Outros</string>
+    <string name="filter_media">Filtrar média</string>
+    <string name="apply_filter">Aplicar</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="search_in_chats">Pesquisar nas conversas</string>
+    <string name="search_for_x_in_chats">Pesquisar por \"%s\" nas conversas</string>
+    <string name="attachment_choice_gallery">Galeria</string>
+    <string name="attachment_choice_file">Ficheiro</string>
+    <string name="attachment_choice_location">Localização</string>
+    <string name="attachment_choice_camera">Câmara</string>
+    <string name="attachment_choice_video">Vídeo</string>
+    <string name="attachment_choice_recording">Gravação</string>
+    <string name="start_group_chat">Começar conversa de grupo</string>
+    <string name="delete_file_dialog_shared">Este ficheiro foi partilhado com outros chats.</string>
+    <string name="delete_file_dialog_confirm">Tem a certeza que quer apagar este ficheiro?</string>
+    <string name="delete_file_dialog_copies">Isto não irá apagar as cópias deste ficheiro que estão armazenadas em outros dispositivos ou servidores.</string>
+    <string name="sheet_music">partituras musicais</string>
+    <string name="attachment_choice_contact">Contacto</string>
+    <string name="note_to_self">Nota pessoal</string>
+    <string name="invalid_contact">Não foi possível processar o contacto</string>
 </resources>

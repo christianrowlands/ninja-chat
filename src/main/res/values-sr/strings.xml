@@ -82,9 +82,6 @@
 \n
 \n<b>Упозорење:</b> Ово неће утицати на поруке смештене на осталим уређајима или серверима.</string>
     <string name="delete_file_dialog">Обриши фајл</string>
-    <string name="delete_file_dialog_msg">Да ли си сигуран/на да желиш да обришеш овај фајл?
-\n
-\n<b>Упозорење:</b> Ово неће утицати на копије овог фајла смештене на осталим уређајима или серверима. </string>
     <string name="choose_presence">Изабери уређај</string>
     <string name="send_unencrypted_message">Пошаљи нешифровану поруку</string>
     <string name="send_message">Пошаљи поруку</string>
@@ -135,8 +132,6 @@
     <string name="send_presence_updates">Шаљи пријаве присутности</string>
     <string name="receive_presence_updates">Примај пријаве присутности</string>
     <string name="ask_for_presence_updates">Питај за пријаве присутности</string>
-    <string name="attach_choose_picture">Изабери слику</string>
-    <string name="attach_take_picture">Фотографиши</string>
     <string name="preemptively_grant">Унапред прихвати захтев за пријавом</string>
     <string name="error_not_an_image_file">Изабрани фајл није слика</string>
     <string name="error_compressing_image">Није могуће конвертовати слику</string>
@@ -179,7 +174,6 @@
     <string name="openpgp_has_been_published">OpenPGP јавни кључ је објављен.</string>
     <string name="mgmt_account_enable">Укључи налог</string>
     <string name="mgmt_account_delete_confirm_text">Да ли си сигуран/на да желиш да обришеш свој налог? Брисањем налога бришеш и целу историју својих преписки</string>
-    <string name="attach_record_voice">Сними глас</string>
     <string name="account_settings_jabber_id">XMPP адреса</string>
     <string name="block_jabber_id">Блокирај XMPP адресу</string>
     <string name="account_settings_example_jabber_id">korisnickoime@primer.com</string>
@@ -326,7 +320,6 @@
     <string name="restoring_backup">Враћам резервну копију</string>
     <string name="notification_restored_backup_title">Твоја резервна копија је враћена</string>
     <string name="notification_restored_backup_subtitle">Не заборави да омогућиш налог.</string>
-    <string name="choose_file">Изабери фајл</string>
     <string name="receiving_x_file">Примам %1$s (%2$d%% завршено)</string>
     <string name="download_x_file">Преузми %s</string>
     <string name="delete_x_file">Обриши %s</string>
@@ -406,7 +399,6 @@
     <string name="contacts_have_stopped_typing">%s су престали да куцају</string>
     <string name="pref_chat_states">Индикатори куцања</string>
     <string name="pref_chat_states_summary">Дозволи својим контактима да знају када им куцаш поруке</string>
-    <string name="send_location">Пошаљи локацију</string>
     <string name="show_location">Прикажи локацију</string>
     <string name="no_application_found_to_display_location">Није пронађена апликација за приказ локације</string>
     <string name="location">Локација</string>
@@ -424,10 +416,7 @@
         <item quantity="few">%d сертификата обрисана</item>
         <item quantity="other">%d сертификата обрисано</item>
     </plurals>
-    <string name="pref_quick_action_summary">Замени дугме за слање брзом радњом</string>
     <string name="pref_quick_action">Брза радња</string>
-    <string name="none">Ниједна</string>
-    <string name="recently_used">Недавно коришћена</string>
     <string name="choose_quick_action">Изаберите брзу радњу</string>
     <string name="search_contacts">Претражи контакте</string>
     <string name="send_private_message">Пошаљи приватну поруку</string>
@@ -621,7 +610,6 @@
     <string name="today">Данас</string>
     <string name="yesterday">Јуче</string>
     <string name="server_info_partial">делимично</string>
-    <string name="attach_record_video">Сними видео</string>
     <string name="copy_to_clipboard">Копирај</string>
     <string name="message_copied_to_clipboard">Порука копирана у клипборд</string>
     <string name="message">Порука</string>
@@ -955,7 +943,7 @@
     <string name="pref_more_notification_settings_summary">Хитност, Звук, Вибрација</string>
     <string name="pref_video_compression">Видео Квалитет</string>
     <string name="pref_video_compression_summary">Нижи квалитет значи да су фајлови мањи</string>
-    <string name="video_360p">Средњи (360p)</string>
+    <string name="video_360p">Ниски (360p)</string>
     <string name="cancelled">прекинуто</string>
     <string name="already_drafting_message">Већ правиш нацрт поруке.</string>
     <string name="feature_not_implemented">Функција није имплементирана</string>
@@ -1019,7 +1007,6 @@
     <string name="pref_channel_discovery_summary">Већина корисника би требало да одабере ‘jabber.network’ за боље предлоге из целокупног јавног XMPP екосистема.</string>
     <string name="pref_channel_discovery">Начин проналаска канала</string>
     <string name="category_about">О апликацији</string>
-    <string name="please_enable_an_account">Укључи неки налог</string>
     <string name="make_call">Обави позив</string>
     <string name="rtp_state_incoming_call">Долазни позив</string>
     <string name="rtp_state_incoming_video_call">Долазни видео позив</string>
@@ -1046,8 +1033,6 @@
     <string name="missed_call">Пропуштен позив</string>
     <string name="audio_call">Аудио позив</string>
     <string name="video_call">Видео позив</string>
-    <string name="search_all_conversations">Све преписке</string>
-    <string name="search_this_conversation">Ова преписка</string>
     <string name="unified_push_distributor">UnifiedPush дистрибутер</string>
     <string name="pref_up_push_account_summary">Налог кроз који ће “push” поруке бити примљене.</string>
     <string name="no_account_deactivated">Ниједан (искључен)</string>
@@ -1076,9 +1061,9 @@
     <string name="pref_category_interaction">Интеракција</string>
     <string name="pref_category_on_this_device">На уређају</string>
     <string name="pref_up_long_summary">Када ради као UnifiedPush дистрибутер, трајна, поуздана и економична XMPP веза ће бити употребљена да “пробуди” другу UnifiedPush-компатибилну апликацију, попут Tusky, Ltt.rs, FluffyChat и других.</string>
-    <string name="pref_privacy_summary">Индикатори куцања, Последњи пут виђен/а, Присутност</string>
+    <string name="pref_privacy_summary">Индикатори куцања, Последњи пут виђен/а, P2P релеј</string>
     <string name="pref_connection_summary">Назив сервера и порт, Тор</string>
-    <string name="pref_connection_summary_w_cd">Назив сервера и порт, Тор, P2P, Проналажење канала</string>
+    <string name="pref_connection_summary_w_cd">Назив сервера и порт, Тор, Проналажење канала</string>
     <string name="pref_category_engagement_notifications">Обавештења о учествовању</string>
     <string name="pref_category_application">Апликација</string>
     <string name="pref_large_font_summary">Повећај величину слова у порукама</string>
@@ -1205,4 +1190,52 @@
     <string name="pref_include_silent_modes_summary">Такође шаљи \"Не узнемиравај\" и када су обавештења утишана или је телефон на вибрацији.</string>
     <string name="presence_offline">Ван мреже</string>
     <string name="rtp_state_no_internet">Нема интернета</string>
+    <string name="send">Пошаљи</string>
+    <string name="pref_auto_send_recording">Аутоматски шаљи снимке</string>
+    <string name="pref_auto_send_recording_summary">Шаљи гласовне поруке аутоматски кад завршиш снимање.</string>
+    <string name="pref_presence_settings_summary">Одсутност при закључаном екрану, синхронизација са DND</string>
+    <string name="video_480p">Средњи (480p)</string>
+    <string name="video_1080p">Веома висок (1080p)</string>
+    <string name="pref_save_to_gallery">Чувај у галерији</string>
+    <string name="pref_save_to_gallery_summary">Аутоматски чувај садржаје у јавним фолдерима како би се појавили у галерији и фајл менаџеру.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Обриши %d фајл</item>
+        <item quantity="few">Обриши %d фајла</item>
+        <item quantity="other">Обриши %d фајлова</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Да ли си сигуран/на да желиш да обришеш фајл?</item>
+        <item quantity="few">Да ли си сигуран/на да желиш да обришеш фајла?</item>
+        <item quantity="other">Да ли си сигуран/на да желиш да обришеш фајлова?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d фајл сачуван</item>
+        <item quantity="few">%d фајла сачувана</item>
+        <item quantity="other">%d фајлова сачувани</item>
+    </plurals>
+    <string name="could_not_save_files">Није могуће сачувати фајлове</string>
+    <string name="filter_type_images">Слике</string>
+    <string name="filter_type_videos">Видео</string>
+    <string name="filter_type_audio">Аудио</string>
+    <string name="filter_type_documents">Документа</string>
+    <string name="filter_type_other">Остало</string>
+    <string name="filter_media">Филтрирај садржај</string>
+    <string name="apply_filter">Примени</string>
+    <string name="select_all">Означи све</string>
+    <string name="search_in_chats">Тражи у препискама</string>
+    <string name="search_for_x_in_chats">Тражи \"%s\" у препискама</string>
+    <string name="attachment_choice_gallery">Галерија</string>
+    <string name="attachment_choice_file">Фајл</string>
+    <string name="attachment_choice_location">Локација</string>
+    <string name="attachment_choice_camera">Камера</string>
+    <string name="attachment_choice_video">Видео</string>
+    <string name="attachment_choice_recording">Снимак</string>
+    <string name="start_group_chat">Покрени групну преписку</string>
+    <string name="delete_file_dialog_shared">Овај фајл је подељен са другим препискама.</string>
+    <string name="delete_file_dialog_confirm">Да ли си сигуран/на да желиш да обришеш овај фајл?</string>
+    <string name="delete_file_dialog_copies">Ово неће обрисати копије овог фајла које су сачуване на другим уређајима или серверима.</string>
+    <string name="sheet_music">ноте</string>
+    <string name="attachment_choice_contact">Контакт</string>
+    <string name="note_to_self">Белешка за себе</string>
+    <string name="invalid_contact">Није могуће ишчитати контакт</string>
 </resources>

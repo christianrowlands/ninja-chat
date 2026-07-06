@@ -82,9 +82,6 @@
 \n
 \n<b>Varování</b>Toto neovlivní zprávy uložené na jiných zařízeních či serverech.</string>
     <string name="delete_file_dialog">Smazat soubor</string>
-    <string name="delete_file_dialog_msg">Opravdu chcete smazat tento soubor\?
-\n
-\n<b>Varování</b>Toto neovlivní kopie uložené na jiných zařízeních či serverech. </string>
     <string name="choose_presence">Vybrat přístroj</string>
     <string name="send_unencrypted_message">Odeslat nešifrovanou zprávu</string>
     <string name="send_message">Odeslat zprávu</string>
@@ -133,8 +130,6 @@
     <string name="send_presence_updates">Zasílat změny stavu</string>
     <string name="receive_presence_updates">Přijímat změny stavu</string>
     <string name="ask_for_presence_updates">Zažádat o změny stavu</string>
-    <string name="attach_choose_picture">Vybrat obrázek</string>
-    <string name="attach_take_picture">Vyfotit obrázek</string>
     <string name="preemptively_grant">Aktivně povolovat vyžádání změn stavu</string>
     <string name="error_not_an_image_file">Vybraný soubor není obrázek</string>
     <string name="error_compressing_image">Nebylo možné převést obrázek</string>
@@ -174,7 +169,6 @@
     <string name="openpgp_has_been_published">OpenPGP veřejný klíč zveřejněn.</string>
     <string name="mgmt_account_enable">Povolit účet</string>
     <string name="mgmt_account_delete_confirm_text">Opravdu chcete svůj účet smazat? Smazáním Vašeho účtu dojde k vymazání celé Vaší chatové historie</string>
-    <string name="attach_record_voice">Nahrát hlas</string>
     <string name="account_settings_jabber_id">Adresa XMPP</string>
     <string name="block_jabber_id">Blokovat XMPP adresu</string>
     <string name="account_settings_example_jabber_id">jmeno@server.cz</string>
@@ -314,7 +308,6 @@
     <string name="restoring_backup">Obnovuji zálohu</string>
     <string name="notification_restored_backup_title">Záloha obnovena</string>
     <string name="notification_restored_backup_subtitle">Nezapomeňte si účet aktivovat.</string>
-    <string name="choose_file">Vybrat soubor</string>
     <string name="receiving_x_file">Přijímám %1$s (%2$d%% dokončeno)</string>
     <string name="download_x_file">Stáhnout %s</string>
     <string name="delete_x_file">Smazat %s</string>
@@ -396,7 +389,6 @@
     <string name="contacts_have_stopped_typing">%s přestali psát</string>
     <string name="pref_chat_states">Upozornění při psaní</string>
     <string name="pref_chat_states_summary">Nechat kontaky vědět když jim píšete zprávu</string>
-    <string name="send_location">Poslat pozici</string>
     <string name="show_location">Zobrazit pozici</string>
     <string name="no_application_found_to_display_location">Nebyla nalezena aplikace pro zobrazení pozice</string>
     <string name="location">Pozice</string>
@@ -415,10 +407,7 @@
         <item quantity="many">%d certifikátů smazáno</item>
         <item quantity="other">%d certifikátů smazáno</item>
     </plurals>
-    <string name="pref_quick_action_summary">Nahradit tlačítko odeslání rychlou akcí</string>
     <string name="pref_quick_action">Rychlá akce</string>
-    <string name="none">Žádná</string>
-    <string name="recently_used">Naposledy použitá</string>
     <string name="choose_quick_action">Vybrat rychlou akci</string>
     <string name="search_contacts">Prohledat kontakty</string>
     <string name="send_private_message">Poslat soukromou zprávu</string>
@@ -644,7 +633,6 @@
     <string name="pref_validate_hostname_summary">Certifikáty serverů obsahující ověřený název hostitele jsou považovány za ověřené</string>
     <string name="certificate_does_not_contain_jid">Certifikát neobsahuje XMPP adresu</string>
     <string name="server_info_partial">částečný</string>
-    <string name="attach_record_video">Nahrát video</string>
     <string name="copy_to_clipboard">Kopírovat do schránky</string>
     <string name="message_copied_to_clipboard">Zpráva zkopírována do schránky</string>
     <string name="message">Zpráva</string>
@@ -850,7 +838,6 @@
     <string name="pref_channel_discovery">Metoda objevování kanálů</string>
     <string name="backup">Záloha</string>
     <string name="category_about">O</string>
-    <string name="please_enable_an_account">Prosíme, povolte účet</string>
     <string name="make_call">Volat</string>
     <string name="rtp_state_incoming_call">Příchozí hovor</string>
     <string name="rtp_state_incoming_video_call">Příchozí videohovor</string>
@@ -885,8 +872,6 @@
     <string name="remove_from_favorites">Odepnout shora</string>
     <string name="gpx_track">GPX trasa</string>
     <string name="could_not_correct_message">Nebylo možné opravit zprávu</string>
-    <string name="search_all_conversations">Všechny chaty</string>
-    <string name="search_this_conversation">Tento chat</string>
     <string name="your_avatar">Váš avatar</string>
     <string name="avatar_for_x">Avatar uživatele %s</string>
     <string name="encrypted_with_omemo">Šifrováno pomocí OMEMO</string>
@@ -1136,4 +1121,5 @@
     <string name="copied_email_address">E-mailová adresa zkopírována do schránky</string>
     <string name="welcome_header">Začněte používat Conversations</string>
     <string name="server_invite">Pozvat na server</string>
+    <string name="contact_has_paused_their_notifications">%s má pozastavené notifikace</string>
 </resources>

@@ -1,0 +1,4 @@
+* Enviar recibos de entrega por padrão e substituir a configuração por "Ler recibos"
+* Introduzir configuração para sempre utilizar relays
+* Corrigir problema no processo de cache de avatar
+* Corrigir problema ocasional onde o DNS não é resolvido quando DNS Privado está ativado

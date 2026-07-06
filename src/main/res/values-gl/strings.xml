@@ -79,9 +79,6 @@
     <string name="clear_conversation_history">Limpar historial da charla</string>
     <string name="clear_histor_msg">Queres eliminar todas as mensaxes desta conversa?\n\n<b>Aviso:</b> Isto non lle afecta ás mensaxes gardadas noutros dispositivos ou servidores.</string>
     <string name="delete_file_dialog">Eliminar ficheiro</string>
-    <string name="delete_file_dialog_msg">Tes a certeza de querer eliminar este ficheiro\?
-\n
-\n<b>Aviso:</b> Esto non eliminará as copias de este ficheiro que están gardadas noutros dispositivos ou servidores. </string>
     <string name="choose_presence">Escoller dispositivo</string>
     <string name="send_unencrypted_message">Enviar mensaxe sen cifrar</string>
     <string name="send_message">Enviar mensaxe</string>
@@ -132,8 +129,6 @@
     <string name="send_presence_updates">Enviar actualizacións de presenza</string>
     <string name="receive_presence_updates">Recibir actualizacións de presenza</string>
     <string name="ask_for_presence_updates">Solicitar actualizacións de presenza</string>
-    <string name="attach_choose_picture">Escoller imaxe</string>
-    <string name="attach_take_picture">Facer foto</string>
     <string name="preemptively_grant">Por defecto conceder solicitudes de subscrición</string>
     <string name="error_not_an_image_file">O arquivo seleccionado non é unha imaxe</string>
     <string name="error_compressing_image">Non se puido converter o ficheiro de imaxe</string>
@@ -147,7 +142,7 @@
     <string name="account_status_disabled">Desactivada temporalmente</string>
     <string name="account_status_online">En liña</string>
     <string name="account_status_connecting">Conectando\u2026</string>
-    <string name="account_status_offline">Sen conexión</string>
+    <string name="account_status_offline">Non conectada</string>
     <string name="account_status_unauthorized">Non autorizado</string>
     <string name="account_status_not_found">Servidor non atopado</string>
     <string name="account_status_no_internet">Sen internet</string>
@@ -176,7 +171,6 @@
     <string name="openpgp_has_been_published">Publicada a chave pública OpenPGP.</string>
     <string name="mgmt_account_enable">Activar conta</string>
     <string name="mgmt_account_delete_confirm_text">Tes a certeza de querer eliminar a túa conta? Ao eliminar a conta eliminas todo o historial de conversas</string>
-    <string name="attach_record_voice">Gravar audio</string>
     <string name="account_settings_jabber_id">Enderezo XMPP</string>
     <string name="block_jabber_id">Bloquear enderezo XMPP</string>
     <string name="account_settings_example_jabber_id">usuaria@exemplo.com</string>
@@ -320,7 +314,6 @@
     <string name="restoring_backup">Restaurando a copia</string>
     <string name="notification_restored_backup_title">O copia foi restablecida</string>
     <string name="notification_restored_backup_subtitle">Non esqueza activar a conta.</string>
-    <string name="choose_file">Escoller ficheiro</string>
     <string name="receiving_x_file">Recibindo %1$s (%2$d %% completado)</string>
     <string name="download_x_file">Descargar %s</string>
     <string name="delete_x_file">Eliminar %s</string>
@@ -397,14 +390,13 @@
     <string name="avatar_has_been_published">Publicouse o avatar!</string>
     <string name="sending_x_file">Enviando %s</string>
     <string name="offering_x_file">Ofrecendo %s</string>
-    <string name="hide_offline">Ocultar fora de liña</string>
+    <string name="hide_offline">Ocultar non conectadas</string>
     <string name="contact_is_typing">%s está escribindo…</string>
     <string name="contact_has_stopped_typing">%s deixou de escribir</string>
     <string name="contacts_are_typing">%s están escribindo…</string>
     <string name="contacts_have_stopped_typing">%s deixaron de escribir</string>
     <string name="pref_chat_states">Notificacións de escritura</string>
     <string name="pref_chat_states_summary">Permitelle aos teus contactos que saiban cando lles estás a escribir</string>
-    <string name="send_location">Enviar localización</string>
     <string name="show_location">Mostrar localización</string>
     <string name="no_application_found_to_display_location">Non se atopou unha app para mostrar a localización</string>
     <string name="location">Localización</string>
@@ -421,10 +413,7 @@
         <item quantity="one">%d certificado eliminado</item>
         <item quantity="other">%d certificados eleminados</item>
     </plurals>
-    <string name="pref_quick_action_summary">Substituír o botón \"Enviar\" cunha acción rápida</string>
     <string name="pref_quick_action">Acción rápida</string>
-    <string name="none">Ningunha</string>
-    <string name="recently_used">Utilizadas recentemente</string>
     <string name="choose_quick_action">Elixe a acción rápida</string>
     <string name="search_contacts">Buscar contactos</string>
     <string name="send_private_message">Enviar mensaxe privada</string>
@@ -643,7 +632,6 @@
     <string name="pref_validate_hostname_summary">Os certificados de servidor que conteñen o nome de servidor validado considéranse verificados</string>
     <string name="certificate_does_not_contain_jid">O certificado non contén un enderezo XMPP</string>
     <string name="server_info_partial">parcial</string>
-    <string name="attach_record_video">Gravar vídeo</string>
     <string name="copy_to_clipboard">Copiar</string>
     <string name="message_copied_to_clipboard">Mensaxe copiada ao portapapeis</string>
     <string name="message">Mensaxe</string>
@@ -735,7 +723,7 @@
     <string name="security_violation_not_attaching_file">Ficheiro omitido debido a transgresión da seguridade.</string>
     <string name="pref_video_compression">Calidade de vídeo</string>
     <string name="pref_video_compression_summary">Menor calidade significa ficheiros máis pequenos</string>
-    <string name="video_360p">Media (360p)</string>
+    <string name="video_360p">Baixa (360p)</string>
     <string name="video_720p">Alta (720p)</string>
     <string name="cancelled">cancelada</string>
     <string name="already_drafting_message">Xa está a escribir un borrador.</string>
@@ -857,7 +845,6 @@
     <string name="pref_channel_discovery">Método de descubrimento de canles</string>
     <string name="backup">Copia de apoio</string>
     <string name="category_about">Sobre</string>
-    <string name="please_enable_an_account">Activa unha conta por favor</string>
     <string name="make_call">Facer unha chamada</string>
     <string name="rtp_state_incoming_call">Chamada entrante</string>
     <string name="rtp_state_incoming_video_call">Videochamada entrante</string>
@@ -911,8 +898,6 @@
     <string name="remove_from_favorites">Non fixar enriba</string>
     <string name="gpx_track">Ruta GPX</string>
     <string name="could_not_correct_message">No se editou a mensaxe</string>
-    <string name="search_all_conversations">Todos as conversas</string>
-    <string name="search_this_conversation">Esta conversa</string>
     <string name="your_avatar">O teu avatar</string>
     <string name="avatar_for_x">Avatar para %s</string>
     <string name="encrypted_with_omemo">Cifrada con OMEMO</string>
@@ -1010,7 +995,7 @@
     <string name="pref_title_trust_system_ca_store">Autoridades de certificación</string>
     <string name="pref_category_operating_system">Sistema operativo</string>
     <string name="pref_connection_summary">Servidor e Porto, Tor</string>
-    <string name="pref_connection_summary_w_cd">Servidor e Porto, Tor, P2P, Descubrimento de Canles</string>
+    <string name="pref_connection_summary_w_cd">Servidor e Porto, Tor, Descubrimento de Canles</string>
     <string name="pref_keyboard_options">Teclado</string>
     <string name="pref_category_application">Aplicación</string>
     <string name="pref_category_engagement_notifications">Notificacións de uso</string>
@@ -1028,7 +1013,7 @@
     <string name="pref_title_trust_system_ca_store_summary">Confiar nos certificados das CA do sistema</string>
     <string name="pref_title_interface">Interface</string>
     <string name="pref_notifications_summary">Período de graza, Ton, Vibración, Estraños</string>
-    <string name="pref_privacy_summary">Notificacións de escritura, Último uso, Dispoñibilidade</string>
+    <string name="pref_privacy_summary">Notificacións de escritura, Último uso, Relés P2P</string>
     <string name="detect_mim_summary">A vinculación de canles pode detectar algúns ataques tipo máquina-interposta</string>
     <string name="detect_mim">Requerir Vinculación de Canles</string>
     <string name="send_encrypted_message">Enviar mensaxe cifrada</string>
@@ -1167,6 +1152,44 @@
     <string name="pref_sync_system_dnd_summary">Establece automaticamente o estado a «Non Molestar» cando o modo Non Molestar de Android estea activo.</string>
     <string name="pref_include_silent_modes">Incluír modos silenciosos</string>
     <string name="pref_include_silent_modes_summary">Tamén indicar «Non Molestar» cando as notificacións estean silenciadas ou o teléfono en modo vibración.</string>
-    <string name="presence_offline">Sen conexión</string>
+    <string name="presence_offline">Non conectada</string>
     <string name="rtp_state_no_internet">Sen conexión a internet</string>
+    <string name="pref_presence_settings_summary">Non dispoñible se bloqueado, Sincr. con Non molestar</string>
+    <string name="send">Enviar</string>
+    <string name="pref_auto_send_recording">Envío automát. de gravacións</string>
+    <string name="pref_auto_send_recording_summary">Enviar as mensaxes de voz automaticamente cando finalizas a gravación.</string>
+    <string name="video_480p">Media (480p)</string>
+    <string name="video_1080p">Moi alta (1080p)</string>
+    <string name="pref_save_to_gallery">Gardar na Galería</string>
+    <string name="pref_save_to_gallery_summary">Gardar de xeito automático o multimedia en cartafoles públicos para que aparezan na túa galería e xestor de ficheiros.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Eliminar ficheiro</item>
+        <item quantity="other">Eliminar %d ficheiros</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Tes certeza de querer eliminar este ficheiro?</item>
+        <item quantity="other">Tes certeza de querer eliminar estes ficheiros?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d ficheiro multimedia gardado</item>
+        <item quantity="other">%d ficheiros multimedia gardados</item>
+    </plurals>
+    <string name="could_not_save_files">Non se puideron gardar os ficheiros</string>
+    <string name="filter_type_images">Imaxes</string>
+    <string name="filter_type_videos">Vídeos</string>
+    <string name="filter_type_audio">Son</string>
+    <string name="filter_type_documents">Documentos</string>
+    <string name="filter_type_other">Outros</string>
+    <string name="filter_media">Filtrar multimedia</string>
+    <string name="apply_filter">Aplicar</string>
+    <string name="select_all">Seleccionar todo</string>
+    <string name="search_in_chats">Buscar nas conversas</string>
+    <string name="search_for_x_in_chats">Buscar «%s» nas conversas</string>
+    <string name="attachment_choice_gallery">Galería</string>
+    <string name="attachment_choice_file">Ficheiro</string>
+    <string name="attachment_choice_location">Localización</string>
+    <string name="attachment_choice_camera">Cámara</string>
+    <string name="attachment_choice_video">Vídeo</string>
+    <string name="attachment_choice_recording">Gravando</string>
+    <string name="start_group_chat">Crear conversa en grupo</string>
 </resources>

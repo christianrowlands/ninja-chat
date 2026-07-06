@@ -45,6 +45,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import de.gultsch.common.Linkify;
 import de.gultsch.common.MiniUri;
@@ -86,6 +87,7 @@ import eu.siacs.conversations.xmpp.XmppConnection.Features;
 import eu.siacs.conversations.xmpp.manager.BlockingManager;
 import eu.siacs.conversations.xmpp.manager.CarbonsManager;
 import eu.siacs.conversations.xmpp.manager.ClientStateIndicationManager;
+import eu.siacs.conversations.xmpp.manager.EasyOnboardingManager;
 import eu.siacs.conversations.xmpp.manager.ExternalServiceDiscoveryManager;
 import eu.siacs.conversations.xmpp.manager.HttpUploadManager;
 import eu.siacs.conversations.xmpp.manager.MessageArchiveManager;
@@ -717,15 +719,6 @@ public class EditAccountActivity extends OmemoActivity
     }
 
     @Override
-    protected MiniUri getShareableUri(final boolean http) {
-        if (mAccount != null) {
-            return http ? mAccount.getShareableLink() : mAccount.getShareableUri();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
@@ -1034,11 +1027,16 @@ public class EditAccountActivity extends OmemoActivity
                 shareBarcode();
                 break;
             case R.id.action_share_http:
-                shareLink(true);
+                shareInviteLink(true);
                 break;
             case R.id.action_share_uri:
-                shareLink(false);
+                shareInviteLink(false);
                 break;
+            case R.id.action_show_qr_code:
+                if (mAccount != null) {
+                    showQrCode(mAccount);
+                }
+                return true;
             case R.id.action_change_password_on_server:
                 gotoChangePassword();
                 break;
@@ -1056,6 +1054,60 @@ public class EditAccountActivity extends OmemoActivity
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected MiniUri getShareableUri(boolean http) {
+        throw new IllegalStateException("Implement uri retrieval directly");
+    }
+
+    private void shareInviteLink(final boolean asHttpInvite) {
+        final var account = mAccount;
+        if (account == null) {
+            return;
+        }
+        final var connection = account.getXmppConnection();
+        final ListenableFuture<? extends MiniUri> future;
+        final var manager = connection.getManager(EasyOnboardingManager.class);
+        if (asHttpInvite) {
+            future = manager.invitationUrl();
+        } else {
+            future = manager.inviteOrFallback();
+        }
+        final Toast toast;
+        if (future.isDone()) {
+            toast = null;
+        } else {
+            toast = Toast.makeText(this, R.string.please_wait, Toast.LENGTH_LONG);
+            toast.show();
+        }
+        Futures.addCallback(
+                future,
+                new FutureCallback<MiniUri>() {
+                    @Override
+                    public void onSuccess(final MiniUri result) {
+                        Toasts.hide(toast);
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_TEXT, result.asUri().toString());
+                        try {
+                            startActivity(
+                                    Intent.createChooser(intent, getText(R.string.share_uri_with)));
+                        } catch (final ActivityNotFoundException e) {
+                            Toast.makeText(
+                                            EditAccountActivity.this,
+                                            R.string.no_application_to_share_uri,
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.e(Config.LOGTAG, "could not fetch invite uri", t);
+                    }
+                },
+                ContextCompat.getMainExecutor(this));
     }
 
     private void deleteAccount() {
@@ -1401,7 +1453,7 @@ public class EditAccountActivity extends OmemoActivity
                 this.binding.axolotlFingerprint.setText(
                         CryptoHelper.prettifyFingerprint(ownAxolotlFingerprint.substring(2)));
                 this.binding.showQrCodeButton.setVisibility(View.VISIBLE);
-                this.binding.showQrCodeButton.setOnClickListener(v -> showQrCode());
+                this.binding.showQrCodeButton.setOnClickListener(v -> showQrCode(this.mAccount));
             } else {
                 this.binding.axolotlFingerprintBox.setVisibility(View.GONE);
             }

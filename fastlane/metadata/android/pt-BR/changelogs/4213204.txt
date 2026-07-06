@@ -1,0 +1,4 @@
+* Permitir que a recordação de áudio seja pausada por um toque no timer
+* Corrigir reações nas mensagens privadas de MUC 
+* Parar de aceitar 'mensagens substitutas' para reações, recibos e marcas de exibição
+* Adicionar mais alguns ícones de prévia de mídia

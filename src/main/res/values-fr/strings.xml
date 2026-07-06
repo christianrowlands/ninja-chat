@@ -82,9 +82,6 @@
 \n
 \n <b>Avertissement :</b> Cela ne supprimera pas les copies des messages qui sont stockés sur d\'autres appareils ou serveurs.</string>
     <string name="delete_file_dialog">Supprimer le fichier</string>
-    <string name="delete_file_dialog_msg">Êtes-vous sûr de vouloir supprimer ce fichier \?
-\n
-\n<b>Avertissement :</b> Cela ne supprimera pas les copies de ce fichier qui sont stockées sur d\'autres appareils ou serveurs. </string>
     <string name="choose_presence">Choisir l\'appareil</string>
     <string name="send_unencrypted_message">Envoyer un message non-chiffré</string>
     <string name="send_message">Envoyer le message</string>
@@ -134,8 +131,6 @@
     <string name="send_presence_updates">Envoyer mes màj de statut</string>
     <string name="receive_presence_updates">Recevoir ses màj de statut</string>
     <string name="ask_for_presence_updates">Demander les màj de statut</string>
-    <string name="attach_choose_picture">Choisir une image</string>
-    <string name="attach_take_picture">Prendre une photo</string>
     <string name="preemptively_grant">Accepter par avance les demandes de publication</string>
     <string name="error_not_an_image_file">Le fichier choisi n\'est pas une image</string>
     <string name="error_compressing_image">Impossible de convertir l\'image</string>
@@ -177,7 +172,6 @@
     <string name="openpgp_has_been_published">Clé publique OpenPGP publiée.</string>
     <string name="mgmt_account_enable">Activer le compte</string>
     <string name="mgmt_account_delete_confirm_text">Êtes-vous sûr de vouloir supprimer votre compte ? Supprimer votre compte effacera l\'historique de vos conversations</string>
-    <string name="attach_record_voice">Enregistrer un son</string>
     <string name="account_settings_jabber_id">Adresse XMPP</string>
     <string name="block_jabber_id">Bloquer l\'adresse XMPP</string>
     <string name="account_settings_example_jabber_id">nom@example.com</string>
@@ -319,7 +313,6 @@
     <string name="restoring_backup">Restauration de la sauvegarde</string>
     <string name="notification_restored_backup_title">Votre sauvegarde a été restaurée</string>
     <string name="notification_restored_backup_subtitle">N\'oubliez pas d\'activer le compte.</string>
-    <string name="choose_file">Choisir un fichier</string>
     <string name="receiving_x_file">Réception %1$s (%2$d%% complété)</string>
     <string name="download_x_file">Télécharger %s</string>
     <string name="delete_x_file">Effacer %s</string>
@@ -401,7 +394,6 @@
     <string name="contacts_have_stopped_typing">%s ont cessé d\'écrire</string>
     <string name="pref_chat_states">Notifications d\'écriture</string>
     <string name="pref_chat_states_summary">Informer vos contacts quand vous leur écrivez des messages</string>
-    <string name="send_location">Envoyer la position</string>
     <string name="show_location">Afficher la position</string>
     <string name="no_application_found_to_display_location">Aucune application trouvée pour afficher le lieu</string>
     <string name="location">Position</string>
@@ -419,10 +411,7 @@
         <item quantity="many">%d certificats supprimés</item>
         <item quantity="other">%d certificats supprimés</item>
     </plurals>
-    <string name="pref_quick_action_summary">Remplacer le bouton « Envoyer » par une action rapide</string>
     <string name="pref_quick_action">Action Rapide</string>
-    <string name="none">Aucune</string>
-    <string name="recently_used">Dernière utilisée</string>
     <string name="choose_quick_action">Sélectionner l\'action rapide</string>
     <string name="search_contacts"> Rechercher dans les contacts</string>
     <string name="send_private_message">Envoyer un message privé</string>
@@ -645,7 +634,6 @@
     <string name="pref_validate_hostname_summary">Les certificats serveur qui comportent le nom de domaine validé sont considérés comme validés</string>
     <string name="certificate_does_not_contain_jid">Le certificat ne contient pas d\'adresse XMPP</string>
     <string name="server_info_partial">partiel</string>
-    <string name="attach_record_video">Enregistrer une vidéo</string>
     <string name="copy_to_clipboard">Copier dans le presse-papier</string>
     <string name="message_copied_to_clipboard">Message copié dans le presse-papier</string>
     <string name="message">Message</string>
@@ -736,7 +724,7 @@
     <string name="security_violation_not_attaching_file">Fichier omis en raison d\'une violation de la sécurité.</string>
     <string name="pref_video_compression">Qualité des vidéos</string>
     <string name="pref_video_compression_summary">Une qualité inférieure signifie des fichiers plus petits</string>
-    <string name="video_360p">Moyenne (360p)</string>
+    <string name="video_360p">Mauvaise (360p)</string>
     <string name="video_720p">Haute (720p)</string>
     <string name="cancelled">Annulé</string>
     <string name="already_drafting_message">Vous avez déjà un brouillon de message.</string>
@@ -858,7 +846,6 @@
     <string name="pref_channel_discovery">Méthode de découverte des salons</string>
     <string name="backup">Sauvegarde</string>
     <string name="category_about">À propos</string>
-    <string name="please_enable_an_account">Veuillez activer votre compte</string>
     <string name="make_call">Appeler</string>
     <string name="rtp_state_incoming_call">Appel entrant</string>
     <string name="rtp_state_incoming_video_call">Appel vidéo entrant</string>
@@ -898,8 +885,6 @@
     <string name="remove_from_favorites">Détacher du haut de la liste</string>
     <string name="gpx_track">Trace GPX</string>
     <string name="could_not_correct_message">Impossible d\'éditer le message</string>
-    <string name="search_all_conversations">Toutes les conversations</string>
-    <string name="search_this_conversation">Cette conversation</string>
     <string name="your_avatar">Votre image de profil</string>
     <string name="avatar_for_x">Image de profil pour %s</string>
     <string name="encrypted_with_omemo">Chiffré avec OMEMO</string>
@@ -1178,4 +1163,6 @@
     <string name="dismiss_as_admin">Retirer comme admin</string>
     <string name="make_owner">Ajouter comme propriétaire</string>
     <string name="dismiss_as_owner">Retirer comme propriétaire</string>
+    <string name="video_480p">Moyenne (480p)</string>
+    <string name="video_1080p">Très haute (1080p)</string>
 </resources>

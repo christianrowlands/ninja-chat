@@ -29,30 +29,26 @@
 
 package eu.siacs.conversations.ui.util;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.Context;
 import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.color.MaterialColors;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.ui.Activities;
-import eu.siacs.conversations.ui.ConversationFragment;
-import eu.siacs.conversations.utils.UIHelper;
+import im.conversations.android.model.AttachmentChoice;
 import im.conversations.android.xmpp.model.stanza.Presence;
 
 public class SendButtonTool {
 
     public static SendButtonAction getAction(
-            final Activity activity, final Conversation c, final String text) {
-        if (activity == null) {
+            final Context context, final Conversation c, final String text) {
+        if (context == null) {
             return SendButtonAction.TEXT;
         }
-        final SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(activity);
         final boolean empty = text.isEmpty();
         final boolean conference = c.getMode() == Conversation.MODE_MULTI;
         if (c.getCorrectingMessage() != null
@@ -69,24 +65,7 @@ public class SendButtonTool {
                 if (conference && c.getNextCounterpart() != null) {
                     return SendButtonAction.CANCEL;
                 } else {
-                    String setting =
-                            preferences.getString(
-                                    "quick_action",
-                                    activity.getResources().getString(R.string.quick_action));
-                    if (!"none".equals(setting)
-                            && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
-                        return SendButtonAction.SEND_LOCATION;
-                    } else {
-                        if ("recent".equals(setting)) {
-                            setting =
-                                    preferences.getString(
-                                            ConversationFragment.RECENTLY_USED_QUICK_ACTION,
-                                            SendButtonAction.TEXT.toString());
-                            return SendButtonAction.valueOfOrDefault(setting);
-                        } else {
-                            return SendButtonAction.valueOfOrDefault(setting);
-                        }
-                    }
+                    return sendButtonAction(new AppSettings(context).getQuickAction());
                 }
             } else {
                 return SendButtonAction.TEXT;
@@ -103,6 +82,16 @@ public class SendButtonTool {
             case RECORD_VIDEO -> R.drawable.ic_videocam_24dp;
             case RECORD_VOICE -> R.drawable.ic_mic_24dp;
             case CANCEL -> R.drawable.ic_cancel_24dp;
+        };
+    }
+
+    private static SendButtonAction sendButtonAction(final AttachmentChoice.Type attachment) {
+        return switch (attachment) {
+            case CAMERA -> SendButtonAction.TAKE_PHOTO;
+            case PICTURE -> SendButtonAction.CHOOSE_PICTURE;
+            case LOCATION -> SendButtonAction.SEND_LOCATION;
+            case RECORDING -> SendButtonAction.RECORD_VOICE;
+            default -> SendButtonAction.TEXT;
         };
     }
 

@@ -1,0 +1,2 @@
+* Añadir una barra de búsqueda para facilitar la búsqueda en la pantalla de inicio
+* Acercar el botón de adjuntar archivos al campo de entrada

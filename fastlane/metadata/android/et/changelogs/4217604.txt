@@ -1,0 +1,4 @@
+* Parem meediumisirvija, kust saab faile jagada ja neid kustutada
+* Meedium salvestatakse vaikimisi sisemällu (seadistusega, mis salvestab automaatselt galeriisse)
+* Helisalvestised saadetakse kohe, mitte manustena (lisaks seadistus vana toimimise taastamiseks)
+* Kui server oskab kasutada kiirkutsete funktsionaalsust, siis „Näita QR-koodi“ sisaldab eelautentimise parameetrit

@@ -1073,11 +1073,11 @@ public class Conversation extends AbstractEntity
         account.getPgpDecryptionService().decrypt(messages);
     }
 
-    public void expireOldMessages(long timestamp) {
+    public void expireOldMessages(final Instant instant) {
         synchronized (this.messages) {
             for (ListIterator<Message> iterator = this.messages.listIterator();
                     iterator.hasNext(); ) {
-                if (iterator.next().getTimeSent() < timestamp) {
+                if (iterator.next().getTimeSent() < instant.toEpochMilli()) {
                     iterator.remove();
                 }
             }

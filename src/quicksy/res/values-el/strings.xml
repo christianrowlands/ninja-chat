@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Αδυναμία επαλήθευσης της ταυτότητας του διακομιστή.</string>
     <string name="unknown_security_error">Άγνωστο σφάλμα ασφάλειας.</string>
     <string name="timeout_while_connecting_to_server">Λήξη χρονικού ορίου κατά τη σύνδεση στον διακομιστή.</string>
+    <string name="use_physical_device">Παρακαλώ χρησιμοποιήστε μια φυσική συσκευή για να δημιουργήσετε τον λογαριασμό σας.</string>
 </resources>

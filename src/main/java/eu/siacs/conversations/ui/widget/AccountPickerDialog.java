@@ -82,7 +82,9 @@ public class AccountPickerDialog {
             super(
                     xmppActivity,
                     xmppConnection ->
-                            xmppConnection.getManager(EasyOnboardingManager.class).hasFeature());
+                            xmppConnection
+                                    .getManager(EasyOnboardingManager.class)
+                                    .hasCreateAccountFeature());
         }
     }
 

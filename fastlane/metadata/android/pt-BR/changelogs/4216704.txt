@@ -1,0 +1,4 @@
+* Oferecer para deletar as mensagens de uma pessoa sendo banida de um canal público
+* Refatorar scaneamento de QR code e manipulação de URI
+* Versão da Play Store: Parar de usar Google libray e interagir diretamente com o Serviço Google Play através de IPC
+* Corrigir problemas de rotação no modo tablet

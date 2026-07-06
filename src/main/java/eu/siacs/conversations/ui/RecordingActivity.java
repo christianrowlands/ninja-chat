@@ -6,7 +6,6 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.util.Log;
@@ -15,20 +14,21 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import androidx.databinding.DataBindingUtil;
 import com.google.common.base.Stopwatch;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityRecordingBinding;
+import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.utils.TimeFrameUtils;
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class RecordingActivity extends BaseActivity implements View.OnClickListener {
+
+    public static String EXTRA_AUTO_SEND_RECORDING = "auto_send_recording";
 
     private ActivityRecordingBinding binding;
 
@@ -47,12 +47,14 @@ public class RecordingActivity extends BaseActivity implements View.OnClickListe
                 }
             };
 
+    private boolean autoSendRecording = false;
     private File mOutputFile;
-
     private FileObserver mFileObserver;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
+        final var appSettings = new AppSettings(this);
+        this.autoSendRecording = appSettings.isAutoSendRecording();
         super.onCreate(savedInstanceState);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_recording);
         this.binding.timer.setOnClickListener(
@@ -60,6 +62,13 @@ public class RecordingActivity extends BaseActivity implements View.OnClickListe
                     onPauseContinue();
                 });
         this.binding.cancelButton.setOnClickListener(this);
+        if (this.autoSendRecording) {
+            this.binding.shareButton.setText(R.string.send);
+            this.binding.shareButton.setIconResource(R.drawable.ic_send_24dp);
+        } else {
+            this.binding.shareButton.setText(R.string.attach);
+            this.binding.shareButton.setIconResource(R.drawable.ic_check_24dp);
+        }
         this.binding.shareButton.setOnClickListener(this);
         this.setFinishOnTouchOutside(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -179,7 +188,8 @@ public class RecordingActivity extends BaseActivity implements View.OnClickListe
             }
         }
         if (saveFile) {
-            new Thread(new Finisher(outputFileWrittenLatch, mOutputFile, this)).start();
+            new Thread(new Finisher(outputFileWrittenLatch, mOutputFile, autoSendRecording, this))
+                    .start();
         }
     }
 
@@ -187,11 +197,17 @@ public class RecordingActivity extends BaseActivity implements View.OnClickListe
 
         private final CountDownLatch latch;
         private final File outputFile;
+        private final boolean autoSendRecording;
         private final WeakReference<Activity> activityReference;
 
-        private Finisher(CountDownLatch latch, File outputFile, Activity activity) {
+        private Finisher(
+                final CountDownLatch latch,
+                final File outputFile,
+                final boolean autoSendRecording,
+                final Activity activity) {
             this.latch = latch;
             this.outputFile = outputFile;
+            this.autoSendRecording = autoSendRecording;
             this.activityReference = new WeakReference<>(activity);
         }
 
@@ -208,41 +224,20 @@ public class RecordingActivity extends BaseActivity implements View.OnClickListe
             if (activity == null) {
                 return;
             }
-            activity.runOnUiThread(
-                    () -> {
-                        activity.setResult(
-                                Activity.RESULT_OK, new Intent().setData(Uri.fromFile(outputFile)));
-                        activity.finish();
-                    });
+            activity.runOnUiThread(() -> finish(activity));
         }
-    }
 
-    private File generateOutputFilename(final int outputFormat) {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
-        final String extension;
-        if (outputFormat == MediaRecorder.OutputFormat.MPEG_4) {
-            extension = "m4a";
-        } else if (outputFormat == MediaRecorder.OutputFormat.OGG) {
-            extension = "oga";
-        } else {
-            throw new IllegalStateException("Unrecognized output format");
+        private void finish(final Activity activity) {
+            final var intent = new Intent();
+            intent.setData(Uri.fromFile(outputFile));
+            intent.putExtra(EXTRA_AUTO_SEND_RECORDING, autoSendRecording);
+            activity.setResult(Activity.RESULT_OK, intent);
+            activity.finish();
         }
-        final String filename =
-                String.format("RECORDING_%s.%s", dateFormat.format(new Date()), extension);
-        final File parentDirectory;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            parentDirectory =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RECORDINGS);
-        } else {
-            parentDirectory =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        }
-        final File conversationsDirectory = new File(parentDirectory, getString(R.string.app_name));
-        return new File(conversationsDirectory, filename);
     }
 
     private void setupOutputFile(final int outputFormat) {
-        mOutputFile = generateOutputFilename(outputFormat);
+        mOutputFile = new FileBackend.Cache(this).recording(outputFormat);
         final File parentDirectory = mOutputFile.getParentFile();
         if (Objects.requireNonNull(parentDirectory).mkdirs()) {
             Log.d(Config.LOGTAG, "created " + parentDirectory.getAbsolutePath());

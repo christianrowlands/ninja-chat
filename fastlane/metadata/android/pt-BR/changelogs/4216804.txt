@@ -1,0 +1,3 @@
+* Corrigir convites URIs para canais IRC
+* Exibir ícone de aviso vermelho nos detalhes de conferencia de MUCs fora do conforme
+* Corrigir comportamento das conexões e de tentar novamente envolvendo modo avião e VPNs

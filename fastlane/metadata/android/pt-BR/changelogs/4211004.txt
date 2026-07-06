@@ -1,0 +1,2 @@
+* corrigir integração de chamada em alguns dispositivos Android 14
+* Introduzir configuração 'Convites de Desconhecidos'

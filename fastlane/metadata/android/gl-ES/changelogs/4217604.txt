@@ -1,0 +1,4 @@
+* melloras no navegador de elementos multimedia coa posibilidade de compartir e eliminar ficheiros
+* almacenar o multimedia internamente de xeito predeterminado (cun axuste para poder gardar na galería)
+* enviar os audios automaticamente no lugar de anexalos (coa posibilidade de usar o comportamento anterior)
+* 'Mostrar código QR' inclúe un parámetro de preautorización no servidor para facilitar as invitacións

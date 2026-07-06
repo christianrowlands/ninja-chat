@@ -1,0 +1,3 @@
+* Mostrar aviso na conversa se o contato estiver em um fuso horário diferente e no período da noite
+* Mostrar aviso na conversa se o contato estiver DND
+* Refatorar manipulação de DND automática (baseada no DND do sistema)

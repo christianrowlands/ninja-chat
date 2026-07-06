@@ -1,0 +1,3 @@
+* Exibir chapéus em conferências públicas que possuem eles
+* Corrigir travamento quando o modelo de acesso de pacote OMEMO é trocado
+* Corrigir travamento quando endereços XMPP Quicksy são compartilhados

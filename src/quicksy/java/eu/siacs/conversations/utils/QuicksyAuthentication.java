@@ -2,9 +2,9 @@ package eu.siacs.conversations.utils;
 
 import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
-import dev.paseto.jpaseto.lang.Keys;
 import eu.siacs.conversations.BuildConfig;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 public final class QuicksyAuthentication {
 
@@ -26,6 +26,6 @@ public final class QuicksyAuthentication {
     }
 
     public static SecretKey getSharedSecret() {
-        return Keys.secretKey(SHARED_SECRET);
+        return new SecretKeySpec(SHARED_SECRET, "HmacSHA256");
     }
 }

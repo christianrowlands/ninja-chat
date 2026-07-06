@@ -1,0 +1,3 @@
+* Suportar transferência de arquivo P2P através de canais de dados WebRTC
+* Corrigir problemas de interoperabilidade com Bind 2.0 no ejabberd
+* Empacotar certificados raiz do Let’s Encrypt para Android <= 7

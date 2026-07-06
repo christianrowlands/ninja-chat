@@ -1,0 +1,2 @@
+* Corrigir chamadas travando durante a conexão quando 'Usar Relays' está ativado mas o servidor não tem nenhum
+* Otimizações de largura de banda

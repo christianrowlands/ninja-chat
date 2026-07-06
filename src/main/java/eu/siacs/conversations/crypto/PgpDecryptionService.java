@@ -6,7 +6,6 @@ import android.util.Log;
 import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.http.HttpConnectionManager;
 import eu.siacs.conversations.services.XmppConnectionService;
@@ -22,6 +21,7 @@ import java.io.OutputStream;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import org.openintents.openpgp.OpenPgpMetadata;
 import org.openintents.openpgp.util.OpenPgpApi;
 
@@ -182,11 +182,11 @@ public class PgpDecryptionService {
                 }
             } else if (message.isFileOrImage()) {
                 try {
-                    final DownloadableFile inputFile =
+                    final File inputFile =
                             mXmppConnectionService.getFileBackend().getFile(message, false);
-                    final DownloadableFile outputFile =
-                            mXmppConnectionService.getFileBackend().getFile(message, true);
-                    if (outputFile.getParentFile().mkdirs()) {
+                    final File outputFile =
+                            mXmppConnectionService.getFileBackend().getFile(message);
+                    if (Objects.requireNonNull(outputFile.getParentFile()).mkdirs()) {
                         Log.d(
                                 Config.LOGTAG,
                                 "created parent directories for " + outputFile.getAbsolutePath());
@@ -215,10 +215,12 @@ public class PgpDecryptionService {
                                         MimeUtils.guessMimeTypeFromExtension(originalExtension);
                                 final String filename =
                                         outputFile.getName() + "." + originalExtension;
-                                final File fixedFile =
+                                final var fixedStorageLocation =
                                         mXmppConnectionService
                                                 .getFileBackend()
                                                 .getStorageLocation(filename, mime);
+                                // TODO do not dereference fixedFile?!
+                                final var fixedFile = fixedStorageLocation.file();
                                 if (fixedFile.getParentFile().mkdirs()) {
                                     Log.d(
                                             Config.LOGTAG,
@@ -236,7 +238,7 @@ public class PgpDecryptionService {
                                                     + outputFile.getAbsolutePath()
                                                     + " to "
                                                     + fixedFile.getAbsolutePath());
-                                    message.setRelativeFilePath(fixedFile.getAbsolutePath());
+                                    message.setRelativeFilePath(fixedStorageLocation);
                                 }
                             }
                             final String url = message.getFileParams().url;

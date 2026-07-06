@@ -1,0 +1,2 @@
+* Dostarczanie paska wyszukiwania dla łatwiejszego dostępu do wyszukiwania na ekranie głównym
+* Przeniesienie przycisku załączania bliżej pola wprowadzania

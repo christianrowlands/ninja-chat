@@ -83,9 +83,6 @@
 \n
 \n<b>Ostrzeżenie:</b> To nie ma wpływu na wiadomości składowane na innych urządzeniach lub serwerach.</string>
     <string name="delete_file_dialog">Usuń plik</string>
-    <string name="delete_file_dialog_msg">Czy na pewno usunąć ten plik\?
-\n
-\n<b>Uwaga:</b> Działanie nie wpływa na kopie pliku przechowywane na innych urządzeniach lub serwerach. </string>
     <string name="choose_presence">Wybierz urządzenie</string>
     <string name="send_unencrypted_message">Wyślij wiadomość czystym tekstem</string>
     <string name="send_message">Wyślij wiadomość</string>
@@ -136,8 +133,6 @@
     <string name="send_presence_updates">Wysyłaj powiadomienia obecności</string>
     <string name="receive_presence_updates">Otrzymuj powiadomienia obecności</string>
     <string name="ask_for_presence_updates">Poproś o powiadomienia obecności</string>
-    <string name="attach_choose_picture">Wybierz obraz</string>
-    <string name="attach_take_picture">Zrób zdjęcie</string>
     <string name="preemptively_grant">Automatyczne powiadomienia obecności</string>
     <string name="error_not_an_image_file">Wybrany plik nie jest obrazem</string>
     <string name="error_compressing_image">Błąd konwersji obrazu</string>
@@ -180,7 +175,6 @@
     <string name="openpgp_has_been_published">Klucz publiczny OpenPGP został opublikowany.</string>
     <string name="mgmt_account_enable">Włącz konto</string>
     <string name="mgmt_account_delete_confirm_text">Czy na pewno chcesz usunąć swoje konto? Usunięcie konta czyści całą twoją historię rozmów</string>
-    <string name="attach_record_voice">Nagraj głos</string>
     <string name="account_settings_jabber_id">Adres XMPP</string>
     <string name="block_jabber_id">Zablokuj adres XMPP</string>
     <string name="account_settings_example_jabber_id">username@ninja.chat</string>
@@ -322,7 +316,6 @@
     <string name="restoring_backup">Przywracanie kopii zapasowej</string>
     <string name="notification_restored_backup_title">Kopia zapasowa została przywrócona</string>
     <string name="notification_restored_backup_subtitle">Nie zapomnij o włączeniu tego konta.</string>
-    <string name="choose_file">Wybierz plik</string>
     <string name="receiving_x_file">Odbieranie %1$s (ukończono %2$d%%)</string>
     <string name="download_x_file">Pobierz %s</string>
     <string name="delete_x_file">Usuń %s</string>
@@ -406,7 +399,6 @@
     <string name="contacts_have_stopped_typing">%s przestali pisać</string>
     <string name="pref_chat_states">Powiadomienia pisania</string>
     <string name="pref_chat_states_summary">Powiadamiaj rozmówcę, kiedy rozpoczynasz nową wiadomość</string>
-    <string name="send_location">Wyślij lokalizację</string>
     <string name="show_location">Pokaż lokalizację</string>
     <string name="no_application_found_to_display_location">Nie odnaleziono aplikacji do wyświetlenia lokalizacji</string>
     <string name="location">Lokalizacja</string>
@@ -425,10 +417,7 @@
         <item quantity="many">Usunięto %d certyfikatów</item>
         <item quantity="other">Usunięto %d certyfikatów</item>
     </plurals>
-    <string name="pref_quick_action_summary">Zastąp przycisk wysyłania szybką akcją</string>
     <string name="pref_quick_action">Szybka akcja</string>
-    <string name="none">Brak</string>
-    <string name="recently_used">Ostatnio używana</string>
     <string name="choose_quick_action">Wybierz szybką akcję</string>
     <string name="search_contacts">Przeszukuj kontakty</string>
     <string name="send_private_message">Wyślij wiadomość prywatną</string>
@@ -658,7 +647,6 @@
     <string name="pref_validate_hostname_summary">Certyfikaty serwera posiadające prawidłową nazwę hosta są uznawane za zweryfikowane</string>
     <string name="certificate_does_not_contain_jid">Certyfikat nie zawiera żadnych adresów XMPP</string>
     <string name="server_info_partial">częściowo</string>
-    <string name="attach_record_video">Nagraj film</string>
     <string name="copy_to_clipboard">Skopiuj</string>
     <string name="message_copied_to_clipboard">Wiadomość skopiowana do schowka</string>
     <string name="message">Wiadomość</string>
@@ -749,7 +737,7 @@
     <string name="security_violation_not_attaching_file">Plik pominięty w związku z naruszeniem bezpieczeństwa.</string>
     <string name="pref_video_compression">Jakość wideo</string>
     <string name="pref_video_compression_summary">Niższa jakość gwarantuje mniejszy rozmiar</string>
-    <string name="video_360p">Średnia (360p)</string>
+    <string name="video_360p">Niska (360p)</string>
     <string name="video_720p">Wysoka (720p)</string>
     <string name="cancelled">anulowane</string>
     <string name="already_drafting_message">Już tworzysz nową wiadomość.</string>
@@ -871,7 +859,6 @@
     <string name="pref_channel_discovery">Metoda odkrywania kanałów</string>
     <string name="backup">Kopia zapasowa</string>
     <string name="category_about">O aplikacji</string>
-    <string name="please_enable_an_account">Proszę włączyć konto</string>
     <string name="make_call">Zadzwoń</string>
     <string name="rtp_state_incoming_call">Połączenie przychodzące</string>
     <string name="rtp_state_incoming_video_call">Wideorozmowa przychodząca</string>
@@ -931,8 +918,6 @@
     <string name="remove_from_favorites">Odepnij</string>
     <string name="gpx_track">Ścieżka GPX</string>
     <string name="could_not_correct_message">Nie można zedytować wiadomości</string>
-    <string name="search_all_conversations">Wszystkie rozmowy</string>
-    <string name="search_this_conversation">Ta rozmowa</string>
     <string name="your_avatar">Twój awatar</string>
     <string name="avatar_for_x">Awatar dla %s</string>
     <string name="encrypted_with_omemo">Zaszyfrowane OMEMO</string>
@@ -1041,13 +1026,13 @@
     <string name="pref_title_trust_system_ca_store_summary">Ufaj systemowym certyfikatom CA</string>
     <string name="pref_category_server_connection">Połączenie z serwerem</string>
     <string name="pref_category_operating_system">System operacyjny</string>
-    <string name="pref_privacy_summary">Powiadomienie o pisaniu, ostatnia aktywność, dostępność</string>
+    <string name="pref_privacy_summary">Powiadomienia o pisaniu, ostatnia aktywność, przekaźniki P2P</string>
     <string name="pref_connection_summary">Nazwa hosta i port, Tor</string>
     <string name="no_certificate_selected">Nie wybrano certyfikatu klienta!</string>
     <string name="appearance">Wygląd</string>
     <string name="detect_mim">Wymagaj przywiązania kanału</string>
     <string name="detect_mim_summary">Przywiązanie kanału może wykryć niektóre ataki machine­‐in­‐the­‐middle</string>
-    <string name="pref_connection_summary_w_cd">Nazwa hosta i port, Tor, P2P, odkrywanie kanałów</string>
+    <string name="pref_connection_summary_w_cd">Nazwa hosta i port, Tor, odkrywanie kanałów</string>
     <string name="pref_keyboard_options">Klawiatura</string>
     <string name="pref_category_engagement_notifications">Powiadomienia o aktywności</string>
     <string name="pref_category_application">Aplikacja</string>
@@ -1197,4 +1182,55 @@
     <string name="pref_include_silent_modes_summary">Sygnalizuj „nie przeszkadzać” również gdy powiadomienia są wyciszone lub telefon ma tylko wibrować.</string>
     <string name="presence_offline">Rozłączony</string>
     <string name="rtp_state_no_internet">Brak połączenia z Internetem</string>
+    <string name="send">Wyślij</string>
+    <string name="pref_auto_send_recording">Automatycznie wysyłaj nagrania</string>
+    <string name="pref_auto_send_recording_summary">Wysyła wiadomości głosowe automatycznie gdy zakończysz nagrywanie.</string>
+    <string name="pref_presence_settings_summary">„Zaraz wracam” przy blokadzie urządzenia, synchronizacja systemowego „nie przeszkadzać”</string>
+    <string name="video_480p">Średnia (480p)</string>
+    <string name="video_1080p">Bardzo wysoka (1080p)</string>
+    <string name="pref_save_to_gallery">Zapisz do galerii</string>
+    <string name="pref_save_to_gallery_summary">Automatycznie zapisuj multimedia w publicznych katalogach, tak żeby były widoczne w Twojej galerii i menedżerze plików.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Usuń plik</item>
+        <item quantity="few">Usuń %d pliki</item>
+        <item quantity="many">Usuń %d plików</item>
+        <item quantity="other">Usuń %d plików</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Czy na pewno chcesz usunąć ten plik?</item>
+        <item quantity="few">Czy na pewno chcesz usunąć te pliki?</item>
+        <item quantity="many">Czy na pewno chcesz usunąć te pliki?</item>
+        <item quantity="other">Czy na pewno chcesz usunąć te pliki?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d plik zapisano</item>
+        <item quantity="few">%d pliki zapisano</item>
+        <item quantity="many">%d plików zapisano</item>
+        <item quantity="other">%d plików zapisano</item>
+    </plurals>
+    <string name="could_not_save_files">Nie udało się zapisać plików</string>
+    <string name="filter_type_images">Obrazy</string>
+    <string name="filter_type_videos">Wideo</string>
+    <string name="filter_type_audio">Audio</string>
+    <string name="filter_type_documents">Dokumenty</string>
+    <string name="filter_type_other">Inne</string>
+    <string name="filter_media">Filtruj multimedia</string>
+    <string name="apply_filter">Zastosuj</string>
+    <string name="select_all">Wybierz wszystkie</string>
+    <string name="search_in_chats">Szukaj w rozmowach</string>
+    <string name="search_for_x_in_chats">Szukaj „%s” w rozmowach</string>
+    <string name="attachment_choice_gallery">Galeria</string>
+    <string name="attachment_choice_file">Plik</string>
+    <string name="attachment_choice_location">Lokalizacja</string>
+    <string name="attachment_choice_camera">Aparat</string>
+    <string name="attachment_choice_video">Wideo</string>
+    <string name="attachment_choice_recording">Nagranie</string>
+    <string name="start_group_chat">Rozpocznij rozmowę grupową</string>
+    <string name="delete_file_dialog_shared">Ten plik został udostępniony w innych rozmowach.</string>
+    <string name="delete_file_dialog_confirm">Czy na pewno chcesz usunąć ten plik?</string>
+    <string name="delete_file_dialog_copies">To nie spowoduje usunięcia kopii tego pliku przechowywanych na innych urządzeniach lub serwerach.</string>
+    <string name="sheet_music">nuty</string>
+    <string name="attachment_choice_contact">Kontakt</string>
+    <string name="note_to_self">Notatka dla siebie</string>
+    <string name="invalid_contact">Nie udało się przetworzyć kontaktu</string>
 </resources>

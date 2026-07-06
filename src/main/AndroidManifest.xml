@@ -94,6 +94,13 @@
         <intent>
             <action android:name="org.unifiedpush.android.connector.MESSAGE" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+            <data android:mimeType="vnd.android.cursor.dir/contact" />
+        </intent>
     </queries>
 
     <application

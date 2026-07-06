@@ -17,15 +17,9 @@ public class PrivacySettingsFragment extends XmppPreferenceFragment {
     protected void onSharedPreferenceChanged(@NonNull String key) {
         super.onSharedPreferenceChanged(key);
         switch (key) {
-            case AppSettings.AWAY_WHEN_SCREEN_IS_OFF, AppSettings.MANUALLY_CHANGE_PRESENCE -> {
-                requireService().toggleScreenEventReceiver();
-                requireService().refreshAllPresences();
-            }
             case AppSettings.READ_RECEIPTS,
                     AppSettings.BROADCAST_LAST_ACTIVITY,
-                    AppSettings.ALLOW_MESSAGE_CORRECTION,
-                    AppSettings.DND_SYNC_SYSTEM,
-                    AppSettings.DND_INCLUDE_SILENT_MODES ->
+                    AppSettings.ALLOW_MESSAGE_CORRECTION ->
                     requireService().refreshAllPresences();
         }
     }

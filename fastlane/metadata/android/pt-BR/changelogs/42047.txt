@@ -1,0 +1,1 @@
+* Corrigir travamento no Distribuidor UnifiedPush

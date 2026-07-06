@@ -2,55 +2,23 @@ package eu.siacs.conversations.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import de.gultsch.common.Patterns;
 import eu.siacs.conversations.R;
-import eu.siacs.conversations.entities.Contact;
-import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.entities.Message;
-import eu.siacs.conversations.ui.ShareLocationActivity;
 import eu.siacs.conversations.ui.ShowLocationActivity;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import org.osmdroid.util.GeoPoint;
 
 public class GeoHelper {
 
-    private static final String SHARE_LOCATION_PACKAGE_NAME =
-            "eu.siacs.conversations.location.request";
-    private static final String SHOW_LOCATION_PACKAGE_NAME = "eu.siacs.conversations.location.show";
-
-    public static boolean isLocationPluginInstalled(Context context) {
-        return new Intent(SHARE_LOCATION_PACKAGE_NAME).resolveActivity(context.getPackageManager())
-                != null;
-    }
-
-    public static boolean isLocationPluginInstalledAndDesired(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final boolean configured =
-                preferences.getBoolean(
-                        "use_share_location_plugin",
-                        context.getResources().getBoolean(R.bool.use_share_location_plugin));
-        return configured && isLocationPluginInstalled(context);
-    }
-
-    public static Intent getFetchIntent(Context context) {
-        if (isLocationPluginInstalledAndDesired(context)) {
-            return new Intent(SHARE_LOCATION_PACKAGE_NAME);
-        } else {
-            return new Intent(context, ShareLocationActivity.class);
-        }
-    }
-
     public static GeoPoint parseGeoPoint(final Uri uri) {
         return parseGeoPoint(uri.toString());
     }
 
-    private static GeoPoint parseGeoPoint(String body) throws IllegalArgumentException {
+    public static GeoPoint parseGeoPoint(String body) throws IllegalArgumentException {
         final Matcher matcher = Patterns.URI_GEO.matcher(body);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid geo uri");
@@ -72,55 +40,6 @@ public class GeoHelper {
         return new GeoPoint(latitude, longitude);
     }
 
-    public static ArrayList<Intent> createGeoIntentsFromMessage(Context context, Message message) {
-        final ArrayList<Intent> intents = new ArrayList<>();
-        final GeoPoint geoPoint;
-        try {
-            geoPoint = parseGeoPoint(message.getBody());
-        } catch (IllegalArgumentException e) {
-            return intents;
-        }
-        final Conversational conversation = message.getConversation();
-        final String label = getLabel(context, message);
-
-        if (isLocationPluginInstalledAndDesired(context)) {
-            Intent locationPluginIntent = new Intent(SHOW_LOCATION_PACKAGE_NAME);
-            locationPluginIntent.putExtra("latitude", geoPoint.getLatitude());
-            locationPluginIntent.putExtra("longitude", geoPoint.getLongitude());
-            if (message.getStatus() != Message.STATUS_RECEIVED) {
-                locationPluginIntent.putExtra("jid", conversation.getAccount().getJid().toString());
-                locationPluginIntent.putExtra(
-                        "name", conversation.getAccount().getJid().getLocal());
-            } else {
-                locationPluginIntent.putExtra("name", UIHelper.getMessageDisplayName(message));
-                final Contact contact = message.getContact();
-                if (contact != null) {
-                    locationPluginIntent.putExtra("jid", contact.getAddress().toString());
-                }
-            }
-            intents.add(locationPluginIntent);
-        } else {
-            Intent intent = new Intent(context, ShowLocationActivity.class);
-            intent.setAction(SHOW_LOCATION_PACKAGE_NAME);
-            intent.putExtra("latitude", geoPoint.getLatitude());
-            intent.putExtra("longitude", geoPoint.getLongitude());
-            intents.add(intent);
-        }
-
-        intents.add(geoIntent(geoPoint, label));
-
-        Intent httpIntent = new Intent(Intent.ACTION_VIEW);
-        httpIntent.setData(
-                Uri.parse(
-                        "https://maps.google.com/maps?q=loc:"
-                                + geoPoint.getLatitude()
-                                + ","
-                                + geoPoint.getLongitude()
-                                + label));
-        intents.add(httpIntent);
-        return intents;
-    }
-
     public static void view(Context context, Message message) {
         final GeoPoint geoPoint = parseGeoPoint(message.getBody());
         final String label = getLabel(context, message);
@@ -128,6 +47,7 @@ public class GeoHelper {
     }
 
     private static Intent geoIntent(GeoPoint geoPoint, String label) {
+        // TODO use mini uri geo
         Intent geoIntent = new Intent(Intent.ACTION_VIEW);
         geoIntent.setData(
                 Uri.parse(
@@ -165,5 +85,14 @@ public class GeoHelper {
         } else {
             return context.getString(R.string.me);
         }
+    }
+
+    public static Intent showLocationIntent(final Context context, final Message message) {
+        final GeoPoint geoPoint = GeoHelper.parseGeoPoint(message.getBody());
+        final Intent intent = new Intent(context, ShowLocationActivity.class);
+        intent.setAction(ShowLocationActivity.ACTION_SHOW_LOCATION);
+        intent.putExtra("latitude", geoPoint.getLatitude());
+        intent.putExtra("longitude", geoPoint.getLongitude());
+        return intent;
     }
 }

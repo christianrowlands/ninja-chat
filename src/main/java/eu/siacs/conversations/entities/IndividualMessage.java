@@ -29,6 +29,7 @@
 
 package eu.siacs.conversations.entities;
 
+import android.content.Context;
 import android.database.Cursor;
 import eu.siacs.conversations.ui.adapter.MessageAdapter;
 import eu.siacs.conversations.xmpp.Jid;
@@ -54,7 +55,7 @@ public class IndividualMessage extends Message {
             int type,
             boolean carbon,
             String remoteMsgId,
-            String relativeFilePath,
+            StorageLocation storageLocation,
             String serverMsgId,
             String fingerprint,
             boolean read,
@@ -80,7 +81,7 @@ public class IndividualMessage extends Message {
                 type,
                 carbon,
                 remoteMsgId,
-                relativeFilePath,
+                storageLocation,
                 serverMsgId,
                 fingerprint,
                 read,
@@ -118,7 +119,8 @@ public class IndividualMessage extends Message {
         return separator;
     }
 
-    public static Message fromCursor(Cursor cursor, Conversational conversation) {
+    public static Message fromCursor(
+            final Context context, final Cursor cursor, final Conversational conversation) {
         Jid jid;
         try {
             String value = cursor.getString(cursor.getColumnIndexOrThrow(COUNTERPART));
@@ -156,7 +158,7 @@ public class IndividualMessage extends Message {
                 cursor.getInt(cursor.getColumnIndexOrThrow(TYPE)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(CARBON)) > 0,
                 cursor.getString(cursor.getColumnIndexOrThrow(REMOTE_MSG_ID)),
-                cursor.getString(cursor.getColumnIndexOrThrow(RELATIVE_FILE_PATH)),
+                storageLocationFromCursor(context, cursor),
                 cursor.getString(cursor.getColumnIndexOrThrow(SERVER_MSG_ID)),
                 cursor.getString(cursor.getColumnIndexOrThrow(FINGERPRINT)),
                 cursor.getInt(cursor.getColumnIndexOrThrow(READ)) > 0,

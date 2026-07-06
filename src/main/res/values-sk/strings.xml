@@ -82,7 +82,6 @@
 \n
 \n<b>Upozornenie:</b>Nebude to mať vplyv na správy uložené na ostatných zariadeniach alebo serveroch.</string>
     <string name="delete_file_dialog">Zmazať súbor</string>
-    <string name="delete_file_dialog_msg">Ste si istý, že chcete tento súbor zmazať?\n\n<b>Upozornenie:</b>Nevymažú sa kópie súborov, ktoré sú uložené na ostatných zariadeniach alebo serveroch.</string>
     <string name="choose_presence">Zvoliť zariadenie</string>
     <string name="send_unencrypted_message">Poslať nezašifrovanú správu</string>
     <string name="send_message">Poslať správu</string>
@@ -131,8 +130,6 @@
     <string name="send_presence_updates">Zasielať zmeny stavu</string>
     <string name="receive_presence_updates">Prijímať zmeny stavu</string>
     <string name="ask_for_presence_updates">Požiadať o zmeny stavu</string>
-    <string name="attach_choose_picture">Vybrať obrázok</string>
-    <string name="attach_take_picture">Odfotiť</string>
     <string name="preemptively_grant">Aktívne povoliť vyžiadanie zmeny stavu</string>
     <string name="error_not_an_image_file">Vybraný súbor nie je obrázok</string>
     <string name="error_compressing_image">Nemohol som konvertovať obrázkový súbor</string>
@@ -167,7 +164,6 @@
     <string name="mgmt_account_publish_pgp">Zverejniť OpenPGP kľúč</string>
     <string name="unpublish_pgp">Odstrániť OpenPGP  verejný kľúč</string>
     <string name="mgmt_account_enable">Povoliť účet</string>
-    <string name="attach_record_voice">Nahrať hlas</string>
     <string name="account_settings_jabber_id">XMPP adresa</string>
     <string name="block_jabber_id">Zablokovať adresu XMPP</string>
     <string name="account_settings_example_jabber_id">meno@priklad.com</string>
@@ -299,7 +295,6 @@
     <string name="restoring_backup">Obnovujem zálohu</string>
     <string name="notification_restored_backup_title">Vaša záloha bola obnovená</string>
     <string name="notification_restored_backup_subtitle">Nezabudnite si zapnúť konto.</string>
-    <string name="choose_file">Vybrať súbor</string>
     <string name="receiving_x_file">Prijímam %1$s (%2$d%% ukončený)</string>
     <string name="download_x_file">Stiahnuť %s</string>
     <string name="delete_x_file">Zmazať %s</string>
@@ -361,7 +356,6 @@
     <string name="contacts_have_stopped_typing">%s prestali písať</string>
     <string name="pref_chat_states">Upozornenia pri písaní</string>
     <string name="pref_chat_states_summary">Dajte svojim kontaktom vedieť že im práve píšete správu.</string>
-    <string name="send_location">Poslať polohu</string>
     <string name="show_location">Zobraziť polohu</string>
     <string name="location">Poloha</string>
     <string name="pref_dont_trust_system_cas_title">Nedôverovať systému CAs</string>
@@ -378,8 +372,6 @@
         <item quantity="other">%d certifikátov vymazaných</item>
     </plurals>
     <string name="pref_quick_action">Rýchla akcia</string>
-    <string name="none">Žiadny</string>
-    <string name="recently_used">Naposledy použitý</string>
     <string name="choose_quick_action">Vybrať rýchlu voľbu</string>
     <string name="send_private_message">Poslať súkromnú správu</string>
     <string name="username">Užívateľské meno</string>
@@ -424,7 +416,6 @@
     <string name="verify_omemo_keys">Overiť kľúče OMEMO</string>
     <string name="pref_automatically_delete_messages_description">Automaticky vymazávať správy z tohto zariadenia, ktoré sú staršie ako nastavené časové obdobie.</string>
     <string name="online_right_now">online práve teraz</string>
-    <string name="attach_record_video">Nahrať video</string>
     <string name="copy_to_clipboard">Kopírovať do schránky</string>
     <string name="message_copied_to_clipboard">Správa skopírovaná do schránky</string>
     <string name="edit_status_message_title">Upraviť status správu</string>

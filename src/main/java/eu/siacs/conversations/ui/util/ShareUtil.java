@@ -37,7 +37,6 @@ import androidx.annotation.StringRes;
 import com.google.common.collect.Iterables;
 import de.gultsch.common.Linkify;
 import eu.siacs.conversations.R;
-import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.ui.ConversationsActivity;
@@ -50,25 +49,28 @@ public class ShareUtil {
     private static final Collection<String> SCHEMES_COPY_PATH_ONLY =
             Arrays.asList("xmpp", "mailto", "tel");
 
-    public static void share(XmppActivity activity, Message message) {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
+    public static void share(final XmppActivity activity, final Message message) {
+        final var intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
         if (message.isGeoUri()) {
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
-            shareIntent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, message.getBody());
+            intent.setType("text/plain");
         } else if (!message.isFileOrImage()) {
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(
+            intent.putExtra(Intent.EXTRA_TEXT, message.getBody());
+            intent.setType("text/plain");
+            intent.putExtra(
                     ConversationsActivity.EXTRA_AS_QUOTE,
                     message.getStatus() == Message.STATUS_RECEIVED);
         } else {
-            final DownloadableFile file =
-                    activity.xmppConnectionService.getFileBackend().getFile(message);
+            final var file = activity.xmppConnectionService.getFileBackend().getFile(message);
+            final var uri =
+                    FileBackend.getUriForFile(activity, file)
+                            .buildUpon()
+                            .appendQueryParameter("uuid", message.getUuid())
+                            .build();
             try {
-                shareIntent.putExtra(
-                        Intent.EXTRA_STREAM, FileBackend.getUriForFile(activity, file));
-            } catch (SecurityException e) {
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+            } catch (final SecurityException e) {
                 Toast.makeText(
                                 activity,
                                 activity.getString(
@@ -77,17 +79,13 @@ public class ShareUtil {
                         .show();
                 return;
             }
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            String mime = message.getMimeType();
-            if (mime == null) {
-                mime = "*/*";
-            }
-            shareIntent.setType(mime);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setType(ViewUtil.nullToWildcard(message.getMimeType()));
         }
         try {
             activity.startActivity(
-                    Intent.createChooser(shareIntent, activity.getText(R.string.share_with)));
-        } catch (ActivityNotFoundException e) {
+                    Intent.createChooser(intent, activity.getText(R.string.share_with)));
+        } catch (final ActivityNotFoundException e) {
             // This should happen only on faulty androids because normally chooser is always
             // available
             Toast.makeText(activity, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT)

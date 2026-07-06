@@ -58,7 +58,6 @@ import im.conversations.android.xmpp.model.muc.Affiliation;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import me.drakeet.support.toast.ToastCompat;
 
 public class ConferenceDetailsActivity extends XmppActivity
         implements OnConversationUpdate, OnMucRosterUpdate, TextWatcher, OnMediaLoaded {
@@ -493,7 +492,7 @@ public class ConferenceDetailsActivity extends XmppActivity
         runOnUiThread(
                 () -> {
                     final int limit = GridManager.getCurrentColumnCount(binding.media);
-                    mMediaAdapter.setAttachments(
+                    mMediaAdapter.submitList(
                             attachments.subList(0, Math.min(limit, attachments.size())));
                     binding.mediaWrapper.setVisibility(
                             attachments.isEmpty() ? View.GONE : View.VISIBLE);
@@ -736,7 +735,7 @@ public class ConferenceDetailsActivity extends XmppActivity
                     if (isFinishing()) {
                         return;
                     }
-                    ToastCompat.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
                 });
     }
 

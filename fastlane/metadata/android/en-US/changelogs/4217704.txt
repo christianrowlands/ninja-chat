@@ -1,0 +1,2 @@
+* Provide search bar for easier access to search on home screen
+* move attachment button closer to input field

@@ -93,8 +93,6 @@
     <string name="send_presence_updates">Send oppdateringer for tilstedeværelse</string>
     <string name="receive_presence_updates">Motta oppdateringer for tilstedeværelse</string>
     <string name="ask_for_presence_updates">Etterspør oppdateringer for tilstedeværelse</string>
-    <string name="attach_choose_picture">Velg bilde</string>
-    <string name="attach_take_picture">Ta bilde</string>
     <string name="preemptively_grant">Tillat abonnementsforespørsel på forhånd</string>
     <string name="error_not_an_image_file">Filen du valgte er ikke et bilde</string>
     <string name="error_file_not_found">Finner ikke filen</string>
@@ -125,7 +123,6 @@
     <string name="unpublish_pgp">Fjern offentlig OpenPGP-nøkkel</string>
     <string name="unpublish_pgp_message">Er du sikker på at du vil fjerne din offentlige OpenPGP-nøkkel fra din tilstedeværelseskunngjøring?\nDine kontakter vil ikke lenger kunne sende deg OpenPGP-krypterte meldinger.</string>
     <string name="mgmt_account_enable">Skru på konto</string>
-    <string name="attach_record_voice">Ta opp stemme</string>
     <string name="account_settings_example_jabber_id">brukernavn@eksempel.no</string>
     <string name="password">Passord</string>
     <string name="add_phone_book_text">Ønsker du å legge %s til i din kontaktliste?</string>
@@ -220,7 +217,6 @@
     <string name="confirm">Bekreft</string>
     <string name="try_again">Prøv igjen</string>
     <string name="pref_keep_foreground_service_summary">Forhindrer operativsystemet fra å drepe tilkoblingen din</string>
-    <string name="choose_file">Velg fil</string>
     <string name="receiving_x_file">Mottak av %1$s (%2$d%% fullført)</string>
     <string name="download_x_file">Last ned %s</string>
     <string name="delete_x_file">Slett %s</string>
@@ -282,7 +278,6 @@
     <string name="contacts_have_stopped_typing">%s har sluttet å skrive</string>
     <string name="pref_chat_states">Varsler for skriving</string>
     <string name="pref_chat_states_summary">Lar dine kontakter få nyss om at du skriver til dem</string>
-    <string name="send_location">Send plasseringsdata</string>
     <string name="show_location">Vis plasseringsdata</string>
     <string name="location">Plasseringsdata</string>
     <string name="pref_dont_trust_system_cas_title">Ikke stol på systemets CA-er</string>
@@ -297,8 +292,6 @@
         <item quantity="other">%d sertifikater slettet</item>
     </plurals>
     <string name="pref_quick_action">Hurtighandling</string>
-    <string name="none">Ingen</string>
-    <string name="recently_used">Senest brukt</string>
     <string name="choose_quick_action">Velg hurtighendelse</string>
     <string name="send_private_message">Send privat melding</string>
     <string name="username">Brukernavn</string>
@@ -429,7 +422,6 @@
     <string name="pref_validate_hostname">Gyldig vertsnavn med DNSSEC</string>
     <string name="pref_validate_hostname_summary">Tjenersertifikat som inneholder gyldige vertsnavn anses som bekreftet</string>
     <string name="server_info_partial">delvis</string>
-    <string name="attach_record_video">Ta opp video</string>
     <string name="copy_to_clipboard">Kopier til utklippstavle</string>
     <string name="message_copied_to_clipboard">Melding kopiert til utklippstavle</string>
     <string name="message">Melding</string>
@@ -463,7 +455,6 @@
     <string name="preparing_images">Gjør klar til å sende bildene</string>
     <string name="clear_histor_msg">Ønsker du å slette alle meldingene i denne samtalen?\n\n<b>OBS!</b> Dette vil ikke påvirke meldinger som er lagret på andre enheter eller servere.</string>
     <string name="delete_file_dialog">Slett filen</string>
-    <string name="delete_file_dialog_msg">Er du sikker på at du vil slette denne filen?\n\n<b>OBS!</b> Dette vil ikke slette andre kopier av filen, lagret på andre enheter eller servere.</string>
     <string name="archive_this_chat">Slett samtalen etterpå</string>
     <string name="send_encrypted_message">Send kryptert melding</string>
     <string name="your_nick_has_been_changed">Kallenavnet ditt har blitt endret</string>

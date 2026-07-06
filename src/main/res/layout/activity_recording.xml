@@ -18,7 +18,7 @@
 
             <Button
                 android:id="@+id/cancel_button"
-                style="@style/Widget.Material3.Button.TextButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -26,9 +26,8 @@
                 android:text="@string/cancel" />
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/share_button"
-                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

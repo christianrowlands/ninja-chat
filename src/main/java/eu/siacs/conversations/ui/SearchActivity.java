@@ -46,7 +46,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import androidx.databinding.DataBindingUtil;
 import com.google.android.material.color.MaterialColors;
-import com.google.common.base.Strings;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivitySearchBinding;
 import eu.siacs.conversations.entities.Contact;
@@ -70,7 +69,7 @@ import java.util.List;
 public class SearchActivity extends XmppActivity
         implements TextWatcher, OnSearchResultsAvailable, MessageAdapter.OnContactPictureClicked {
 
-    private static final String EXTRA_SEARCH_TERM = "search-term";
+    public static final String EXTRA_SEARCH_TERM = "search-term";
     public static final String EXTRA_CONVERSATION_UUID = "uuid";
 
     private ActivitySearchBinding binding;
@@ -84,16 +83,25 @@ public class SearchActivity extends XmppActivity
 
     @Override
     public void onCreate(final Bundle bundle) {
-        final Intent intent = getIntent();
-        this.uuid =
-                intent == null
-                        ? null
-                        : Strings.emptyToNull(intent.getStringExtra(EXTRA_CONVERSATION_UUID));
-        final String searchTerm = bundle == null ? null : bundle.getString(EXTRA_SEARCH_TERM);
-        if (searchTerm != null) {
-            pendingSearchTerm.push(searchTerm);
-        }
         super.onCreate(bundle);
+        final Intent intent = getIntent();
+        final Bundle parameters;
+        if (bundle != null) {
+            parameters = bundle;
+        } else if (intent != null) {
+            parameters = intent.getExtras();
+        } else {
+            parameters = null;
+        }
+        if (parameters != null) {
+            this.uuid = parameters.getString(EXTRA_CONVERSATION_UUID);
+            final var searchTerm = parameters.getString(EXTRA_SEARCH_TERM);
+            if (searchTerm != null) {
+                this.pendingSearchTerm.push(searchTerm);
+            }
+        } else {
+            this.uuid = null;
+        }
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         Activities.setStatusAndNavigationBarColors(this, binding.getRoot());
         setSupportActionBar(this.binding.toolbar);

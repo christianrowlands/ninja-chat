@@ -1,0 +1,2 @@
+* Corrigir chamadas no Android 15
+* Corrigir travamento raro / regressão introduzida em 2.17.0

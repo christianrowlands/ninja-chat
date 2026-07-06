@@ -36,50 +36,33 @@ import static eu.siacs.conversations.ui.ConversationFragment.ATTACHMENT_CHOICE_R
 import static eu.siacs.conversations.ui.ConversationFragment.ATTACHMENT_CHOICE_TAKE_PHOTO;
 
 public enum SendButtonAction {
-	TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE, RECORD_VIDEO;
+    TEXT,
+    TAKE_PHOTO,
+    SEND_LOCATION,
+    RECORD_VOICE,
+    CANCEL,
+    CHOOSE_PICTURE,
+    RECORD_VIDEO;
 
-	public static SendButtonAction valueOfOrDefault(final String setting) {
-		if (setting == null) {
-			return TEXT;
-		}
-		try {
-			return valueOf(setting);
-		} catch (IllegalArgumentException e) {
-			return TEXT;
-		}
-	}
+    public static SendButtonAction of(final int attachmentChoice) {
+        return switch (attachmentChoice) {
+            case ATTACHMENT_CHOICE_LOCATION -> SEND_LOCATION;
+            case ATTACHMENT_CHOICE_RECORD_VOICE -> RECORD_VOICE;
+            case ATTACHMENT_CHOICE_RECORD_VIDEO -> RECORD_VIDEO;
+            case ATTACHMENT_CHOICE_TAKE_PHOTO -> TAKE_PHOTO;
+            case ATTACHMENT_CHOICE_CHOOSE_IMAGE -> CHOOSE_PICTURE;
+            default -> throw new IllegalArgumentException("Not a known attachment choice");
+        };
+    }
 
-	public static SendButtonAction of(int attachmentChoice) {
-		switch (attachmentChoice) {
-			case ATTACHMENT_CHOICE_LOCATION:
-				return SEND_LOCATION;
-			case ATTACHMENT_CHOICE_RECORD_VOICE:
-				return RECORD_VOICE;
-			case ATTACHMENT_CHOICE_RECORD_VIDEO:
-				return RECORD_VIDEO;
-			case ATTACHMENT_CHOICE_TAKE_PHOTO:
-				return TAKE_PHOTO;
-			case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
-				return CHOOSE_PICTURE;
-			default:
-				throw new IllegalArgumentException("Not a known attachment choice");
-		}
-	}
-
-	public int toChoice() {
-		switch (this) {
-			case TAKE_PHOTO:
-				return ATTACHMENT_CHOICE_TAKE_PHOTO;
-			case SEND_LOCATION:
-				return ATTACHMENT_CHOICE_LOCATION;
-			case RECORD_VOICE:
-				return ATTACHMENT_CHOICE_RECORD_VOICE;
-			case CHOOSE_PICTURE:
-				return ATTACHMENT_CHOICE_CHOOSE_IMAGE;
-			case RECORD_VIDEO:
-				return ATTACHMENT_CHOICE_RECORD_VIDEO;
-			default:
-				return 0;
-		}
-	}
+    public int toChoice() {
+        return switch (this) {
+            case TAKE_PHOTO -> ATTACHMENT_CHOICE_TAKE_PHOTO;
+            case SEND_LOCATION -> ATTACHMENT_CHOICE_LOCATION;
+            case RECORD_VOICE -> ATTACHMENT_CHOICE_RECORD_VOICE;
+            case CHOOSE_PICTURE -> ATTACHMENT_CHOICE_CHOOSE_IMAGE;
+            case RECORD_VIDEO -> ATTACHMENT_CHOICE_RECORD_VIDEO;
+            default -> 0;
+        };
+    }
 }

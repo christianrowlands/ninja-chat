@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Nu s-a putut verifica identitatea serverului.</string>
     <string name="unknown_security_error">Eroare de securitate necunoscută.</string>
     <string name="timeout_while_connecting_to_server">A expirat timpul de așteptare conexiune server.</string>
+    <string name="use_physical_device">Vă rugăm să utilizați un dispozitiv fizic pentru a vă înregistra contul.</string>
 </resources>

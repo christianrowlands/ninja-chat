@@ -32,8 +32,10 @@ package eu.siacs.conversations.ui;
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +44,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuProvider;
@@ -52,9 +56,15 @@ import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.search.SearchView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
+import de.gultsch.common.MiniUri;
+import de.gultsch.common.Patterns;
 import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -62,7 +72,9 @@ import eu.siacs.conversations.databinding.FragmentConversationsOverviewBinding;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.services.QuickConversationsService;
+import eu.siacs.conversations.ui.activity.SettingsActivity;
 import eu.siacs.conversations.ui.adapter.ConversationAdapter;
+import eu.siacs.conversations.ui.adapter.SearchSuggestionAdapter;
 import eu.siacs.conversations.ui.interfaces.OnConversationArchived;
 import eu.siacs.conversations.ui.interfaces.OnConversationSelected;
 import eu.siacs.conversations.ui.util.PendingActionHelper;
@@ -70,7 +82,15 @@ import eu.siacs.conversations.ui.util.PendingItem;
 import eu.siacs.conversations.ui.util.ScrollState;
 import eu.siacs.conversations.ui.widget.AccountPickerDialog;
 import eu.siacs.conversations.utils.AccountUtils;
+import eu.siacs.conversations.utils.CharSequences;
+import eu.siacs.conversations.utils.XmppUriLauncher;
+import eu.siacs.conversations.xmpp.manager.BookmarkManager;
+import eu.siacs.conversations.xmpp.manager.RosterManager;
+import im.conversations.android.model.SearchSuggestion;
+import im.conversations.android.provider.SearchSuggestionProvider;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ConversationsOverviewFragment extends XmppFragment {
@@ -83,6 +103,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
     private final PendingItem<ScrollState> pendingScrollState = new PendingItem<>();
     private FragmentConversationsOverviewBinding binding;
     private ConversationAdapter conversationsAdapter;
+    private SearchSuggestionAdapter searchSuggestionAdapter;
     private final PendingActionHelper pendingActionHelper = new PendingActionHelper();
 
     private final ItemTouchHelper.SimpleCallback callback =
@@ -148,34 +169,105 @@ public class ConversationsOverviewFragment extends XmppFragment {
                     onConversationSwiped(conversation, position);
                 }
             };
-
-    private final MenuProvider menuProvider =
+    private final MenuProvider globalMenuProvider =
             new MenuProvider() {
                 @Override
                 public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-                    menuInflater.inflate(R.menu.fragment_conversations_overview, menu);
+                    menuInflater.inflate(R.menu.fragment_global, menu);
                     AccountUtils.showHideMenuItems(menu);
-                    final MenuItem privacyPolicyMenuItem =
-                            menu.findItem(R.id.action_privacy_policy);
-                    privacyPolicyMenuItem.setVisible(
-                            BuildConfig.PRIVACY_POLICY != null
-                                    && QuickConversationsService.isPlayStoreFlavor());
                 }
 
                 @Override
                 public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                     final var id = menuItem.getItemId();
-                    if (id == R.id.action_search) {
-                        startActivity(new Intent(getActivity(), SearchActivity.class));
+                    if (id == R.id.action_settings) {
+                        startActivity(new Intent(requireContext(), SettingsActivity.class));
                         return true;
-                    } else if (id == R.id.action_easy_invite) {
-                        selectAccountToStartEasyInvite();
+                    } else if (id == R.id.action_accounts) {
+                        AccountUtils.launchManageAccounts(requireXmppActivity());
+                        return true;
+                    } else if (id == R.id.action_account) {
+                        AccountUtils.launchManageAccount(requireXmppActivity());
                         return true;
                     } else {
                         return false;
                     }
                 }
             };
+
+    private final MenuProvider menuProvider =
+            new MenuProvider() {
+                @Override
+                public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                    menuInflater.inflate(R.menu.fragment_conversations_overview, menu);
+                    final MenuItem privacyPolicyMenuItem =
+                            menu.findItem(R.id.action_privacy_policy);
+                    privacyPolicyMenuItem.setVisible(
+                            BuildConfig.PRIVACY_POLICY != null
+                                    && QuickConversationsService.isPlayStoreFlavor());
+                    final var qrCodeActions = menu.findItem(R.id.action_qr_codes);
+                    final var qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
+                    final var showQrCodeMenuItem = menu.findItem(R.id.action_show_qr_code);
+                    final var easyOnboardInvite = menu.findItem(R.id.action_easy_invite);
+                    qrCodeActions.setVisible(true);
+                    qrCodeScanMenuItem.setVisible(requireXmppActivity().isCameraFeatureAvailable());
+                    showQrCodeMenuItem.setVisible(
+                            new AccountPickerDialog.Enabled(requireXmppActivity())
+                                    .hasAnyAccounts());
+                    easyOnboardInvite.setVisible(
+                            new AccountPickerDialog.EasyInvite(requireXmppActivity())
+                                    .hasAnyAccounts());
+                }
+
+                @Override
+                public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                    final var id = menuItem.getItemId();
+                    if (id == R.id.action_easy_invite) {
+                        selectAccountToStartEasyInvite();
+                        return true;
+                    } else if (id == R.id.action_show_qr_code) {
+                        new AccountPickerDialog.Enabled(requireXmppActivity())
+                                .pick(a -> requireXmppActivity().showQrCode(a));
+                        return true;
+                    } else if (id == R.id.action_scan_qr_code) {
+                        if (requireActivity()
+                                instanceof QrCodeScanningActivity qrCodeScanningActivity) {
+                            qrCodeScanningActivity.requestPermissionAndScanQrCode();
+                        }
+                        return true;
+                    } else if (id == R.id.action_privacy_policy) {
+                        openPrivacyPolicy();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            };
+    private final OnBackPressedCallback searchViewOnBackPressedCallback =
+            new OnBackPressedCallback(false) {
+                @Override
+                public void handleOnBackPressed() {
+                    binding.searchView.hide();
+                }
+            };
+
+    private void openPrivacyPolicy() {
+        if (BuildConfig.PRIVACY_POLICY == null) {
+            return;
+        }
+        final var viewPolicyIntent = new Intent(Intent.ACTION_VIEW);
+        viewPolicyIntent.setData(Uri.parse(BuildConfig.PRIVACY_POLICY));
+        try {
+            startActivity(viewPolicyIntent);
+        } catch (final ActivityNotFoundException e) {
+            Toast.makeText(
+                            requireContext(),
+                            R.string.no_application_found_to_open_link,
+                            Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
 
     private void onConversationSwiped(final Conversation c, final int position) {
         pendingActionHelper.execute();
@@ -283,8 +375,6 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     public void onViewCreated(@NonNull final View view, final Bundle savedInstanceState) {
-        requireActivity()
-                .addMenuProvider(menuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
         if (savedInstanceState == null) {
             return;
         }
@@ -296,6 +386,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
         super.onDestroyView();
         this.binding = null;
         this.conversationsAdapter = null;
+        this.searchSuggestionAdapter = null;
         this.touchHelper = null;
     }
 
@@ -306,6 +397,14 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requireActivity()
+                .getOnBackPressedDispatcher()
+                .addCallback(this, this.searchViewOnBackPressedCallback);
+    }
+
+    @Override
     public View onCreateView(
             @NonNull final LayoutInflater inflater,
             ViewGroup container,
@@ -313,6 +412,32 @@ public class ConversationsOverviewFragment extends XmppFragment {
         this.binding =
                 DataBindingUtil.inflate(
                         inflater, R.layout.fragment_conversations_overview, container, false);
+        this.binding.searchBar.addMenuProvider(
+                menuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        this.binding.searchBar.addMenuProvider(
+                globalMenuProvider, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        this.binding
+                .searchView
+                .getEditText()
+                .setOnEditorActionListener(
+                        (v, actionId, event) -> {
+                            startSearch(CharSequences.nullToEmpty(v.getText()));
+                            this.binding.searchView.hide();
+                            return true;
+                        });
+        this.binding
+                .searchView
+                .getEditText()
+                .addTextChangedListener(new TextChangeListener(this::submitSearchSuggestion));
+        this.binding.searchView.addTransitionListener(
+                (searchView, oldState, newState) -> {
+                    final boolean isShowing =
+                            Arrays.asList(
+                                            SearchView.TransitionState.SHOWING,
+                                            SearchView.TransitionState.SHOWN)
+                                    .contains(newState);
+                    searchViewOnBackPressedCallback.setEnabled(isShowing);
+                });
         this.binding.fab.setOnClickListener(
                 (view) -> StartConversationActivity.launch(getActivity()));
 
@@ -328,13 +453,144 @@ public class ConversationsOverviewFragment extends XmppFragment {
                                 "Activity does not implement OnConversationSelected");
                     }
                 });
+        this.searchSuggestionAdapter = new SearchSuggestionAdapter();
         this.binding.list.setAdapter(this.conversationsAdapter);
         this.binding.list.setLayoutManager(
                 new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         this.binding.list.addOnScrollListener(ExtendedFabSizeChanger.of(binding.fab));
+        this.binding.searchSuggestionList.setAdapter(this.searchSuggestionAdapter);
+        this.searchSuggestionAdapter.setOnSearchSuggestionClicked(this::executeSuggestion);
         this.touchHelper = new ItemTouchHelper(this.callback);
         this.touchHelper.attachToRecyclerView(this.binding.list);
         return binding.getRoot();
+    }
+
+    private void startSearch(final String term) {
+        final var intent = new Intent(requireContext(), SearchActivity.class);
+        intent.putExtra(SearchActivity.EXTRA_SEARCH_TERM, term);
+        startActivity(intent);
+    }
+
+    private void submitSearchSuggestion(final String raw) {
+        final var search = raw.trim();
+        if (Strings.isNullOrEmpty(search)) {
+            this.searchSuggestionAdapter.submitList(Collections.emptyList());
+            return;
+        }
+        final var builder = new ImmutableList.Builder<SearchSuggestion>();
+        builder.add(new SearchSuggestion.Text(search));
+        if (Patterns.URI_GENERIC.matcher(search).matches()) {
+            final var xmppUri = MiniUri.getXmppUriOrNull(search);
+            if (xmppUri != null && xmppUri.isAddress()) {
+                builder.add(new SearchSuggestion.Uri(xmppUri));
+            }
+        }
+        final var service = requireXmppActivity().xmppConnectionService;
+        final List<SearchSuggestion.Sortable> suggestions;
+        final boolean noteToSelf;
+        if (service != null) {
+            final var accounts = service.getAccounts();
+            final var matchInAccount =
+                    Iterables.any(
+                            accounts,
+                            a ->
+                                    a != null
+                                            && a.isEnabled()
+                                            && CharSequences.containsAll(
+                                                    a.getJid().asBareJid().toString(), search));
+            noteToSelf =
+                    matchInAccount
+                            || CharSequences.containsAll(getString(R.string.note_to_self), search);
+            final var provider = new SearchSuggestionProvider(accounts);
+            suggestions = provider.suggest(search);
+        } else {
+            noteToSelf = false;
+            suggestions = Collections.emptyList();
+        }
+        // we do not want to spam the list with tens of results of searching for individual letters
+        if (suggestions.size() <= 8 || search.length() >= 3) {
+            if (noteToSelf) {
+                builder.add(new SearchSuggestion.Note());
+            }
+            builder.addAll(
+                    new Ordering<SearchSuggestion.Sortable>() {
+                        @Override
+                        public int compare(
+                                SearchSuggestion.Sortable left, SearchSuggestion.Sortable right) {
+                            return left.address().compareTo(right.address());
+                        }
+                    }.sortedCopy(suggestions));
+        }
+        this.searchSuggestionAdapter.submitList(builder.build());
+    }
+
+    private void executeSuggestion(final SearchSuggestion suggestion) {
+        if (suggestion instanceof SearchSuggestion.Text(String text)) {
+            this.hideSearchView();
+            startSearch(text);
+        } else if (suggestion instanceof SearchSuggestion.Uri(MiniUri.Xmpp xmpp)) {
+            this.hideSearchView();
+            final var uriLauncher = new XmppUriLauncher(requireContext(), true);
+            uriLauncher.launch(xmpp);
+        } else if (suggestion instanceof SearchSuggestion.Bookmark b) {
+            final var account =
+                    requireXmppActivity().xmppConnectionService.findAccountByUuid(b.uuid());
+            if (account == null) {
+                return;
+            }
+            final var bookmark =
+                    account.getXmppConnection()
+                            .getManager(BookmarkManager.class)
+                            .getBookmark(b.address());
+            if (bookmark == null) {
+                return;
+            }
+            this.hideSearchView();
+            requireXmppActivity().openConversationsForBookmark(bookmark);
+        } else if (suggestion instanceof SearchSuggestion.Contact c) {
+            final var account =
+                    requireXmppActivity().xmppConnectionService.findAccountByUuid(c.uuid());
+            if (account == null) {
+                return;
+            }
+            final var contact =
+                    account.getXmppConnection()
+                            .getManager(RosterManager.class)
+                            .getContact(c.address());
+            final var conversation =
+                    requireXmppActivity()
+                            .xmppConnectionService
+                            .findOrCreateConversation(
+                                    contact.getAccount(), contact.getAddress(), false, true);
+            this.hideSearchView();
+            requireXmppActivity().switchToConversation(conversation);
+        } else if (suggestion instanceof SearchSuggestion.Note) {
+            this.hideSearchView();
+            final var picker = new AccountPickerDialog.Enabled(requireXmppActivity());
+            picker.pick(
+                    a -> {
+                        final var contact = a.getSelfContact();
+                        final var conversation =
+                                requireXmppActivity()
+                                        .xmppConnectionService
+                                        .findOrCreateConversation(
+                                                contact.getAccount(),
+                                                contact.getAddress(),
+                                                false,
+                                                true);
+                        requireXmppActivity().switchToConversation(conversation);
+                    });
+        }
+    }
+
+    private void hideSearchView() {
+        if (ConversationsActivity.isTabletView(requireActivity())) {
+            this.binding.searchView.hide();
+        } else {
+            this.binding.searchView.hide();
+            this.binding.searchView.setVisible(false);
+            this.binding.searchView.clearFocus();
+        }
     }
 
     @Override
@@ -393,6 +649,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
                             + " or activity was null");
             return;
         }
+        this.binding.searchBar.invalidateMenu();
         this.requireXmppActivity()
                 .xmppConnectionService
                 .populateWithOrderedConversations(this.conversations);

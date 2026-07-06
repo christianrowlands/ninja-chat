@@ -1,0 +1,1 @@
+* Corrigir erro na Interface de Usuário quando múltiplas reações são exibidas

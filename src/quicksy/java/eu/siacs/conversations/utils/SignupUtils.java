@@ -52,7 +52,7 @@ public class SignupUtils {
         return false;
     }
 
-    public static Intent getTokenRegistrationIntent(Activity activity, Jid preset, String key) {
+    public static Intent getTokenRegistrationIntent(Context activity, Jid preset, String key) {
         return null;
     }
 }

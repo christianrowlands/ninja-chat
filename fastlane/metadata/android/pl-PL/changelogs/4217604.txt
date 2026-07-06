@@ -1,0 +1,4 @@
+* Ulepszona przeglądarka multimediów z możliwością udostępniania i usuwania plików
+* Przechowywanie mediów domyślnie wewnętrznie, z możliwością ustawienia automatycznego zapisywania do galerii
+* Wysyłanie nagrań głosowych natychmiast zamiast dołączania (oraz ustawienie pozwalające przywrócić poprzednie zachowanie)
+* „Pokaż kod QR” zawiera parametr „preauth” na serwerach obsługujących „uproszczone zapraszanie”

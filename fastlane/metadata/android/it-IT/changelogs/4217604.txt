@@ -1,0 +1,4 @@
+* Migliorato il browser dei media con possibilità di condividere ed eliminare i file
+* Memorizza i media internamente in modo predefinito (con impostazione per salvare automaticamente nella galleria)
+* Invia registrazioni audio immediatamente invece di allegarle (con impostazione per ripristinare il comportamento precedente)
+* 'Mostra codice QR' include un parametro di pre-autenticazione sui server con gli inviti semplici

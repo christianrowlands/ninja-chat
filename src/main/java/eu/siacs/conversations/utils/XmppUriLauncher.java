@@ -1,5 +1,6 @@
 package eu.siacs.conversations.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,14 +20,14 @@ import java.util.Objects;
 
 public class XmppUriLauncher {
 
-    private final AppCompatActivity context;
+    private final Context context;
     private final boolean scanned;
 
     public XmppUriLauncher(final AppCompatActivity context) {
         this(context, false);
     }
 
-    public XmppUriLauncher(final AppCompatActivity context, final boolean scanned) {
+    public XmppUriLauncher(final Context context, final boolean scanned) {
         this.context = context;
         this.scanned = scanned;
     }

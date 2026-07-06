@@ -1,0 +1,4 @@
+* U përmirësua shfletues mediash me aftësinë për të ndarë me të tjerë dhe fshirë kartela media
+* Depozitim mediash së brendshmi, si parazgjedhje (me rregullim për të ruajtur automatikisht në galeri)
+* Dërgim menjëherë incizimesh audio, në vend se të bashkëngjiten (plus rregullim për të rikthyer mënyrën e dikurshme)
+* “Shfaq kod QR” përfshin parametrin “preauth” në shërbyes me ftesa të kollajta

@@ -1,0 +1,2 @@
+* Exibir o número de participantes no subtítulo para canais públicos
+* Corrigir a inscrição a MUCs em servidores Prosody muito velhos

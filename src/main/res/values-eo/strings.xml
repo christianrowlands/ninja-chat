@@ -84,7 +84,6 @@
     <string name="clear_conversation_history">Forviŝi babilejan historion</string>
     <string name="clear_histor_msg">Ĉu vi volas forigi ĉiujn mesaĝojn en tiu ĉi babilejo?\n\n<b>Averto:</b> Tio ĉi ne influos mesaĝojn konservitajn ĉe aliaj aparatoj aŭ serviloj.</string>
     <string name="delete_file_dialog">Forigi dosieron</string>
-    <string name="delete_file_dialog_msg">Ĉu vi certas ke vi volas forigi tiun ĉi dosieron?\n\n<b>Averto:</b> Tio ĉi ne forigos kopiojn de tiu ĉi dosiero konservitajn ĉe aliaj aparatoj aŭ serviloj.</string>
     <string name="archive_this_chat">Forigi babilejo post tiu</string>
     <string name="choose_presence">Elektu aparaton</string>
     <string name="send_unencrypted_message">Sendi neĉifrotan mesaĝon</string>

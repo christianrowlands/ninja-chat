@@ -41,37 +41,14 @@
             android:summary="@string/pref_accept_invites_from_strangers_summary"
             android:title="@string/pref_accept_invites_from_strangers" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_presence_settings">
+    <PreferenceCategory android:title="@string/peer_to_peer">
         <SwitchPreferenceCompat
-            android:defaultValue="@bool/manually_change_presence"
-            android:disableDependentsState="true"
-            android:icon="@drawable/ic_announcement_24dp"
-            android:key="manually_change_presence"
-            android:summary="@string/pref_manually_change_presence_summary"
-            android:title="@string/pref_manually_change_presence" />
-        <SwitchPreferenceCompat
-            android:defaultValue="@bool/away_when_screen_off"
-            android:dependency="manually_change_presence"
-            android:icon="@drawable/ic_screen_lock_portrait_24dp"
-            android:key="away_when_screen_off"
-            android:summary="@string/pref_away_when_screen_off_summary"
-            android:title="@string/pref_away_when_screen_off" />
-        <!-- The name of the key reflects the old functionality but will be reused -->
-        <SwitchPreferenceCompat
-            android:defaultValue="@bool/dnd_sync_system"
-            android:dependency="manually_change_presence"
-            android:icon="@drawable/ic_do_not_disturb_on_24dp"
-            android:key="dnd_on_silent_mode"
-            android:summary="@string/pref_sync_system_dnd_summary"
-            android:title="@string/pref_sync_system_dnd" />
-        <!-- The name of the key mirrors the old (pre DND mode) functionality. Elsewhere in the app it will be referred to as DND_INCLUDE_SILENT_MODES -->
-        <SwitchPreferenceCompat
-            android:defaultValue="@bool/dnd_include_silent_modes"
-            android:dependency="dnd_on_silent_mode"
-            android:icon="@drawable/ic_vibration_24dp"
-            android:key="treat_vibrate_as_silent"
-            android:summary="@string/pref_include_silent_modes_summary"
-            android:title="@string/pref_include_silent_modes" />
+            android:defaultValue="@bool/use_relays"
+            android:icon="@drawable/ic_location_disabled_24dp"
+            android:key="use_relays"
+            android:summary="@string/pref_use_relays_summary"
+            android:title="@string/pref_use_relays" />
+
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_application">
         <SwitchPreferenceCompat

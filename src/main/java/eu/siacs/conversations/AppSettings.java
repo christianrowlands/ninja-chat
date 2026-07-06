@@ -7,6 +7,7 @@ import android.os.Environment;
 import androidx.annotation.BoolRes;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 import com.google.common.base.Joiner;
@@ -18,7 +19,9 @@ import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.utils.Compatibility;
 import eu.siacs.conversations.utils.Random;
 import eu.siacs.conversations.xmpp.Jid;
+import im.conversations.android.model.AttachmentChoice;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -44,6 +47,8 @@ public class AppSettings {
     public static final String ALLOW_SCREENSHOTS = "allow_screenshots";
     public static final String RINGTONE = "call_ringtone";
     public static final String DISPLAY_ENTER_KEY = "display_enter_key";
+    public static final String ENTER_IS_SEND = "enter_is_send";
+    public static final String SCROLL_TO_BOTTOM = "scroll_to_bottom";
 
     public static final String READ_RECEIPTS = "confirm_messages";
     public static final String ALLOW_MESSAGE_CORRECTION = "allow_message_correction";
@@ -69,6 +74,9 @@ public class AppSettings {
     public static final String BACKUP_LOCATION = "backup_location";
     public static final String AUTO_ACCEPT_FILE_SIZE = "auto_accept_file_size";
     public static final String VIDEO_COMPRESSION = "video_compression";
+    public static final String AUTO_SEND_RECORDING = "auto_send_recording";
+    public static final String USE_SHARED_STORAGE = "use_shared_storage";
+    public static final String QUICK_ACTION = "quick_action_button";
 
     private static final String ACCEPT_INVITES_FROM_STRANGERS = "accept_invites_from_strangers";
     private static final String NOTIFICATIONS_FROM_STRANGERS = "notifications_from_strangers";
@@ -97,11 +105,8 @@ public class AppSettings {
     }
 
     public Uri getRingtone() {
-        final SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        final String incomingCallRingtone =
-                sharedPreferences.getString(
-                        RINGTONE, context.getString(R.string.incoming_call_ringtone));
+        final var incomingCallRingtone =
+                getStringPreference(RINGTONE, R.string.incoming_call_ringtone);
         return Strings.isNullOrEmpty(incomingCallRingtone) ? null : Uri.parse(incomingCallRingtone);
     }
 
@@ -112,12 +117,8 @@ public class AppSettings {
     }
 
     public Uri getNotificationTone() {
-        final SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        final String incomingCallRingtone =
-                sharedPreferences.getString(
-                        NOTIFICATION_RINGTONE, context.getString(R.string.notification_ringtone));
-        return Strings.isNullOrEmpty(incomingCallRingtone) ? null : Uri.parse(incomingCallRingtone);
+        final var tone = getStringPreference(NOTIFICATION_RINGTONE, R.string.notification_ringtone);
+        return Strings.isNullOrEmpty(tone) ? null : Uri.parse(tone);
     }
 
     public void setNotificationTone(final Uri uri) {
@@ -155,6 +156,14 @@ public class AppSettings {
 
     public boolean isShowAvatarsAccounts() {
         return getBooleanPreference(SHOW_AVATARS_ACCOUNTS, R.bool.show_avatars_accounts);
+    }
+
+    public boolean isAutoSendRecording() {
+        return getBooleanPreference(AUTO_SEND_RECORDING, R.bool.auto_send_recording);
+    }
+
+    public boolean isQuickActionRecordingAuto() {
+        return isAutoSendRecording() && getQuickAction() == AttachmentChoice.Type.RECORDING;
     }
 
     public boolean isCallIntegration() {
@@ -197,6 +206,10 @@ public class AppSettings {
     public boolean isAwayWhenScreenLocked() {
         return getBooleanPreference(
                 AppSettings.AWAY_WHEN_SCREEN_IS_OFF, R.bool.away_when_screen_off);
+    }
+
+    public boolean isUseSharedStorage() {
+        return getBooleanPreference(USE_SHARED_STORAGE, R.bool.use_shared_storage);
     }
 
     public boolean isUseTor() {
@@ -242,9 +255,7 @@ public class AppSettings {
     }
 
     public int getDesiredNightMode() {
-        final SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        final var theme = sharedPreferences.getString(THEME, context.getString(R.string.theme));
+        final var theme = getStringPreference(THEME, R.string.theme);
         return getDesiredNightMode(theme);
     }
 
@@ -256,6 +267,12 @@ public class AppSettings {
         } else {
             return AppCompatDelegate.MODE_NIGHT_YES;
         }
+    }
+
+    private String getStringPreference(@NonNull final String name, @StringRes final int res) {
+        final SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getString(name, context.getResources().getString(res));
     }
 
     private boolean getBooleanPreference(@NonNull final String name, @BoolRes final int res) {
@@ -281,10 +298,7 @@ public class AppSettings {
     }
 
     public String getOmemo() {
-        final SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString(
-                OMEMO, context.getString(R.string.omemo_setting_default));
+        return getStringPreference(OMEMO, R.string.omemo_setting_default);
     }
 
     public Uri getBackupLocation() {
@@ -339,6 +353,14 @@ public class AppSettings {
         return getBooleanPreference(DISPLAY_ENTER_KEY, R.bool.display_enter_key);
     }
 
+    public boolean isEnterSend() {
+        return getBooleanPreference(ENTER_IS_SEND, R.bool.enter_is_send);
+    }
+
+    public boolean isScrollToBottom() {
+        return getBooleanPreference(SCROLL_TO_BOTTOM, R.bool.scroll_to_bottom);
+    }
+
     public void setSendCrashReports(boolean value) {
         final SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(context);
@@ -371,13 +393,40 @@ public class AppSettings {
     }
 
     public String getVideoCompression() {
-        final var sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString(
-                VIDEO_COMPRESSION, context.getResources().getString(R.string.video_compression));
+        return getStringPreference(VIDEO_COMPRESSION, R.string.video_compression);
+    }
+
+    public AttachmentChoice.Type getQuickAction() {
+        final var setting = getStringPreference(QUICK_ACTION, R.string.quick_action);
+        if (Strings.isNullOrEmpty(setting)) {
+            return getDefaultQuickAction();
+        }
+        try {
+            return AttachmentChoice.Type.valueOf(setting);
+        } catch (final IllegalArgumentException e) {
+            return getDefaultQuickAction();
+        }
+    }
+
+    private AttachmentChoice.Type getDefaultQuickAction() {
+        return AttachmentChoice.Type.valueOf(context.getString(R.string.quick_action));
+    }
+
+    public Optional<Duration> getAutomaticMessageDeletion() {
+        final var value =
+                getLongPreference(AUTOMATIC_MESSAGE_DELETION, R.integer.automatic_message_deletion);
+        if (value <= 0) {
+            return Optional.empty();
+        }
+        return Optional.of(Duration.ofSeconds(value));
+    }
+
+    public Optional<Instant> getAutomaticMessageDeletionInstant() {
+        return getAutomaticMessageDeletion().map(duration -> Instant.now().minus(duration));
     }
 
     public boolean isCompressVideo() {
-        return Arrays.asList("720", "360").contains(getVideoCompression());
+        return Arrays.asList("1080", "720", "480", "360").contains(getVideoCompression());
     }
 
     public synchronized void resetInstallationId() {

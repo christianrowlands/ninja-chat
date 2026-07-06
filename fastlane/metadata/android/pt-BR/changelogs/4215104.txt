@@ -1,0 +1,2 @@
+* Exibir 'Visto por último' proeminentemente no título da conversa (quando ativado)
+* Várias correções de erros

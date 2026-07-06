@@ -9,4 +9,5 @@
     <string name="unable_to_verify_server_identity">Не удалось подтвердить сервер.</string>
     <string name="unknown_security_error">Неизвестная ошибка безопасности.</string>
     <string name="timeout_while_connecting_to_server">Время ожидания подключения к серверу вышло.</string>
+    <string name="use_physical_device">Используйте физическое устройство для регистрации аккаунта .</string>
 </resources>

@@ -11,9 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.Pair;
@@ -61,7 +59,6 @@ import com.google.common.util.concurrent.Futures;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import de.gultsch.common.MiniUri;
-import eu.siacs.conversations.BuildConfig;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.databinding.ActivityStartConversationBinding;
@@ -162,20 +159,6 @@ public class StartConversationActivity extends XmppActivity
                     filter(null);
                     return true;
                 }
-            };
-    private final TextWatcher mSearchTextWatcher =
-            new TextWatcher() {
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    filter(editable.toString());
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
             };
     private MenuItem mMenuSearchView;
     private final Consumer<DynamicTag> mOnTagClickedListener =
@@ -532,24 +515,6 @@ public class StartConversationActivity extends XmppActivity
         }
     }
 
-    protected void openConversationsForBookmark(final Bookmark existing) {
-        final var account = existing.getAccount();
-        final Jid jid = existing.getFullAddress();
-        if (jid == null) {
-            Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final Conversation conversation =
-                xmppConnectionService.findOrCreateConversation(account, jid, true, true, true);
-        if (!existing.isAutoJoin()) {
-            final var bookmark =
-                    ImmutableBookmark.builder().from(existing).isAutoJoin(true).build();
-            xmppConnectionService.createBookmark(bookmark.getAccount(), bookmark);
-        }
-        SoftKeyboardUtils.hideSoftKeyboard(this);
-        switchToConversation(conversation);
-    }
-
     protected void openDetailsForContact() {
         int position = contact_context_id;
         Contact contact = (Contact) contacts.get(position);
@@ -777,10 +742,6 @@ public class StartConversationActivity extends XmppActivity
         getMenuInflater().inflate(R.menu.start_conversation, menu);
         AccountUtils.showHideMenuItems(menu);
         final MenuItem menuHideOffline = menu.findItem(R.id.action_hide_offline);
-        final MenuItem privacyPolicyMenuItem = menu.findItem(R.id.action_privacy_policy);
-        privacyPolicyMenuItem.setVisible(
-                BuildConfig.PRIVACY_POLICY != null
-                        && QuickConversationsService.isPlayStoreFlavor());
         if (QuickConversationsService.isQuicksy()) {
             menuHideOffline.setVisible(false);
         } else {
@@ -791,7 +752,7 @@ public class StartConversationActivity extends XmppActivity
         mMenuSearchView.setOnActionExpandListener(mOnActionExpandListener);
         View mSearchView = mMenuSearchView.getActionView();
         mSearchEditText = mSearchView.findViewById(R.id.search_field);
-        mSearchEditText.addTextChangedListener(mSearchTextWatcher);
+        mSearchEditText.addTextChangedListener(new TextChangeListener(this::filter));
         mSearchEditText.setOnEditorActionListener(mSearchDone);
         String initialSearchValue = mInitialSearchValue.pop();
         if (initialSearchValue != null) {

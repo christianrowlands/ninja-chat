@@ -81,9 +81,6 @@
 \n 
 \n<b>Varning:</b> Det här påverkar inte meddelanden som finns lagrade på andra enheter eller servrar.</string>
     <string name="delete_file_dialog">Ta bort fil</string>
-    <string name="delete_file_dialog_msg">Är du säker på att du vill ta bort den här filen\?
-\n
-\n<b>Varning:</b> Den här åtgärden kommer inte att ta bort kopior av den här filen som finns lagrad på andra enheter eller servrar. </string>
     <string name="choose_presence">Välj enhet</string>
     <string name="send_unencrypted_message">Skicka ett meddelande i klartext</string>
     <string name="send_message">Skicka meddelande</string>
@@ -138,8 +135,6 @@
     <string name="send_presence_updates">Skicka närvarouppdateringar</string>
     <string name="receive_presence_updates">Ta emot närvarouppdateringar</string>
     <string name="ask_for_presence_updates">Be om närvarouppdateringar</string>
-    <string name="attach_choose_picture">Välj bild</string>
-    <string name="attach_take_picture">Ta ny bild</string>
     <string name="preemptively_grant">Bevilja prenumerationsförfrågan i förebyggande syfte</string>
     <string name="error_not_an_image_file">Filen som du har valt, är inte en bild</string>
     <string name="error_compressing_image">Det gick inte att konvertera bildfilen</string>
@@ -182,7 +177,6 @@
     <string name="openpgp_has_been_published">OpenPGP-nyckel har publicerats.</string>
     <string name="mgmt_account_enable">Aktivera konto</string>
     <string name="mgmt_account_delete_confirm_text">Är du säker på att du vill ta bort ditt konto? Hela din chatt-historik kommer att tas bort om ditt konto tas bort</string>
-    <string name="attach_record_voice">Spela in röst</string>
     <string name="account_settings_jabber_id">XMPP-adress</string>
     <string name="block_jabber_id">Blockera XMPP-adress</string>
     <string name="account_settings_example_jabber_id">användarnamn@exempel.se</string>
@@ -327,7 +321,6 @@
     <string name="restoring_backup">Återställer säkerhetskopia</string>
     <string name="notification_restored_backup_title">Din säkerhetskopia har återställts</string>
     <string name="notification_restored_backup_subtitle">Glöm inte att aktivera kontot.</string>
-    <string name="choose_file">Välj fil</string>
     <string name="receiving_x_file">Tar emot %1$s (%2$d%% slutfört)</string>
     <string name="download_x_file">Ladda ner %s</string>
     <string name="delete_x_file">Ta bort %s</string>
@@ -411,7 +404,6 @@
     <string name="contacts_have_stopped_typing">%s har slutat att skriva</string>
     <string name="pref_chat_states">Skrivaviseringar</string>
     <string name="pref_chat_states_summary">Låt dina kontakter veta när du skriver meddelande till dem</string>
-    <string name="send_location">Skicka position</string>
     <string name="show_location">Visa position</string>
     <string name="no_application_found_to_display_location">Ingen app hittades för att kunna visa platsen</string>
     <string name="location">Position</string>
@@ -428,10 +420,7 @@
         <item quantity="one">%d certifikat borttaget</item>
         <item quantity="other">%d certifikat borttagna</item>
     </plurals>
-    <string name="pref_quick_action_summary">Ersätt \"Skicka\"-knappen med en snabbfunktion</string>
     <string name="pref_quick_action">Snabbfunktion</string>
-    <string name="none">Ingen</string>
-    <string name="recently_used">Senast använd</string>
     <string name="choose_quick_action">Välj snabbfunktion</string>
     <string name="search_contacts">Sök kontakter</string>
     <string name="send_private_message">Skicka privat meddelande</string>
@@ -653,7 +642,6 @@
     <string name="pref_validate_hostname_summary">Servercertifikat som innehåller det validerade värdnamnet anses vara verifierade</string>
     <string name="certificate_does_not_contain_jid">Certifikatet innehåller ingen XMPP-adress</string>
     <string name="server_info_partial">delvis</string>
-    <string name="attach_record_video">Spela in video</string>
     <string name="copy_to_clipboard">Kopiera</string>
     <string name="message_copied_to_clipboard">Meddelandet har kopierats till urklipp</string>
     <string name="message">Meddelande</string>
@@ -733,7 +721,7 @@
     <string name="group_chat_members">Deltagare</string>
     <string name="media_browser">Mediebläddrare</string>
     <string name="pref_video_compression">Videokvalitet</string>
-    <string name="video_360p">Medium (360p)</string>
+    <string name="video_360p">Låg (360p)</string>
     <string name="video_720p">Hög (720p)</string>
     <string name="cancelled">avbruten</string>
     <string name="already_drafting_message">Du håller redan på att skriva ett meddelande.</string>
@@ -810,14 +798,13 @@
     <string name="unable_to_perform_this_action">Det gick inte att utföra den här åtgärden</string>
     <string name="open_join_dialog">Anslut till publik gruppchatt…</string>
     <string name="sharing_application_not_grant_permission">Delningsappen gav inte behörighet att komma åt den här filen.</string>
-    <string name="group_chats_and_channels"><![CDATA[Grupp-chatter & Kanaler]]></string>
+    <string name="group_chats_and_channels"><![CDATA[Gruppchattar &amp; kanaler]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Lokal server</string>
     <string name="pref_channel_discovery_summary">De flesta användare bör välja \"jabber.network\", för att få bättre förslag från hela det offentliga XMPP-ekosystemet.</string>
     <string name="pref_channel_discovery">Metod för kanalupptäckt</string>
     <string name="backup">Säkerhetskopiering</string>
     <string name="category_about">Om</string>
-    <string name="please_enable_an_account">Var god och aktivera ett konto</string>
     <string name="make_call">Ring ett samtal</string>
     <string name="rtp_state_incoming_call">Inkommande samtal</string>
     <string name="rtp_state_incoming_video_call">Inkommande videosamtal</string>
@@ -856,8 +843,6 @@
     <string name="remove_from_favorites">Lossa flik från toppen</string>
     <string name="gpx_track">GPX-spår</string>
     <string name="could_not_correct_message">Det gick inte att redigera meddelandet</string>
-    <string name="search_all_conversations">Alla chatter</string>
-    <string name="search_this_conversation">Den här chatten</string>
     <string name="your_avatar">Din visningsbild</string>
     <string name="avatar_for_x">Visningsbild för %s</string>
     <string name="encrypted_with_omemo">Krypterad med OMEMO</string>
@@ -910,7 +895,7 @@
     <string name="resend_sms">Skicka SMS igen</string>
     <string name="resend_sms_in">Skicka SMS igen (%s)</string>
     <string name="wait_x">Var god vänta (%s)</string>
-    <string name="we_will_be_verifying"><![CDATA[Vi kommer att bekräfta telefonnumret<br/><br/><b>%s</b><br/><br/>Är detta OK eller vill du redigera numret?]]></string>
+    <string name="we_will_be_verifying"><![CDATA[Vi kommer att bekräfta telefonnumret<br><br><b>%s</b><br><br>Är detta okej, eller vill du ändra numret?]]></string>
     <string name="not_a_valid_phone_number">%s är inte ett giltigt telefonnummer.</string>
     <string name="security_violation_not_attaching_file">Filen har utelämnats på grund av säkerhetsöverträdelse.</string>
     <string name="pref_video_compression_summary">Lägre kvalitet resulterar i mindre filer</string>
@@ -1019,7 +1004,7 @@
     <string name="restore_omemo_key">Återställ OMEMO-nycklar</string>
     <string name="switch_to_chat">Byt till chatt</string>
     <string name="pref_backup_recurring">Återkommande säkerhetskopiering</string>
-    <string name="pref_connection_summary">Värdnamn &amp; Port, Tor</string>
+    <string name="pref_connection_summary">Värdnamn och port, Tor</string>
     <string name="pref_fullscreen_notification">Fullskärmsaviseringar</string>
     <string name="welcome_header_quicksy">Välkommen till Quicksy!</string>
     <string name="copy_email_address">Kopiera e-postadress</string>
@@ -1130,8 +1115,8 @@
     <string name="pref_title_trust_system_ca_store">Certifikatutfärdare</string>
     <string name="detect_mim">Kräv kanalbindning</string>
     <string name="detect_mim_summary">Kanalbindning kan upptäcka vissa machine-in-the-middle-attacker</string>
-    <string name="pref_privacy_summary">Skrivindikatorer, senast sedd, tillgänglighet</string>
-    <string name="pref_connection_summary_w_cd">Värdnamn och port, Tor, P2P, kanalupptäckt</string>
+    <string name="pref_privacy_summary">Skrivindikeringar, senast sedd, P2P-reläer</string>
+    <string name="pref_connection_summary_w_cd">Värdnamn och port, Tor, kanalupptäckt</string>
     <string name="pref_category_engagement_notifications">Interaktionsnotiser</string>
     <string name="pref_up_long_summary">När du agerar som UnifiedPush-distributör, kommer den ihållande, pålitliga och batterivänliga XMPP-anslutningen att användas för att väcka andra UnifiedPush-kompatibla appar, som Tusky, Ltt.rs, FluffyChat och fler.</string>
     <string name="pref_backup_summary">Skapa engångsföreteelser, schemalägg återkommande, lagringsplats</string>
@@ -1181,7 +1166,52 @@
     <string name="pref_sync_system_dnd">Synkronisera systemets stör-ej-läge</string>
     <string name="pref_sync_system_dnd_summary">Ställ automatiskt in din status till \"Stör ej\" när Androids stör-ej-läge är aktivt.</string>
     <string name="pref_include_silent_modes">Inkludera tysta lägen</string>
-    <string name="pref_include_silent_modes_summary">Signalera också \"Stör ej\" när aviseringar är avstängda, eller när telefonen är på vibrationsläget.</string>
+    <string name="pref_include_silent_modes_summary">Signalera även \"Stör ej\" när aviseringar är avstängda, eller när telefonen är inställd på vibrationsläget.</string>
     <string name="presence_offline">Offline</string>
     <string name="rtp_state_no_internet">Ingen Internetförbindelse</string>
+    <string name="send">Skicka</string>
+    <string name="pref_auto_send_recording">Skicka inspelningar automatiskt</string>
+    <string name="pref_auto_send_recording_summary">Skicka röstmeddelanden automatiskt när du är klar med inspelningen.</string>
+    <string name="pref_presence_settings_summary">Frånvarande när enheten är låst, synkronisera systemets \"stör ej\"-läge</string>
+    <string name="video_480p">Medium (480p)</string>
+    <string name="video_1080p">Väldigt hög (1080p)</string>
+    <string name="pref_save_to_gallery">Spara till galleriet</string>
+    <string name="pref_save_to_gallery_summary">Spara media automatiskt i publika kataloger för att kunna visa dem i ditt galleri och din filhanterare.</string>
+    <plurals name="delete_files_dialog">
+        <item quantity="one">Ta bort fil</item>
+        <item quantity="other">Ta bort %d filer</item>
+    </plurals>
+    <plurals name="delete_files_dialog_msg">
+        <item quantity="one">Är du säker på att du vill radera den här filen?</item>
+        <item quantity="other">Är du säker på att du vill ta bort de här filerna?</item>
+    </plurals>
+    <plurals name="attachments_saved">
+        <item quantity="one">%d mediafil sparad</item>
+        <item quantity="other">%d mediafiler sparade</item>
+    </plurals>
+    <string name="could_not_save_files">Kunde inte spara filer</string>
+    <string name="filter_type_images">Bilder</string>
+    <string name="filter_type_videos">Videor</string>
+    <string name="filter_type_audio">Ljud</string>
+    <string name="filter_type_documents">Dokument</string>
+    <string name="filter_type_other">Annat</string>
+    <string name="filter_media">Filtrera media</string>
+    <string name="apply_filter">Tillämpa</string>
+    <string name="select_all">Välj alla</string>
+    <string name="search_in_chats">Sök i chattar</string>
+    <string name="search_for_x_in_chats">Sök efter \"%s\" i chattar</string>
+    <string name="start_group_chat">Påbörja gruppchatt</string>
+    <string name="delete_file_dialog_shared">Den här filen har delats med andra chattar.</string>
+    <string name="delete_file_dialog_confirm">Är du säker på att du vill radera den här filen?</string>
+    <string name="attachment_choice_gallery">Galleri</string>
+    <string name="attachment_choice_file">Fil</string>
+    <string name="attachment_choice_location">Plats</string>
+    <string name="attachment_choice_camera">Kamera</string>
+    <string name="attachment_choice_video">Video</string>
+    <string name="attachment_choice_recording">Inspelning</string>
+    <string name="attachment_choice_contact">Kontakt</string>
+    <string name="sheet_music">noter</string>
+    <string name="note_to_self">Anteckning till mig själv</string>
+    <string name="invalid_contact">Kunde inte tolka kontakten</string>
+    <string name="delete_file_dialog_copies">Det här kommer att ta bort kopior av den här filen som lagras i andra enheter eller servrar.</string>
 </resources>

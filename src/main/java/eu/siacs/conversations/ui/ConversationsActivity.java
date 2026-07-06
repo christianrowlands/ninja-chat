@@ -33,6 +33,7 @@ import static eu.siacs.conversations.ui.ConversationFragment.REQUEST_DECRYPT_PGP
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -43,13 +44,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -64,9 +62,7 @@ import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OmemoSetting;
 import eu.siacs.conversations.databinding.ActivityConversationsBinding;
-import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Conversational;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.interfaces.OnBackendConnected;
 import eu.siacs.conversations.ui.interfaces.OnConversationArchived;
@@ -74,13 +70,8 @@ import eu.siacs.conversations.ui.interfaces.OnConversationRead;
 import eu.siacs.conversations.ui.interfaces.OnConversationSelected;
 import eu.siacs.conversations.ui.interfaces.OnConversationsListItemUpdated;
 import eu.siacs.conversations.ui.util.ActivityResult;
-import eu.siacs.conversations.ui.util.ConversationMenuConfigurator;
-import eu.siacs.conversations.ui.util.MenuDoubleTabUtil;
 import eu.siacs.conversations.ui.util.PendingItem;
-import eu.siacs.conversations.ui.util.ToolbarUtils;
-import eu.siacs.conversations.ui.widget.AccountPickerDialog;
 import eu.siacs.conversations.utils.ExceptionHelper;
-import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
 import java.util.Arrays;
 import java.util.List;
@@ -141,8 +132,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
 
     @Override
     protected void refreshUiReal() {
-        invalidateOptionsMenu();
-        invalidateActionBarTitle();
         for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
             refreshFragment(id);
         }
@@ -157,7 +146,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
                 if (binding.secondaryFragment != null) {
                     notifyFragmentOfBackendConnected(R.id.main_fragment);
                 }
-                invalidateActionBarTitle();
                 return;
             }
         }
@@ -170,7 +158,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
             handleActivityResult(activityResult);
         }
 
-        invalidateActionBarTitle();
         if (binding.secondaryFragment != null
                 && ConversationFragment.getConversation(this) == null) {
             final var conversation = ConversationsOverviewFragment.getSuggestion(this);
@@ -362,18 +349,13 @@ public class ConversationsActivity extends QrCodeProcessingActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ConversationMenuConfigurator.reloadFeatures(this);
         OmemoSetting.load(this);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
         Activities.setStatusAndNavigationBarColors(this, binding.getRoot());
-        setSupportActionBar(binding.toolbar);
-        configureActionBar(getSupportActionBar());
-        this.getSupportFragmentManager()
-                .addOnBackStackChangedListener(this::invalidateActionBarTitle);
+        ;
         this.getSupportFragmentManager()
                 .addOnBackStackChangedListener(this::showDialogsIfMainIsOverview);
         this.initializeFragments();
-        this.invalidateActionBarTitle();
         final Intent intent;
         if (savedInstanceState == null) {
             intent = getIntent();
@@ -384,31 +366,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
             pendingViewIntent.push(intent);
             setIntent(createLauncherIntent(this));
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_conversations, menu);
-        final var qrCodeActions = menu.findItem(R.id.action_qr_codes);
-        if (qrCodeActions == null) {
-            return super.onCreateOptionsMenu(menu);
-        }
-        final var fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-        boolean visible =
-                getResources().getBoolean(R.bool.show_qr_code_scan)
-                        && fragment instanceof ConversationsOverviewFragment;
-        if (visible) {
-            final var qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
-            final var showQrCodeMenuItem = menu.findItem(R.id.action_show_qr_code);
-            final var easyOnboardInvite = menu.findItem(R.id.action_easy_invite);
-            qrCodeActions.setVisible(true);
-            qrCodeScanMenuItem.setVisible(isCameraFeatureAvailable());
-            showQrCodeMenuItem.setVisible(new AccountPickerDialog.Enabled(this).hasAnyAccounts());
-            easyOnboardInvite.setVisible(new AccountPickerDialog.EasyInvite(this).hasAnyAccounts());
-        } else {
-            qrCodeActions.setVisible(false);
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -441,7 +398,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
                     Log.d(Config.LOGTAG, "not loading conversation. removing secondary");
                     final var transaction = fragmentManager.beginTransaction();
                     transaction.remove(secondaryFragment);
-                    transaction.runOnCommit(this::invalidateActionBarTitle);
                     transaction.commitAllowingStateLoss();
                 } else {
                     Log.d(Config.LOGTAG, "not loading conversation and secondary is already empty");
@@ -457,7 +413,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
                     fragmentTransaction.replace(R.id.secondary_fragment, cf);
                     fragmentTransaction.runOnCommit(
                             () -> {
-                                invalidateActionBarTitle();
                                 refreshFragment(R.id.main_fragment);
                             });
                     fragmentTransaction.commitAllowingStateLoss();
@@ -486,7 +441,14 @@ public class ConversationsActivity extends QrCodeProcessingActivity
         if (mainNeedsRefresh) {
             refreshFragment(R.id.main_fragment);
         }
-        invalidateActionBarTitle();
+    }
+
+    public static boolean isTabletView(final Activity activity) {
+        if (activity instanceof ConversationsActivity conversationsActivity) {
+            return conversationsActivity.binding.secondaryFragment != null;
+        } else {
+            return false;
+        }
     }
 
     private void openConversationOrCatch(
@@ -516,45 +478,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
-            return false;
-        }
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                FragmentManager fm = getSupportFragmentManager();
-                if (fm.getBackStackEntryCount() > 0) {
-                    try {
-                        fm.popBackStack();
-                    } catch (IllegalStateException e) {
-                        Log.w(Config.LOGTAG, "Unable to pop back stack after pressing home button");
-                    }
-                    return true;
-                }
-                break;
-            case R.id.action_scan_qr_code:
-                requestPermissionAndScanQrCode();
-                return true;
-            case R.id.action_show_qr_code:
-                new AccountPickerDialog.Enabled(this).pick(a -> showQrCode(a.getShareableUri()));
-                return true;
-            case R.id.action_search_all_conversations:
-                startActivity(new Intent(this, SearchActivity.class));
-                return true;
-            case R.id.action_search_this_conversation:
-                final Conversation conversation = ConversationFragment.getConversation(this);
-                if (conversation == null) {
-                    return true;
-                }
-                final Intent intent = new Intent(this, SearchActivity.class);
-                intent.putExtra(SearchActivity.EXTRA_CONVERSATION_UUID, conversation.getUuid());
-                startActivity(intent);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -627,77 +550,6 @@ public class ConversationsActivity extends QrCodeProcessingActivity
         final var transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_fragment, new ConversationsOverviewFragment());
         transaction.commitAllowingStateLoss();
-    }
-
-    private void invalidateActionBarTitle() {
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        final var fragmentManager = getSupportFragmentManager();
-        final Fragment mainFragment = fragmentManager.findFragmentById(R.id.main_fragment);
-        if (mainFragment instanceof ConversationFragment conversationFragment) {
-            final Conversation conversation = conversationFragment.getConversation();
-            if (conversation != null) {
-                setTitleAndSubtitle(actionBar, conversation, true);
-                return;
-            }
-        }
-        final Fragment secondaryFragment =
-                fragmentManager.findFragmentById(R.id.secondary_fragment);
-        if (secondaryFragment instanceof ConversationFragment conversationFragment) {
-            final Conversation conversation = conversationFragment.getConversation();
-            if (conversation != null) {
-                setTitleAndSubtitle(actionBar, conversation, false);
-            } else {
-                actionBar.setTitle(R.string.app_name);
-            }
-        } else {
-            actionBar.setTitle(R.string.app_name);
-            actionBar.setSubtitle(null);
-        }
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        ToolbarUtils.resetActionBarOnClickListeners(binding.toolbar);
-    }
-
-    private void setTitleAndSubtitle(
-            final ActionBar actionBar, final Conversation conversation, final boolean clickable) {
-        actionBar.setTitle(conversation.getName());
-        if (conversation.getMode() == Conversational.MODE_SINGLE && this.mShowLastUserInteraction) {
-            final var contact = conversation.getContact();
-            actionBar.setSubtitle(
-                    UIHelper.lastUserInteraction(this, contact.getLastUserInteraction()));
-        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-            final var mucOptions = conversation.getMucOptions();
-            final var userCount = mucOptions.getUserCount();
-            if (mucOptions.isPrivateAndNonAnonymous() || userCount < 1) {
-                actionBar.setSubtitle(null);
-            } else {
-                actionBar.setSubtitle(
-                        getResources()
-                                .getQuantityString(R.plurals.x_participants, userCount, userCount));
-            }
-        } else {
-            actionBar.setSubtitle(null);
-        }
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        if (clickable) {
-            ToolbarUtils.setActionBarOnClickListener(
-                    binding.toolbar, (v) -> openConversationDetails(conversation));
-        }
-    }
-
-    private void openConversationDetails(final Conversation conversation) {
-        if (conversation.getMode() == Conversational.MODE_MULTI) {
-            ConferenceDetailsActivity.open(this, conversation);
-        } else {
-            final Contact contact = conversation.getContact();
-            if (contact.isSelf()) {
-                switchToAccount(conversation.getAccount());
-            } else {
-                switchToContactDetails(contact);
-            }
-        }
     }
 
     @Override

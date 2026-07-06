@@ -1,0 +1,2 @@
+* Melhorar a mensagem de erro para servidores que não suportam TLS 1.3
+* Corrigir problemas com a rotação do dispositivo

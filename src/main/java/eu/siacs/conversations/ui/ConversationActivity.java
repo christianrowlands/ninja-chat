@@ -1,6 +1,8 @@
 package eu.siacs.conversations.ui;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import eu.siacs.conversations.utils.SignupUtils;
@@ -11,6 +13,6 @@ public class ConversationActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startActivity(SignupUtils.getRedirectionIntent(this));
-        finish();
+        new Handler(Looper.getMainLooper()).post(this::finish);
     }
 }

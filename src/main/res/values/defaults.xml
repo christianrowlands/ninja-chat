@@ -19,7 +19,7 @@
     <bool name="use_green_background">true</bool>
     <bool name="large_font">false</bool>
     <bool name="show_avatars">true</bool>
-    <string name="quick_action">recent</string>
+    <string name="quick_action">RECORDING</string>
     <bool name="show_dynamic_tags">false</bool>
     <bool name="dynamic_colors">false</bool>
     <bool name="btbv">true</bool>
@@ -36,14 +36,10 @@
     <bool name="enable_foreground_service">true</bool>
     <bool name="send_crash_reports">true</bool>
     <bool name="validate_hostname">false</bool>
-    <bool name="show_qr_code_scan">true</bool>
-    <bool name="show_individual_search_options">true</bool>
-    <bool name="show_combined_search_options">false</bool>
     <bool name="scroll_to_bottom">true</bool>
     <string name="omemo_setting_default">default_on</string>
-    <bool name="use_share_location_plugin">false</bool>
     <bool name="start_searching">false</bool>
-    <string name="video_compression">360</string>
+    <string name="video_compression">480</string>
     <string name="default_channel_discovery">JABBER_NETWORK</string>
     <bool name="allow_screenshots">true</bool>
     <string name="default_push_server">up.conversations.im</string>
@@ -51,5 +47,7 @@
     <bool name="require_channel_binding">false</bool>
     <bool name="require_tls_v1_3">true</bool>
     <bool name="call_integration">true</bool>
+    <bool name="auto_send_recording">true</bool>
     <bool name="align_start">false</bool>
+    <bool name="use_shared_storage">false</bool>
 </resources>

@@ -10,6 +10,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
+import eu.siacs.conversations.AppSettings;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
@@ -53,13 +54,19 @@ public class MessageArchiveManager extends AbstractManager {
             // TODO there was no 'kill' before but maybe we need one?
             this.queries.clear();
         }
-        MamReference mamReference =
+        final var mamReferenceByMessage =
                 MamReference.max(
                         mXmppConnectionService.databaseBackend.getLastMessageReceived(getAccount()),
                         mXmppConnectionService.databaseBackend.getLastClearDate(getAccount()));
-        mamReference =
-                MamReference.max(
-                        mamReference, mXmppConnectionService.getAutomaticMessageDeletionDate());
+        final var messageDeletion =
+                new AppSettings(mXmppConnectionService).getAutomaticMessageDeletionInstant();
+        final MamReference mamReference;
+        if (messageDeletion.isPresent()) {
+            mamReference =
+                    MamReference.max(mamReferenceByMessage, messageDeletion.get().toEpochMilli());
+        } else {
+            mamReference = mamReferenceByMessage;
+        }
         long endCatchup = connection.getLastSessionEstablished();
         final Query query;
         if (mamReference.getTimestamp() == 0) {
@@ -133,10 +140,16 @@ public class MessageArchiveManager extends AbstractManager {
     public Query query(
             Conversation conversation, MamReference start, long end, boolean allowCatchup) {
         synchronized (this.queries) {
+            final var deletion =
+                    new AppSettings(mXmppConnectionService).getAutomaticMessageDeletionInstant();
             final Query query;
-            final MamReference startActual =
-                    MamReference.max(
-                            start, mXmppConnectionService.getAutomaticMessageDeletionDate());
+
+            final MamReference startActual;
+            if (deletion.isPresent()) {
+                startActual = MamReference.max(start, deletion.get().toEpochMilli());
+            } else {
+                startActual = start;
+            }
             if (start.getTimestamp() == 0) {
                 query = new Query(conversation, startActual, end, false);
                 query.reference = conversation.getFirstMamReference();

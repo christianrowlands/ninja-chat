@@ -11,11 +11,14 @@ import android.os.SystemClock;
 import android.util.Base64;
 import android.util.Log;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.FingerprintStatus;
@@ -23,10 +26,12 @@ import eu.siacs.conversations.crypto.axolotl.SQLiteAxolotlStore;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
+import eu.siacs.conversations.entities.IndividualMessage;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.PresenceTemplate;
 import eu.siacs.conversations.services.QuickConversationsService;
 import eu.siacs.conversations.services.ShortcutService;
+import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.CursorUtils;
 import eu.siacs.conversations.utils.FtsUtils;
@@ -46,6 +51,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,7 +77,7 @@ import org.whispersystems.libsignal.state.SignedPreKeyRecord;
 public class DatabaseBackend extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "history";
-    private static final int DATABASE_VERSION = 54;
+    private static final int DATABASE_VERSION = 55;
 
     private static boolean requiresMessageIndexRebuild = false;
     private static DatabaseBackend instance = null;
@@ -328,8 +334,11 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static final String COPY_PREEXISTING_ENTRIES =
             "INSERT INTO messages_index(messages_index) VALUES('rebuild');";
 
+    private final Context context;
+
     private DatabaseBackend(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context.getApplicationContext();
     }
 
     private static ContentValues createFingerprintStatusContentValues(
@@ -458,6 +467,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                         + " NUMBER, "
                         + Message.RELATIVE_FILE_PATH
                         + " TEXT, "
+                        + Message.SHARED_STORAGE
+                        + " BOOLEAN NOT NULL DEFAULT 1,"
                         + Message.SERVER_MSG_ID
                         + " TEXT, "
                         + Message.FINGERPRINT
@@ -1088,6 +1099,14 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             db.execSQL(CREATE_CAPS_CACHE_INDEX_CAPS);
             db.execSQL(CREATE_CAPS_CACHE_INDEX_CAPS2);
         }
+        if (oldVersion < 55 && newVersion >= 55) {
+            db.execSQL(
+                    "ALTER TABLE "
+                            + Message.TABLENAME
+                            + " ADD COLUMN "
+                            + Message.SHARED_STORAGE
+                            + " BOOLEAN NOT NULL DEFAULT 1");
+        }
     }
 
     private void canonicalizeJids(SQLiteDatabase db) {
@@ -1358,7 +1377,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         CursorUtils.upgradeCursorWindowSize(cursor);
         while (cursor.moveToNext()) {
             try {
-                list.add(0, Message.fromCursor(cursor, conversation));
+                list.add(0, Message.fromCursor(context, cursor, conversation));
             } catch (final Exception e) {
                 Log.e(Config.LOGTAG, "unable to restore message", e);
             }
@@ -1426,33 +1445,18 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return db.rawQuery(SQL.toString(), selectionArgs);
     }
 
-    public List<String> markFileAsDeleted(final File file, final boolean internal) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selection;
-        String[] selectionArgs;
-        if (internal) {
-            final String name = file.getName();
-            if (name.endsWith(".pgp")) {
-                selection =
-                        "("
-                                + Message.RELATIVE_FILE_PATH
-                                + " IN(?,?) OR ("
-                                + Message.RELATIVE_FILE_PATH
-                                + "=? and encryption in(1,4))) and type in (1,2,5)";
-                selectionArgs =
-                        new String[] {
-                            file.getAbsolutePath(), name, name.substring(0, name.length() - 4)
-                        };
-            } else {
-                selection = Message.RELATIVE_FILE_PATH + " IN(?,?) and type in (1,2,5)";
-                selectionArgs = new String[] {file.getAbsolutePath(), name};
-            }
-        } else {
-            selection = Message.RELATIVE_FILE_PATH + "=? and type in (1,2,5)";
-            selectionArgs = new String[] {file.getAbsolutePath()};
-        }
-        final List<String> uuids = new ArrayList<>();
-        Cursor cursor =
+    public List<String> markFileAsDeleted(final File file) {
+        final var uuids = getMessagesWithFile(file);
+        markFileAsDeleted(uuids);
+        return uuids;
+    }
+
+    public List<String> getMessagesWithFile(final File file) {
+        final var db = this.getReadableDatabase();
+        final var selection = Message.RELATIVE_FILE_PATH + "=? and type in (1,2,5)";
+        final var selectionArgs = new String[] {file.getAbsolutePath()};
+        final var builder = new ImmutableList.Builder<String>();
+        try (final var cursor =
                 db.query(
                         Message.TABLENAME,
                         new String[] {Message.UUID},
@@ -1460,35 +1464,37 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                         selectionArgs,
                         null,
                         null,
-                        null);
-        while (cursor != null && cursor.moveToNext()) {
-            uuids.add(cursor.getString(0));
+                        null)) {
+            while (cursor.moveToNext()) {
+                builder.add(cursor.getString(0));
+            }
         }
-        if (cursor != null) {
-            cursor.close();
-        }
-        markFileAsDeleted(uuids);
-        return uuids;
+        return builder.build();
     }
 
-    public void markFileAsDeleted(List<String> uuids) {
+    public ListenableFuture<List<String>> getMessagesWithFileFuture(final File file) {
+        return Futures.submit(
+                () -> getMessagesWithFile(file), XmppConnectionService.DATABASE_READER);
+    }
+
+    private void markFileAsDeleted(final List<String> uuids) {
         SQLiteDatabase db = this.getReadableDatabase();
         final ContentValues contentValues = new ContentValues();
         final String where = Message.UUID + "=?";
         contentValues.put(Message.DELETED, 1);
         db.beginTransaction();
-        for (String uuid : uuids) {
+        for (final String uuid : uuids) {
             db.update(Message.TABLENAME, contentValues, where, new String[] {uuid});
         }
         db.setTransactionSuccessful();
         db.endTransaction();
     }
 
-    public void markFilesAsChanged(List<FilePathInfo> files) {
+    public void markFilesAsChanged(final List<FilePathInfo> files) {
         SQLiteDatabase db = this.getReadableDatabase();
         final String where = Message.UUID + "=?";
         db.beginTransaction();
-        for (FilePathInfo info : files) {
+        for (final var info : files) {
             final ContentValues contentValues = new ContentValues();
             contentValues.put(Message.DELETED, info.deleted ? 1 : 0);
             db.update(Message.TABLENAME, contentValues, where, new String[] {info.uuid.toString()});
@@ -1498,81 +1504,116 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     }
 
     public List<FilePathInfo> getFilePathInfo() {
-        final SQLiteDatabase db = this.getReadableDatabase();
-        final Cursor cursor =
+        final var selection = "type in (1,2,5) and relativeFilePath is not null";
+        return getFilePathInfoInternal(selection, null);
+    }
+
+    private List<FilePathInfo> getFilePathInfoInternal(
+            final String selection, final String[] selectionArgs) {
+        final var builder = new ImmutableList.Builder<FilePathInfo>();
+        final var db = this.getReadableDatabase();
+        try (final Cursor cursor =
                 db.query(
                         Message.TABLENAME,
                         new String[] {Message.UUID, Message.RELATIVE_FILE_PATH, Message.DELETED},
-                        "type in (1,2,5) and " + Message.RELATIVE_FILE_PATH + " is not null",
+                        selection,
+                        selectionArgs,
                         null,
                         null,
-                        null,
-                        null);
-        final List<FilePathInfo> list = new ArrayList<>();
-        while (cursor != null && cursor.moveToNext()) {
-            list.add(
-                    new FilePathInfo(
-                            cursor.getString(0), cursor.getString(1), cursor.getInt(2) > 0));
+                        null)) {
+            while (cursor.moveToNext()) {
+                builder.add(
+                        new FilePathInfo(
+                                cursor.getString(0), cursor.getString(1), cursor.getInt(2) > 0));
+            }
+        } catch (final Throwable throwable) {
+            Log.e(Config.LOGTAG, "could not get file infos from database", throwable);
         }
-        if (cursor != null) {
-            cursor.close();
-        }
-        return list;
+        return builder.build();
     }
 
-    public List<FilePath> getRelativeFilePaths(String account, Jid jid, int limit) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public List<FilePath> getRelativeFilePaths(
+            final String account, final Jid jid, final int limit) {
+        final var db = this.getReadableDatabase();
         final String SQL =
                 "select uuid,relativeFilePath from messages where type in (1,2,5) and deleted=0 and"
-                        + " "
-                        + Message.RELATIVE_FILE_PATH
-                        + " is not null and conversationUuid=(select uuid from conversations where"
-                        + " accountUuid=? and (contactJid=? or contactJid like ?)) order by"
-                        + " timeSent desc";
+                    + " relativeFilePath is not null and conversationUuid=(select uuid from"
+                    + " conversations where accountUuid=? and (contactJid=? or contactJid like ?))"
+                    + " GROUP BY relativeFilePath ORDER BY timeSent desc";
         final String[] args = {account, jid.toString(), jid + "/%"};
-        Cursor cursor = db.rawQuery(SQL + (limit > 0 ? " limit " + limit : ""), args);
-        List<FilePath> filesPaths = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            filesPaths.add(new FilePath(cursor.getString(0), cursor.getString(1)));
+        final var builder = new ImmutableList.Builder<FilePath>();
+        try (final var cursor = db.rawQuery(SQL + (limit > 0 ? " limit " + limit : ""), args)) {
+            while (cursor.moveToNext()) {
+                builder.add(new FilePath(cursor.getString(0), cursor.getString(1)));
+            }
         }
-        cursor.close();
-        return filesPaths;
+        return builder.build();
+    }
+
+    public Set<String> getExistingUrlsForPath(
+            final String account, final String path, final int encryption) {
+        final var builder = new ImmutableList.Builder<Message.FileParams>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String sql =
+                "select body from messages join conversations on"
+                    + " messages.conversationUuid=conversations.uuid where relativeFilePath=? and"
+                    + " conversations.accountUuid=? and messages.status<>0 and"
+                    + " messages.encryption=? ORDER BY messages.timeSent desc LIMIT 3";
+        final String[] args = {path, account, String.valueOf(encryption)};
+        try (final Cursor cursor = db.rawQuery(sql, args)) {
+            while (cursor.moveToNext()) {
+                builder.add(Message.FileParams.of(cursor.getString(0)));
+            }
+        }
+        final var parameters = builder.build();
+        return ImmutableSet.copyOf(
+                Collections2.transform(
+                        Collections2.filter(parameters, p -> Objects.requireNonNull(p).url != null),
+                        p -> Objects.requireNonNull(p).url));
     }
 
     public Message getMessageWithServerMsgId(
             final Conversation conversation, final String messageId) {
         final var db = this.getReadableDatabase();
-        final String sql =
-                "select * from messages where conversationUuid=? and serverMsgId=? LIMIT 1";
+        final var sql = "select * from messages where conversationUuid=? and serverMsgId=? LIMIT 1";
         final String[] args = {conversation.getUuid(), messageId};
-        final Cursor cursor = db.rawQuery(sql, args);
-        if (cursor == null) {
-            return null;
-        }
         final Message message;
-        if (cursor.moveToFirst()) {
-            message = Message.fromCursor(cursor, conversation);
-        } else {
-            message = null;
+        try (final Cursor cursor = db.rawQuery(sql, args)) {
+            if (cursor.moveToFirst()) {
+                message = Message.fromCursor(context, cursor, conversation);
+            } else {
+                message = null;
+            }
         }
-        cursor.close();
         return message;
     }
 
     public Message getMessageWithUuidOrRemoteId(
             final Conversation conversation, final String messageId) {
         final var db = this.getReadableDatabase();
-        final String sql =
+        final var sql =
                 "select * from messages where conversationUuid=? and (uuid=? OR remoteMsgId=?)"
                         + " LIMIT 1";
         final String[] args = {conversation.getUuid(), messageId, messageId};
-        final Cursor cursor = db.rawQuery(sql, args);
-        if (cursor == null) {
-            return null;
+        final Message message;
+        try (final Cursor cursor = db.rawQuery(sql, args)) {
+            if (cursor.moveToFirst()) {
+                message = Message.fromCursor(context, cursor, conversation);
+            } else {
+                message = null;
+            }
         }
+        return message;
+    }
+
+    public Message getIndividualMessage(final String uuid) {
+        final var db = this.getReadableDatabase();
+        final String sql = "select * from messages where uuid=? LIMIT 1";
+        final String[] args = {uuid};
+        final Cursor cursor = db.rawQuery(sql, args);
         final Message message;
         if (cursor.moveToFirst()) {
-            message = Message.fromCursor(cursor, conversation);
+            message = IndividualMessage.fromCursor(context, cursor, null);
         } else {
             message = null;
         }
@@ -1869,12 +1910,16 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 account.getJid().asBareJid() + ": persisted roster in " + duration + "ms");
     }
 
-    public void deleteMessagesInConversation(Conversation conversation) {
+    public List<FilePathInfo> deleteMessagesInConversation(final Conversation conversation) {
         long start = SystemClock.elapsedRealtime();
         final SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         final String[] args = {conversation.getUuid()};
-        int num = db.delete(Message.TABLENAME, Message.CONVERSATION + "=?", args);
+        final var selection =
+                "conversationUuid=? AND type in (1,2,5) AND relativeFilePath is not null AND"
+                        + " sharedStorage=0";
+        final var filePathInfos = getFilePathInfoInternal(selection, args);
+        final int num = db.delete(Message.TABLENAME, Message.CONVERSATION + "=?", args);
         db.setTransactionSuccessful();
         db.endTransaction();
         Log.d(
@@ -1886,15 +1931,40 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                         + " in "
                         + (SystemClock.elapsedRealtime() - start)
                         + "ms");
+        updateConversation(conversation);
+        return filterUnusedFiles(filePathInfos);
     }
 
-    public void expireOldMessages(long timestamp) {
-        final String[] args = {String.valueOf(timestamp)};
-        SQLiteDatabase db = this.getReadableDatabase();
+    public List<FilePathInfo> expireOldMessages(final Instant instant) {
+        final String[] args = {String.valueOf(instant.toEpochMilli())};
+        final var db = this.getWritableDatabase();
+        final var selection =
+                "type in (1,2,5) AND relativeFilePath is not null AND sharedStorage=0 AND"
+                        + " timeSent<?";
+        final var files = getFilePathInfoInternal(selection, args);
         db.beginTransaction();
         db.delete(Message.TABLENAME, "timeSent<?", args);
         db.setTransactionSuccessful();
         db.endTransaction();
+        return filterUnusedFiles(files);
+    }
+
+    private List<FilePathInfo> filterUnusedFiles(final List<FilePathInfo> filePathInfos) {
+        final var builder = new ImmutableList.Builder<FilePathInfo>();
+        for (final var info : filePathInfos) {
+            if (Strings.isNullOrEmpty(info.path) || info.deleted) {
+                continue;
+            }
+            if (info.path.charAt(0) == '/') {
+                final var uuids = getMessagesWithFile(new File(info.path));
+                if (uuids.isEmpty()) {
+                    builder.add(info);
+                } else {
+                    Log.d(Config.LOGTAG, "omitting " + info.path + " used by " + uuids);
+                }
+            }
+        }
+        return builder.build();
     }
 
     public MamReference getLastMessageReceived(Account account) {

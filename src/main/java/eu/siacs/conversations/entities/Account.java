@@ -12,7 +12,6 @@ import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpDecryptionService;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
-import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
 import eu.siacs.conversations.crypto.sasl.ChannelBinding;
 import eu.siacs.conversations.crypto.sasl.ChannelBindingMechanism;
 import eu.siacs.conversations.crypto.sasl.HashedToken;
@@ -633,17 +632,13 @@ public class Account extends AbstractEntity implements AvatarService.Avatar {
         return new MiniUri.Xmpp(this.getJid().asBareJid(), getFingerprints());
     }
 
-    public MiniUri.Http getShareableLink() {
-        return getShareableUri().asInvitationUri();
-    }
-
-    private ImmutableMap<String, Collection<String>> getFingerprints() {
+    public ImmutableMap<String, Collection<String>> getFingerprints() {
         final ImmutableMultimap.Builder<String, String> builder = new ImmutableMultimap.Builder<>();
         final var axolotlService = getAxolotlService();
         builder.put(
                 String.format("omemo-sid-%d", axolotlService.getOwnDeviceId()),
                 axolotlService.getOwnFingerprint().substring(2));
-        for (XmppAxolotlSession session : axolotlService.findOwnSessions()) {
+        for (final var session : axolotlService.findOwnSessions()) {
             if (session.getTrust().isVerified() && session.getTrust().isActive()) {
                 builder.put(
                         String.format("omemo-sid-%d", session.getRemoteAddress().getDeviceId()),

@@ -9,4 +9,5 @@
     <string name="timeout_while_connecting_to_server">Нема одзива приликом повезивања на сервер.</string>
     <string name="pref_never_send_crash_summary">Слањем извештаја о грешкама помажеш даљем развоју Quicksy-ја</string>
     <string name="huawei_protected_apps_summary">Да би наставио/ла да примаш обавештења, чак и када је екран угашен, требало би да додаш Quicksy у листу заштићених апликација.</string>
+    <string name="use_physical_device">Употреби физички уређај да региструјеш налог.</string>
 </resources>

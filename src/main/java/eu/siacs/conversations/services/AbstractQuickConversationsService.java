@@ -1,22 +1,14 @@
 package eu.siacs.conversations.services;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-
-import com.google.common.collect.Iterables;
-
 import eu.siacs.conversations.BuildConfig;
-
-import java.util.Arrays;
+import eu.siacs.conversations.Conversations;
 
 public abstract class AbstractQuickConversationsService {
 
     public static final String SMS_RETRIEVED_ACTION =
             "com.google.android.gms.auth.api.phone.SMS_RETRIEVED";
-
-    private static Boolean declaredReadContacts = null;
 
     protected final XmppConnectionService service;
 
@@ -42,27 +34,7 @@ public abstract class AbstractQuickConversationsService {
         if ("quicksy".equals(BuildConfig.FLAVOR_mode)) {
             return true;
         }
-        final var readContacts = AbstractQuickConversationsService.declaredReadContacts;
-        if (readContacts != null) {
-            return Boolean.TRUE.equals(readContacts);
-        }
-        AbstractQuickConversationsService.declaredReadContacts = hasDeclaredReadContacts(context);
-        return AbstractQuickConversationsService.declaredReadContacts;
-    }
-
-    private static boolean hasDeclaredReadContacts(final Context context) {
-        final String[] permissions;
-        try {
-            permissions =
-                    context.getPackageManager()
-                            .getPackageInfo(
-                                    context.getPackageName(), PackageManager.GET_PERMISSIONS)
-                            .requestedPermissions;
-        } catch (final PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return Iterables.any(
-                Arrays.asList(permissions), p -> p.equals(Manifest.permission.READ_CONTACTS));
+        return Conversations.getInstance(context).isDeclaredContactsPermissions();
     }
 
     public static boolean isQuicksyPlayStore() {

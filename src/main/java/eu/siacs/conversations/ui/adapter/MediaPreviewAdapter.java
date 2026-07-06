@@ -29,6 +29,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.function.Consumer;
 
 public class MediaPreviewAdapter
         extends RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder> {
@@ -37,8 +38,12 @@ public class MediaPreviewAdapter
 
     private final ConversationFragment conversationFragment;
 
-    public MediaPreviewAdapter(final ConversationFragment fragment) {
+    private final Consumer<Attachment> onAttachmentRemoved;
+
+    public MediaPreviewAdapter(
+            final ConversationFragment fragment, final Consumer<Attachment> onAttachmentRemoved) {
         this.conversationFragment = fragment;
+        this.onAttachmentRemoved = onAttachmentRemoved;
     }
 
     @NonNull
@@ -67,6 +72,7 @@ public class MediaPreviewAdapter
                     mediaPreviews.remove(pos);
                     notifyItemRemoved(pos);
                     conversationFragment.toggleInputMethod();
+                    onAttachmentRemoved.accept(attachment);
                 });
         holder.binding.mediaPreview.setOnClickListener(v -> view(context, attachment));
     }
@@ -114,8 +120,7 @@ public class MediaPreviewAdapter
                                     true);
             if (bm != null) {
                 cancelPotentialWork(attachment, imageView);
-                imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(0x00000000);
+                MediaAdapter.setImageBitmap(imageView, bm);
             } else {
                 imageView.setBackgroundColor(
                         ContextCompat.getColor(imageView.getContext(), R.color.gray_800));
@@ -223,14 +228,15 @@ public class MediaPreviewAdapter
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
-                }
+        protected void onPostExecute(final Bitmap bitmap) {
+            if (bitmap == null || isCancelled()) {
+                return;
             }
+            final ImageView imageView = imageViewReference.get();
+            if (imageView == null) {
+                return;
+            }
+            MediaAdapter.setImageBitmap(imageView, bitmap);
         }
     }
 }

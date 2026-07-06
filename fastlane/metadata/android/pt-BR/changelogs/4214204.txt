@@ -1,0 +1,2 @@
+* Suportar 'Estado da Suspensão do Serviço'
+* Pequenas correções de segurança para a análise de múltiplos bodies, occupant-ids e stanza-id

@@ -79,9 +79,6 @@
     <string name="clear_conversation_history">Ryd chat historik</string>
     <string name="clear_histor_msg">Vil du slette alle beskeder i denne chat? \n \n<b>Advarsel:</b> Dette vil ikke påvirke beskeder gemt på andre enheder eller servere.</string>
     <string name="delete_file_dialog">Slet fil</string>
-    <string name="delete_file_dialog_msg">Er du sikker på, at du vil slette denne fil\?
-\n
-\n<b>Advarsel:</b> Dette sletter ikke kopier af denne fil, der er gemt på andre enheder eller servere. </string>
     <string name="choose_presence">Vælg enhed</string>
     <string name="send_unencrypted_message">Send ukrypteret besked</string>
     <string name="send_message">Send besked</string>
@@ -132,8 +129,6 @@
     <string name="send_presence_updates">Send nærværsopdateringer</string>
     <string name="receive_presence_updates">Modtag nærværsopdateringer</string>
     <string name="ask_for_presence_updates">Bed om nærværsopdateringer</string>
-    <string name="attach_choose_picture">Vælg billede</string>
-    <string name="attach_take_picture">Tag billede</string>
     <string name="preemptively_grant">Giv forebyggende anmodning om abonnement</string>
     <string name="error_not_an_image_file">Den valgte fil er ikke et billede</string>
     <string name="error_compressing_image">Kunne ikke konverter billedefil</string>
@@ -174,7 +169,6 @@
     <string name="openpgp_has_been_published">OpenPGP offentlig nøgle er offentliggjort.</string>
     <string name="mgmt_account_enable">Aktiver konto</string>
     <string name="mgmt_account_delete_confirm_text">Er du sikker på, at du vil slette din konto? Sletning af din konto sletter hele din chat historik</string>
-    <string name="attach_record_voice">Optag lyd</string>
     <string name="account_settings_jabber_id">XMPP-adresse</string>
     <string name="block_jabber_id">Bloker XMPP-adresse</string>
     <string name="account_settings_example_jabber_id">brugernavn@domæne.dk</string>
@@ -316,7 +310,6 @@
     <string name="restoring_backup">Gendan backup</string>
     <string name="notification_restored_backup_title">Din backup er blevet gendannet</string>
     <string name="notification_restored_backup_subtitle">Glem ikke at aktivere kontoen.</string>
-    <string name="choose_file">Vælg fil</string>
     <string name="receiving_x_file">Modtager %1$s (%2$d%% fuldført)</string>
     <string name="download_x_file">Download %s</string>
     <string name="delete_x_file">Slet %s</string>
@@ -400,7 +393,6 @@
     <string name="contacts_have_stopped_typing">%s har stoppet skrivning</string>
     <string name="pref_chat_states">Indtastningsnotifikation</string>
     <string name="pref_chat_states_summary">Lad dine kontakter vide når du skriver beskeder til dem</string>
-    <string name="send_location">Send placering</string>
     <string name="show_location">Vis placering</string>
     <string name="no_application_found_to_display_location">Ingen app fundet der kan vise placering</string>
     <string name="location">Placering</string>
@@ -417,10 +409,7 @@
         <item quantity="one">%d certifikat slettet</item>
         <item quantity="other">%d certifikater slettet</item>
     </plurals>
-    <string name="pref_quick_action_summary">Erstat \"Send\" knap med hurtig handling</string>
     <string name="pref_quick_action">Hurtig handling</string>
-    <string name="none">Ingen</string>
-    <string name="recently_used">Senest brugt</string>
     <string name="choose_quick_action">Vælg hurtig handling</string>
     <string name="search_contacts">Find kontakter</string>
     <string name="send_private_message">Send privat besked</string>
@@ -639,7 +628,6 @@
     <string name="pref_validate_hostname_summary">Servercertifikater, der indeholder det validerede værtsnavn, betragtes som bekræftede</string>
     <string name="certificate_does_not_contain_jid">Certifikat indeholder ikke en XMPP-adresse</string>
     <string name="server_info_partial">delvis</string>
-    <string name="attach_record_video">Optag video</string>
     <string name="copy_to_clipboard">Kopier til udklipsholder</string>
     <string name="message_copied_to_clipboard">Besked kopieret til udklipsholder</string>
     <string name="message">Besked</string>
@@ -852,7 +840,6 @@
     <string name="pref_channel_discovery">Metode for kanalsøgning</string>
     <string name="backup">Backup</string>
     <string name="category_about">Om</string>
-    <string name="please_enable_an_account">Aktiver venligst en konto</string>
     <string name="make_call">Lav opkald</string>
     <string name="rtp_state_incoming_call">Indkommende opkald</string>
     <string name="rtp_state_incoming_video_call">Indkommende videoopkald</string>
@@ -906,8 +893,6 @@
     <string name="remove_from_favorites">Frigør fra top</string>
     <string name="gpx_track">GPX spor</string>
     <string name="could_not_correct_message">Kunne ikke rediger besked</string>
-    <string name="search_all_conversations">Alle chats</string>
-    <string name="search_this_conversation">Denne chat</string>
     <string name="your_avatar">Dit avatar</string>
     <string name="avatar_for_x">Avatar for %s</string>
     <string name="encrypted_with_omemo">Krypteret med OMEMO</string>
