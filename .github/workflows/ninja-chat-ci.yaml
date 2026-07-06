@@ -34,14 +34,11 @@ jobs:
       - name: Build Regular APK
         run: ./gradlew assembleConversationsFreeDebug --stacktrace
 
-      - name: Get APK name
-        run: echo "base_name=`./gradlew properties -q | grep 'archivesBaseName:' | awk '{print $2}'`" >> $GITHUB_ENV
-
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
           name: Ninja Chat Debug APK
-          path: build/outputs/apk/conversationsFree/debug/${{ env.base_name }}-conversations-free-arm64-v8a-debug.apk
+          path: build/outputs/apk/conversationsFree/debug/*-conversations-free-arm64-v8a-debug.apk
 
 
   test:

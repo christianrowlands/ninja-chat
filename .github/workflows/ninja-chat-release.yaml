@@ -133,16 +133,11 @@ jobs:
           -Pandroid.injected.signing.key.alias=$KEY_ALIAS
           -Pandroid.injected.signing.key.password=$KEY_PASSWORD
 
-      - name: Get base name
-        run: |
-          echo "base_name=`./gradlew properties -q | grep 'archivesBaseName:' | awk '{print $2}'`" >> $GITHUB_ENV
-          echo ${{ env.base_name }}
-
       - name: Upload Release APK
         uses: actions/upload-artifact@v6
         with:
           name: Ninja Chat Release APK
-          path: build/outputs/apk/conversationsFree/release/${{ env.base_name }}-conversations-free-arm64-v8a-release.apk
+          path: build/outputs/apk/conversationsFree/release/*-conversations-free-arm64-v8a-release.apk
 
       - name: Build Release Bundle
         env:
@@ -170,6 +165,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
           packageName: com.ninja.chat
-          releaseFiles: build/outputs/bundle/conversationsFreeRelease/${{ env.base_name }}-conversations-free-release.aab
+          releaseFiles: build/outputs/bundle/conversationsFreeRelease/*.aab
           track: internal
           status: completed
